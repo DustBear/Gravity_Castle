@@ -8,6 +8,19 @@ TagManager:
   - Platform
   - Enemy
   - Lever
+  - EnemyHome
+  - Stone
+  - Arrow
+  - ArrowHome
+  - CannonHome
+  - Cannon
+  - Spike
+  - BoxBody
+  - BoxHead
+  - Key1
+  - Key2
+  - Door1
+  - Door2
   layers:
   - Default
   - TransparentFX
@@ -15,16 +28,16 @@ TagManager:
   - Platform
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - ArrowHome
+  - Arrow
+  - CannonHome
+  - Cannon
+  - Spike
+  - BoxBody
+  - BoxHead
+  - Key
+  - ElevatorFloor
+  - Stone
   - 
   - 
   - 
@@ -59,4 +72,13 @@ TagManager:
     locked: 0
   - name: Lever
     uniqueID: 1097649741
+    locked: 0
+  - name: Key
+    uniqueID: 256397483
+    locked: 0
+  - name: BoxHead
+    uniqueID: 354058783
+    locked: 0
+  - name: BoxBody
+    uniqueID: 1395944127
     locked: 0

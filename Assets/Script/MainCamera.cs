@@ -19,7 +19,7 @@ public class MainCamera : MonoBehaviour
         Vector3 playerPos = player.transform.position;
         float playerAngle = player.transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
         Vector3 cameraPos = new Vector3(playerPos.x - 3 * Mathf.Sin(playerAngle), playerPos.y + 3 * Mathf.Cos(playerAngle), -10);
-        if (player.gravityDirection == Player.GravityDirection.down || player.gravityDirection == Player.GravityDirection.up) {
+        /*if (player.gravityDirection == Player.GravityDirection.down || player.gravityDirection == Player.GravityDirection.up) {
             if (cameraPos.x < -10) {
                 cameraPos.x = -10;
             }
@@ -46,7 +46,7 @@ public class MainCamera : MonoBehaviour
             else if (cameraPos.y > 22) {
                 cameraPos.y = 22;
             }
-        }
+        }*/
         transform.position = cameraPos;
         
     }
