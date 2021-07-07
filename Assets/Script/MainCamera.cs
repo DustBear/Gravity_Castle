@@ -5,49 +5,68 @@ using UnityEngine;
 public class MainCamera : MonoBehaviour
 {
     Player player;
+    Camera cam;
+    public float resolutionX;
+    public float resolutionY;
+    float angle; // angle with resolutionX and resolutionY
+    float diagonal; // diagonal length
+    // map coordinates
+    public float mapMinX;
+    public float mapMaxX;
+    public float mapMinY;
+    public float mapMaxY;
 
     void Awake() {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        cam = GetComponent<Camera>();
+        angle = Mathf.Atan2(resolutionX, resolutionY);
+        diagonal = Mathf.Sqrt(Mathf.Pow(cam.orthographicSize, 2) + Mathf.Pow(cam.orthographicSize / resolutionY * resolutionX, 2));
     }
 
-    void FixedUpdate()
+    void Update()
     {     
-        // rotation
+        // Rotation
         transform.rotation = player.transform.rotation;
         
-        // position
-        Vector3 playerPos = player.transform.position;
-        float playerAngle = player.transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
-        Vector3 cameraPos = new Vector3(playerPos.x - 3 * Mathf.Sin(playerAngle), playerPos.y + 3 * Mathf.Cos(playerAngle), -10);
-        /*if (player.gravityDirection == Player.GravityDirection.down || player.gravityDirection == Player.GravityDirection.up) {
-            if (cameraPos.x < -10) {
-                cameraPos.x = -10;
-            }
-            else if (cameraPos.x > 21) {
-                cameraPos.x = 21;
-            }
-            if (cameraPos.y < -10) {
-                cameraPos.y = -10;
-            }
-            else if (cameraPos.y > 32) {
-                cameraPos.y = 32;
-            }
-        }
-        else {
-            if (cameraPos.x < -20) {
-                cameraPos.x = -20;
-            }
-            else if (cameraPos.x > 31) {
-                cameraPos.x = 31;
-            }
-            if (cameraPos.y < 0) {
-                cameraPos.y = 0;
-            }
-            else if (cameraPos.y > 22) {
-                cameraPos.y = 22;
-            }
-        }*/
-        transform.position = cameraPos;
+        // Position
+        float playerRot = player.transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
+        Vector2 playerPos = player.transform.position;
+        float cameraX = playerPos.x - 3 * Mathf.Sin(playerRot);
+        float cameraY = playerPos.y + 3 * Mathf.Cos(playerRot);
         
+        // viewRect coordinates
+        float upLeftX = cameraX + diagonal * Mathf.Sin(playerRot + angle);
+        float upLeftY = cameraY + diagonal * Mathf.Cos(playerRot + angle);
+        float downLeftX = cameraX + diagonal * Mathf.Sin(playerRot + Mathf.PI - angle);
+        float downLeftY = cameraY + diagonal * Mathf.Cos(playerRot + Mathf.PI - angle);
+        float downRightX = cameraX + diagonal * Mathf.Sin(playerRot + Mathf.PI + angle);
+        float downRightY = cameraY + diagonal * Mathf.Cos(playerRot + Mathf.PI + angle);
+        float upRightX = cameraX + diagonal * Mathf.Sin(playerRot + Mathf.PI * 2 - angle);
+        float upRightY = cameraY + diagonal * Mathf.Cos(playerRot + Mathf.PI * 2 - angle);
+        
+        // min and max coordinates in viewRect
+        float cameraMinX = Mathf.Min(downLeftX, downRightX, upLeftX, upRightX);
+        float cameraMaxX = Mathf.Max(downLeftX, downRightX, upLeftX, upRightX);
+        float cameraMinY = Mathf.Min(downLeftY, downRightY, upLeftY, upRightY);
+        float cameraMaxY = Mathf.Max(downLeftY, downRightY, upLeftY, upRightY);
+        
+        // x, y for adjusting
+        float deltaX = 0;
+        float deltaY = 0;
+        if (cameraMinX < mapMinX) {
+            deltaX = mapMinX - cameraMinX;
+        }
+        else if (cameraMaxX > mapMaxX) {
+            deltaX = mapMaxX - cameraMaxX;
+        }
+        if (cameraMinY < mapMinY) {
+            deltaY = mapMinY - cameraMinY;
+        }
+        else if (cameraMaxY > mapMaxY) {
+            deltaY = mapMaxY - cameraMaxY;
+        }
+
+        // calculate result
+        transform.position = new Vector3((upLeftX + downLeftX + downRightX + upRightX) / 4 + deltaX, (upLeftY + downLeftY + downRightY + upRightY) / 4  + deltaY, -10);
     }
 }

@@ -1,132 +1,114 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     Rigidbody2D rigid;
-    public GameObject leftArrow;
-    public GameObject rightArrow;
-    public GameObject stone;
-    public GameObject fadeIn;
-    public GameObject fadeOut;
-    FadeIn fadeInScript;
-    FadeOut fadeOutScript;
-    // input variable
+    float collidX;
+    float collidY;
+    GameObject leftArrow;
+    GameObject rightArrow;
+    GameObject fadeIn;
+    GameObject fadeOut;
+    bool isFadingOut;
+    GameManager gameManager;
+    // Input
     float inputHorizontal;
     float inputVertical;
-    bool inputVerticalRope;
     bool inputJump;
-    // walk
+    // Collision
+    bool isCollideRope;
+    bool isCollideLever;
+    // Walk
     public float walkSpeed;
-    // jump
+    // Jump
     public float jumpPower;
     float jumpTimer;
     bool isJumping;
-    // rope
+    // Rope
     Rope rope;
     bool isRoping;
     public float ropeSpeed;
-    // collision
-    bool isCollideRope;
-    bool isCollideLever;
-    bool isCollideKey1;
-    bool isCollideKey2;
-    bool isDie;
-    // gravity
-    public enum GravityDirection {left, down, right, up};
-    public GravityDirection gravityDirection;
+    // Gravity
+    public GameManager.GravityDirection gravityDirection;
     bool isSelectingGravity;
     bool isUsingVertical;
+    Vector2 startingPos;
     public float rotateDirection;
-    bool afterRotating;
-    // key
-    //BoxBody boxBody;
-
-    public GameObject elevator;
-    Elevator elevatorScript;
-
-    SpriteRenderer sr;
-    BoxCollider2D bc;
+    public bool afterRotating;
+    // Elevator
+    public bool inElevator;
 
     void Awake() {
-        Init();
-        fadeIn.SetActive(true);
-        fadeOut.SetActive(false);
-        fadeInScript = fadeIn.GetComponent<FadeIn>();
-        fadeOutScript = fadeOut.GetComponent<FadeOut>();
-        elevatorScript = elevator.GetComponent<Elevator>();
+        gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
+        rigid = GetComponent<Rigidbody2D>();
+        GameObject canvas = GameObject.FindWithTag("Canvas");
+        fadeIn = canvas.transform.GetChild(0).gameObject;
+        fadeOut = canvas.transform.GetChild(1).gameObject;
+        leftArrow = transform.GetChild(0).gameObject;
+        rightArrow = transform.GetChild(1).gameObject;
     }
 
     void Start() {
-        int sceneIdx = SceneManager.GetActiveScene().buildIndex;
-        if (sceneIdx == 1) {
-            StartCoroutine(EnableStone());
+        fadeIn.SetActive(true);
+        leftArrow.SetActive(false);
+        rightArrow.SetActive(false);
+        // Just Next Scene
+        if (!gameManager.isDie) {
+            transform.position = gameManager.nextPos;
+            transform.rotation = gameManager.nextRot;
+            Physics2D.gravity = gameManager.nextGravity;
+            gravityDirection = gameManager.nextGravityDir;
+            afterRotating = gameManager.nextAfterRotating;
+        }
+        // Respawn after Dying
+        else {
+            int curStage = gameManager.curStage;
+            int curState = gameManager.curState;
+            transform.position = gameManager.respawnPos[curStage, curState];
+            transform.rotation = gameManager.respawnRot[curStage, curState];
+            Physics2D.gravity = gameManager.respawnGravity[curStage, curState];
+            gravityDirection = gameManager.respawnGravityDir[curStage, curState];
+            gameManager.isDie = false;
         }
     }
 
     void Update()
     {
-        // input for walking
+        // Input for walking
         inputHorizontal = Input.GetAxisRaw("Horizontal");
-        // input for jumping
+        // Input for jumping
         inputJump = Input.GetKeyDown(KeyCode.Space);
-        // input for moving on rope
+        // Input for hanging on the rope
         inputVertical = Input.GetAxisRaw("Vertical");
-        // input for hanging on rope
-        inputVerticalRope = Input.GetKeyDown(KeyCode.UpArrow);
 
-        if (elevatorScript.isStart) {
-            transform.parent = elevator.transform;
-        }
-        else {
-            transform.parent = null;
-        }
-
-        if (isDie) {
-            Die();
-        }
-        else {
+        if (!gameManager.isDie) {
             if (!isSelectingGravity && rotateDirection == 0 && !afterRotating) {
                 Walk();
                 Jump();
                 Rope();
             }
-            NextScene();
+            UsingLever();
         }
-    }
-
-    void FixedUpdate() {
-        RotateGravity();
-        //GetKey();
     }
 
     void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.tag == "Spike" || other.gameObject.tag == "Arrow" || other.gameObject.tag == "Cannon") {
-            isDie = true;
-        }
-        if (other.gameObject.tag == "Door1" && isCollideKey1 || other.gameObject.tag == "Door2" && isCollideKey2) {
-            bc = other.gameObject.GetComponent<BoxCollider2D>();
-            sr = other.gameObject.GetComponent<SpriteRenderer>();
-            StartCoroutine("FadeOut");
+            gameManager.isDie = true;
+            fadeOut.SetActive(true);
         }
     }
 
-    void OnTriggerStay2D(Collider2D other) {
+    void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Rope")) {
             isCollideRope = true;
             rope = other.GetComponent<Rope>();
         }
         if (other.CompareTag("Lever")) {
             isCollideLever = true;
-        }
-        if (other.CompareTag("Key1")) {
-            isCollideKey1 = true;
-        }
-        if (other.CompareTag("Key2")) {
-            isCollideKey2 = true;
         }
     }
 
@@ -139,38 +121,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Init() {
-        rigid = GetComponent<Rigidbody2D>();
-        stone.SetActive(false);
-        fadeOut.SetActive(false);
-        fadeIn.SetActive(true);
-        leftArrow.SetActive(false);
-        rightArrow.SetActive(false);
-        transform.position = new Vector3(-110, -11, 0);
-        transform.rotation = Quaternion.Euler(0, 0, 0);
-        Physics2D.gravity = new Vector2(0, -9.8f);
-        gravityDirection = GravityDirection.down;
-        afterRotating = false;
-        isCollideRope = false;
-        isCollideLever = false;
-        isCollideKey1 = false;
-        isCollideKey2 = false;
-        isDie = false;
-        isSelectingGravity = false;
-        isUsingVertical = false;
-    }
-    /*
-    void GetKey() {
-        if (isCollideKey && !isJumping && !afterRotating) {
-            boxBody.isGetKey = true;
-        }
-        else {
-            boxBody.isGetKey = false;
-        }
-    }
-*/
-    void RotateGravity() {
-        if (rotateDirection == 0 && isCollideLever && !isJumping && rigid.velocity == Vector2.zero && !afterRotating) {
+    void UsingLever() {
+        // Decide wheter to use the lever
+        if (rotateDirection == 0 && isCollideLever && !isJumping && !afterRotating) {
             if (inputVertical == 1) {
                 if (!isUsingVertical) {
                     isSelectingGravity = !isSelectingGravity;
@@ -184,83 +137,97 @@ public class Player : MonoBehaviour
             }
         }
 
+        // Select gravity direction
         if (isSelectingGravity && inputHorizontal != 0) {
             leftArrow.SetActive(false);
             rightArrow.SetActive(false);
             rotateDirection = inputHorizontal;
             isSelectingGravity = false;
             isUsingVertical = false;
-            rigid.gravityScale = 0;
+            startingPos = transform.position;
         }
 
+        // Change gravity direction
         if (rotateDirection != 0) {
             switch (gravityDirection) {
-                case GravityDirection.left:
+                case GameManager.GravityDirection.left:
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection - 90), Time.deltaTime * 5.0f);
+                    if (startingPos.x - transform.position.x > 0.28f) {
+                        rigid.gravityScale = 0;
+                    }
                     if (transform.rotation == Quaternion.Euler(0, 0, 90 * rotateDirection - 90)) {
                         Physics2D.gravity = new Vector2(0, -9.8f * rotateDirection);
+                        rigid.gravityScale = 2;
                         if (rotateDirection == 1) {
-                            gravityDirection = GravityDirection.down;
+                            gravityDirection = GameManager.GravityDirection.down;
                         }
                         else {
-                            gravityDirection = GravityDirection.up;
+                            gravityDirection = GameManager.GravityDirection.up;
                         }
                         rotateDirection = 0;
                         afterRotating = true;
-                        rigid.gravityScale = 2;
                     }
                     break;
-                case GravityDirection.right:
+                case GameManager.GravityDirection.right:
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection + 90), Time.deltaTime * 5.0f);
+                    if (transform.position.x - startingPos.x > 0.28f) {
+                        rigid.gravityScale = 0;
+                    }
                     if (transform.rotation == Quaternion.Euler(0, 0, 90 * rotateDirection + 90)) {
                         Physics2D.gravity = new Vector2(0, 9.8f * rotateDirection);
+                        rigid.gravityScale = 2;
                         if (rotateDirection == 1) {
-                            gravityDirection = GravityDirection.up;
+                            gravityDirection = GameManager.GravityDirection.up;
                         }
                         else {
-                            gravityDirection = GravityDirection.down;
+                            gravityDirection = GameManager.GravityDirection.down;
                         }
                         rotateDirection = 0;
                         afterRotating = true;
-                        rigid.gravityScale = 2;
                     }
                     break;
-                case GravityDirection.up:
+                case GameManager.GravityDirection.up:
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, -90 * rotateDirection), Time.deltaTime * 5.0f);
+                    if (transform.position.y - startingPos.y > 0.28f) {
+                        rigid.gravityScale = 0;
+                    }
                     if (transform.rotation == Quaternion.Euler(0, 0, -90 * rotateDirection)) {
                         Physics2D.gravity = new Vector2(-9.8f * rotateDirection, 0);
+                        rigid.gravityScale = 2;
                         if (rotateDirection == 1) {
-                            gravityDirection = GravityDirection.left;
+                            gravityDirection = GameManager.GravityDirection.left;
                         }
                         else {
-                            gravityDirection = GravityDirection.right;
+                            gravityDirection = GameManager.GravityDirection.right;
                         }
                         rotateDirection = 0;
                         afterRotating = true;
-                        rigid.gravityScale = 2;
                     }
                     break;
                 default:
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection), Time.deltaTime * 5.0f);
+                    if (startingPos.y - transform.position.y > 0.28f) {
+                        rigid.gravityScale = 0;
+                    }
                     if (transform.rotation == Quaternion.Euler(0, 0, 90 * rotateDirection)) {
                         Physics2D.gravity = new Vector2(9.8f * rotateDirection, 0);
+                        rigid.gravityScale = 2;
                         if (rotateDirection == 1) {
-                            gravityDirection = GravityDirection.right;
+                            gravityDirection = GameManager.GravityDirection.right;
                         }
                         else {
-                            gravityDirection = GravityDirection.left;
+                            gravityDirection = GameManager.GravityDirection.left;
                         }
                         rotateDirection = 0;
                         afterRotating = true;
-                        rigid.gravityScale = 2;
                     }
                     break;
             }
         }
-        if (afterRotating) {
-            if (IsGrounded()) {
-                afterRotating = false;
-            }
+
+        // Finish applying the changed gravity direction
+        if (afterRotating && IsGrounded()) {
+            afterRotating = false;
         }
     }
 
@@ -271,13 +238,13 @@ public class Player : MonoBehaviour
     }
 
     void Jump() {
-        // start jumping
+        // Start jumping
         if (inputJump && !isJumping) {
             rigid.velocity = Vector2.zero;
             rigid.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
             isJumping = true;
         }
-        // landing on the ground -> finish jumping
+        // Landing on the ground -> Finish jumping
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
         if (locVel.y <= 0 && IsGrounded()) {
             isJumping = false;
@@ -285,8 +252,9 @@ public class Player : MonoBehaviour
     }
 
     void Rope() {
+        // Start to hang on the rope
         if (!isRoping) {
-            if (inputVerticalRope && isCollideRope) {
+            if (inputVertical != 0 && isCollideRope) {
                 rigid.gravityScale = 0;
                 Vector2 ropePos = rope.transform.position;
                 if (rope.isVertical) {
@@ -300,15 +268,15 @@ public class Player : MonoBehaviour
             }
         }
         else {
-            // hanging on the rope
+            // Moving on the rope
             if (isCollideRope && !isJumping) {
                 switch (gravityDirection) {
-                    case GravityDirection.left:
+                    case GameManager.GravityDirection.left:
                         if (rope.isVertical) {
                             rigid.velocity = new Vector2(0, -inputHorizontal * ropeSpeed);
                         }
                         else {
-                            // end of rope -> stop moving
+                            // End of the rope -> Stop moving
                             if (transform.position.x >= rope.transform.position.x && inputVertical >= 0) {
                                 rigid.velocity = Vector2.zero;
                             }
@@ -317,12 +285,12 @@ public class Player : MonoBehaviour
                             }
                         }
                         break;
-                    case GravityDirection.right:
+                    case GameManager.GravityDirection.right:
                         if (rope.isVertical) {
                             rigid.velocity = new Vector2(0, inputHorizontal * ropeSpeed);
                         }
                         else {
-                            // end of rope -> stop moving
+                            // End of the rope -> Stop moving
                             if (transform.position.x <= rope.endPos && inputVertical >= 0) {
                                 rigid.velocity = Vector2.zero;
                             }
@@ -331,9 +299,9 @@ public class Player : MonoBehaviour
                             }
                         }
                         break;
-                    case GravityDirection.up:
+                    case GameManager.GravityDirection.up:
                         if (rope.isVertical) {
-                            // end of rope -> stop moving
+                            // End of the rope -> Stop moving
                             if (transform.position.y <= rope.endPos && inputVertical >= 0) {
                                 rigid.velocity = Vector2.zero;
                             }
@@ -345,9 +313,9 @@ public class Player : MonoBehaviour
                             rigid.velocity = new Vector2(-inputHorizontal * ropeSpeed, 0);
                         }
                         break;
-                    case GravityDirection.down:
+                    case GameManager.GravityDirection.down:
                         if (rope.isVertical) {
-                            // end of rope -> stop moving
+                            // End of the rope -> Stop moving
                             if (transform.position.y >= rope.transform.position.y && inputVertical >= 0) {
                                 rigid.velocity = Vector2.zero;
                             }
@@ -361,53 +329,52 @@ public class Player : MonoBehaviour
                         break;
                 }
             }
-            // finish hanging on the rope
+            // Finish hanging on the rope
             else {
                 rigid.gravityScale = 2;
                 isRoping = false;
             }
         }
     }
-
-    void Die() {
-        fadeIn.SetActive(false);
-        fadeOut.SetActive(true);
-        if (fadeOutScript.alpha >= 1) {
-            fadeOut.SetActive(false);
-            fadeIn.SetActive(true);
-            Init();
-        }
+/*
+    void OnDrawGizmos() {
+        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 3 | 1 << 6 | 1 << 8 | 1 << 15 | 1 << 16 | 1 << 17);
+        Gizmos.DrawRay(transform.position, -transform.up * rayHit.distance);
+        Gizmos.DrawWireCube(transform.position - transform.up * rayHit.distance, new Vector2(0.9f, 0.1f));
     }
-
+*/
     bool IsGrounded() {
-        RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, -transform.up, 0.7f, 1 << 3 | 1 << 6 | 1 << 8 | 1 << 15);
+        // Jump
+        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f
+        , 1 << 3 | 1 << 6 | 1 << 8 | 1 << 15 | 1 << 16); // Platform, ArrowHome, CannonHome, Stone, ElevatorFloor
+        
+        // Elevator
+        RaycastHit2D rayHitElevator = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 16);
+        if (rayHitElevator.collider != null) {
+            transform.parent = rayHitElevator.collider.transform;
+            inElevator = true;
+        }
+        else {
+            transform.parent = null;
+            inElevator = false;
+        }
+        
+        // KeyBox
+        RaycastHit2D rayHitKeyBox = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 17);
+        if (rayHitKeyBox.collider != null) {
+            Transform keyBox = rayHitKeyBox.collider.transform.parent;
+            if (keyBox.childCount == 5) {
+                if (keyBox.GetChild(2).CompareTag("Key1")) {
+                    gameManager.isOpenKeyBox1 = true;
+                }
+                else if (keyBox.GetChild(2).CompareTag("Key2")) {
+                    gameManager.isOpenKeyBox2 = true;
+                }
+                // activate key
+                keyBox.GetChild(2).gameObject.SetActive(true);
+            }
+        }
+        
         return rayHit.collider != null;
-    }
-
-    void NextScene() {
-        int sceneIdx = SceneManager.GetActiveScene().buildIndex;
-        if (transform.position.y > 9 && sceneIdx == 0) {
-            SceneManager.LoadScene(1);
-        } 
-        else if (transform.position.y > 11 && sceneIdx == 1) {
-            SceneManager.LoadScene(2);
-        }
-    }
-
-    IEnumerator EnableStone() {
-        while (transform.position.x > -150) {
-            yield return null;
-        }
-        stone.SetActive(true);
-    }
-
-    IEnumerator FadeOut() {
-        for (int i = 10; i >= 0; i--) {
-            Color c = sr.material.color;
-            c.a = i / 10.0f;
-            sr.material.color = c;
-            yield return new WaitForSeconds(0.1f);
-        }
-        bc.isTrigger = true;
     }
 }

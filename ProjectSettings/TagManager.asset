@@ -5,7 +5,6 @@ TagManager:
   serializedVersion: 2
   tags:
   - Rope
-  - Platform
   - Enemy
   - Lever
   - EnemyHome
@@ -15,12 +14,14 @@ TagManager:
   - CannonHome
   - Cannon
   - Spike
-  - BoxBody
-  - BoxHead
   - Key1
   - Key2
   - Door1
   - Door2
+  - Canvas
+  - FinishLine
+  - KeyBox1
+  - KeyBox2
   layers:
   - Default
   - TransparentFX
@@ -32,14 +33,14 @@ TagManager:
   - Arrow
   - CannonHome
   - Cannon
-  - Spike
-  - BoxBody
-  - BoxHead
+  - Player
+  - ChangeScene
+  - 
   - Key
-  - ElevatorFloor
+  - Elevator
   - Stone
-  - 
-  - 
+  - ElevatorFloor
+  - KeySensor
   - 
   - 
   - 
@@ -55,30 +56,33 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Default
-    uniqueID: 0
+  - name: TransParent
+    uniqueID: 1160230747
     locked: 0
-  - name: Platform
-    uniqueID: 2670144953
+  - name: Background
+    uniqueID: 2873726937
     locked: 0
   - name: Rope
     uniqueID: 1476648101
     locked: 0
-  - name: Enemy
-    uniqueID: 410894975
+  - name: ElevatorWall
+    uniqueID: 784456033
+    locked: 0
+  - name: KeyBox
+    uniqueID: 256397483
     locked: 0
   - name: Player
     uniqueID: 3318942427
     locked: 0
-  - name: Lever
-    uniqueID: 1097649741
-    locked: 0
   - name: Key
-    uniqueID: 256397483
+    uniqueID: 951519381
     locked: 0
-  - name: BoxHead
-    uniqueID: 354058783
+  - name: Elevator
+    uniqueID: 1886223963
     locked: 0
-  - name: BoxBody
-    uniqueID: 1395944127
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Outline
+    uniqueID: 3635509129
     locked: 0

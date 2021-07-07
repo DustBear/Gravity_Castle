@@ -4,21 +4,54 @@ using UnityEngine;
 
 public class Elevator : MonoBehaviour
 {
-    public bool isStart;
+    public Vector2 startingPos;
+    public Vector2 finishingPos;
+    public float speed;
+    public float waitingTime;
+    
+    Player player;
+    bool isAllow1; // allow to go to the finishingPos
+    bool isAllow2; // allow to go to the startingPos
+
+    void Awake() {
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+    }
 
     void Update()
     {
-        if (isStart) {
-            Vector2 targetPos = new Vector2(-80.4f, 8.06f);
-            transform.position = Vector2.MoveTowards(transform.position, targetPos, 10.0f * Time.deltaTime);
+        if (player.inElevator) {
+            // wait before going to the finishingPos
+            if (!isAllow1) {
+                StartCoroutine("Wait1");
+            }
+            // go to the finishingPos
+            else {
+                transform.position = Vector2.Lerp(transform.position, finishingPos, speed * Time.deltaTime);
+            }
+        }
+        else {
+            // wait before going to the startingPos
+            if (!isAllow2) {
+                StartCoroutine("Wait2");
+            }
+            // go to the startingPos
+            else {
+                transform.position = Vector2.Lerp(transform.position, startingPos, speed * Time.deltaTime);
+            }
         }
     }
 
-    void OnCollisionEnter2D(Collision2D other) {
-        isStart = true;
+    // after waiting, allow to go to the finishingPos
+    IEnumerator Wait1() {
+        yield return new WaitForSeconds(waitingTime);
+        isAllow1 = true;
+        isAllow2 = false;
     }
-    
-    void OnCollisionExit2D(Collision2D other) {
-        isStart = false;
+
+    // after waiting, allow to go to the startingPos
+    IEnumerator Wait2() {
+        yield return new WaitForSeconds(waitingTime);
+        isAllow1 = false;
+        isAllow2 = true;
     }
 }
