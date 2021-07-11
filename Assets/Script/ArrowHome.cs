@@ -7,6 +7,7 @@ public class ArrowHome : MonoBehaviour
     public Arrow prefab;
     public float timeInterval;
     public float nextTime;
+    float startTime;
     
     public float firePower;
     public enum FireDirection {up, upright, right, downright, down, downleft, left, upleft};
@@ -14,6 +15,7 @@ public class ArrowHome : MonoBehaviour
     Vector2 fireDir;
 
     void Start() {
+        startTime = Time.time;
         switch (fireDirection) {
             case FireDirection.up:
                 fireDir = Vector2.up;
@@ -43,11 +45,12 @@ public class ArrowHome : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if (Time.time > nextTime) {
+        float curTime = Time.time - startTime;
+        if (curTime > nextTime) {
             Arrow arrow = Instantiate(prefab, transform.position, Quaternion.identity);
             arrow.firePower = firePower;
             arrow.fireDir = fireDir;
-            nextTime = Time.time + timeInterval;
+            nextTime = curTime + timeInterval;
         }
     }
 }

@@ -7,6 +7,7 @@ public class CannonHome : MonoBehaviour
     public Cannon prefab;
     public float timeInterval;
     public float nextTime;
+    float startTime;
     
     public float firePower;
     public enum FireDirection {up, upright, right, downright, down, downleft, left, upleft};
@@ -15,6 +16,7 @@ public class CannonHome : MonoBehaviour
     Quaternion fireRot;
 
     void Start() {
+        startTime = Time.time;
         switch (fireDirection) {
             case FireDirection.up:
                 fireDir = Vector2.up;
@@ -52,12 +54,13 @@ public class CannonHome : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if (Time.time > nextTime) {
+        float curTime = Time.time - startTime;
+        if (curTime > nextTime) {
             Cannon cannon = Instantiate(prefab, transform.position, Quaternion.identity);
             cannon.firePower = firePower;
             cannon.fireDir = fireDir;
             cannon.fireRot = fireRot;
-            nextTime = Time.time + timeInterval;
+            nextTime = curTime + timeInterval;
         }
     }
 }

@@ -19,9 +19,13 @@ TagManager:
   - Door1
   - Door2
   - Canvas
-  - FinishLine
   - KeyBox1
   - KeyBox2
+  - Platform
+  - UpWind
+  - DownWind
+  - RightWind
+  - LeftWind
   layers:
   - Default
   - TransparentFX
@@ -35,7 +39,7 @@ TagManager:
   - Cannon
   - Player
   - ChangeScene
-  - 
+  - WindHome
   - Key
   - Elevator
   - Stone

@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     // Store informations
     public bool isDie;
     public int curStage; // First stage is 0
-    public int curState; // 0 ~ 4
+    public int curState; // 0: no key, no door  1: key1  2: door1  3: key2   4: door2
     public bool isOpenKeyBox1;
     public bool isOpenKeyBox2;
     public bool isGetKey1;
@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
     public Vector2 nextGravity;
     public bool nextAfterRotating;
     public GravityDirection nextGravityDir;
+    public float nextGravityScale;
+    public bool nextIsJumping;
+    public bool nextIsRoping;
+    public bool nextIsCollideRope;
 
     // If die
     public int[,] respawnScene;
@@ -38,21 +42,30 @@ public class GameManager : MonoBehaviour
         nextRot = Quaternion.Euler(0, 0, 0);
         nextGravity = new Vector2(0, -9.8f);
         nextGravityDir = GravityDirection.down;
+        nextGravityScale = 2;
 
         // Die
-        respawnScene = new int[2, 5]
-        {{1, 1, 1, 2, 3}, {3, 3, 3, 3, 3}};
-        respawnPos = new Vector2[2, 5]
-        {{new Vector2(-161.5f, -7), new Vector2(-82, -2), new Vector2(-157.5f, 2), new Vector2(-196, 2), new Vector2(-110.5f, -11)}
-        , {new Vector2(-110.6f, -11), new Vector2(-110.6f, -11), new Vector2(-110.6f, -11), new Vector2(-110.6f, -11), new Vector2(-110.6f, -11)}};
-        respawnRot = new Quaternion[2, 5]
+        respawnScene = new int[3, 5]
+        {{1, 1, 1, 2, 1}, {3, 4, 3, 3, 3}, {4, 4, 4, 4, 4}};
+        
+        respawnPos = new Vector2[3, 5]
+        {{new Vector2(-161.5f, -7), new Vector2(-82, -2), new Vector2(-157.5f, 2), new Vector2(-196, 2), new Vector2(-157, 12)}
+        , {new Vector2(-108.5f, 1), new Vector2(-110.6f, -11), new Vector2(-20.53f, -12.1f), new Vector2(-127.3f, 1.9f), new Vector2(-125.7f, -3.2f)}
+        , {new Vector2(-162, -6), new Vector2(-162, -6), new Vector2(-162, -6), new Vector2(-162, -6), new Vector2(-162, -6)}};
+        
+        respawnRot = new Quaternion[3, 5]
         {{Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, -90), Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0)}
+        , {Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0)}
         , {Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0)}};
-        respawnGravity = new Vector2[2, 5]
+        
+        respawnGravity = new Vector2[3, 5]
         {{new Vector2(0, -9.8f), new Vector2(-9.8f, 0), new Vector2(0, -9.8f), new Vector2(0, -9.8f), new Vector2(0, -9.8f)}
+        , {new Vector2(0, -9.8f), new Vector2(0, -9.8f), new Vector2(0, -9.8f), new Vector2(0, -9.8f), new Vector2(0, -9.8f)}
         , {new Vector2(0, -9.8f), new Vector2(0, -9.8f), new Vector2(0, -9.8f), new Vector2(0, -9.8f), new Vector2(0, -9.8f)}};
-        respawnGravityDir = new GravityDirection[2, 5]
+        
+        respawnGravityDir = new GravityDirection[3, 5]
         {{GravityDirection.down, GravityDirection.left, GravityDirection.down, GravityDirection.down, GravityDirection.down}
+        , {GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down}
         , {GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down}};
     }
 }

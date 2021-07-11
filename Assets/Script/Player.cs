@@ -7,8 +7,6 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     Rigidbody2D rigid;
-    float collidX;
-    float collidY;
     GameObject leftArrow;
     GameObject rightArrow;
     GameObject fadeIn;
@@ -20,17 +18,19 @@ public class Player : MonoBehaviour
     float inputVertical;
     bool inputJump;
     // Collision
-    bool isCollideRope;
+    public bool isCollideRope;
     bool isCollideLever;
+    bool isHorizontalWind;
+    bool isVerticalWind;
     // Walk
     public float walkSpeed;
     // Jump
     public float jumpPower;
     float jumpTimer;
-    bool isJumping;
+    public bool isJumping;
     // Rope
     Rope rope;
-    bool isRoping;
+    public bool isRoping;
     public float ropeSpeed;
     // Gravity
     public GameManager.GravityDirection gravityDirection;
@@ -63,6 +63,10 @@ public class Player : MonoBehaviour
             Physics2D.gravity = gameManager.nextGravity;
             gravityDirection = gameManager.nextGravityDir;
             afterRotating = gameManager.nextAfterRotating;
+            rigid.gravityScale = gameManager.nextGravityScale;
+            isJumping = gameManager.nextIsJumping;
+            isRoping = gameManager.nextIsRoping;
+            isCollideRope = gameManager.nextIsCollideRope;
         }
         // Respawn after Dying
         else {
@@ -87,7 +91,9 @@ public class Player : MonoBehaviour
 
         if (!gameManager.isDie) {
             if (!isSelectingGravity && rotateDirection == 0 && !afterRotating) {
-                Walk();
+                if ((!isHorizontalWind || Physics2D.gravity.x != 0) && (!isVerticalWind || Physics2D.gravity.y != 0)) {
+                    Walk();
+                }
                 Jump();
                 Rope();
             }
@@ -110,6 +116,29 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Lever")) {
             isCollideLever = true;
         }
+        if (other.CompareTag("RightWind") || other.CompareTag("LeftWind")) {
+            isHorizontalWind = true;
+        }
+        if (other.CompareTag("UpWind") || other.CompareTag("DownWind")) {
+            isVerticalWind = true;
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D other) {
+        if (!isRoping) {
+            if (other.CompareTag("UpWind")) {
+                rigid.AddForce(Vector2.up * 50.0f, ForceMode2D.Force);
+            }
+            else if (other.CompareTag("DownWind")) {
+                rigid.AddForce(Vector2.down * 50.0f, ForceMode2D.Force);
+            }
+            else if (other.CompareTag("RightWind")) {
+                rigid.AddForce(Vector2.right * 50.0f, ForceMode2D.Force);
+            }
+            else if (other.CompareTag("LeftWind")) {
+                rigid.AddForce(Vector2.left * 50.0f, ForceMode2D.Force);
+            }
+        }
     }
 
     void OnTriggerExit2D(Collider2D other) {
@@ -119,11 +148,17 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Lever")) {
             isCollideLever = false;
         }
+        if (other.CompareTag("RightWind") || other.CompareTag("LeftWind")) {
+            isHorizontalWind = false;
+        }
+        if (other.CompareTag("UpWind") || other.CompareTag("DownWind")) {
+            isVerticalWind = false;
+        }
     }
 
     void UsingLever() {
         // Decide wheter to use the lever
-        if (rotateDirection == 0 && isCollideLever && !isJumping && !afterRotating) {
+        if (rotateDirection == 0 && isCollideLever && !isJumping && !isRoping && !afterRotating) {
             if (inputVertical == 1) {
                 if (!isUsingVertical) {
                     isSelectingGravity = !isSelectingGravity;
@@ -233,7 +268,7 @@ public class Player : MonoBehaviour
 
     void Walk() {
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-        locVel.x  = inputHorizontal * walkSpeed;
+        locVel.x = inputHorizontal * walkSpeed;
         rigid.velocity = transform.TransformDirection(locVel);
     }
 
@@ -270,63 +305,65 @@ public class Player : MonoBehaviour
         else {
             // Moving on the rope
             if (isCollideRope && !isJumping) {
-                switch (gravityDirection) {
-                    case GameManager.GravityDirection.left:
-                        if (rope.isVertical) {
-                            rigid.velocity = new Vector2(0, -inputHorizontal * ropeSpeed);
-                        }
-                        else {
-                            // End of the rope -> Stop moving
-                            if (transform.position.x >= rope.transform.position.x && inputVertical >= 0) {
-                                rigid.velocity = Vector2.zero;
+                if (rope != null) {
+                    switch (gravityDirection) {
+                        case GameManager.GravityDirection.left:
+                            if (rope.isVertical) {
+                                rigid.velocity = new Vector2(0, -inputHorizontal * ropeSpeed);
                             }
                             else {
-                                rigid.velocity = new Vector2(inputVertical * ropeSpeed, 0);
+                                // End of the rope -> Stop moving
+                                if (transform.position.x >= rope.transform.position.x && inputVertical >= 0) {
+                                    rigid.velocity = Vector2.zero;
+                                }
+                                else {
+                                    rigid.velocity = new Vector2(inputVertical * ropeSpeed, 0);
+                                }
                             }
-                        }
-                        break;
-                    case GameManager.GravityDirection.right:
-                        if (rope.isVertical) {
-                            rigid.velocity = new Vector2(0, inputHorizontal * ropeSpeed);
-                        }
-                        else {
-                            // End of the rope -> Stop moving
-                            if (transform.position.x <= rope.endPos && inputVertical >= 0) {
-                                rigid.velocity = Vector2.zero;
-                            }
-                            else {
-                                rigid.velocity = new Vector2(-inputVertical * ropeSpeed, 0);
-                            }
-                        }
-                        break;
-                    case GameManager.GravityDirection.up:
-                        if (rope.isVertical) {
-                            // End of the rope -> Stop moving
-                            if (transform.position.y <= rope.endPos && inputVertical >= 0) {
-                                rigid.velocity = Vector2.zero;
+                            break;
+                        case GameManager.GravityDirection.right:
+                            if (rope.isVertical) {
+                                rigid.velocity = new Vector2(0, inputHorizontal * ropeSpeed);
                             }
                             else {
-                                rigid.velocity = new Vector2(0, -inputVertical * ropeSpeed);
+                                // End of the rope -> Stop moving
+                                if (transform.position.x <= rope.endPos && inputVertical >= 0) {
+                                    rigid.velocity = Vector2.zero;
+                                }
+                                else {
+                                    rigid.velocity = new Vector2(-inputVertical * ropeSpeed, 0);
+                                }
                             }
-                        }
-                        else {
-                            rigid.velocity = new Vector2(-inputHorizontal * ropeSpeed, 0);
-                        }
-                        break;
-                    case GameManager.GravityDirection.down:
-                        if (rope.isVertical) {
-                            // End of the rope -> Stop moving
-                            if (transform.position.y >= rope.transform.position.y && inputVertical >= 0) {
-                                rigid.velocity = Vector2.zero;
+                            break;
+                        case GameManager.GravityDirection.up:
+                            if (rope.isVertical) {
+                                // End of the rope -> Stop moving
+                                if (transform.position.y <= rope.endPos && inputVertical >= 0) {
+                                    rigid.velocity = Vector2.zero;
+                                }
+                                else {
+                                    rigid.velocity = new Vector2(0, -inputVertical * ropeSpeed);
+                                }
                             }
                             else {
-                                rigid.velocity = new Vector2(0, inputVertical * ropeSpeed);
+                                rigid.velocity = new Vector2(-inputHorizontal * ropeSpeed, 0);
                             }
-                        }
-                        else {
-                            rigid.velocity = new Vector2(inputHorizontal * ropeSpeed, 0);
-                        }
-                        break;
+                            break;
+                        case GameManager.GravityDirection.down:
+                            if (rope.isVertical) {
+                                // End of the rope -> Stop moving
+                                if (transform.position.y >= rope.transform.position.y && inputVertical >= 0) {
+                                    rigid.velocity = Vector2.zero;
+                                }
+                                else {
+                                    rigid.velocity = new Vector2(0, inputVertical * ropeSpeed);
+                                }
+                            }
+                            else {
+                                rigid.velocity = new Vector2(inputHorizontal * ropeSpeed, 0);
+                            }
+                            break;
+                    }
                 }
             }
             // Finish hanging on the rope
@@ -338,18 +375,40 @@ public class Player : MonoBehaviour
     }
 /*
     void OnDrawGizmos() {
-        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 3 | 1 << 6 | 1 << 8 | 1 << 15 | 1 << 16 | 1 << 17);
-        Gizmos.DrawRay(transform.position, -transform.up * rayHit.distance);
-        Gizmos.DrawWireCube(transform.position - transform.up * rayHit.distance, new Vector2(0.9f, 0.1f));
+        RaycastHit2D rayHit;
+        if (Physics2D.gravity.x == 0) {
+            rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15 | 1 << 16 | 1 << 17);
+            Gizmos.DrawRay(transform.position, -transform.up * rayHit.distance);
+            Gizmos.DrawWireCube(transform.position - transform.up * rayHit.distance, new Vector2(0.9f, 0.1f));
+        }
+        else {
+            rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.1f, 0.9f), 0, -transform.up, 0.8f, 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15 | 1 << 16 | 1 << 17);
+            Gizmos.DrawRay(transform.position, -transform.up * rayHit.distance);
+            Gizmos.DrawWireCube(transform.position - transform.up * rayHit.distance, new Vector2(0.1f, 0.9f));
+        }
+        
     }
 */
     bool IsGrounded() {
         // Jump
-        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f
-        , 1 << 3 | 1 << 6 | 1 << 8 | 1 << 15 | 1 << 16); // Platform, ArrowHome, CannonHome, Stone, ElevatorFloor
-        
+        RaycastHit2D rayHit;
+        if (Physics2D.gravity.x == 0) {
+            rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f
+            , 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15 | 1 << 16); // Platform, ArrowHome, CannonHome, WindHome, Stone, ElevatorFloor
+        }
+        else {
+            rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.1f, 0.9f), 0, -transform.up, 0.8f
+            , 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15 | 1 << 16);
+        }
+
         // Elevator
-        RaycastHit2D rayHitElevator = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 16);
+        RaycastHit2D rayHitElevator;
+        if (Physics2D.gravity.x == 0) {
+            rayHitElevator = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 16);
+        }
+        else {
+            rayHitElevator = Physics2D.BoxCast(transform.position, new Vector2(0.1f, 0.9f), 0, -transform.up, 0.8f, 1 << 16);
+        }
         if (rayHitElevator.collider != null) {
             transform.parent = rayHitElevator.collider.transform;
             inElevator = true;
@@ -360,7 +419,13 @@ public class Player : MonoBehaviour
         }
         
         // KeyBox
-        RaycastHit2D rayHitKeyBox = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 17);
+        RaycastHit2D rayHitKeyBox;
+        if (Physics2D.gravity.x == 0) {
+            rayHitKeyBox = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 17);
+        }
+        else {
+            rayHitKeyBox = Physics2D.BoxCast(transform.position, new Vector2(0.1f, 0.9f), 0, -transform.up, 0.8f, 1 << 17);
+        }
         if (rayHitKeyBox.collider != null) {
             Transform keyBox = rayHitKeyBox.collider.transform.parent;
             if (keyBox.childCount == 5) {
