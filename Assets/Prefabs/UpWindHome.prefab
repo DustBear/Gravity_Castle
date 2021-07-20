@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 4126499885421435556}
   - component: {fileID: 4126499885421435555}
   m_Layer: 12
-  m_Name: WindHome (24)
+  m_Name: UpWindHome
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -159,7 +159,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4126499885421435553}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: -19.1, y: 14.8, z: 1185.066}
+  m_LocalPosition: {x: -19.1, y: 14.8, z: 0}
   m_LocalScale: {x: 5.0330215, y: 0.9475, z: 1}
   m_Children:
   - {fileID: 4126499883878565551}
@@ -277,4 +277,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startTime: 0
-  timeInterval: 0
+  activeTime: 0
+  inActiveTime: 0

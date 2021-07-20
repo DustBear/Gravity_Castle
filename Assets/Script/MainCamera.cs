@@ -6,8 +6,8 @@ public class MainCamera : MonoBehaviour
 {
     Player player;
     Camera cam;
-    public float resolutionX;
-    public float resolutionY;
+    float resolutionX = 1920.0f;
+    float resolutionY = 1080.0f;
     float angle; // angle with resolutionX and resolutionY
     float diagonal; // diagonal length
     // map coordinates

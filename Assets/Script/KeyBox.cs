@@ -30,6 +30,13 @@ public class KeyBox : MonoBehaviour
         else if (keyBoxNum == 1 && gameManager.isOpenKeyBox1 || keyBoxNum == 2 && gameManager.isOpenKeyBox2) {
             boxBodyAnimator.SetBool("allowKey", true);
             boxHeadAnimator.SetBool("allowKey", true);
+            StartCoroutine("Wait");
         }
+    }
+
+    IEnumerator Wait() {
+        yield return new WaitForSeconds(0.9f);
+        // activate key
+        transform.GetChild(2).gameObject.SetActive(true);
     }
 }

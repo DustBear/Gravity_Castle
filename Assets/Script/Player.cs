@@ -106,6 +106,18 @@ public class Player : MonoBehaviour
             gameManager.isDie = true;
             fadeOut.SetActive(true);
         }
+        else if (other.gameObject.CompareTag("Key1") && other.gameObject.GetComponent<Key>().isAllowKey) {
+            gameManager.isGetKey1 = true;
+            gameManager.curState = 1;
+            Physics2D.IgnoreLayerCollision(10, 13, true); // player and key
+            Destroy(other.gameObject);
+        }
+        else if (other.gameObject.CompareTag("Key2") && other.gameObject.GetComponent<Key>().isAllowKey) {
+            gameManager.isGetKey2 = true;
+            gameManager.curState = 3;
+            Physics2D.IgnoreLayerCollision(10, 13, true); // player and key
+            Destroy(other.gameObject);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other) {
@@ -187,7 +199,7 @@ public class Player : MonoBehaviour
             switch (gravityDirection) {
                 case GameManager.GravityDirection.left:
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection - 90), Time.deltaTime * 5.0f);
-                    if (startingPos.x - transform.position.x > 0.28f) {
+                    if (startingPos.x - transform.position.x > 0.21f) {
                         rigid.gravityScale = 0;
                     }
                     if (transform.rotation == Quaternion.Euler(0, 0, 90 * rotateDirection - 90)) {
@@ -205,7 +217,7 @@ public class Player : MonoBehaviour
                     break;
                 case GameManager.GravityDirection.right:
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection + 90), Time.deltaTime * 5.0f);
-                    if (transform.position.x - startingPos.x > 0.28f) {
+                    if (transform.position.x - startingPos.x > 0.21f) {
                         rigid.gravityScale = 0;
                     }
                     if (transform.rotation == Quaternion.Euler(0, 0, 90 * rotateDirection + 90)) {
@@ -223,7 +235,7 @@ public class Player : MonoBehaviour
                     break;
                 case GameManager.GravityDirection.up:
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, -90 * rotateDirection), Time.deltaTime * 5.0f);
-                    if (transform.position.y - startingPos.y > 0.28f) {
+                    if (transform.position.y - startingPos.y > 0.21f) {
                         rigid.gravityScale = 0;
                     }
                     if (transform.rotation == Quaternion.Euler(0, 0, -90 * rotateDirection)) {
@@ -241,7 +253,7 @@ public class Player : MonoBehaviour
                     break;
                 default:
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection), Time.deltaTime * 5.0f);
-                    if (startingPos.y - transform.position.y > 0.28f) {
+                    if (startingPos.y - transform.position.y > 0.21f) {
                         rigid.gravityScale = 0;
                     }
                     if (transform.rotation == Quaternion.Euler(0, 0, 90 * rotateDirection)) {
@@ -428,15 +440,13 @@ public class Player : MonoBehaviour
         }
         if (rayHitKeyBox.collider != null) {
             Transform keyBox = rayHitKeyBox.collider.transform.parent;
-            if (keyBox.childCount == 5) {
+            if (keyBox.childCount == 4) {
                 if (keyBox.GetChild(2).CompareTag("Key1")) {
                     gameManager.isOpenKeyBox1 = true;
                 }
                 else if (keyBox.GetChild(2).CompareTag("Key2")) {
                     gameManager.isOpenKeyBox2 = true;
                 }
-                // activate key
-                keyBox.GetChild(2).gameObject.SetActive(true);
             }
         }
         

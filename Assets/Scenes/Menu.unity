@@ -152,17 +152,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0ab97c1508bbdd46a2037002214aaba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPos: {x: 0, y: 0}
-  nextRot: {x: 0, y: 0, z: 0, w: 0}
-  nextGravity: {x: 0, y: 0}
-  nextAfterRotating: 0
-  nextGravityDir: 0
+  isDie: 0
+  curStage: 0
+  curState: 0
   isOpenKeyBox1: 0
   isOpenKeyBox2: 0
   isGetKey1: 0
   isGetKey2: 0
   isOpenDoor1: 0
   isOpenDoor2: 0
+  nextPos: {x: 0, y: 0}
+  nextRot: {x: 0, y: 0, z: 0, w: 0}
+  nextGravity: {x: 0, y: 0}
+  nextAfterRotating: 0
+  nextGravityDir: 0
+  nextGravityScale: 0
+  nextIsJumping: 0
+  nextIsRoping: 0
+  nextIsCollideRope: 0
 --- !u!4 &316650662
 Transform:
   m_ObjectHideFlags: 0

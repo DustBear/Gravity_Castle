@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f39296799c2c9f84b8ed2b585cc0ff67
+guid: eaa12757f3ca3ee41a9d903c5b097a09
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -11,6 +11,9 @@ TextureImporter:
   - first:
       213: 441430408249952992
     second: outline2_2
+  - first:
+      213: 7697665336335814904
+    second: outline2_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -117,7 +120,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 872
+        width: 880
         height: 400
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -136,9 +139,9 @@ TextureImporter:
       name: outline2_1
       rect:
         serializedVersion: 2
-        x: 872
+        x: 880
         y: 0
-        width: 552
+        width: 624
         height: 400
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -157,9 +160,9 @@ TextureImporter:
       name: outline2_2
       rect:
         serializedVersion: 2
-        x: 1424
+        x: 1504
         y: 0
-        width: 1152
+        width: 1088
         height: 400
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -170,6 +173,27 @@ TextureImporter:
       bones: []
       spriteID: 0ea4bc41e96402600800000000000000
       internalID: 441430408249952992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: outline2_3
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 384
+        width: 624
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f05224e6d993da60800000000000000
+      internalID: 7697665336335814904
       vertices: []
       indices: 
       edges: []

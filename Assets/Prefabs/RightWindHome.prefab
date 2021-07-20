@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 8408504208270270952}
   - component: {fileID: 8408504208270270953}
   m_Layer: 12
-  m_Name: WindHome (22)
+  m_Name: RightWindHome
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -159,7 +159,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8408504208270270951}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -15.3, y: 11.7, z: 1185.066}
+  m_LocalPosition: {x: -15.3, y: 11.7, z: 0}
   m_LocalScale: {x: 5.0330215, y: 0.9475, z: 1}
   m_Children:
   - {fileID: 8408504207404933391}
@@ -277,4 +277,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startTime: 0
-  timeInterval: 0
+  activeTime: 0
+  inActiveTime: 0

@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
 
         // Die
         respawnScene = new int[3, 5]
-        {{1, 1, 1, 2, 1}, {3, 4, 3, 3, 3}, {4, 4, 4, 4, 4}};
+        {{1, 2, 1, 3, 1}, {4, 5, 4, 4, 4}, {5, 5, 5, 5, 5}};
         
         respawnPos = new Vector2[3, 5]
         {{new Vector2(-161.5f, -7), new Vector2(-82, -2), new Vector2(-157.5f, 2), new Vector2(-196, 2), new Vector2(-157, 12)}
