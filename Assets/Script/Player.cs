@@ -13,8 +13,12 @@ public class Player : MonoBehaviour
     GameObject fadeOut;
     bool isFadingOut;
     GameManager gameManager;
+    Animator animator;
+    SpriteRenderer sprite;
     // Input
     float inputHorizontal;
+    bool isHorizontalUse;
+    bool inputHorizontalDown;
     float inputVertical;
     bool inputJump;
     // Collision
@@ -29,18 +33,20 @@ public class Player : MonoBehaviour
     float jumpTimer;
     public bool isJumping;
     // Rope
-    Rope rope;
+    GameObject rope;
     public bool isRoping;
     public float ropeSpeed;
     // Gravity
     public GameManager.GravityDirection gravityDirection;
     bool isSelectingGravity;
     bool isUsingVertical;
-    Vector2 startingPos;
+    public Vector2 startingPos;
     public float rotateDirection;
     public bool afterRotating;
     // Elevator
     public bool inElevator;
+    // Ghost
+    public bool isGhostRotating;
 
     void Awake() {
         gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
@@ -50,6 +56,8 @@ public class Player : MonoBehaviour
         fadeOut = canvas.transform.GetChild(1).gameObject;
         leftArrow = transform.GetChild(0).gameObject;
         rightArrow = transform.GetChild(1).gameObject;
+        animator = GetComponent<Animator>();
+        sprite = GetComponent<SpriteRenderer>();
     }
 
     void Start() {
@@ -59,9 +67,25 @@ public class Player : MonoBehaviour
         // Just Next Scene
         if (!gameManager.isDie) {
             transform.position = gameManager.nextPos;
-            transform.rotation = gameManager.nextRot;
-            Physics2D.gravity = gameManager.nextGravity;
             gravityDirection = gameManager.nextGravityDir;
+            switch (gravityDirection) {
+                case GameManager.GravityDirection.left:
+                    transform.rotation = Quaternion.Euler(0, 0, -90);
+                    Physics2D.gravity = new Vector2(-9.8f, 0);
+                    break;
+                case GameManager.GravityDirection.up:
+                    transform.rotation = Quaternion.Euler(0, 0, 180);
+                    Physics2D.gravity = new Vector2(0, 9.8f);
+                    break;
+                case GameManager.GravityDirection.right:
+                    transform.rotation = Quaternion.Euler(0, 0, 90);
+                    Physics2D.gravity = new Vector2(9.8f, 0);
+                    break;
+                default:
+                    transform.rotation = Quaternion.Euler(0, 0, 0);
+                    Physics2D.gravity = new Vector2(0, -9.8f);
+                    break;
+            }
             afterRotating = gameManager.nextAfterRotating;
             rigid.gravityScale = gameManager.nextGravityScale;
             isJumping = gameManager.nextIsJumping;
@@ -73,9 +97,25 @@ public class Player : MonoBehaviour
             int curStage = gameManager.curStage;
             int curState = gameManager.curState;
             transform.position = gameManager.respawnPos[curStage, curState];
-            transform.rotation = gameManager.respawnRot[curStage, curState];
-            Physics2D.gravity = gameManager.respawnGravity[curStage, curState];
             gravityDirection = gameManager.respawnGravityDir[curStage, curState];
+            switch (gravityDirection) {
+                case GameManager.GravityDirection.left:
+                    transform.rotation = Quaternion.Euler(0, 0, -90);
+                    Physics2D.gravity = new Vector2(-9.8f, 0);
+                    break;
+                case GameManager.GravityDirection.up:
+                    transform.rotation = Quaternion.Euler(0, 0, 180);
+                    Physics2D.gravity = new Vector2(0, 9.8f);
+                    break;
+                case GameManager.GravityDirection.right:
+                    transform.rotation = Quaternion.Euler(0, 0, 90);
+                    Physics2D.gravity = new Vector2(9.8f, 0);
+                    break;
+                default:
+                    transform.rotation = Quaternion.Euler(0, 0, 0);
+                    Physics2D.gravity = new Vector2(0, -9.8f);
+                    break;
+            }
             gameManager.isDie = false;
         }
     }
@@ -84,20 +124,38 @@ public class Player : MonoBehaviour
     {
         // Input for walking
         inputHorizontal = Input.GetAxisRaw("Horizontal");
+        if (inputHorizontal != 0) {
+            if (!isHorizontalUse) {
+                inputHorizontalDown = true;
+                isHorizontalUse = true;
+            }
+            else {
+                inputHorizontalDown = false;
+            }
+        }
+        else {
+            isHorizontalUse = false;
+            inputHorizontalDown = false;
+        }
         // Input for jumping
         inputJump = Input.GetKeyDown(KeyCode.Space);
         // Input for hanging on the rope
         inputVertical = Input.GetAxisRaw("Vertical");
 
         if (!gameManager.isDie) {
-            if (!isSelectingGravity && rotateDirection == 0 && !afterRotating) {
-                if ((!isHorizontalWind || Physics2D.gravity.x != 0) && (!isVerticalWind || Physics2D.gravity.y != 0)) {
-                    Walk();
+            if (!isGhostRotating) {
+                if (!isSelectingGravity && rotateDirection == 0 && !afterRotating) {
+                    if ((!isHorizontalWind || Physics2D.gravity.x != 0) && (!isVerticalWind || Physics2D.gravity.y != 0)) {
+                        Walk();
+                    }
+                    Jump();
+                    Rope();
                 }
-                Jump();
-                Rope();
+                UsingLever();
             }
-            UsingLever();
+            else {
+                GhostUsingLever();
+            }
         }
     }
 
@@ -121,9 +179,9 @@ public class Player : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Rope")) {
+        if (other.CompareTag("VerticalRope") || other.CompareTag("HorizontalRope")) {
             isCollideRope = true;
-            rope = other.GetComponent<Rope>();
+            rope = other.gameObject;
         }
         if (other.CompareTag("Lever")) {
             isCollideLever = true;
@@ -133,6 +191,18 @@ public class Player : MonoBehaviour
         }
         if (other.CompareTag("UpWind") || other.CompareTag("DownWind")) {
             isVerticalWind = true;
+        }
+        if (other.CompareTag("Ghost")) {
+            if (other.TryGetComponent(out GhostFading ghostfading)) {
+                if (ghostfading.state == GhostFading.State.fadeIn || ghostfading.state == GhostFading.State.keepFadeIn) {
+                    gameManager.isDie = true;
+                    fadeOut.SetActive(true);
+                }
+            }
+            else {
+                gameManager.isDie = true;
+                fadeOut.SetActive(true);
+            }
         }
     }
 
@@ -154,7 +224,7 @@ public class Player : MonoBehaviour
     }
 
     void OnTriggerExit2D(Collider2D other) {
-        if (other.CompareTag("Rope")) {
+        if (other.CompareTag("VerticalRope") || other.CompareTag("HorizontalRope")) {
             isCollideRope = false;
         }
         if (other.CompareTag("Lever")) {
@@ -168,6 +238,104 @@ public class Player : MonoBehaviour
         }
     }
 
+    void Walk() {
+        Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+        if (inputHorizontal != 0) {
+            animator.SetBool("isWalking", true);
+        }
+        else {
+            animator.SetBool("isWalking", false);
+        }
+        if (inputHorizontal == 1) {
+            sprite.flipX = false;
+        }
+        else if (inputHorizontal == -1) {
+            sprite.flipX = true;
+        }
+        locVel.x = inputHorizontal * walkSpeed;
+        rigid.velocity = transform.TransformDirection(locVel);
+    }
+
+    void Jump() {
+        // Start jumping
+        if (inputJump && !isJumping) {
+            rigid.velocity = Vector2.zero;
+            rigid.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
+            animator.SetBool("isJumping", true);
+            isJumping = true;
+        }
+        // Landing on the ground -> Finish jumping
+        Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+        if (locVel.y <= 0 && IsGrounded()) {
+            animator.SetBool("isJumping", false);
+            isJumping = false;
+        }
+    }
+
+    void Rope() {
+        // Start to hang on the rope
+        if (!isRoping) {
+            if (inputVertical != 0 && isCollideRope) {
+                rigid.gravityScale = 0;
+                Vector2 ropePos = rope.transform.position;
+                if (rope.CompareTag("VerticalRope")) {
+                    transform.position = new Vector2(ropePos.x - transform.up.x * 0.7f, transform.position.y);
+                }
+                else {
+                    transform.position = new Vector2(transform.position.x, ropePos.y - transform.up.y * 0.7f);
+                }
+                isJumping = false;
+                isRoping = true;
+            }
+        }
+        else {
+            // Moving on the rope
+            if (isCollideRope && !isJumping) {
+                if (rope != null) {
+                    switch (gravityDirection) {
+                        case GameManager.GravityDirection.left:
+                            if (rope.CompareTag("VerticalRope")) {
+                                rigid.velocity = new Vector2(0, -inputHorizontal * ropeSpeed);
+                            }
+                            else {
+                                rigid.velocity = new Vector2(inputVertical * ropeSpeed, 0);
+                            }
+                            break;
+                        case GameManager.GravityDirection.right:
+                            if (rope.CompareTag("VerticalRope")) {
+                                rigid.velocity = new Vector2(0, inputHorizontal * ropeSpeed);
+                            }
+                            else {
+                                rigid.velocity = new Vector2(-inputVertical * ropeSpeed, 0);
+                            }
+                            break;
+                        case GameManager.GravityDirection.up:
+                            if (rope.CompareTag("VerticalRope")) {
+                                rigid.velocity = new Vector2(0, -inputVertical * ropeSpeed);
+                            }
+                            else {
+                                rigid.velocity = new Vector2(-inputHorizontal * ropeSpeed, 0);
+                            }
+                            break;
+                        case GameManager.GravityDirection.down:
+                            if (rope.CompareTag("VerticalRope")) {
+                                rigid.velocity = new Vector2(0, inputVertical * ropeSpeed);
+                            }
+                            else {
+                                rigid.velocity = new Vector2(inputHorizontal * ropeSpeed, 0);
+                            }
+                            break;
+                    }
+                }
+            }
+            // Finish hanging on the rope
+            else {
+                rigid.gravityScale = 2;
+                isRoping = false;
+            }
+        }
+    }
+
     void UsingLever() {
         // Decide wheter to use the lever
         if (rotateDirection == 0 && isCollideLever && !isJumping && !isRoping && !afterRotating) {
@@ -177,6 +345,8 @@ public class Player : MonoBehaviour
                     leftArrow.SetActive(isSelectingGravity);
                     rightArrow.SetActive(isSelectingGravity);
                     isUsingVertical = true;
+                    animator.SetBool("isWalking", false);
+                    rigid.velocity = Vector2.zero;
                 }
             }
             else {
@@ -185,7 +355,7 @@ public class Player : MonoBehaviour
         }
 
         // Select gravity direction
-        if (isSelectingGravity && inputHorizontal != 0) {
+        if (isSelectingGravity && inputHorizontalDown) {
             leftArrow.SetActive(false);
             rightArrow.SetActive(false);
             rotateDirection = inputHorizontal;
@@ -198,7 +368,7 @@ public class Player : MonoBehaviour
         if (rotateDirection != 0) {
             switch (gravityDirection) {
                 case GameManager.GravityDirection.left:
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection - 90), Time.deltaTime * 5.0f);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection - 90), Time.deltaTime * 8.0f);
                     if (startingPos.x - transform.position.x > 0.21f) {
                         rigid.gravityScale = 0;
                     }
@@ -216,7 +386,7 @@ public class Player : MonoBehaviour
                     }
                     break;
                 case GameManager.GravityDirection.right:
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection + 90), Time.deltaTime * 5.0f);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection + 90), Time.deltaTime * 8.0f);
                     if (transform.position.x - startingPos.x > 0.21f) {
                         rigid.gravityScale = 0;
                     }
@@ -234,7 +404,7 @@ public class Player : MonoBehaviour
                     }
                     break;
                 case GameManager.GravityDirection.up:
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, -90 * rotateDirection), Time.deltaTime * 5.0f);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, -90 * rotateDirection), Time.deltaTime * 8.0f);
                     if (transform.position.y - startingPos.y > 0.21f) {
                         rigid.gravityScale = 0;
                     }
@@ -252,7 +422,7 @@ public class Player : MonoBehaviour
                     }
                     break;
                 default:
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection), Time.deltaTime * 5.0f);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 90 * rotateDirection), Time.deltaTime * 8.0f);
                     if (startingPos.y - transform.position.y > 0.21f) {
                         rigid.gravityScale = 0;
                     }
@@ -273,117 +443,25 @@ public class Player : MonoBehaviour
         }
 
         // Finish applying the changed gravity direction
-        if (afterRotating && IsGrounded()) {
+        else if (afterRotating && IsGrounded()) {
             afterRotating = false;
         }
     }
 
-    void Walk() {
-        Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-        locVel.x = inputHorizontal * walkSpeed;
-        rigid.velocity = transform.TransformDirection(locVel);
-    }
-
-    void Jump() {
-        // Start jumping
-        if (inputJump && !isJumping) {
-            rigid.velocity = Vector2.zero;
-            rigid.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
-            isJumping = true;
-        }
-        // Landing on the ground -> Finish jumping
-        Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-        if (locVel.y <= 0 && IsGrounded()) {
-            isJumping = false;
-        }
-    }
-
-    void Rope() {
-        // Start to hang on the rope
-        if (!isRoping) {
-            if (inputVertical != 0 && isCollideRope) {
-                rigid.gravityScale = 0;
-                Vector2 ropePos = rope.transform.position;
-                if (rope.isVertical) {
-                    transform.position = new Vector2(ropePos.x - transform.up.x * 0.7f, transform.position.y);
-                }
-                else {
-                    transform.position = new Vector2(transform.position.x, ropePos.y - transform.up.y * 0.7f);
-                }
-                isJumping = false;
-                isRoping = true;
+    void GhostUsingLever() {
+        if (transform.rotation == Quaternion.Euler(0, 0, 0)) {
+            Physics2D.gravity = new Vector2(0, -9.8f);
+            rigid.gravityScale = 2;
+            gravityDirection = GameManager.GravityDirection.down;
+            if (IsGrounded()) {
+                isGhostRotating = false;
             }
         }
         else {
-            // Moving on the rope
-            if (isCollideRope && !isJumping) {
-                if (rope != null) {
-                    switch (gravityDirection) {
-                        case GameManager.GravityDirection.left:
-                            if (rope.isVertical) {
-                                rigid.velocity = new Vector2(0, -inputHorizontal * ropeSpeed);
-                            }
-                            else {
-                                // End of the rope -> Stop moving
-                                if (transform.position.x >= rope.transform.position.x && inputVertical >= 0) {
-                                    rigid.velocity = Vector2.zero;
-                                }
-                                else {
-                                    rigid.velocity = new Vector2(inputVertical * ropeSpeed, 0);
-                                }
-                            }
-                            break;
-                        case GameManager.GravityDirection.right:
-                            if (rope.isVertical) {
-                                rigid.velocity = new Vector2(0, inputHorizontal * ropeSpeed);
-                            }
-                            else {
-                                // End of the rope -> Stop moving
-                                if (transform.position.x <= rope.endPos && inputVertical >= 0) {
-                                    rigid.velocity = Vector2.zero;
-                                }
-                                else {
-                                    rigid.velocity = new Vector2(-inputVertical * ropeSpeed, 0);
-                                }
-                            }
-                            break;
-                        case GameManager.GravityDirection.up:
-                            if (rope.isVertical) {
-                                // End of the rope -> Stop moving
-                                if (transform.position.y <= rope.endPos && inputVertical >= 0) {
-                                    rigid.velocity = Vector2.zero;
-                                }
-                                else {
-                                    rigid.velocity = new Vector2(0, -inputVertical * ropeSpeed);
-                                }
-                            }
-                            else {
-                                rigid.velocity = new Vector2(-inputHorizontal * ropeSpeed, 0);
-                            }
-                            break;
-                        case GameManager.GravityDirection.down:
-                            if (rope.isVertical) {
-                                // End of the rope -> Stop moving
-                                if (transform.position.y >= rope.transform.position.y && inputVertical >= 0) {
-                                    rigid.velocity = Vector2.zero;
-                                }
-                                else {
-                                    rigid.velocity = new Vector2(0, inputVertical * ropeSpeed);
-                                }
-                            }
-                            else {
-                                rigid.velocity = new Vector2(inputHorizontal * ropeSpeed, 0);
-                            }
-                            break;
-                    }
-                }
-            }
-            // Finish hanging on the rope
-            else {
-                rigid.gravityScale = 2;
-                isRoping = false;
-            }
+            rigid.gravityScale = 0;
+            rigid.velocity = Vector2.zero;
         }
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 8.0f);
     }
 /*
     void OnDrawGizmos() {

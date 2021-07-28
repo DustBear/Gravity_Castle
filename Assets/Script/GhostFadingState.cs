@@ -2,30 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GhostState : MonoBehaviour
+public class GhostFadingState : MonoBehaviour
 {
     SpriteRenderer sprite;
-    Ghost ghost;
-    Ghost.State state;
+    GhostFading ghost;
+    GhostFading.State state;
     public float maxTransparency;
-    public float keepTime;
+    public float keepFadeInTime;
+    public float keepFadeOutTime;
 
     void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
-        ghost = GetComponent<Ghost>();
+        Color color = sprite.material.color;
+        color.a = maxTransparency;
+        sprite.material.color = color;
+        ghost = GetComponent<GhostFading>();
     }
 
     void OnEnable() {
         state = ghost.state;
-        if (state == Ghost.State.fadeIn) {
+        if (state == GhostFading.State.fadeIn) {
             StartCoroutine(FadeIn());
         }
-        else if (state == Ghost.State.fadeOut) {
+        else if (state == GhostFading.State.keepFadeIn) {
+            StartCoroutine(KeepFadeIn());
+        }
+        else if (state == GhostFading.State.fadeOut) {
             StartCoroutine(FadeOut());
         }
         else {
-            StartCoroutine(Keep());
+            StartCoroutine(KeepFadeOut());
         }
     }
 
@@ -39,6 +46,11 @@ public class GhostState : MonoBehaviour
         this.enabled = false;
     }
 
+    IEnumerator KeepFadeIn() {
+        yield return new WaitForSeconds(keepFadeInTime);
+        this.enabled = false;
+    }
+
     IEnumerator FadeOut() {
         for (float f = maxTransparency; f >= 0; f -= 0.1f) {
             Color color = sprite.material.color;
@@ -49,8 +61,8 @@ public class GhostState : MonoBehaviour
         this.enabled = false;
     }
 
-    IEnumerator Keep() {
-        yield return new WaitForSeconds(keepTime);
+    IEnumerator KeepFadeOut() {
+        yield return new WaitForSeconds(keepFadeOutTime);
         this.enabled = false;
     }
 }
