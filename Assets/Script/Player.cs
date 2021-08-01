@@ -260,7 +260,12 @@ public class Player : MonoBehaviour
         // Start jumping
         if (inputJump && !isJumping) {
             rigid.velocity = Vector2.zero;
-            rigid.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
+            if (inputVertical == -1) {
+                rigid.AddForce(-transform.up * jumpPower, ForceMode2D.Impulse);
+            }
+            else {
+                rigid.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
+            }
             animator.SetBool("isJumping", true);
             isJumping = true;
         }
@@ -275,7 +280,7 @@ public class Player : MonoBehaviour
     void Rope() {
         // Start to hang on the rope
         if (!isRoping) {
-            if (inputVertical != 0 && isCollideRope) {
+            if (inputVertical == 1 && isCollideRope) {
                 rigid.gravityScale = 0;
                 Vector2 ropePos = rope.transform.position;
                 if (rope.CompareTag("VerticalRope")) {

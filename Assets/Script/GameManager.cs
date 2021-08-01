@@ -36,10 +36,8 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         
         // Next scene
-        nextPos = new Vector2(-193f, 2.1f);
-        nextGravityDir = GravityDirection.down;
-        /*nextPos = new Vector2(-162, -7);
-        nextGravityDir = GravityDirection.down;*/
+        nextPos = new Vector2(-173.5f, -14);
+        nextGravityDir = GravityDirection.right;
         nextGravityScale = 2;
 
         // Die
@@ -50,12 +48,12 @@ public class GameManager : MonoBehaviour
         {{new Vector2(-161.5f, -7), new Vector2(-82, -2), new Vector2(-157.5f, 2), new Vector2(-196, 2), new Vector2(-157, 12)}
         , {new Vector2(-108.5f, 1), new Vector2(-110.6f, -11), new Vector2(-20.53f, -12.1f), new Vector2(-127.3f, 1.9f), new Vector2(-125.7f, -3.2f)}
         , {new Vector2(-141.0f, -10.0f), new Vector2(-102.4f, -11.26f), new Vector2(-151.9f, 2.02f), new Vector2(-211.7f, 11.5f), new Vector2(-150.5f, -16.98f)}
-        , {new Vector2(-193f, 2.1f), new Vector2(-179.2f, -7.7f), new Vector2(-179.2f, -7.7f), new Vector2(-179.2f, -7.7f), new Vector2(-179.2f, -7.7f)}};
+        , {new Vector2(-173.5f, -14.0f), new Vector2(-246.6f, -3f), new Vector2(-190.1f, -4.1f), new Vector2(-166.4f, 20.2f), new Vector2(-179.2f, -7.7f)}};
 
         respawnGravityDir = new GravityDirection[4, 5]
         {{GravityDirection.down, GravityDirection.left, GravityDirection.down, GravityDirection.down, GravityDirection.down}
         , {GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down}
         , {GravityDirection.down, GravityDirection.down, GravityDirection.up, GravityDirection.left, GravityDirection.right}
-        , {GravityDirection.down, GravityDirection.right, GravityDirection.right, GravityDirection.right, GravityDirection.right}};;
+        , {GravityDirection.right, GravityDirection.down, GravityDirection.down, GravityDirection.right, GravityDirection.right}};;
     }
 }

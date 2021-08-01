@@ -14,9 +14,6 @@ public class GhostLinear : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody2D>();
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
-    }
-
-    void Start() {
         rigid.position = pos[(targetPosIdx + pos.Length - 1) % pos.Length];
         transform.rotation = player.transform.rotation;
     }

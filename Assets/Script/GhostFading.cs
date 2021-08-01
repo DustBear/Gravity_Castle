@@ -15,14 +15,13 @@ public class GhostFading : MonoBehaviour
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         ghostState = GetComponent<GhostFadingState>();
         transform.rotation = player.transform.rotation;
-        time = startTime;
     }
 
     void Update()
     {
         time += Time.deltaTime;
         // state
-        if (time >= startTime * 2 && !ghostState.isActiveAndEnabled) {
+        if (time >= startTime && !ghostState.isActiveAndEnabled) {
             if (state == State.fadeIn) {
                 state = State.keepFadeIn;
             }
