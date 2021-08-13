@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -43,10 +42,10 @@ public class Player : MonoBehaviour
     public Vector2 startingPos;
     public float rotateDirection;
     public bool afterRotating;
-    // Elevator
-    public bool inElevator;
     // Ghost
     public bool isGhostRotating;
+    // MovingFloor
+    public bool onMovingFloor;
 
     void Awake() {
         gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
@@ -87,10 +86,8 @@ public class Player : MonoBehaviour
                     break;
             }
             afterRotating = gameManager.nextAfterRotating;
-            rigid.gravityScale = gameManager.nextGravityScale;
             isJumping = gameManager.nextIsJumping;
             isRoping = gameManager.nextIsRoping;
-            isCollideRope = gameManager.nextIsCollideRope;
         }
         // Respawn after Dying
         else {
@@ -116,7 +113,16 @@ public class Player : MonoBehaviour
                     Physics2D.gravity = new Vector2(0, -9.8f);
                     break;
             }
+            isRoping = gameManager.respawnIsRoping[curStage, curState];
             gameManager.isDie = false;
+        }
+        if (isRoping) {
+            rigid.gravityScale = 0;
+            isCollideRope = true;
+        }
+        else {
+            rigid.gravityScale = 2;
+            isCollideRope = false;
         }
     }
 
@@ -160,7 +166,7 @@ public class Player : MonoBehaviour
     }
 
     void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.tag == "Spike" || other.gameObject.tag == "Arrow" || other.gameObject.tag == "Cannon") {
+        if (other.gameObject.tag == "Spike" || other.gameObject.tag == "Projectile") {
             gameManager.isDie = true;
             fadeOut.SetActive(true);
         }
@@ -271,7 +277,8 @@ public class Player : MonoBehaviour
         }
         // Landing on the ground -> Finish jumping
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-        if (locVel.y <= 0 && IsGrounded()) {
+        RaycastHit2D rayHitBounce = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 8);
+        if (rayHitBounce.collider == null && locVel.y <= 0 && IsGrounded()) {
             animator.SetBool("isJumping", false);
             isJumping = false;
         }
@@ -468,59 +475,40 @@ public class Player : MonoBehaviour
         }
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 8.0f);
     }
-/*
-    void OnDrawGizmos() {
-        RaycastHit2D rayHit;
-        if (Physics2D.gravity.x == 0) {
-            rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15 | 1 << 16 | 1 << 17);
-            Gizmos.DrawRay(transform.position, -transform.up * rayHit.distance);
-            Gizmos.DrawWireCube(transform.position - transform.up * rayHit.distance, new Vector2(0.9f, 0.1f));
-        }
-        else {
-            rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.1f, 0.9f), 0, -transform.up, 0.8f, 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15 | 1 << 16 | 1 << 17);
-            Gizmos.DrawRay(transform.position, -transform.up * rayHit.distance);
-            Gizmos.DrawWireCube(transform.position - transform.up * rayHit.distance, new Vector2(0.1f, 0.9f));
-        }
-        
-    }
-*/
-    bool IsGrounded() {
-        // Jump
-        RaycastHit2D rayHit;
-        if (Physics2D.gravity.x == 0) {
-            rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f
-            , 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15 | 1 << 16); // Platform, ArrowHome, CannonHome, WindHome, Stone, ElevatorFloor
-        }
-        else {
-            rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.1f, 0.9f), 0, -transform.up, 0.8f
-            , 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15 | 1 << 16);
-        }
 
-        // Elevator
-        RaycastHit2D rayHitElevator;
-        if (Physics2D.gravity.x == 0) {
-            rayHitElevator = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 16);
-        }
-        else {
-            rayHitElevator = Physics2D.BoxCast(transform.position, new Vector2(0.1f, 0.9f), 0, -transform.up, 0.8f, 1 << 16);
-        }
-        if (rayHitElevator.collider != null) {
-            transform.parent = rayHitElevator.collider.transform;
-            inElevator = true;
+    // void OnDrawGizmos() {
+    //     RaycastHit2D rayHit;
+    //     if (Physics2D.gravity.x == 0) {
+    //         rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 3 | 1 << 6 | 1 << 12 | 1 << 15 | 1 << 16 | 1 << 17);
+    //         Gizmos.DrawRay(transform.position, -transform.up * rayHit.distance);
+    //         Gizmos.DrawWireCube(transform.position - transform.up * rayHit.distance, new Vector2(0.9f, 0.1f));
+    //     }
+    //     else {
+    //         rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.1f, 0.9f), 0, -transform.up, 0.8f, 1 << 3 | 1 << 6 | 1 << 12 | 1 << 15 | 1 << 16 | 1 << 17);
+    //         Gizmos.DrawRay(transform.position, -transform.up * rayHit.distance);
+    //         Gizmos.DrawWireCube(transform.position - transform.up * rayHit.distance, new Vector2(0.1f, 0.9f));
+    //     }
+        
+    // }
+
+    bool IsGrounded() {
+        // Platform, Launcher, WindHome, Stone
+        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f
+        , 1 << 3 | 1 << 6 | 1 << 12 | 1 << 15);
+
+        // MovingFloor
+        RaycastHit2D rayHitMovingFloor = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 16);
+        if (rayHitMovingFloor.collider != null) {
+            transform.parent = rayHitMovingFloor.collider.transform;
+            onMovingFloor = true;
         }
         else {
             transform.parent = null;
-            inElevator = false;
+            onMovingFloor = false;
         }
-        
+
         // KeyBox
-        RaycastHit2D rayHitKeyBox;
-        if (Physics2D.gravity.x == 0) {
-            rayHitKeyBox = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), 0, -transform.up, 0.8f, 1 << 17);
-        }
-        else {
-            rayHitKeyBox = Physics2D.BoxCast(transform.position, new Vector2(0.1f, 0.9f), 0, -transform.up, 0.8f, 1 << 17);
-        }
+        RaycastHit2D rayHitKeyBox = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 17);
         if (rayHitKeyBox.collider != null) {
             Transform keyBox = rayHitKeyBox.collider.transform.parent;
             if (keyBox.childCount == 4) {
@@ -532,7 +520,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        
-        return rayHit.collider != null;
+
+        return rayHit.collider != null || rayHitMovingFloor.collider != null;
     }
 }

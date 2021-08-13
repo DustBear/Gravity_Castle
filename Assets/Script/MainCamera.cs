@@ -16,6 +16,9 @@ public class MainCamera : MonoBehaviour
     public float mapMinY;
     public float mapMaxY;
 
+    public float shakedX;
+    public float shakedY;
+
     void Awake() {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         cam = GetComponent<Camera>();
@@ -67,6 +70,6 @@ public class MainCamera : MonoBehaviour
         }
 
         // calculate result
-        transform.position = new Vector3((upLeftX + downLeftX + downRightX + upRightX) / 4 + deltaX, (upLeftY + downLeftY + downRightY + upRightY) / 4  + deltaY, -10);
+        transform.position = new Vector3((upLeftX + downLeftX + downRightX + upRightX) / 4 + deltaX - shakedX, (upLeftY + downLeftY + downRightY + upRightY) / 4  + deltaY - shakedY, -10);
     }
 }

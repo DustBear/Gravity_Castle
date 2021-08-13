@@ -152,6 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0ab97c1508bbdd46a2037002214aaba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrow: {fileID: 7424884176990279404, guid: 813ccf5744f81294885a2d550865d912, type: 3}
+  cannon: {fileID: 6815621349196668693, guid: 2129deb4bd32d0642a60040789cf5904, type: 3}
+  arrowNum: 80
+  cannonNum: 50
   isDie: 0
   curStage: 0
   curState: 0
@@ -166,10 +170,8 @@ MonoBehaviour:
   nextGravity: {x: 0, y: 0}
   nextAfterRotating: 0
   nextGravityDir: 0
-  nextGravityScale: 0
   nextIsJumping: 0
   nextIsRoping: 0
-  nextIsCollideRope: 0
 --- !u!4 &316650662
 Transform:
   m_ObjectHideFlags: 0

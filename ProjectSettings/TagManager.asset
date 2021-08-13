@@ -8,10 +8,6 @@ TagManager:
   - Lever
   - EnemyHome
   - Stone
-  - Arrow
-  - ArrowHome
-  - CannonHome
-  - Cannon
   - Spike
   - Key1
   - Key2
@@ -29,6 +25,7 @@ TagManager:
   - HorizontalRope
   - Rope
   - Ghost
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -36,17 +33,17 @@ TagManager:
   - Platform
   - Water
   - UI
-  - ArrowHome
-  - Arrow
-  - CannonHome
-  - Cannon
+  - Launcher
+  - Projectile
+  - Bounce
+  - 
   - Player
   - ChangeScene
   - WindHome
   - Key
   - Elevator
   - Stone
-  - ElevatorFloor
+  - MovingFloor
   - KeySensor
   - 
   - 

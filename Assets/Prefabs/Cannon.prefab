@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 6815621349196668689}
   - component: {fileID: 6815621349196668694}
   - component: {fileID: 6815621349196668695}
-  - component: {fileID: 6815621349196668692}
   - component: {fileID: 6002599396388284013}
-  m_Layer: 9
+  - component: {fileID: 2978245635038405523}
+  m_Layer: 7
   m_Name: Cannon
-  m_TagString: Cannon
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,21 +106,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &6815621349196668692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6815621349196668693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53e0111394eccc046802b2f8a88eda86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePower: 0
-  fireDir: {x: 0, y: 0}
-  fireRot: {x: 0, y: 0, z: 0, w: 0}
 --- !u!61 &6002599396388284013
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -138,7 +123,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 0.5}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 0.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -147,3 +132,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.5}
   m_EdgeRadius: 0
+--- !u!114 &2978245635038405523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6815621349196668693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95cd081903595af41a3cddbb79f5a395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePower: 0
+  isArrow: 0

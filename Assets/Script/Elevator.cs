@@ -19,7 +19,7 @@ public class Elevator : MonoBehaviour
 
     void Update()
     {
-        if (player.inElevator) {
+        if (player.onMovingFloor) {
             // wait before going to the finishingPos
             if (!isAllow1) {
                 StartCoroutine("Wait1");
