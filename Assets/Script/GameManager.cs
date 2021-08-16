@@ -58,8 +58,8 @@ public class GameManager : MonoBehaviour
         }
 
         // Next scene
-        //nextPos = new Vector2(-178, -13);
-        nextPos = new Vector2(-174.7f, -12.5f);
+        nextPos = new Vector2(-161.4f, -7f);
+        //nextPos = new Vector2(-174.7f, -12.5f);
         nextGravityDir = GravityDirection.down;
 
         // Die

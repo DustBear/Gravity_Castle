@@ -2,30 +2,62 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloorShaking : MonoBehaviour
+public class FloorLinearEllipseShaking : MonoBehaviour
 {
     public float shakeRange;
     public float shakeDuration;
     public float waitingTime;
     MainCamera mainCamera;
+    Player player;
     Rigidbody2D rigid;
-    Vector2 floorPos;
     float time;
     enum State {idle, waiting, shaked, falling, fading};
     State state;
     SpriteRenderer sprite;
+    
+    public float[] speed;
+    public Vector2[] pos;
+    public int targetPosIdx;
 
-    void Awake() {
+    float movingTime;
+    public float startMovingTime;
+    Vector2 centerPos;
+    Vector2 ellipsePos;
+    public float ellipseSpeed;
+    public float xRad, yRad;
+    public bool counterClockWise;
+
+    void Awake()
+    {
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<MainCamera>();
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         rigid = GetComponent<Rigidbody2D>();
-        floorPos = transform.position;
         state = State.idle;
+        transform.position = pos[(targetPosIdx + pos.Length - 1) % pos.Length];
+        movingTime = startMovingTime;
+        centerPos = pos[0];
         sprite = GetComponent<SpriteRenderer>();
     }
 
-    void Update() {
+    void Update()
+    {
         switch (state) {
             case State.idle:
+                // linear moved position
+                centerPos = Vector2.MoveTowards(centerPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
+                // add ellipse moved position
+                movingTime += Time.deltaTime;
+                if (!counterClockWise) {
+                    transform.position = centerPos + new Vector2(xRad * Mathf.Sin(movingTime * ellipseSpeed), yRad * Mathf.Cos(movingTime * ellipseSpeed));
+                }
+                else {
+                    transform.position = centerPos + new Vector2(xRad * Mathf.Sin(-movingTime * ellipseSpeed), yRad * Mathf.Cos(-movingTime * ellipseSpeed));
+                }
+                // if floor arrive target position, convert targetPosIdx to next targetPosIdx
+                if (centerPos == pos[targetPosIdx]) {
+                    targetPosIdx = (targetPosIdx + 1) % pos.Length;
+                }
+                // if player is on the floor, move state to "shaked"
                 RaycastHit2D rayHitPlayer;
                 if (Physics2D.gravity == new Vector2(-9.8f, 0f)) {
                     rayHitPlayer = Physics2D.BoxCast(new Vector2(transform.position.x + transform.localScale.x / 2f + 0.1f, transform.position.y), new Vector2(0.01f, transform.localScale.y * 0.7f), 0f, Vector2.right, 0.5f, 1 << 10);
@@ -45,6 +77,20 @@ public class FloorShaking : MonoBehaviour
                 break;
             case State.waiting:
                 time += Time.deltaTime;
+                centerPos = Vector2.MoveTowards(centerPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
+                
+                movingTime += Time.deltaTime;
+                if (!counterClockWise) {
+                    transform.position = centerPos + new Vector2(xRad * Mathf.Sin(movingTime * ellipseSpeed), yRad * Mathf.Cos(movingTime * ellipseSpeed));
+                }
+                else {
+                    transform.position = centerPos + new Vector2(xRad * Mathf.Sin(-movingTime * ellipseSpeed), yRad * Mathf.Cos(-movingTime * ellipseSpeed));
+                }
+                
+                if (centerPos == pos[targetPosIdx]) {
+                    targetPosIdx = (targetPosIdx + 1) % pos.Length;
+                }
+                
                 if (time >= waitingTime) {
                     time = 0;
                     state = State.shaked;
@@ -52,6 +98,17 @@ public class FloorShaking : MonoBehaviour
                 break;
             case State.shaked:
                 time += Time.deltaTime;
+                centerPos = Vector2.MoveTowards(centerPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
+                
+                movingTime += Time.deltaTime;
+                
+                if (!counterClockWise) {
+                    ellipsePos = centerPos + new Vector2(xRad * Mathf.Sin(movingTime * ellipseSpeed), yRad * Mathf.Cos(movingTime * ellipseSpeed));
+                }
+                else {
+                    ellipsePos = centerPos + new Vector2(xRad * Mathf.Sin(-movingTime * ellipseSpeed), yRad * Mathf.Cos(-movingTime * ellipseSpeed));
+                }
+
                 if (Physics2D.gravity.x == 0) {
                     if (mainCamera.shakedX == 0f) {
                         mainCamera.shakedX = shakeRange;
@@ -70,11 +127,16 @@ public class FloorShaking : MonoBehaviour
                         mainCamera.shakedY *= -1;
                     }
                 }
-                transform.position = new Vector2(floorPos.x + mainCamera.shakedX, floorPos.y + mainCamera.shakedY);
+                transform.position = ellipsePos + new Vector2(mainCamera.shakedX, mainCamera.shakedY);
+                
+                
+                if (centerPos == pos[targetPosIdx]) {
+                    targetPosIdx = (targetPosIdx + 1) % pos.Length;
+                }
                 if (time >= shakeDuration) {
                     mainCamera.shakedX = 0f;
                     mainCamera.shakedY = 0f;
-                    transform.position = floorPos;
+                    transform.position = ellipsePos;
                     if (Physics2D.gravity.x == 0) {
                         rigid.constraints = RigidbodyConstraints2D.FreezePositionX;
                     }
@@ -109,7 +171,6 @@ public class FloorShaking : MonoBehaviour
                 }
                 if (rayHitPlatform.collider != null) {
                     StartCoroutine(FadeOut());
-                    state = State.fading;
                 }
                 break;
             case State.fading:

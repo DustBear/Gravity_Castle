@@ -11,8 +11,9 @@ public class FloorLinearShaking : MonoBehaviour
     Player player;
     Rigidbody2D rigid;
     float time;
-    enum State {idle, waiting, shaked, falling};
+    enum State {idle, waiting, shaked, falling, fading};
     State state;
+    SpriteRenderer sprite;
     
     public float[] speed;
     public Vector2[] pos;
@@ -27,6 +28,7 @@ public class FloorLinearShaking : MonoBehaviour
         state = State.idle;
         transform.position = pos[(targetPosIdx + pos.Length - 1) % pos.Length];
         nextPos = transform.position;
+        sprite = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -131,15 +133,28 @@ public class FloorLinearShaking : MonoBehaviour
                     rayHitPlatform = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y - transform.localScale.y / 2f - 0.1f), new Vector2(transform.localScale.x * 0.6f, 0.01f), 0f, Vector2.down, 0.5f);
                 }
                 if (rayHitPlatform.collider != null) {
-                    for (int i = 0; i < transform.childCount; i++) {
-                        Transform trans = transform.GetChild(i);
-                        if (trans.CompareTag("Player")) {
-                            trans.parent = null;
-                        }
-                    }
-                    Destroy(gameObject);
+                    StartCoroutine(FadeOut());
+                    state = State.fading;
                 }
                 break;
+            case State.fading:
+                break;
         }
+    }
+
+    IEnumerator FadeOut() {
+        for (float f = 1.0f; f >= 0.0f; f -= 0.1f) {
+            Color color = sprite.material.color;
+            color.a = f;
+            sprite.material.color = color;
+            yield return new WaitForSeconds(0.02f);
+        }
+        for (int i = 0; i < transform.childCount; i++) {
+            Transform trans = transform.GetChild(i);
+            if (trans.CompareTag("Player")) {
+                trans.parent = null;
+            }
+        }
+        Destroy(gameObject);
     }
 }
