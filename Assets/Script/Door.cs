@@ -4,33 +4,31 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-    GameManager gameManager;
     SpriteRenderer sprite;
     BoxCollider2D collid;
 
     void Awake() {
-        gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
         sprite = GetComponent<SpriteRenderer>();
         collid = GetComponent<BoxCollider2D>();
     }
 
     void Start() {
-        if (gameObject.CompareTag("Door1") && gameManager.isOpenDoor1
-        || gameObject.CompareTag("Door2") && gameManager.isOpenDoor2) {
+        if (gameObject.CompareTag("Door1") && GameManager.instance.isOpenDoor1
+        || gameObject.CompareTag("Door2") && GameManager.instance.isOpenDoor2) {
             Destroy(gameObject);
         }
     }
 
     void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.CompareTag("Player")) {
-            if (gameObject.CompareTag("Door1") && gameManager.isGetKey1) {
-                gameManager.isOpenDoor1 = true;
-                gameManager.curState = 2;
+            if (gameObject.CompareTag("Door1") && GameManager.instance.isGetKey1) {
+                GameManager.instance.isOpenDoor1 = true;
+                GameManager.instance.curState = 2;
                 StartCoroutine("FadeOut");
             }
-            else if (gameObject.CompareTag("Door2") && gameManager.isGetKey2) {
-                gameManager.isOpenDoor2 = true;
-                gameManager.curState = 4;
+            else if (gameObject.CompareTag("Door2") && GameManager.instance.isGetKey2) {
+                GameManager.instance.isOpenDoor2 = true;
+                GameManager.instance.curState = 4;
                 StartCoroutine("FadeOut");
             }
         }

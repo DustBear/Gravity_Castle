@@ -154,8 +154,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrow: {fileID: 7424884176990279404, guid: 813ccf5744f81294885a2d550865d912, type: 3}
   cannon: {fileID: 6815621349196668693, guid: 2129deb4bd32d0642a60040789cf5904, type: 3}
+  fire: {fileID: 3097866934597682577, guid: 3c804a24e53b3dd4387743225aa70a9f, type: 3}
   arrowNum: 80
   cannonNum: 50
+  fireNum: 50
   isDie: 0
   curStage: 0
   curState: 0
@@ -172,6 +174,8 @@ MonoBehaviour:
   nextGravityDir: 0
   nextIsJumping: 0
   nextIsRoping: 0
+  curIsShaked: 0000000000000000000000000000000000000000000000000000000000000000000000
+  storedIsShaked: 0000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!4 &316650662
 Transform:
   m_ObjectHideFlags: 0

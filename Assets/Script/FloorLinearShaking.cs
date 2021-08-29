@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FloorLinearShaking : MonoBehaviour
 {
+    public int floorNum;
     public float shakeRange;
     public float shakeDuration;
     public float waitingTime;
@@ -22,6 +23,9 @@ public class FloorLinearShaking : MonoBehaviour
 
     void Awake()
     {
+        if (GameManager.instance.curIsShaked[floorNum]) {
+            Destroy(gameObject);
+        }
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<MainCamera>();
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         rigid = GetComponent<Rigidbody2D>();
@@ -56,6 +60,7 @@ public class FloorLinearShaking : MonoBehaviour
                     rayHitPlayer = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y + transform.localScale.y / 2f + 0.1f), new Vector2(transform.localScale.x * 0.7f, 0.01f), 0f, Vector2.up, 0.5f, 1 << 10);
                 }
                 if (rayHitPlayer.collider != null) {
+                    GameManager.instance.curIsShaked[floorNum] = true;
                     state = State.waiting;
                 }
                 break;

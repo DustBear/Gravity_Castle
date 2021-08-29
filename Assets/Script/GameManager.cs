@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     // Object Pool
-    public enum Obj {arrow, cannon};
-    GameObject[] arrowPool;
-    GameObject[] cannonPool;
+    public enum Type {arrow, cannon};
     public GameObject arrow;
     public GameObject cannon;
+    public GameObject fire;
+    public GameObject fireFalling;
     public int arrowNum;
     public int cannonNum;
+    public int fireNum;
+    public int fireFallingNum;
+    public Queue<GameObject> arrowQueue;
+    public Queue<GameObject> cannonQueue;
+    public Queue<GameObject> fireQueue;
+    public Queue<GameObject> fireFallingQueue;
 
     // Store informations
     public bool isDie;
@@ -40,68 +48,93 @@ public class GameManager : MonoBehaviour
     public GravityDirection[,] respawnGravityDir;
     public bool[,] respawnIsRoping;
 
+    // shaked floor
+    public bool[] curIsShaked = new bool[35]; // 35 is the number of floors
+    public bool[] storedIsShaked = new bool[35];
+    int storedCurState;
+
+    // rotating
+    public bool isRotating;
+
     void Awake() {
+        instance = this;
         DontDestroyOnLoad(gameObject);
-        
+
         // Object Pool
-        arrowPool = new GameObject[arrowNum];
-        cannonPool = new GameObject[cannonNum];
+        arrowQueue = new Queue<GameObject>();
+        cannonQueue = new Queue<GameObject>();
+        fireQueue = new Queue<GameObject>();
+        fireFallingQueue = new Queue<GameObject>();
         for (int i = 0; i < arrowNum; i++) {
-            arrowPool[i] = Instantiate(arrow);
-            DontDestroyOnLoad(arrowPool[i]);
-            arrowPool[i].SetActive(false);
+            GameObject newArrow = Instantiate(arrow);
+            DontDestroyOnLoad(newArrow);
+            arrowQueue.Enqueue(newArrow);
+            newArrow.SetActive(false);
         }
         for (int i = 0; i < cannonNum; i++) {
-            cannonPool[i] = Instantiate(cannon);
-            DontDestroyOnLoad(cannonPool[i]);
-            cannonPool[i].SetActive(false);
+            GameObject newCannon = Instantiate(cannon);
+            DontDestroyOnLoad(newCannon);
+            cannonQueue.Enqueue(newCannon);
+            newCannon.SetActive(false);
+        }
+        for (int i = 0; i < fireNum; i++) {
+            GameObject newFire = Instantiate(fire);
+            DontDestroyOnLoad(newFire);
+            fireQueue.Enqueue(newFire);
+            newFire.SetActive(false);
+        }
+        for (int i = 0; i < fireFallingNum; i++) {
+            GameObject newFireFalling = Instantiate(fireFalling);
+            DontDestroyOnLoad(newFireFalling);
+            fireFallingQueue.Enqueue(newFireFalling);
+            newFireFalling.SetActive(false);
         }
 
         // Next scene
-        nextPos = new Vector2(-161.4f, -7f);
-        //nextPos = new Vector2(-174.7f, -12.5f);
-        nextGravityDir = GravityDirection.down;
+        //nextPos = new Vector2(-161.4f, -7f);
+        //nextGravityDir = GravityuDirection.down;
+        nextPos = new Vector2(-247.2f, 2f);
+        nextGravityDir = GravityDirection.right;
 
         // Die
-        respawnScene = new int[4, 5]
-        {{1, 2, 1, 3, 1}, {4, 5, 4, 4, 4}, {7, 7, 7, 8, 7}, {10, 9, 10, 10, 10}};
+        respawnScene = new int[5, 5]
+        {{1, 2, 1, 3, 1}, {4, 5, 4, 4, 4}, {7, 7, 7, 8, 7}, {10, 9, 10, 10, 10}, {12, 12, 12, 12, 11}};
         
-        respawnPos = new Vector2[4, 5]
+        respawnPos = new Vector2[5, 5]
         {{new Vector2(-161.5f, -7), new Vector2(-82, -2), new Vector2(-157.5f, 2), new Vector2(-196, 2), new Vector2(-157, 12)}
         , {new Vector2(-110.42f, -16.7f), new Vector2(-110.6f, -11), new Vector2(-20.53f, -12.1f), new Vector2(-127.3f, 1.9f), new Vector2(-125.7f, -3.2f)}
         , {new Vector2(-138.43f, -12.8f), new Vector2(-102.4f, -11.26f), new Vector2(-151.9f, 2.02f), new Vector2(-211.7f, 11.5f), new Vector2(-150.5f, -16.98f)}
-        , {new Vector2(-175.52f, -14.53f), new Vector2(-245.3f, -3f), new Vector2(-189.18f, -3.97f), new Vector2(-133.82f, -9.03f), new Vector2(-197.4f, 17.91f)}};
+        , {new Vector2(-175.52f, -14.53f), new Vector2(-245.3f, -3f), new Vector2(-189.18f, -3.97f), new Vector2(-133.82f, -9.03f), new Vector2(-197.4f, 17.91f)}
+        , {new Vector2(-177.5f, -20f), new Vector2(-156.5f, -11f), new Vector2(-199f, -12f), new Vector2(-196f, 3.7f), new Vector2(-246f, 27.5f)}};
 
-        respawnGravityDir = new GravityDirection[4, 5]
+        respawnGravityDir = new GravityDirection[5, 5]
         {{GravityDirection.down, GravityDirection.left, GravityDirection.down, GravityDirection.down, GravityDirection.down}
         , {GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down}
         , {GravityDirection.down, GravityDirection.down, GravityDirection.up, GravityDirection.left, GravityDirection.right}
-        , {GravityDirection.right, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down}};;
+        , {GravityDirection.right, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down}
+        , {GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.right}};
 
-        respawnIsRoping = new bool[4, 5]
+        respawnIsRoping = new bool[5, 5]
         {{false, false, false, false, false}
+        , {true, false, false, false, false}
         , {true, false, false, false, false}
         , {true, false, false, false, false}
         , {true, false, false, false, false}};
     }
 
-    public GameObject MakeObj(Obj obj) {
-        switch (obj) {
-            case Obj.arrow:
-                for (int i = 0; i < arrowNum; i++) {
-                    if (!arrowPool[i].activeSelf) {
-                        return arrowPool[i];
-                    }
+    void Update() {
+        if (curStage == 4) {
+            if (storedCurState != curState) {
+                storedCurState = curState;
+                for (int i = 0; i < 35; i++) {
+                    storedIsShaked[i] = curIsShaked[i];
                 }
-                break;
-            case Obj.cannon:
-                for (int i = 0; i < cannonNum; i++) {
-                    if (!cannonPool[i].activeSelf) {
-                        return cannonPool[i];
-                    }
+            }
+            if (isDie) {
+                for (int i = 0; i < 35; i++) {
+                    curIsShaked[i] = storedIsShaked[i];
                 }
-                break;
+            }
         }
-        return null;
     }
 }

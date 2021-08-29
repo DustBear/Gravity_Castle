@@ -8,35 +8,35 @@ public class ChangeScene : MonoBehaviour
     public bool isNextStage;
     public int nextScene;
     public Vector2 deltaPos;
-    GameManager gameManager;
     Player player;
 
     void Awake() {
-        gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
     void OnCollisionEnter2D(Collision2D other) {
-        gameManager.nextPos.x = player.transform.position.x + deltaPos.x; 
-        gameManager.nextPos.y = player.transform.position.y + deltaPos.y;
-        gameManager.nextRot = player.transform.rotation;
-        gameManager.nextGravity = Physics2D.gravity;
-        gameManager.nextAfterRotating = player.afterRotating;
-        gameManager.nextGravityDir = player.gravityDirection;
-        gameManager.nextIsJumping = player.isJumping;
-        gameManager.nextIsRoping = player.isRoping;
+        if (other.gameObject.CompareTag("Player")) {
+            GameManager.instance.nextPos.x = player.transform.position.x + deltaPos.x;
+            GameManager.instance.nextPos.y = player.transform.position.y + deltaPos.y;
+            GameManager.instance.nextRot = player.transform.rotation;
+            GameManager.instance.nextGravity = Physics2D.gravity;
+            GameManager.instance.nextAfterRotating = player.afterRotating;
+            GameManager.instance.nextGravityDir = player.gravityDirection;
+            GameManager.instance.nextIsJumping = player.isJumping;
+            GameManager.instance.nextIsRoping = player.isRoping;
 
-        if (isNextStage) {
-            gameManager.curStage++;
-            gameManager.curState = 0;
-            gameManager.isOpenKeyBox1 = false;
-            gameManager.isOpenKeyBox2 = false;
-            gameManager.isGetKey1 = false;
-            gameManager.isGetKey2 = false;
-            gameManager.isOpenDoor1 = false;
-            gameManager.isOpenDoor2 = false;
+            if (isNextStage) {
+                GameManager.instance.curStage++;
+                GameManager.instance.curState = 0;
+                GameManager.instance.isOpenKeyBox1 = false;
+                GameManager.instance.isOpenKeyBox2 = false;
+                GameManager.instance.isGetKey1 = false;
+                GameManager.instance.isGetKey2 = false;
+                GameManager.instance.isOpenDoor1 = false;
+                GameManager.instance.isOpenDoor2 = false;
+            }
+
+            SceneManager.LoadScene(nextScene);
         }
-        
-        SceneManager.LoadScene(nextScene);
     }
 }

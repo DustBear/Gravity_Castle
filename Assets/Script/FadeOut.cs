@@ -6,14 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class FadeOut : MonoBehaviour
 {
-    GameManager gameManager;
     UnityEngine.UI.Image fade;
     public float alpha;
     float time;
 
     void Awake() {
         fade = GetComponent<Image>();
-        gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
     }
 
     void OnEnable() {
@@ -30,7 +28,7 @@ public class FadeOut : MonoBehaviour
             time = 0;
         }
         else if (alpha >= 1) {
-            SceneManager.LoadScene(gameManager.respawnScene[gameManager.curStage, gameManager.curState]);
+            SceneManager.LoadScene(GameManager.instance.respawnScene[GameManager.instance.curStage, GameManager.instance.curState]);
         }
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -11,7 +10,6 @@ public class Player : MonoBehaviour
     GameObject fadeIn;
     GameObject fadeOut;
     bool isFadingOut;
-    GameManager gameManager;
     Animator animator;
     SpriteRenderer sprite;
     // Input
@@ -27,6 +25,7 @@ public class Player : MonoBehaviour
     bool isVerticalWind;
     // Walk
     public float walkSpeed;
+    bool isRayHitIce;
     // Jump
     public float jumpPower;
     float jumpTimer;
@@ -44,11 +43,10 @@ public class Player : MonoBehaviour
     public bool afterRotating;
     // Ghost
     public bool isGhostRotating;
-    // MovingFloor
+    // MovingFloor (for elevator)
     public bool onMovingFloor;
 
     void Awake() {
-        gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
         rigid = GetComponent<Rigidbody2D>();
         GameObject canvas = GameObject.FindWithTag("Canvas");
         fadeIn = canvas.transform.GetChild(0).gameObject;
@@ -64,9 +62,9 @@ public class Player : MonoBehaviour
         leftArrow.SetActive(false);
         rightArrow.SetActive(false);
         // Just Next Scene
-        if (!gameManager.isDie) {
-            transform.position = gameManager.nextPos;
-            gravityDirection = gameManager.nextGravityDir;
+        if (!GameManager.instance.isDie) {
+            transform.position = GameManager.instance.nextPos;
+            gravityDirection = GameManager.instance.nextGravityDir;
             switch (gravityDirection) {
                 case GameManager.GravityDirection.left:
                     transform.rotation = Quaternion.Euler(0, 0, -90);
@@ -85,16 +83,16 @@ public class Player : MonoBehaviour
                     Physics2D.gravity = new Vector2(0, -9.8f);
                     break;
             }
-            afterRotating = gameManager.nextAfterRotating;
-            isJumping = gameManager.nextIsJumping;
-            isRoping = gameManager.nextIsRoping;
+            afterRotating = GameManager.instance.nextAfterRotating;
+            isJumping = GameManager.instance.nextIsJumping;
+            isRoping = GameManager.instance.nextIsRoping;
         }
         // Respawn after Dying
         else {
-            int curStage = gameManager.curStage;
-            int curState = gameManager.curState;
-            transform.position = gameManager.respawnPos[curStage, curState];
-            gravityDirection = gameManager.respawnGravityDir[curStage, curState];
+            int curStage = GameManager.instance.curStage;
+            int curState = GameManager.instance.curState;
+            transform.position = GameManager.instance.respawnPos[curStage, curState];
+            gravityDirection = GameManager.instance.respawnGravityDir[curStage, curState];
             switch (gravityDirection) {
                 case GameManager.GravityDirection.left:
                     transform.rotation = Quaternion.Euler(0, 0, -90);
@@ -113,8 +111,8 @@ public class Player : MonoBehaviour
                     Physics2D.gravity = new Vector2(0, -9.8f);
                     break;
             }
-            isRoping = gameManager.respawnIsRoping[curStage, curState];
-            gameManager.isDie = false;
+            isRoping = GameManager.instance.respawnIsRoping[curStage, curState];
+            GameManager.instance.isDie = false;
         }
         if (isRoping) {
             rigid.gravityScale = 0;
@@ -148,7 +146,7 @@ public class Player : MonoBehaviour
         // Input for hanging on the rope
         inputVertical = Input.GetAxisRaw("Vertical");
 
-        if (!gameManager.isDie) {
+        if (!GameManager.instance.isDie) {
             if (!isGhostRotating) {
                 if (!isSelectingGravity && rotateDirection == 0 && !afterRotating) {
                     if ((!isHorizontalWind || Physics2D.gravity.x != 0) && (!isVerticalWind || Physics2D.gravity.y != 0)) {
@@ -167,18 +165,18 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.tag == "Spike" || other.gameObject.tag == "Projectile") {
-            gameManager.isDie = true;
+            GameManager.instance.isDie = true;
             fadeOut.SetActive(true);
         }
-        else if (other.gameObject.CompareTag("Key1") && other.gameObject.GetComponent<Key>().isAllowKey) {
-            gameManager.isGetKey1 = true;
-            gameManager.curState = 1;
+        else if (other.gameObject.CompareTag("Key1") && other.gameObject.GetComponent<Key>().isAllowKey) {            
+            GameManager.instance.isGetKey1 = true;
+            GameManager.instance.curState = 1;
             Physics2D.IgnoreLayerCollision(10, 13, true); // player and key
             Destroy(other.gameObject);
         }
         else if (other.gameObject.CompareTag("Key2") && other.gameObject.GetComponent<Key>().isAllowKey) {
-            gameManager.isGetKey2 = true;
-            gameManager.curState = 3;
+            GameManager.instance.isGetKey2 = true;
+            GameManager.instance.curState = 3;
             Physics2D.IgnoreLayerCollision(10, 13, true); // player and key
             Destroy(other.gameObject);
         }
@@ -201,12 +199,12 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Ghost")) {
             if (other.TryGetComponent(out GhostFading ghostfading)) {
                 if (ghostfading.state == GhostFading.State.fadeIn || ghostfading.state == GhostFading.State.keepFadeIn) {
-                    gameManager.isDie = true;
+                    GameManager.instance.isDie = true;
                     fadeOut.SetActive(true);
                 }
             }
             else {
-                gameManager.isDie = true;
+                GameManager.instance.isDie = true;
                 fadeOut.SetActive(true);
             }
         }
@@ -245,7 +243,6 @@ public class Player : MonoBehaviour
     }
 
     void Walk() {
-        Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
         if (inputHorizontal != 0) {
             animator.SetBool("isWalking", true);
         }
@@ -258,7 +255,16 @@ public class Player : MonoBehaviour
         else if (inputHorizontal == -1) {
             sprite.flipX = true;
         }
-        locVel.x = inputHorizontal * walkSpeed;
+
+        Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+        // on ice
+        if (isRayHitIce && inputHorizontal == 0) {
+            locVel = new Vector2(Vector2.Lerp(locVel, Vector2.zero, Time.deltaTime * 1.5f).x , locVel.y);
+        }
+        // not ice
+        else {
+            locVel = new Vector2(inputHorizontal * walkSpeed, locVel.y);
+        }
         rigid.velocity = transform.TransformDirection(locVel);
     }
 
@@ -278,7 +284,7 @@ public class Player : MonoBehaviour
         // Landing on the ground -> Finish jumping
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
         RaycastHit2D rayHitBounce = Physics2D.BoxCast(transform.position, new Vector2(0.9f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 8);
-        if (rayHitBounce.collider == null && locVel.y <= 0 && IsGrounded()) {
+        if (IsGrounded() && rayHitBounce.collider == null && locVel.y <= 0) {
             animator.SetBool("isJumping", false);
             isJumping = false;
         }
@@ -296,6 +302,7 @@ public class Player : MonoBehaviour
                 else {
                     transform.position = new Vector2(transform.position.x, ropePos.y - transform.up.y * 0.7f);
                 }
+                transform.parent = rope.transform;
                 isJumping = false;
                 isRoping = true;
             }
@@ -307,7 +314,9 @@ public class Player : MonoBehaviour
                     switch (gravityDirection) {
                         case GameManager.GravityDirection.left:
                             if (rope.CompareTag("VerticalRope")) {
+                                transform.position = new Vector2(rope.transform.position.x - transform.up.x * 0.7f, transform.position.y);
                                 rigid.velocity = new Vector2(0, -inputHorizontal * ropeSpeed);
+                                
                             }
                             else {
                                 rigid.velocity = new Vector2(inputVertical * ropeSpeed, 0);
@@ -342,6 +351,7 @@ public class Player : MonoBehaviour
             }
             // Finish hanging on the rope
             else {
+                transform.parent = null;
                 rigid.gravityScale = 2;
                 isRoping = false;
             }
@@ -350,7 +360,7 @@ public class Player : MonoBehaviour
 
     void UsingLever() {
         // Decide wheter to use the lever
-        if (rotateDirection == 0 && isCollideLever && !isJumping && !isRoping && !afterRotating) {
+        if (rotateDirection == 0 && isCollideLever && !isJumping && !isRoping && !afterRotating && rigid.velocity == Vector2.zero) {
             if (inputVertical == 1) {
                 if (!isUsingVertical) {
                     isSelectingGravity = !isSelectingGravity;
@@ -358,7 +368,13 @@ public class Player : MonoBehaviour
                     rightArrow.SetActive(isSelectingGravity);
                     isUsingVertical = true;
                     animator.SetBool("isWalking", false);
-                    rigid.velocity = Vector2.zero;
+                    // rigid.velocity = Vector2.zero;
+                    if (isSelectingGravity) {
+                        rigid.constraints = RigidbodyConstraints2D.FreezePosition;
+                    }
+                    else {
+                        rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
+                    }
                 }
             }
             else {
@@ -368,12 +384,15 @@ public class Player : MonoBehaviour
 
         // Select gravity direction
         if (isSelectingGravity && inputHorizontalDown) {
+            rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
             leftArrow.SetActive(false);
             rightArrow.SetActive(false);
             rotateDirection = inputHorizontal;
+            GameManager.instance.isRotating = true;
             isSelectingGravity = false;
             isUsingVertical = false;
             startingPos = transform.position;
+            transform.parent = null;
         }
 
         // Change gravity direction
@@ -394,6 +413,7 @@ public class Player : MonoBehaviour
                             gravityDirection = GameManager.GravityDirection.up;
                         }
                         rotateDirection = 0;
+                        GameManager.instance.isRotating = false;
                         afterRotating = true;
                     }
                     break;
@@ -412,6 +432,7 @@ public class Player : MonoBehaviour
                             gravityDirection = GameManager.GravityDirection.down;
                         }
                         rotateDirection = 0;
+                        GameManager.instance.isRotating = false;
                         afterRotating = true;
                     }
                     break;
@@ -430,6 +451,7 @@ public class Player : MonoBehaviour
                             gravityDirection = GameManager.GravityDirection.right;
                         }
                         rotateDirection = 0;
+                        GameManager.instance.isRotating = false;
                         afterRotating = true;
                     }
                     break;
@@ -448,6 +470,7 @@ public class Player : MonoBehaviour
                             gravityDirection = GameManager.GravityDirection.left;
                         }
                         rotateDirection = 0;
+                        GameManager.instance.isRotating = false;
                         afterRotating = true;
                     }
                     break;
@@ -494,17 +517,27 @@ public class Player : MonoBehaviour
     bool IsGrounded() {
         // Platform, Launcher, WindHome, Stone
         RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f
-        , 1 << 3 | 1 << 6 | 1 << 12 | 1 << 15);
+        , 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15);
 
-        // MovingFloor
-        RaycastHit2D rayHitMovingFloor = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 16);
-        if (rayHitMovingFloor.collider != null) {
-            transform.parent = rayHitMovingFloor.collider.transform;
+        // MovingPlatform
+        RaycastHit2D rayHitMovingPlatform = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 16);
+        if (rayHitMovingPlatform.collider != null && rotateDirection == 0) {
+            transform.parent = rayHitMovingPlatform.collider.transform;
             onMovingFloor = true;
         }
         else {
             transform.parent = null;
             onMovingFloor = false;
+        }
+
+        // IcePlatform
+        RaycastHit2D rayHitIcePlatform = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f
+        , 1 << 9);
+        if (rayHitIcePlatform.collider != null) {
+            isRayHitIce = true;
+        }
+        else {
+            isRayHitIce = false;
         }
 
         // KeyBox
@@ -513,14 +546,14 @@ public class Player : MonoBehaviour
             Transform keyBox = rayHitKeyBox.collider.transform.parent;
             if (keyBox.childCount == 4) {
                 if (keyBox.GetChild(2).CompareTag("Key1")) {
-                    gameManager.isOpenKeyBox1 = true;
+                    GameManager.instance.isOpenKeyBox1 = true;
                 }
                 else if (keyBox.GetChild(2).CompareTag("Key2")) {
-                    gameManager.isOpenKeyBox2 = true;
+                    GameManager.instance.isOpenKeyBox2 = true;
                 }
             }
         }
 
-        return rayHit.collider != null || rayHitMovingFloor.collider != null;
+        return rayHit.collider != null || rayHitMovingPlatform.collider != null || rayHitIcePlatform.collider != null;
     }
 }
