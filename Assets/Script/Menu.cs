@@ -7,6 +7,7 @@ public class Menu : MonoBehaviour
 {
     void Start()
     {
+        GameManager.instance.curStage++;
         SceneManager.LoadScene(1);
     }
 }

@@ -259,7 +259,7 @@ public class Player : MonoBehaviour
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
         // on ice
         if (isRayHitIce && inputHorizontal == 0) {
-            locVel = new Vector2(Vector2.Lerp(locVel, Vector2.zero, Time.deltaTime * 1.5f).x , locVel.y);
+            locVel = new Vector2(Vector2.Lerp(locVel, Vector2.zero, Time.deltaTime * 8f).x , locVel.y);
         }
         // not ice
         else {
@@ -360,21 +360,15 @@ public class Player : MonoBehaviour
 
     void UsingLever() {
         // Decide wheter to use the lever
-        if (rotateDirection == 0 && isCollideLever && !isJumping && !isRoping && !afterRotating && rigid.velocity == Vector2.zero) {
+        if (rotateDirection == 0 && isCollideLever && !isJumping && !isRoping && !afterRotating) {
             if (inputVertical == 1) {
                 if (!isUsingVertical) {
+                    rigid.velocity = Vector2.zero;
                     isSelectingGravity = !isSelectingGravity;
                     leftArrow.SetActive(isSelectingGravity);
                     rightArrow.SetActive(isSelectingGravity);
                     isUsingVertical = true;
                     animator.SetBool("isWalking", false);
-                    // rigid.velocity = Vector2.zero;
-                    if (isSelectingGravity) {
-                        rigid.constraints = RigidbodyConstraints2D.FreezePosition;
-                    }
-                    else {
-                        rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
-                    }
                 }
             }
             else {
@@ -384,7 +378,6 @@ public class Player : MonoBehaviour
 
         // Select gravity direction
         if (isSelectingGravity && inputHorizontalDown) {
-            rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
             leftArrow.SetActive(false);
             rightArrow.SetActive(false);
             rotateDirection = inputHorizontal;

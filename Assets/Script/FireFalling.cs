@@ -6,14 +6,18 @@ using UnityEngine.SceneManagement;
 public class FireFalling : MonoBehaviour
 {
     Scene originScene;
-    ParticleSystem particle;
+    ParticleSystem fireParticle, sparkParticle, smokeParticle;
     Rigidbody2D rigid;
     BoxCollider2D collid;
+    Player player;
     bool isFinish;
     bool isApplyRotating;
     
     void Awake() {
-        particle = GetComponent<ParticleSystem>();
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        fireParticle = transform.GetChild(0).GetComponent<ParticleSystem>();
+        sparkParticle = transform.GetChild(1).GetComponent<ParticleSystem>();
+        smokeParticle = transform.GetChild(2).GetComponent<ParticleSystem>();
         rigid = GetComponent<Rigidbody2D>();
         collid = GetComponent<BoxCollider2D>();
     }
@@ -21,10 +25,21 @@ public class FireFalling : MonoBehaviour
     void OnEnable() {
         originScene = SceneManager.GetActiveScene();
         isFinish = false;
+        rigid.gravityScale = 1f;
         collid.isTrigger = false;
     }
 
     void Update() {
+        transform.rotation = player.transform.rotation;
+
+        if (isApplyRotating) {
+            rigid.gravityScale = 0f;
+            rigid.velocity = Vector2.zero;
+        }
+        else {
+            rigid.gravityScale = 1f;
+        }
+        
         // if scene changes, then erase all activated fires
         if (originScene != SceneManager.GetActiveScene()) {
             gameObject.SetActive(false);
@@ -47,7 +62,6 @@ public class FireFalling : MonoBehaviour
                 StartCoroutine(EraseFireOnIce());
             }
             else {
-                particle.Stop();
                 StartCoroutine(EraseFire());
             }
         }
@@ -55,15 +69,22 @@ public class FireFalling : MonoBehaviour
 
     IEnumerator EraseFireOnIce() {
         yield return new WaitForSeconds(1.0f);
-        particle.Stop();
+        fireParticle.Stop();
+        sparkParticle.Stop();
+        smokeParticle.Stop();
         gameObject.SetActive(false);
         GameManager.instance.fireFallingQueue.Enqueue(gameObject);
     }
 
     IEnumerator EraseFire() {
-        yield return new WaitForSeconds(0.2f);
+        fireParticle.Stop();
+        sparkParticle.Stop();
+        smokeParticle.Stop();
+        yield return new WaitForSeconds(0.4f); // wait until fire particle goes on
+        rigid.constraints = RigidbodyConstraints2D.FreezePosition;
         collid.isTrigger = true;
         yield return new WaitForSeconds(3.0f);
+        rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
         gameObject.SetActive(false);
         GameManager.instance.fireFallingQueue.Enqueue(gameObject);
     }

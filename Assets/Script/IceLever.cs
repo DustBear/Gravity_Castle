@@ -5,37 +5,42 @@ using UnityEngine;
 public class IceLever : MonoBehaviour
 {
     bool isStart;
-    SpriteRenderer iceRenderer, leverRenderer;
-    Transform lever;
+    SpriteRenderer iceRenderer;
+    GameObject fire;
 
     void Awake() {
         iceRenderer = GetComponent<SpriteRenderer>();
-        lever = transform.GetChild(0);
-        leverRenderer = lever.gameObject.GetComponent<SpriteRenderer>();
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
-        if (!isStart && other.CompareTag("Projectile")) {
+    void OnCollisionEnter2D(Collision2D other) {
+        if (!isStart && other.gameObject.CompareTag("Projectile")) {
+            fire = GameManager.instance.fireQueue.Dequeue();
+            fire.transform.position = transform.position;
+            fire.SetActive(true);
+
             StartCoroutine(Melt());
             isStart = true;
         }
     }
 
     IEnumerator Melt() {
-        while (iceRenderer.color.a > 0f || leverRenderer.color.r < 1f) {
+        while (iceRenderer.color.a > 0f) {
             Color iceColor = iceRenderer.color;
-            Color leverColor = leverRenderer.color;
             if (iceColor.a > 0f) {
-                iceColor.a -= 0.01f;
+                iceColor.a -= 0.025f;
                 iceRenderer.color = iceColor;
-            }
-            if (leverColor.r < 1f) {
-                leverColor.r += 0.025f;
-                leverRenderer.color = leverColor;
             }
             yield return new WaitForSeconds(0.1f);
         }
-        lever.parent = null;
+        // after melting
+        fire.GetComponent<FireNotFalling>().isIceMelted = true;
+        StartCoroutine(Wait());
+    }
+
+    IEnumerator Wait() {
+        yield return new WaitForSeconds(1.0f);
+        fire.SetActive(false);
+        GameManager.instance.fireQueue.Enqueue(fire);
         Destroy(gameObject);
     }
 }

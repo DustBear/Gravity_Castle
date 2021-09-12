@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     // Store informations
     public bool isDie;
-    public int curStage; // First stage is 0
+    public int curStage; // First stage is 1
     public int curState; // 0: no key, no door  1: key1  2: door1  3: key2   4: door2
     public bool isOpenKeyBox1;
     public bool isOpenKeyBox2;
@@ -49,8 +49,8 @@ public class GameManager : MonoBehaviour
     public bool[,] respawnIsRoping;
 
     // shaked floor
-    public bool[] curIsShaked = new bool[35]; // 35 is the number of floors
-    public bool[] storedIsShaked = new bool[35];
+    public bool[] curIsShaked; // size is the number of floors
+    public bool[] storedIsShaked; // size is the number of floors
     int storedCurState;
 
     // rotating
@@ -91,10 +91,10 @@ public class GameManager : MonoBehaviour
         }
 
         // Next scene
-        //nextPos = new Vector2(-161.4f, -7f);
-        //nextGravityDir = GravityuDirection.down;
-        nextPos = new Vector2(-247.2f, 2f);
-        nextGravityDir = GravityDirection.right;
+        // nextPos = new Vector2(-161.4f, -7f);
+        // nextGravityDir = GravityDirection.down;
+        nextPos = new Vector2(-143.68f, -15.84f);
+        nextGravityDir = GravityDirection.up;
 
         // Die
         respawnScene = new int[5, 5]

@@ -14,7 +14,7 @@ public class FloorShaking : MonoBehaviour
     float time;
     enum State {idle, waiting, shaked, falling, fading};
     State state;
-    SpriteRenderer sprite;
+    SpriteRenderer render;
 
     void Awake() {
         if (GameManager.instance.curIsShaked[floorNum]) {
@@ -24,7 +24,7 @@ public class FloorShaking : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         floorPos = transform.position;
         state = State.idle;
-        sprite = GetComponent<SpriteRenderer>();
+        render = GetComponent<SpriteRenderer>();
     }
 
     void Update() {
@@ -124,9 +124,9 @@ public class FloorShaking : MonoBehaviour
 
     IEnumerator FadeOut() {
         for (float f = 1.0f; f >= 0.0f; f -= 0.1f) {
-            Color color = sprite.material.color;
+            Color color = render.material.color;
             color.a = f;
-            sprite.material.color = color;
+            render.material.color = color;
             yield return new WaitForSeconds(0.02f);
         }
         for (int i = 0; i < transform.childCount; i++) {
