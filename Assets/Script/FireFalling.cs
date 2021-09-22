@@ -68,10 +68,10 @@ public class FireFalling : MonoBehaviour
     }
 
     IEnumerator EraseFireOnIce() {
-        yield return new WaitForSeconds(1.0f);
         fireParticle.Stop();
         sparkParticle.Stop();
         smokeParticle.Stop();
+        yield return new WaitForSeconds(0.4f); // wait until fire particle goes on
         gameObject.SetActive(false);
         GameManager.instance.fireFallingQueue.Enqueue(gameObject);
     }
@@ -85,6 +85,7 @@ public class FireFalling : MonoBehaviour
         collid.isTrigger = true;
         yield return new WaitForSeconds(3.0f);
         rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
+        collid.isTrigger = false;
         gameObject.SetActive(false);
         GameManager.instance.fireFallingQueue.Enqueue(gameObject);
     }

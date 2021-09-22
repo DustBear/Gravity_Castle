@@ -365,6 +365,12 @@ public class Player : MonoBehaviour
                 if (!isUsingVertical) {
                     rigid.velocity = Vector2.zero;
                     isSelectingGravity = !isSelectingGravity;
+                    if (isSelectingGravity) {
+                        rigid.constraints = RigidbodyConstraints2D.FreezePosition;
+                    }
+                    else {
+                        rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
+                    }
                     leftArrow.SetActive(isSelectingGravity);
                     rightArrow.SetActive(isSelectingGravity);
                     isUsingVertical = true;
@@ -386,6 +392,7 @@ public class Player : MonoBehaviour
             isUsingVertical = false;
             startingPos = transform.position;
             transform.parent = null;
+            rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
         }
 
         // Change gravity direction

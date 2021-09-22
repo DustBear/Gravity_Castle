@@ -5,11 +5,12 @@ using UnityEngine;
 public class FireLauncher : MonoBehaviour
 {
     public float timeInterval;
-    public float nextTime;
     float startTime;
+    float nextTime;
 
-    void Awake() {
+    void OnEnable() {
         startTime = Time.time;
+        nextTime = 0f;
     }
 
     void FixedUpdate() {

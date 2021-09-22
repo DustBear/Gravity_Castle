@@ -8,6 +8,9 @@ public class FireLauncherLasting : MonoBehaviour
     public GameObject fire;
     public Vector2 leftPos, rightPos;
     public Vector2 finalPos;
+    public float curSpeed;
+    public float deltaSpeed;
+    float startTime;
     
     void Start() {
         if (!isVertical) {
@@ -24,9 +27,15 @@ public class FireLauncherLasting : MonoBehaviour
                 newFire.transform.localScale = new Vector3(1f, 1f, 1f);
             }
         }
+
+        startTime = Time.time;
     }
 
     void Update() {
-        transform.position = Vector2.MoveTowards(transform.position, finalPos, Time.deltaTime * 0.3f);
+        transform.position = Vector2.MoveTowards(transform.position, finalPos, Time.deltaTime * curSpeed);
+        if (Time.time - startTime > 0.1f) {
+            curSpeed += deltaSpeed;
+            startTime = Time.time;
+        }
     }
 }

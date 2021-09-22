@@ -9,12 +9,14 @@ public class WindHome : MonoBehaviour
     public float activeTime;
     public float inActiveTime;
     GameObject windZone;
+    ParticleSystem windParticle;
     float time;
     bool isStart;
     Animator windAnimator;
     
     void Awake() {
         windZone = transform.GetChild(0).gameObject;
+        windParticle = transform.GetChild(1).GetComponent<ParticleSystem>();
         windAnimator = GetComponent<Animator>();
     }
 
@@ -22,6 +24,7 @@ public class WindHome : MonoBehaviour
         if (!isToggle) {
             windAnimator.SetBool("isActive", true);
             windZone.SetActive(true);
+            windParticle.Play();
             this.enabled = false;
         }
         StartCoroutine("StartWind");
@@ -34,6 +37,7 @@ public class WindHome : MonoBehaviour
                 if (time >= inActiveTime) {
                     windAnimator.SetBool("isActive", true);
                     windZone.SetActive(true);
+                    windParticle.Play();
                     time = 0;
                 }
             }
@@ -41,6 +45,7 @@ public class WindHome : MonoBehaviour
                 if (time >= activeTime) {
                     windAnimator.SetBool("isActive", false);
                     windZone.SetActive(false);
+                    windParticle.Stop();
                     time = 0;
                 }
             }
@@ -51,6 +56,7 @@ public class WindHome : MonoBehaviour
         yield return new WaitForSeconds(startTime);
         windAnimator.SetBool("isActive", true);
         windZone.SetActive(true);
+        windParticle.Play();
         time = 0;
         isStart = true;
     }

@@ -91,10 +91,10 @@ public class GameManager : MonoBehaviour
         }
 
         // Next scene
-        // nextPos = new Vector2(-161.4f, -7f);
-        // nextGravityDir = GravityDirection.down;
-        nextPos = new Vector2(-143.68f, -15.84f);
-        nextGravityDir = GravityDirection.up;
+        //nextPos = new Vector2(-161.4f, -7f);
+        nextGravityDir = GravityDirection.down;
+
+        nextPos = new Vector2(-140f, -9f);
 
         // Die
         respawnScene = new int[5, 5]

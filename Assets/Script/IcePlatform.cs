@@ -111,51 +111,53 @@ public class IcePlatform : MonoBehaviour
 
     IEnumerator CreateFire() {
         while (!isFinishLeft || !isFinishRight) {
-            if (!isVertical) {
-                if (leftPos.x < leftmostPos.x) {
-                    isFinishLeft = true;
-                }
-                if (rightPos.x > rightmostPos.x) {
-                    isFinishRight = true;
-                }
-            }
-            else {
-                if (leftPos.y < leftmostPos.y) {
-                    isFinishLeft = true;
-                }
-                if (rightPos.y > rightmostPos.y) {
-                    isFinishRight = true;
-                }
-            }
-
-            if (!isFinishLeft) {
-                GameObject fire = GameManager.instance.fireQueue.Dequeue();
-                fire.transform.position = leftPos;
-                fire.SetActive(true);
-                fireList.Add(fire);
-                leftPos -= deltaPos;
-                for (int i = 0; i < transform.childCount; i++) {
-                    if (leftPos.x == leverPos[i].x || leftPos.y == leverPos[i].y) {
-                        fire = GameManager.instance.fireQueue.Dequeue();
-                        fire.transform.position = leverPos[i];
-                        fire.SetActive(true);
-                        fireList.Add(fire);
+            if (!GameManager.instance.isRotating) {
+                if (!isVertical) {
+                    if (leftPos.x < leftmostPos.x) {
+                        isFinishLeft = true;
+                    }
+                    if (rightPos.x > rightmostPos.x) {
+                        isFinishRight = true;
                     }
                 }
-            }
-            if (!isFinishRight) {
-                GameObject fire = GameManager.instance.fireQueue.Dequeue();
-                fire.transform.position = rightPos;
-                fire.SetActive(true);
-                fireList.Add(fire);
-                rightPos += deltaPos;
-                for (int i = 0; i < transform.childCount; i++) {
-                    if (leverRenderer != null && (rightPos.x == leverPos[i].x || rightPos.y == leverPos[i].y)) {
-                        fire = GameManager.instance.fireQueue.Dequeue();
-                        fire.transform.position = leverPos[i];
-                        fire.SetActive(true);
-                        fireList.Add(fire);
+                else {
+                    if (leftPos.y < leftmostPos.y) {
+                        isFinishLeft = true;
+                    }
+                    if (rightPos.y > rightmostPos.y) {
+                        isFinishRight = true;
+                    }
                 }
+
+                if (!isFinishLeft) {
+                    GameObject fire = GameManager.instance.fireQueue.Dequeue();
+                    fire.transform.position = leftPos;
+                    fire.SetActive(true);
+                    fireList.Add(fire);
+                    leftPos -= deltaPos;
+                    for (int i = 0; i < transform.childCount; i++) {
+                        if (leftPos.x == leverPos[i].x || leftPos.y == leverPos[i].y) {
+                            fire = GameManager.instance.fireQueue.Dequeue();
+                            fire.transform.position = leverPos[i];
+                            fire.SetActive(true);
+                            fireList.Add(fire);
+                        }
+                    }
+                }
+                if (!isFinishRight) {
+                    GameObject fire = GameManager.instance.fireQueue.Dequeue();
+                    fire.transform.position = rightPos;
+                    fire.SetActive(true);
+                    fireList.Add(fire);
+                    rightPos += deltaPos;
+                    for (int i = 0; i < transform.childCount; i++) {
+                        if (leverRenderer != null && (rightPos.x == leverPos[i].x || rightPos.y == leverPos[i].y)) {
+                            fire = GameManager.instance.fireQueue.Dequeue();
+                            fire.transform.position = leverPos[i];
+                            fire.SetActive(true);
+                            fireList.Add(fire);
+                        }
+                    }
                 }
             }
             yield return new WaitForSeconds(0.1f);
@@ -165,15 +167,17 @@ public class IcePlatform : MonoBehaviour
 
     IEnumerator Melt() {
         while (tilemap.color.a > 0f) {
-            Color tileColor = tilemap.color;
-            if (tileColor.a > 0f) {
-                tileColor.a -= 0.025f;
-                tilemap.color = tileColor;
-            }
-            for (int i = 0; i < transform.childCount; i++) {
-                Color leverColor = leverRenderer[i].color;
-                leverColor.a -= 0.025f;
-                leverRenderer[i].color = leverColor;
+            if (!GameManager.instance.isRotating) {
+                Color tileColor = tilemap.color;
+                if (tileColor.a > 0f)   {
+                    tileColor.a -= 0.025f;
+                    tilemap.color = tileColor;
+                }
+                for (int i = 0; i < transform.childCount; i++){
+                    Color leverColor = leverRenderer[i].color;
+                    leverColor.a -= 0.0625f;
+                    leverRenderer[i].color = leverColor;
+                }
             }
             yield return new WaitForSeconds(0.1f);
         }
@@ -181,11 +185,10 @@ public class IcePlatform : MonoBehaviour
         for (int i = 0; i < fireList.Count; i++) {
             fireList[i].GetComponent<FireNotFalling>().isIceMelted = true;
         }
-        StartCoroutine(Wait());
+        Invoke("Wait", 1.0f); // wait particle to stop
     }
 
-    IEnumerator Wait() {
-        yield return new WaitForSeconds(1.0f);
+    void Wait() {
         for (int i = 0; i < fireList.Count; i++) {
             fireList[i].SetActive(false);
             GameManager.instance.fireQueue.Enqueue(fireList[i]);
