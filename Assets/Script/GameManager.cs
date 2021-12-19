@@ -90,12 +90,6 @@ public class GameManager : MonoBehaviour
             newFireFalling.SetActive(false);
         }
 
-        // Next scene
-        //nextPos = new Vector2(-161.4f, -7f);
-        nextGravityDir = GravityDirection.down;
-
-        nextPos = new Vector2(-140f, -9f);
-
         // Die
         respawnScene = new int[5, 5]
         {{1, 2, 1, 3, 1}, {4, 5, 4, 4, 4}, {7, 7, 7, 8, 7}, {10, 9, 10, 10, 10}, {12, 12, 12, 12, 11}};
