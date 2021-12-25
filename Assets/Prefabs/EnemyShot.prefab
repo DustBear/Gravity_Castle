@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2311659948842064771, guid: 2ec2026bc8024ef43a5525501788cf3f, type: 3}
-  m_Color: {r: 0.6509434, g: 0.000000082771734, b: 0, a: 1}
+  m_Color: {r: 0.745283, g: 0.7273282, b: 0.046873063, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -105,7 +105,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &3566900781471672745
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -144,6 +144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c87488fe837f22446a0d081ef72a878e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDestroyed: 0
-  speed: 2
+  speed: 1
+  startMv: 0
   missile: {fileID: 8212574720629962435, guid: 5d42dd4f3477e164793b9842651c9e8c, type: 3}

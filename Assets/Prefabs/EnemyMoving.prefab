@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 8272607903455590944}
   - component: {fileID: 8272607903455590972}
   - component: {fileID: 8272607903455590973}
-  - component: {fileID: 8272607903455590974}
+  - component: {fileID: 1277774747587596979}
   m_Layer: 18
   m_Name: EnemyMoving
   m_TagString: Enemy
@@ -112,7 +112,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDestroyed: 0
-  speed: 2
+  speed: 1.5
+  startMv: 0
 --- !u!50 &8272607903455590973
 Rigidbody2D:
   serializedVersion: 4
@@ -133,8 +134,8 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
---- !u!61 &8272607903455590974
+  m_Constraints: 4
+--- !u!61 &1277774747587596979
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

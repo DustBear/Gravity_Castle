@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-    Rigidbody2D rigid;
     Player player;
     Vector3 dir;
 
     void Awake() {
-        rigid = GetComponent<Rigidbody2D>();
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         dir = (player.transform.position - this.transform.position).normalized;
     }
 
-    void Update() {
-        this.transform.Translate(dir * Time.deltaTime * 5.0f, Space.World);
+    void Start() {
+        transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90f);
     }
 
-    void OnCollisionEnter2D(Collision2D other) {
-        if (other.collider != null) {
-            Destroy(this);
+    void Update() {
+        this.transform.Translate(dir * Time.deltaTime * 5.0f, Space.World);
+        RaycastHit2D rayHit = Physics2D.CircleCast(transform.position, 0.5f, Vector2.zero, 0f, 1 << 3);
+        if (rayHit.collider != null) {
+            Destroy(gameObject);
         }
     }
 }

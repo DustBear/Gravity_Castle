@@ -517,7 +517,7 @@ public class Player : MonoBehaviour
     bool IsGrounded() {
         // Platform, Launcher, WindHome, Stone
         RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f
-        , 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15);
+        , 1 << 3 | 1 << 6 | 1 << 8 | 1 << 12 | 1 << 15 | 1 << 18);
 
         // MovingPlatform
         RaycastHit2D rayHitMovingPlatform = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 16);
@@ -540,13 +540,6 @@ public class Player : MonoBehaviour
             isRayHitIce = false;
         }
 
-        // Enemy
-        RaycastHit2D rayHitEnemy = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f
-        , 1 << 18);
-        if (rayHitEnemy.collider != null) {
-            rayHitEnemy.collider.gameObject.GetComponent<EnemyDefault>().isDestroyed = true;
-        }
-
         // KeyBox
         RaycastHit2D rayHitKeyBox = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 17);
         if (rayHitKeyBox.collider != null) {
@@ -561,6 +554,6 @@ public class Player : MonoBehaviour
             }
         }
 
-        return rayHit.collider != null || rayHitMovingPlatform.collider != null || rayHitIcePlatform.collider != null || rayHitEnemy.collider != null;
+        return rayHit.collider != null || rayHitMovingPlatform.collider != null || rayHitIcePlatform.collider != null;
     }
 }
