@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public GameObject menuBar;
+
     // Object Pool
     public enum Type {arrow, cannon};
     public GameObject arrow;
@@ -59,6 +61,7 @@ public class GameManager : MonoBehaviour
     void Awake() {
         instance = this;
         DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(menuBar);
 
         // Object Pool
         arrowQueue = new Queue<GameObject>();
@@ -130,5 +133,27 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetButtonDown("Cancel") && curStage != 0) {
+            menuBar.SetActive(!menuBar.activeSelf);
+        }
+
+        
+    }
+
+    void OnClickContinue() {
+        menuBar.SetActive(false);
+    }
+
+    void OnClickSave() {
+
+    }
+
+    void OnClickExit() {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
