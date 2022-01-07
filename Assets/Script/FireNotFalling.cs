@@ -15,10 +15,10 @@ public class FireNotFalling : MonoBehaviour
     }
 
     void OnEnable() {
-        if (GameManager.instance.curStage != 0) {
+        //if (GameManager.instance.curStage != 0) {
             player = GameObject.FindWithTag("Player").GetComponent<Player>();
             isIceMelted = false;
-        }
+        //}
     }
 
     void Update()

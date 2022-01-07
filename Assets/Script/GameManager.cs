@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
     void Awake() {
         instance = this;
         DontDestroyOnLoad(gameObject);
-        DontDestroyOnLoad(menuBar);
+        //DontDestroyOnLoad(menuBar);
 
         // Object Pool
         arrowQueue = new Queue<GameObject>();
@@ -94,29 +94,32 @@ public class GameManager : MonoBehaviour
         }
 
         // Die
-        respawnScene = new int[5, 5]
-        {{1, 2, 1, 3, 1}, {4, 5, 4, 4, 4}, {7, 7, 7, 8, 7}, {10, 9, 10, 10, 10}, {12, 12, 12, 12, 11}};
+        respawnScene = new int[6, 5]
+        {{1, 2, 1, 3, 1}, {4, 5, 4, 4, 4}, {7, 7, 7, 8, 7}, {10, 9, 10, 10, 10}, {12, 12, 12, 12, 11}, {14, 15, 15, 15, 16}};
         
-        respawnPos = new Vector2[5, 5]
+        respawnPos = new Vector2[6, 5]
         {{new Vector2(-161.5f, -7), new Vector2(-82, -2), new Vector2(-157.5f, 2), new Vector2(-196, 2), new Vector2(-157, 12)}
         , {new Vector2(-110.42f, -16.7f), new Vector2(-110.6f, -11), new Vector2(-20.53f, -12.1f), new Vector2(-127.3f, 1.9f), new Vector2(-125.7f, -3.2f)}
         , {new Vector2(-138.43f, -12.8f), new Vector2(-102.4f, -11.26f), new Vector2(-151.9f, 2.02f), new Vector2(-211.7f, 11.5f), new Vector2(-150.5f, -16.98f)}
         , {new Vector2(-175.52f, -14.53f), new Vector2(-245.3f, -3f), new Vector2(-189.18f, -3.97f), new Vector2(-133.82f, -9.03f), new Vector2(-197.4f, 17.91f)}
-        , {new Vector2(-177.5f, -20f), new Vector2(-156.5f, -11f), new Vector2(-199f, -12f), new Vector2(-196f, 3.7f), new Vector2(-246f, 27.5f)}};
+        , {new Vector2(-177.5f, -20f), new Vector2(-156.5f, -11f), new Vector2(-199f, -12f), new Vector2(-196f, 3.7f), new Vector2(-246f, 27.5f)}
+        , {new Vector2(-247.5f, -19f), new Vector2(-208.5f, 29.5f), new Vector2(-149.5f, -16.5f), new Vector2(-148.5f, 19.5f), new Vector2(-72.5f, 29.5f)}};
 
-        respawnGravityDir = new GravityDirection[5, 5]
+        respawnGravityDir = new GravityDirection[6, 5]
         {{GravityDirection.down, GravityDirection.left, GravityDirection.down, GravityDirection.down, GravityDirection.down}
         , {GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down}
         , {GravityDirection.down, GravityDirection.down, GravityDirection.up, GravityDirection.left, GravityDirection.right}
         , {GravityDirection.right, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down}
-        , {GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.right}};
+        , {GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.down, GravityDirection.right}
+        , {GravityDirection.right, GravityDirection.up, GravityDirection.up, GravityDirection.left, GravityDirection.up}};
 
-        respawnIsRoping = new bool[5, 5]
+        respawnIsRoping = new bool[6, 5]
         {{false, false, false, false, false}
         , {true, false, false, false, false}
         , {true, false, false, false, false}
         , {true, false, false, false, false}
-        , {true, false, false, false, false}};
+        , {true, false, false, false, false}
+        , {false, false, false, false, false}};
     }
 
     void Update() {
