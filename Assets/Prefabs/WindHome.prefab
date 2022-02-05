@@ -230,6 +230,8 @@ MonoBehaviour:
   startTime: 0
   activeTime: 0
   inActiveTime: 0
+  windZone: {fileID: 1168494902145406734}
+  windParticle: {fileID: 1184893297765902887}
 --- !u!95 &3149269181256495693
 Animator:
   serializedVersion: 3
@@ -417,8 +419,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 8
-      minScalar: 5
+      scalar: 30
+      minScalar: 20
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -534,7 +536,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.1
-      minScalar: 0.05
+      minScalar: 0.1
       maxCurve:
         serializedVersion: 2
         m_Curve:

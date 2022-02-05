@@ -4,37 +4,54 @@ using UnityEngine;
 
 public class KeyBox : MonoBehaviour
 {
+    [SerializeField] Key key;
+    [SerializeField] Animator boxHeadAnimator;
     Animator boxBodyAnimator;
-    Animator boxHeadAnimator;
-    int keyBoxNum;
+    bool isCollidePlayer;
 
-    void Awake() {
-        boxBodyAnimator = transform.GetChild(0).gameObject.GetComponent<Animator>();
-        boxHeadAnimator = transform.GetChild(1).gameObject.GetComponent<Animator>();
-        if (gameObject.CompareTag("KeyBox1")) {
-            keyBoxNum = 1;
-        }
-        else {
-            keyBoxNum = 2;
-        }
+    void Awake()
+    {
+        boxBodyAnimator = GetComponent<Animator>();
     }
 
-    void Update()
+    void Start()
     {
-        if (keyBoxNum == 1 && GameManager.instance.isGetKey1 || keyBoxNum == 2 && GameManager.instance.isGetKey2) {
+        // If player have already obtained the key, start scene with the keybox open
+        if (GameManager.instance.curAchievementNum >= key.achievementNum) {
             boxBodyAnimator.SetBool("getKey", true);
             boxHeadAnimator.SetBool("getKey", true);
+            this.enabled = false;
         }
-        else if (keyBoxNum == 1 && GameManager.instance.isOpenKeyBox1 || keyBoxNum == 2 && GameManager.instance.isOpenKeyBox2) {
-            boxBodyAnimator.SetBool("allowKey", true);
-            boxHeadAnimator.SetBool("allowKey", true);
-            StartCoroutine("Wait");
+        else {
+            StartCoroutine(ActivateKey());
         }
     }
 
-    IEnumerator Wait() {
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.CompareTag("Player"))
+        {
+            isCollidePlayer = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other) {
+        if (other.CompareTag("Player"))
+        {
+            isCollidePlayer = false;
+        }
+    }
+
+    IEnumerator ActivateKey()
+    {
+        // Open keybox
+        while (!isCollidePlayer || Vector2.Distance(transform.up, -Physics2D.gravity.normalized) > 0.1f)
+        {
+            yield return null;
+        }
+        boxBodyAnimator.SetBool("allowKey", true);
+        boxHeadAnimator.SetBool("allowKey", true);
         yield return new WaitForSeconds(0.9f);
-        // activate key
-        transform.GetChild(2).gameObject.SetActive(true);
+        key.gameObject.SetActive(true);
+        this.enabled = false;
     }
 }

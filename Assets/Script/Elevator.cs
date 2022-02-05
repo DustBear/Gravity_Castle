@@ -4,54 +4,58 @@ using UnityEngine;
 
 public class Elevator : MonoBehaviour
 {
-    public Vector2 startingPos;
-    public Vector2 finishingPos;
-    public float speed;
-    public float waitingTime;
-    
-    Player player;
-    bool isAllow1; // allow to go to the finishingPos
-    bool isAllow2; // allow to go to the startingPos
+    [SerializeField] Vector2 startingPos;
+    [SerializeField] Vector2 finishingPos;
+    [SerializeField] float speed;
+    [SerializeField] float waitingTime;
+    [SerializeField] Transform player;
+    Transform elevator;
+    IEnumerator coroutine;
 
     void Awake() {
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        elevator = transform.parent;
+        coroutine = Return();
     }
 
-    void Update()
-    {
-        if (player.onMovingFloor) {
-            // wait before going to the finishingPos
-            if (!isAllow1) {
-                StartCoroutine("Wait1");
-            }
-            // go to the finishingPos
-            else {
-                transform.position = Vector2.Lerp(transform.position, finishingPos, speed * Time.deltaTime);
-            }
-        }
-        else {
-            // wait before going to the startingPos
-            if (!isAllow2) {
-                StartCoroutine("Wait2");
-            }
-            // go to the startingPos
-            else {
-                transform.position = Vector2.Lerp(transform.position, startingPos, speed * Time.deltaTime);
-            }
+    void OnTriggerEnter2D(Collider2D other) {
+        // When player takes the elevator, elevator moves to the finishingPos
+        if (other.CompareTag("Player") && (Vector2)transform.up == -Physics2D.gravity.normalized)
+        {
+            player.parent = elevator;
+            StopCoroutine(coroutine);
+            coroutine = Go();
+            StartCoroutine(coroutine);
         }
     }
 
-    // after waiting, allow to go to the finishingPos
-    IEnumerator Wait1() {
-        yield return new WaitForSeconds(waitingTime);
-        isAllow1 = true;
-        isAllow2 = false;
+    void OnTriggerExit2D(Collider2D other) {
+        // When player gets off the elevator, elevator moves to the startingPos
+        if (other.CompareTag("Player"))
+        {
+            player.parent = null;
+            StopCoroutine(coroutine);
+            coroutine = Return();
+            StartCoroutine(coroutine);
+        }
     }
 
-    // after waiting, allow to go to the startingPos
-    IEnumerator Wait2() {
+    IEnumerator Go() {
         yield return new WaitForSeconds(waitingTime);
-        isAllow1 = false;
-        isAllow2 = true;
+        while (Vector2.Distance(elevator.position, finishingPos) > 0.1f)
+        {
+            elevator.position = Vector2.Lerp(elevator.position, finishingPos, speed * Time.deltaTime);
+            yield return null;
+        }
+        elevator.position = finishingPos;
+    }
+
+    IEnumerator Return() {
+        yield return new WaitForSeconds(waitingTime);
+        while (Vector2.Distance(elevator.position, startingPos) > 0.1f)
+        {
+            elevator.position = Vector2.Lerp(elevator.position, startingPos, speed * Time.deltaTime);
+            yield return null;
+        }
+        elevator.position = startingPos;
     }
 }

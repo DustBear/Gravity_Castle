@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5135453547917011350}
   - component: {fileID: 5135453547917011351}
   - component: {fileID: 5135453547917011348}
-  - component: {fileID: 5135453547917011353}
   - component: {fileID: 6048044561377434336}
   - component: {fileID: -1060706906106094782}
+  - component: {fileID: -5759503169634568024}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -109,30 +109,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &5135453547917011353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135453547917011346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5cf17e680683214d98ef85d23b8789c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isCollideRope: 0
-  walkSpeed: 6
-  jumpPower: 9.5
-  isJumping: 0
-  isRoping: 0
-  ropeSpeed: 4
-  gravityDirection: 1
-  startingPos: {x: 0, y: 0}
-  rotateDirection: 0
-  afterRotating: 0
-  isGhostRotating: 0
-  onMovingFloor: 0
 --- !u!95 &6048044561377434336
 Animator:
   serializedVersion: 3
@@ -178,6 +154,26 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8125, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-5759503169634568024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5135453547917011346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27aee8397fc3134b8fa9384de1b586c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftArrow: {fileID: 5135453549317223075}
+  rightArrow: {fileID: 5135453548562255226}
+  walkSpeed: 6
+  jumpPower: 9.5
+  isJumping: 0
+  ropingState: 0
+  ropeSpeed: 4
+  leveringState: 0
 --- !u!1 &5135453548562255226
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,9 +242,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -659458167
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7642980859614939925, guid: 8611e36e486a09c4ba479385fc3831a0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -328,9 +324,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -659458167
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7642980859614939925, guid: 8611e36e486a09c4ba479385fc3831a0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
