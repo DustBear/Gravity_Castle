@@ -27,13 +27,10 @@ public class Key : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             GameManager.instance.curAchievementNum = achievementNum;
-            
             GameManager.instance.respawnScene = SceneManager.GetActiveScene().buildIndex;
             GameManager.instance.respawnPos = player.transform.position;
             GameManager.instance.respawnGravityDir = Physics2D.gravity.normalized;
-
-            int curAchievementNum = GameManager.instance.curAchievementNum;
-            if (curAchievementNum >= 17 && curAchievementNum <= 20) // Stage5
+            if (achievementNum >= 17 && achievementNum <= 20) // Stage5
             {
                 GameManager.instance.UpdateShakedFloorInfo();
             }

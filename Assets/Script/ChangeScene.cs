@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class ChangeScene : MonoBehaviour
 {
-    [SerializeField] int nextStage;
     [SerializeField] int nextScene;
     [SerializeField] Vector2 deltaPos;
     Player player;

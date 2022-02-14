@@ -44,6 +44,10 @@ public class Projectile : MonoBehaviour
             {
                 yield return null;
             }
+            if (type == ObjManager.ObjType.arrow)
+            {
+                rigid.gravityScale = 0f;
+            }
             Vector2 storeVel = rigid.velocity;
             rigid.velocity = Vector2.zero;
             while (GameManager.instance.isChangeGravityDir)
@@ -51,6 +55,10 @@ public class Projectile : MonoBehaviour
                 yield return null;
             }
             rigid.velocity = storeVel;
+            if (type == ObjManager.ObjType.arrow)
+            {
+                rigid.gravityScale = 2f;
+            }
         }
     }
 }

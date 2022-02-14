@@ -27,15 +27,14 @@ public class Door : MonoBehaviour
         if (other.gameObject.CompareTag("Player")) {
             if (GameManager.instance.curAchievementNum == achievementNum - 1) {
                 StartCoroutine("FadeOut");
-            }
-
-            GameManager.instance.respawnScene = SceneManager.GetActiveScene().buildIndex;
-            GameManager.instance.respawnPos = player.transform.position;
-            GameManager.instance.respawnGravityDir = Physics2D.gravity.normalized;
-            int curAchievementNum = GameManager.instance.curAchievementNum;
-            if (curAchievementNum >= 17 && curAchievementNum <= 20) // Stage5
-            {
-                GameManager.instance.UpdateShakedFloorInfo();
+                GameManager.instance.curAchievementNum = achievementNum;
+                GameManager.instance.respawnScene = SceneManager.GetActiveScene().buildIndex;
+                GameManager.instance.respawnPos = player.transform.position;
+                GameManager.instance.respawnGravityDir = Physics2D.gravity.normalized;
+                if (achievementNum >= 17 && achievementNum <= 20) // Stage5
+                {
+                    GameManager.instance.UpdateShakedFloorInfo();
+                }
             }
         }
     }

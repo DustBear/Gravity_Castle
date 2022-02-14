@@ -11,13 +11,14 @@ public class MainCamera : MonoBehaviour
     float angle; // angle with resolutionX and resolutionY
     float diagonal; // diagonal length
     // map coordinates
-    public float mapMinX;
-    public float mapMaxX;
-    public float mapMinY;
-    public float mapMaxY;
+    [SerializeField] float mapMinX;
+    [SerializeField] float mapMaxX;
+    [SerializeField] float mapMinY;
+    [SerializeField] float mapMaxY;
 
-    public float shakedX;
-    public float shakedY;
+    [HideInInspector] public float shakedX;
+    [HideInInspector] public float shakedY;
+    [HideInInspector] public float shakedZ;
 
     void Awake() {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
@@ -29,7 +30,7 @@ public class MainCamera : MonoBehaviour
     void Update()
     {     
         // Rotation
-        transform.rotation = player.transform.rotation;
+        transform.rotation = Quaternion.Euler(0f, 0f, player.transform.eulerAngles.z + shakedZ);
         
         // Position
         float playerRot = player.transform.rotation.eulerAngles.z * Mathf.Deg2Rad;

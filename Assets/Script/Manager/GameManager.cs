@@ -10,6 +10,7 @@ public class GameManager : Singleton<GameManager>
     [HideInInspector] public bool isChangeGravityDir;
 
     // If next scene
+    public int nextScene;
     public Vector2 nextPos;
     public Vector2 nextGravityDir;
     public Player.RopingState nextRopingState;
@@ -31,10 +32,9 @@ public class GameManager : Singleton<GameManager>
     
     void Awake() {
         DontDestroyOnLoad(gameObject);
+        
         curIsShaked = new bool[shakedFloorNum];
         storedIsShaked = new bool[shakedFloorNum];
-
-        // Die
         respawnScene = 1;
         respawnPos = nextPos;
         respawnGravityDir = nextGravityDir;

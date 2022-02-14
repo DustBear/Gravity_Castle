@@ -52,7 +52,6 @@ public class Player : MonoBehaviour
             Physics2D.gravity = GameManager.instance.nextGravityDir * 9.8f;
             transform.up = -GameManager.instance.nextGravityDir;
             transform.eulerAngles = Vector3.forward * transform.eulerAngles.z;
-            //ropingState = GameManager.instance.nextRopingState;
             leveringState = GameManager.instance.nextLeveringState;
             isJumping = GameManager.instance.nextIsJumping;
         }
@@ -84,13 +83,16 @@ public class Player : MonoBehaviour
             if (leveringState == LeveringState.idle)
             {
                 Rope();
-                if (ropingState != RopingState.access)
+                if (!shouldRope)
                 {
-                    Jump();
-                }
-                if (ropingState == RopingState.idle)
-                {
-                    Walk();
+                    if (ropingState != RopingState.access)
+                    {
+                        Jump();
+                    }
+                    if (ropingState == RopingState.idle)
+                    {
+                        Walk();
+                    }
                 }
             }
         }
@@ -201,7 +203,6 @@ public class Player : MonoBehaviour
             case RopingState.idle:
                 if (InputManager.instance.vertical == 1 && isCollideRope || shouldRope)
                 {
-                    shouldRope = false;
                     rigid.gravityScale = 0;
                     rigid.velocity = Vector2.zero;
                     if (rope == null)
@@ -241,6 +242,7 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
+                    shouldRope = false;
                     if (Physics2D.gravity.normalized == Vector2.left)
                     {
                         if (rope.CompareTag("VerticalRope"))

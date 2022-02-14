@@ -24,7 +24,7 @@ public class Launcher : MonoBehaviour
         else if (timeRemaining != 0f && !GameManager.instance.isChangeGravityDir)
         {
             // When playr finishes changing gravity direction, apply calculated time remaining to nextTime
-            nextTime = Time.time + timeRemaining;
+            nextTime = Time.time - startTime + timeRemaining;
             timeRemaining = 0f;
         }
 

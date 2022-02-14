@@ -14,34 +14,43 @@ public class ObjManager : Singleton<ObjManager>
     [SerializeField] int cannonNum;    
     [SerializeField] int fireNum;
     [SerializeField] int fireFallingNum;
-    Queue<GameObject> arrowQueue = new Queue<GameObject>();
-    Queue<GameObject> cannonQueue = new Queue<GameObject>();
-    Queue<GameObject> fireQueue = new Queue<GameObject>();
-    Queue<GameObject> fireFallingQueue = new Queue<GameObject>();
+    Queue<GameObject> arrowQueue;
+    Queue<GameObject> cannonQueue;
+    Queue<GameObject> fireQueue;
+    Queue<GameObject> fireFallingQueue;
     
     protected ObjManager() {}
 
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
+        arrowQueue = new Queue<GameObject>();
+        cannonQueue = new Queue<GameObject>();
+        fireQueue = new Queue<GameObject>();
+        fireFallingQueue = new Queue<GameObject>();
         
         for (int i = 0; i < arrowNum; i++) {
             GameObject newObj = Instantiate(arrow);
+            DontDestroyOnLoad(newObj);
             arrowQueue.Enqueue(newObj);
             newObj.SetActive(false);
         }
         for (int i = 0; i < cannonNum; i++) {
             GameObject newObj = Instantiate(cannon);
+            DontDestroyOnLoad(newObj);
             cannonQueue.Enqueue(newObj);
             newObj.SetActive(false);
         }
         for (int i = 0; i < fireNum; i++) {
             GameObject newObj = Instantiate(fire);
+            DontDestroyOnLoad(newObj);
             fireQueue.Enqueue(newObj);
             newObj.SetActive(false);
         }
         for (int i = 0; i < fireFallingNum; i++) {
             GameObject newObj = Instantiate(fireFalling);
+            DontDestroyOnLoad(newObj);
             fireFallingQueue.Enqueue(newObj);
             newObj.SetActive(false);
         }

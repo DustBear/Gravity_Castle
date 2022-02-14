@@ -519,11 +519,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825307, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -151.45
+      value: -84
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825307, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.43
+      value: -9.97
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825307, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -559,7 +559,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825308, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: mapMaxX
-      value: 500
+      value: -84
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825308, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: mapMaxY
@@ -571,7 +571,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825308, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: mapMinY
-      value: -500
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825311, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_Name
@@ -708,7 +708,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04cfe68fe58ba6841af5e838a09fb56a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextStage: 2
   nextScene: 4
   deltaPos: {x: 45, y: -35.5}
 --- !u!1 &494837609
@@ -861,7 +860,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04cfe68fe58ba6841af5e838a09fb56a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextStage: 1
   nextScene: 2
   deltaPos: {x: 1.5, y: 0}
 --- !u!61 &846395136
@@ -7421,7 +7419,7 @@ Tilemap:
   m_GameObject: {fileID: 1497172715}
   m_Enabled: 1
   m_Tiles:
-  - first: {x: -165, y: 3, z: 0}
+  - first: {x: -155, y: 6, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 0
@@ -8369,6 +8367,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04cfe68fe58ba6841af5e838a09fb56a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextStage: 1
   nextScene: 3
   deltaPos: {x: -1.5, y: 0}
