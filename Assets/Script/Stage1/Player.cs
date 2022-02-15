@@ -346,13 +346,12 @@ public class Player : MonoBehaviour
                     if (Mathf.Abs(gravity.x) < 1f)
                     {
                         gravity.x = 0f;
-                        Physics2D.gravity = gravity;
                     }
                     else
                     {
                         gravity.y = 0f;
-                        Physics2D.gravity = gravity;
                     }
+                    Physics2D.gravity = gravity;
                     leveringState = LeveringState.fall;
                 }
                 break;
