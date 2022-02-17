@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] GameObject leftArrow;
-    [SerializeField] GameObject rightArrow;
+    [SerializeField] protected GameObject leftArrow;
+    [SerializeField] protected GameObject rightArrow;
     protected Rigidbody2D rigid;
     protected SpriteRenderer sprite;
     protected Animator animator;
@@ -18,22 +18,22 @@ public class Player : MonoBehaviour
     [SerializeField] protected float walkSpeed;
 
     // jump
-    [SerializeField] float jumpPower;
+    [SerializeField] protected float jumpPower;
     [HideInInspector] public bool isJumping;
-    bool isFalling;
+    protected bool isFalling;
 
     // Rope
     [HideInInspector] public enum RopingState { idle, access, move };
     [HideInInspector] public RopingState ropingState;
-    Vector3 destPos;
+    protected Vector3 destPos;
     GameObject rope;
     [SerializeField] public float ropeSpeed;
-    bool shouldRope;
+    protected bool shouldRope;
 
     // Lever
     [HideInInspector] public enum LeveringState { idle, selectGravityDir, changeGravityDir, fall };
     [HideInInspector] public LeveringState leveringState;
-    Vector3 destRot;
+    protected Vector3 destRot;
 
     virtual protected void Awake()
     {
@@ -292,7 +292,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    protected void Lever()
+    protected virtual void Lever()
     {
         switch (leveringState)
         {

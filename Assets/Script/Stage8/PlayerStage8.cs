@@ -67,6 +67,79 @@ public class PlayerStage8 : Player
         base.OnTriggerExit2D(other);
     }
 
+    protected override void Lever()
+    {
+        switch (leveringState)
+        {
+            case LeveringState.idle:
+                if (isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown)
+                {
+                    rigid.velocity = Vector2.zero;
+                    rigid.constraints = RigidbodyConstraints2D.FreezePosition;
+                    animator.SetBool("isWalking", false);
+                    leftArrow.SetActive(true);
+                    rightArrow.SetActive(true);
+                    leveringState = LeveringState.selectGravityDir;
+                }
+                break;
+
+            case LeveringState.selectGravityDir:
+                if (InputManager.instance.vertical == 1 && InputManager.instance.verticalDown || InputManager.instance.horizontalDown || !isCollideLever)
+                {
+                    rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
+                    leftArrow.SetActive(false);
+                    rightArrow.SetActive(false);
+                    transform.parent = null; // For moving floor
+
+                    if (InputManager.instance.vertical == 1 && InputManager.instance.verticalDown || !isCollideLever)
+                    {
+                        leveringState = LeveringState.idle;
+                    }
+                    else
+                    {
+                        float destRotZ = transform.eulerAngles.z + InputManager.instance.horizontal * 90f;
+                        if (destRotZ > 180f)
+                        {
+                            destRotZ -= 360f;
+                        }
+                        destRot = Vector3.forward * destRotZ;
+                        leveringState = LeveringState.changeGravityDir;
+                    }
+                }
+                break;
+
+            case LeveringState.changeGravityDir:
+                GameManager.instance.isChangeGravityDir = true; 
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(destRot), Time.deltaTime * 8.0f);
+                float tmp = Mathf.Abs(transform.eulerAngles.z - destRot.z);
+                // If finish rotating
+                if (Mathf.Abs(tmp - 360f) < 0.1f || tmp < 0.1f)
+                {
+                    GameManager.instance.isChangeGravityDir = false;
+                    transform.eulerAngles = destRot;
+                    Vector2 gravity = -transform.up * 9.8f;
+                    if (Mathf.Abs(gravity.x) < 1f)
+                    {
+                        gravity.x = 0f;
+                    }
+                    else
+                    {
+                        gravity.y = 0f;
+                    }
+                    Physics2D.gravity = gravity;
+                    leveringState = LeveringState.fall;
+                }
+                break;
+
+            case LeveringState.fall:
+                if (IsGrounded())
+                {
+                    leveringState = LeveringState.idle;
+                }
+                break;
+        }
+    }
+
     protected override bool IsGrounded()
     {
        return base.IsGrounded();
