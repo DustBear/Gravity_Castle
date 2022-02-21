@@ -9,7 +9,19 @@ public class LaserLauncher : MonoBehaviour
 
     void Start()
     {
-        Launch();
+        StartCoroutine(StartLaunch());
+    }
+
+    IEnumerator StartLaunch()
+    {
+        while (GameManager.instance.curAchievementNum <= 30)
+        {
+            yield return new WaitForSeconds(3f);
+        }
+        if (GameManager.instance.curAchievementNum <= 32)
+        {
+            Launch();
+        }
     }
 
     public void Launch()

@@ -32,18 +32,22 @@ public class Devil : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(5f);
-            Walk(-1f);
+            Walk(-12f);
             Jump();
             yield return new WaitForSeconds(5f);
-            Walk(1f);
+            Walk(12f);
             Jump();
+            yield return new WaitForSeconds(2f);
+            Walk(20f);
+            yield return new WaitForSeconds(2f);
+            Walk(-20f);
         }
     }
 
-    void Walk(float dir)
+    void Walk(float vel)
     {
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-        locVel = new Vector2(dir * 12f, locVel.y);
+        locVel = new Vector2(vel, locVel.y);
         rigid.velocity = transform.TransformDirection(locVel);
     }
 

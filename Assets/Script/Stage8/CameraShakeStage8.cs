@@ -8,6 +8,7 @@ public class CameraShakeStage8 : MonoBehaviour
     [SerializeField] float shakeDuration;
     [SerializeField] float shakeRange;
     MainCamera mainCamera;
+    [HideInInspector] public bool isShaked;
 
     void Awake()
     {
@@ -16,14 +17,12 @@ public class CameraShakeStage8 : MonoBehaviour
 
     public void StartShaking(float shakeDir, float targetDir)
     {
-        if (!player.isDevilRotating)
-        {
-            StartCoroutine(Shake(shakeDir, targetDir));
-        }
+        StartCoroutine(Shake(shakeDir, targetDir));
     }
 
     IEnumerator Shake(float shakeDir, float targetDir)
     {
+        isShaked = true;
         float shakeDirDelta = shakeDir > 0f ? 0.003f : -0.003f;
         float stopShakingTime = Time.time + shakeDuration;
         while (Time.time < stopShakingTime)
@@ -38,7 +37,7 @@ public class CameraShakeStage8 : MonoBehaviour
         mainCamera.shakedX = 0f;
         mainCamera.shakedY = 0f;
         mainCamera.shakedZ = 0f;
-        player.isDevilRotating = true;
         StartCoroutine(player.DevilUsingLever(targetDir));
+        isShaked = false;
     }
 }

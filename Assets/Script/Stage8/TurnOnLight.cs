@@ -8,6 +8,16 @@ public class TurnOnLight : MonoBehaviour
     [SerializeField] Light2D globalLight;
     [SerializeField] Light2D playerLight;
 
+    void Start()
+    {
+        if (GameManager.instance.curAchievementNum >= 29)
+        {
+            globalLight.intensity = 1f;
+            playerLight.intensity = 0f;
+            Destroy(gameObject);
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other != null && other.CompareTag("Player"))
@@ -24,6 +34,7 @@ public class TurnOnLight : MonoBehaviour
             playerLight.intensity -= 0.02f;
             yield return new WaitForSeconds(0.05f);
         }
+        GameManager.instance.curAchievementNum = 29;
         Destroy(gameObject);
     }
 }

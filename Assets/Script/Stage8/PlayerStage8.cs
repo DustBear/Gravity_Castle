@@ -147,6 +147,7 @@ public class PlayerStage8 : Player
 
     public IEnumerator DevilUsingLever(float targetRot)
     {
+        isDevilRotating = true;
         isDevilFalling = false;
         while (isBlackHole && !isBlackHoleFalling)
         {
@@ -211,7 +212,7 @@ public class PlayerStage8 : Player
         // Move to the target position
         while ((Vector2)transform.position != targetPos)
         {
-            transform.position = Vector2.MoveTowards(transform.position, targetPos, 30f * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, targetPos, 50f * Time.deltaTime);
             yield return null;
         }
         while (sprite.color.a < 1f)
