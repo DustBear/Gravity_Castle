@@ -18,31 +18,69 @@ public class PlayerStage8 : Player
 
     protected override void Start()
     {
-        base.Start();
+        UIManager.instance.FadeIn();
+        // Go to Next Scene
+        if (!GameManager.instance.isDie)
+        {
+            transform.position = GameManager.instance.nextPos;
+            Physics2D.gravity = GameManager.instance.nextGravityDir * 9.8f;
+            transform.up = -GameManager.instance.nextGravityDir;
+            transform.eulerAngles = Vector3.forward * transform.eulerAngles.z;
+            leveringState = GameManager.instance.nextLeveringState;
+            isJumping = GameManager.instance.nextIsJumping;
+        }
+        // Respawn after Dying
+        else
+        {
+            transform.position = GameManager.instance.respawnPos;
+            Physics2D.gravity = GameManager.instance.respawnGravityDir * 9.8f;
+            transform.up = -GameManager.instance.respawnGravityDir;
+            transform.eulerAngles = Vector3.forward * transform.eulerAngles.z;
+            GameManager.instance.isDie = false;
+            if (GameManager.instance.curAchievementNum == 33 && !GameManager.instance.isCliffChecked)
+            {
+                InputManager.instance.isInputBlocked = true;
+            }
+        }
+
+        if (GameManager.instance.nextRopingState != RopingState.idle)
+        {
+            rigid.gravityScale = 0f;
+            shouldRope = true;
+        }
     }
 
     protected override void Update()
     {
-        if (!GameManager.instance.isDie)
+        if (!GameManager.instance.isDie && !isDevilRotating && !isBlackHole)
         {
-            if (!isDevilRotating && !isBlackHole)
+            if (!isJumping && ropingState == RopingState.idle)
             {
-                if (!isJumping && ropingState == RopingState.idle)
+                Lever();
+            }
+            if (leveringState == LeveringState.idle)
+            {
+                Rope();
+                if (ropingState != RopingState.access)
                 {
-                    Lever();
+                    Jump();
                 }
-                if (leveringState == LeveringState.idle)
+                if (ropingState == RopingState.idle)
                 {
-                    Rope();
-                    if (ropingState != RopingState.access)
-                    {
-                        Jump();
-                    }
-                    if (ropingState == RopingState.idle)
-                    {
-                        Walk();
-                    }
+                    Walk();
                 }
+            }
+        }
+        if (InputManager.instance.isInputBlocked)
+        {
+            rigid.velocity = Vector2.left * walkSpeed;
+            animator.SetBool("isWalking", true);
+            sprite.flipX = false;
+            if (transform.position.x < -158f)
+            {
+                GameManager.instance.isCliffChecked = true;
+                rigid.velocity = Vector2.zero;
+                InputManager.instance.isInputBlocked = false;
             }
         }
     }
@@ -69,75 +107,7 @@ public class PlayerStage8 : Player
 
     protected override void Lever()
     {
-        switch (leveringState)
-        {
-            case LeveringState.idle:
-                if (isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown)
-                {
-                    rigid.velocity = Vector2.zero;
-                    rigid.constraints = RigidbodyConstraints2D.FreezePosition;
-                    animator.SetBool("isWalking", false);
-                    leftArrow.SetActive(true);
-                    rightArrow.SetActive(true);
-                    leveringState = LeveringState.selectGravityDir;
-                }
-                break;
-
-            case LeveringState.selectGravityDir:
-                if (InputManager.instance.vertical == 1 && InputManager.instance.verticalDown || InputManager.instance.horizontalDown || !isCollideLever)
-                {
-                    rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
-                    leftArrow.SetActive(false);
-                    rightArrow.SetActive(false);
-                    transform.parent = null; // For moving floor
-
-                    if (InputManager.instance.vertical == 1 && InputManager.instance.verticalDown || !isCollideLever)
-                    {
-                        leveringState = LeveringState.idle;
-                    }
-                    else
-                    {
-                        float destRotZ = transform.eulerAngles.z + InputManager.instance.horizontal * 90f;
-                        if (destRotZ > 180f)
-                        {
-                            destRotZ -= 360f;
-                        }
-                        destRot = Vector3.forward * destRotZ;
-                        leveringState = LeveringState.changeGravityDir;
-                    }
-                }
-                break;
-
-            case LeveringState.changeGravityDir:
-                GameManager.instance.isChangeGravityDir = true; 
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(destRot), Time.deltaTime * 8.0f);
-                float tmp = Mathf.Abs(transform.eulerAngles.z - destRot.z);
-                // If finish rotating
-                if (Mathf.Abs(tmp - 360f) < 0.1f || tmp < 0.1f)
-                {
-                    GameManager.instance.isChangeGravityDir = false;
-                    transform.eulerAngles = destRot;
-                    Vector2 gravity = -transform.up * 9.8f;
-                    if (Mathf.Abs(gravity.x) < 1f)
-                    {
-                        gravity.x = 0f;
-                    }
-                    else
-                    {
-                        gravity.y = 0f;
-                    }
-                    Physics2D.gravity = gravity;
-                    leveringState = LeveringState.fall;
-                }
-                break;
-
-            case LeveringState.fall:
-                if (IsGrounded())
-                {
-                    leveringState = LeveringState.idle;
-                }
-                break;
-        }
+        base.Lever();
     }
 
     protected override bool IsGrounded()
@@ -215,6 +185,7 @@ public class PlayerStage8 : Player
             transform.position = Vector2.MoveTowards(transform.position, targetPos, 50f * Time.deltaTime);
             yield return null;
         }
+        collide.enabled = true;
         while (sprite.color.a < 1f)
         {
             Color color = sprite.color;
@@ -225,7 +196,7 @@ public class PlayerStage8 : Player
 
         // Fall
         isBlackHoleFalling = true;
-        collide.enabled = true;
+        isBlackHole = false;
         if (!isDevilRotating || isDevilFalling)
         {
             rigid.gravityScale = 2f;
@@ -234,6 +205,5 @@ public class PlayerStage8 : Player
         {
             yield return null;
         }
-        isBlackHole = false;
     }
 }

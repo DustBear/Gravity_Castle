@@ -20,7 +20,7 @@ public class Laser : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(moveDir * 1.5f * Time.deltaTime, Space.World);
+        transform.Translate(moveDir * 1.2f * Time.deltaTime, Space.World);
     }
 
     void OnCollisionEnter2D(Collision2D other) {
@@ -31,25 +31,25 @@ public class Laser : MonoBehaviour
             effect.SetActive(true);
             if (other.collider.name == "LeftPlatform")
             {
-                lever.transform.position = new Vector2(-126.5f, collisionPos.y);
+                lever.transform.position = new Vector2(-126.5f, (int)collisionPos.y + 0.5f);
                 lever.transform.eulerAngles = Vector3.forward * 270f;
                 lever.SetActive(true);
             }
             else if (other.collider.name == "RightPlatform")
             {
-                lever.transform.position = new Vector2(-90.5f, collisionPos.y);
+                lever.transform.position = new Vector2(-90.5f, (int)collisionPos.y + 0.5f);
                 lever.transform.eulerAngles = Vector3.forward * 90f;
                 lever.SetActive(true);
             }
             else if (other.collider.name == "UpPlatform")
             {
-                lever.transform.position = new Vector2(collisionPos.x, 40.5f);
+                lever.transform.position = new Vector2(Mathf.Clamp((int)collisionPos.x + 0.5f, -125.5f, -91.5f), 40.5f);
                 lever.transform.eulerAngles = Vector3.forward * 180f;
                 lever.SetActive(true);
             }
             else if (other.collider.name == "DownPlatform")
             {
-                lever.transform.position = new Vector2(collisionPos.x, 7.5f);
+                lever.transform.position = new Vector2(Mathf.Clamp((int)collisionPos.x + 0.5f, -125.5f, -91.5f), 7.5f);
                 lever.transform.eulerAngles = Vector3.forward * 0f;
                 lever.SetActive(true);
             }

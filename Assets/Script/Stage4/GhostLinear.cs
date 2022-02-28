@@ -16,10 +16,13 @@ public class GhostLinear : MonoBehaviour
 
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
-        if ((Vector2)transform.position == pos[targetPosIdx])
+        if (!GameManager.instance.isChangeGravityDir)
         {
-            targetPosIdx = (targetPosIdx + 1) % pos.Length;
+            transform.position = Vector2.MoveTowards(transform.position, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
+            if ((Vector2)transform.position == pos[targetPosIdx])
+            {
+                targetPosIdx = (targetPosIdx + 1) % pos.Length;
+            }
         }
         
         transform.rotation = player.transform.rotation;

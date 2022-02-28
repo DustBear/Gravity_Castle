@@ -13,6 +13,8 @@ public class InputManager : Singleton<InputManager>
     [HideInInspector] public bool jump;
     [HideInInspector] public bool esc;
 
+    [HideInInspector] public bool isInputBlocked;
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -20,11 +22,22 @@ public class InputManager : Singleton<InputManager>
 
     void Update()
     {
-        horizontal = Input.GetAxisRaw("Horizontal");
-        horizontalDown = Input.GetButtonDown("Horizontal");
-        vertical = Input.GetAxisRaw("Vertical");
-        verticalDown = Input.GetButtonDown("Vertical");
-        jump = Input.GetKeyDown(KeyCode.Space);
+        if (!isInputBlocked)
+        {
+            horizontal = Input.GetAxisRaw("Horizontal");
+            horizontalDown = Input.GetButtonDown("Horizontal");
+            vertical = Input.GetAxisRaw("Vertical");
+            verticalDown = Input.GetButtonDown("Vertical");
+            jump = Input.GetKeyDown(KeyCode.Space);
+        }
+        else
+        {
+            horizontal = 0f;
+            horizontalDown = false;
+            vertical = 0f;
+            verticalDown = false;
+            jump = false;
+        }
         esc = Input.GetButtonDown("Cancel");
 
         if (esc && GameManager.instance.curAchievementNum >= 0)

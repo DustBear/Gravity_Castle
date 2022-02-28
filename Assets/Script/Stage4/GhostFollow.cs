@@ -16,23 +16,42 @@ public class GhostFollow : MonoBehaviour
         targetPos = transform.position;
     }
 
+    void Start()
+    {
+        StartCoroutine(IncreaseSpeed());
+    }
+
     void Update()
     {
-        if (GameManager.instance.curAchievementNum >= 14) {
+        if (GameManager.instance.curAchievementNum >= 14)
+        {
             // Timing when player start to fall after using lever
-            if (player.leveringState == Player.LeveringState.changeGravityDir) {
+            if (GameManager.instance.isChangeGravityDir)
+            {
                 targetPos = player.transform.position;
             }
-
-            // Follow
-            transform.position = Vector2.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+            else
+            {
+                // Follow
+                transform.position = Vector2.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+            }
 
             // Finish follow
-            if (GameManager.instance.curAchievementNum >= 15 && (Vector2)transform.position == targetPos && Physics2D.gravity.normalized != Vector2.down) {
+            if (GameManager.instance.curAchievementNum >= 15 && (Vector2)transform.position == targetPos && Physics2D.gravity.normalized != Vector2.down)
+            {
                 player.isGhostRotating = true;
             }
             
             transform.rotation = player.transform.rotation;
         }
+    }
+
+    IEnumerator IncreaseSpeed()
+    {
+        while (GameManager.instance.curAchievementNum != 15)
+        {
+            yield return new WaitForSeconds(5f);
+        }
+        speed = 5f;
     }
 }

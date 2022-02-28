@@ -20,12 +20,17 @@ public class GhostEllipse : MonoBehaviour
 
     void Update()
     {
-        time += Time.deltaTime;
-        if (!counterClockWise) {
-            transform.position = centerPos + new Vector2(xRad * Mathf.Sin(time * speed), yRad * Mathf.Cos(time * speed));
-        }
-        else {
-            transform.position = centerPos + new Vector2(xRad * Mathf.Sin(-time * speed), yRad * Mathf.Cos(-time * speed));
+        if (!GameManager.instance.isChangeGravityDir)
+        {
+            time += Time.deltaTime;
+            if (!counterClockWise)
+            {
+                transform.position = centerPos + new Vector2(xRad * Mathf.Sin(time * speed), yRad * Mathf.Cos(time * speed));
+            }
+            else
+            {
+                transform.position = centerPos + new Vector2(xRad * Mathf.Sin(-time * speed), yRad * Mathf.Cos(-time * speed));
+            }
         }
         
         transform.rotation = player.transform.rotation;

@@ -26,7 +26,7 @@ public class Door : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.CompareTag("Player")) {
             if (GameManager.instance.curAchievementNum == achievementNum - 1) {
-                StartCoroutine("FadeOut");
+                StartCoroutine(FadeOut());
                 GameManager.instance.curAchievementNum = achievementNum;
                 GameManager.instance.respawnScene = SceneManager.GetActiveScene().buildIndex;
                 GameManager.instance.respawnPos = player.transform.position;
@@ -47,5 +47,9 @@ public class Door : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         collid.isTrigger = true;
+        if (achievementNum == 33 && !GameManager.instance.isCliffChecked)
+        {
+            InputManager.instance.isInputBlocked = true;
+        }
     }
 }

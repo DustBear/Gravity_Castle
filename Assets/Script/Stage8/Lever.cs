@@ -24,7 +24,7 @@ public class Lever : MonoBehaviour
             render.color = color;
             yield return new WaitForSeconds(0.1f);
         }
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         while (render.color.a > 0f)
         {
             Color color = render.color;

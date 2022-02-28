@@ -34,7 +34,8 @@ public class PlayerStage2 : Player
         base.OnTriggerEnter2D(other);
     }
 
-    protected override void OnTriggerExit2D(Collider2D other) {
+    protected override void OnTriggerExit2D(Collider2D other)
+    {
         base.OnTriggerExit2D(other);
     }
 

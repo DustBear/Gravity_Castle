@@ -6,7 +6,7 @@ public class GameManager : Singleton<GameManager>
 {
     // Store informations
     [HideInInspector] public bool isDie;
-    [HideInInspector] public int curAchievementNum = -1;
+    public int curAchievementNum;
     [HideInInspector] public bool isChangeGravityDir;
 
     // If next scene
@@ -28,11 +28,12 @@ public class GameManager : Singleton<GameManager>
     [HideInInspector] public bool[] curIsShaked;
     [HideInInspector] public bool[] storedIsShaked;
 
+    [HideInInspector] public bool isCliffChecked;
+
     protected GameManager() {}
     
     void Awake() {
         DontDestroyOnLoad(gameObject);
-        
         curIsShaked = new bool[shakedFloorNum];
         storedIsShaked = new bool[shakedFloorNum];
         respawnScene = 1;

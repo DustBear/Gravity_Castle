@@ -61,7 +61,7 @@ public class EnemyDefault : MonoBehaviour
                 break;
         }
         rigid.bodyType = RigidbodyType2D.Kinematic;
-        while (player.leveringState != Player.LeveringState.changeGravityDir && rayHitPlayerUp.collider == null) {
+        while (!GameManager.instance.isChangeGravityDir && rayHitPlayerUp.collider == null) {
             // Move
             transform.position = transform.position + transform.right * (isLeft ? -speed : speed) * Time.deltaTime;
             
@@ -100,7 +100,7 @@ public class EnemyDefault : MonoBehaviour
     }
 
     IEnumerator Rotating() {
-        while (player.leveringState == Player.LeveringState.changeGravityDir) {
+        while (GameManager.instance.isChangeGravityDir) {
             transform.rotation = player.transform.rotation;
             yield return null;
         }

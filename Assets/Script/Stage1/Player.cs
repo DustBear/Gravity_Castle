@@ -26,14 +26,16 @@ public class Player : MonoBehaviour
     [HideInInspector] public enum RopingState { idle, access, move };
     [HideInInspector] public RopingState ropingState;
     protected Vector3 destPos;
-    GameObject rope;
+    protected GameObject rope;
     [SerializeField] public float ropeSpeed;
     protected bool shouldRope;
 
     // Lever
-    [HideInInspector] public enum LeveringState { idle, selectGravityDir, changeGravityDir, fall };
+    [HideInInspector] public enum LeveringState { idle, moveToLever1, moveToLever2, selectGravityDir, changeGravityDir1, changeGravityDir2, fall };
     [HideInInspector] public LeveringState leveringState;
-    protected Vector3 destRot;
+    protected Quaternion destRot;
+    protected float destRotZ;
+    protected GameObject lever;
 
     virtual protected void Awake()
     {
@@ -117,6 +119,7 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Lever"))
         {
             isCollideLever = true;
+            lever = other.gameObject;
         }
     }
 
@@ -297,24 +300,91 @@ public class Player : MonoBehaviour
         switch (leveringState)
         {
             case LeveringState.idle:
-                if (isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown)
+                if (isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown
+                    && lever.transform.eulerAngles.z == transform.eulerAngles.z)
                 {
                     rigid.velocity = Vector2.zero;
-                    rigid.constraints = RigidbodyConstraints2D.FreezePosition;
-                    animator.SetBool("isWalking", false);
-                    leftArrow.SetActive(true);
-                    rightArrow.SetActive(true);
-                    leveringState = LeveringState.selectGravityDir;
+                    animator.SetBool("isWalking", true);
+                    switch (lever.transform.eulerAngles.z)
+                    {
+                        case 0f:
+                            if (transform.localPosition.x > lever.transform.localPosition.x)
+                            {
+                                sprite.flipX = true;
+                            }
+                            else
+                            {
+                                sprite.flipX = false;
+                            }
+                            leveringState = LeveringState.moveToLever1;
+                            break;
+
+                        case 180f:
+                            if (transform.localPosition.x > lever.transform.localPosition.x)
+                            {
+                                sprite.flipX = false;
+                            }
+                            else
+                            {
+                                sprite.flipX = true;
+                            }
+                            leveringState = LeveringState.moveToLever1;
+                            break;
+                        
+                        case 90f:
+                            if (transform.localPosition.y > lever.transform.localPosition.y)
+                            {
+                                sprite.flipX = true;
+                            }
+                            else
+                            {
+                                sprite.flipX = false;
+                            }
+                            leveringState = LeveringState.moveToLever2;
+                            break;
+
+                        case 270f:
+                            if (transform.localPosition.y > lever.transform.localPosition.y)
+                            {
+                                sprite.flipX = false;
+                            }
+                            else
+                            {
+                                sprite.flipX = true;
+                            }
+                            leveringState = LeveringState.moveToLever2;
+                            break;
+                    }
+                }
+                break;
+
+            case LeveringState.moveToLever1:
+                // Move
+                transform.localPosition = Vector2.MoveTowards(transform.localPosition, new Vector2(lever.transform.localPosition.x, transform.localPosition.y), 3f * Time.deltaTime);
+
+                // Finish moving
+                if (transform.localPosition.x == lever.transform.localPosition.x)
+                {
+                    FinishMovingToLever();
+                }
+                break;
+
+            case LeveringState.moveToLever2:
+                // Move
+                transform.localPosition = Vector2.MoveTowards(transform.localPosition, new Vector2(transform.localPosition.x, lever.transform.localPosition.y), 3f * Time.deltaTime);
+
+                // Finish moving
+                if (transform.localPosition.y == lever.transform.localPosition.y)
+                {
+                    FinishMovingToLever();
                 }
                 break;
 
             case LeveringState.selectGravityDir:
                 if (InputManager.instance.vertical == 1 && InputManager.instance.verticalDown || InputManager.instance.horizontalDown)
                 {
-                    rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
                     leftArrow.SetActive(false);
                     rightArrow.SetActive(false);
-                    transform.parent = null; // For moving floor
 
                     if (InputManager.instance.vertical == 1 && InputManager.instance.verticalDown)
                     {
@@ -322,37 +392,50 @@ public class Player : MonoBehaviour
                     }
                     else
                     {
-                        float destRotZ = transform.eulerAngles.z + InputManager.instance.horizontal * 90f;
-                        if (destRotZ > 180f)
+                        rigid.gravityScale = 0f;
+                        rigid.velocity = Vector2.zero;
+                        transform.parent = null; // For moving floor
+                        destRotZ = transform.eulerAngles.z + InputManager.instance.horizontal * 90f;
+                        if (destRotZ == 360f)
                         {
-                            destRotZ -= 360f;
+                            destRot = Quaternion.Euler(Vector3.zero);
                         }
-                        destRot = Vector3.forward * destRotZ;
-                        leveringState = LeveringState.changeGravityDir;
+                        else
+                        {
+                            if (destRotZ == -90f)
+                            {
+                                destRotZ = 270f;
+                            }
+                            destRot = Quaternion.Euler(Vector3.forward * destRotZ);
+                        }
+                        GameManager.instance.isChangeGravityDir = true;
+                        if (lever.transform.eulerAngles.z == 0f || lever.transform.eulerAngles.z == 180f)
+                        {
+                            leveringState = LeveringState.changeGravityDir1;
+                        }
+                        else
+                        {
+                            leveringState = LeveringState.changeGravityDir2;
+                        }
                     }
                 }
                 break;
 
-            case LeveringState.changeGravityDir:
-                GameManager.instance.isChangeGravityDir = true; 
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(destRot), Time.deltaTime * 8.0f);
-                float tmp = Mathf.Abs(transform.eulerAngles.z - destRot.z);
-                // If finish rotating
-                if (Mathf.Abs(tmp - 360f) < 0.1f || tmp < 0.1f)
+            case LeveringState.changeGravityDir1:
+                transform.localPosition = Vector2.MoveTowards(transform.localPosition, new Vector2(transform.localPosition.x, lever.transform.position.y), 3f * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, destRot, Time.deltaTime * 8.0f);
+                if (Mathf.RoundToInt(transform.eulerAngles.z) == destRotZ)
                 {
-                    GameManager.instance.isChangeGravityDir = false;
-                    transform.eulerAngles = destRot;
-                    Vector2 gravity = -transform.up * 9.8f;
-                    if (Mathf.Abs(gravity.x) < 1f)
-                    {
-                        gravity.x = 0f;
-                    }
-                    else
-                    {
-                        gravity.y = 0f;
-                    }
-                    Physics2D.gravity = gravity;
-                    leveringState = LeveringState.fall;
+                    FinishRotating();
+                }
+                break;
+
+            case LeveringState.changeGravityDir2:
+                transform.localPosition = Vector2.MoveTowards(transform.localPosition, new Vector2(lever.transform.position.x, transform.localPosition.y), 3f * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, destRot, Time.deltaTime * 8.0f);
+                if (Mathf.RoundToInt(transform.eulerAngles.z) == destRotZ)
+                {
+                    FinishRotating();
                 }
                 break;
 
@@ -363,6 +446,36 @@ public class Player : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    protected virtual void FinishMovingToLever()
+    {
+        animator.SetBool("isWalking", false);
+        leftArrow.SetActive(true);
+        rightArrow.SetActive(true);
+        leveringState = LeveringState.selectGravityDir;
+    }
+
+    protected virtual void FinishRotating()
+    {
+        if (destRotZ == 360f)
+        {
+            destRotZ = 0f;
+        }
+        transform.eulerAngles = Vector3.forward * destRotZ;
+        GameManager.instance.isChangeGravityDir = false;
+        Vector2 gravity = -transform.up * 9.8f;
+        if (Mathf.Abs(gravity.x) < 1f)
+        {
+            gravity.x = 0f;
+        }
+        else
+        {
+            gravity.y = 0f;
+        }
+        Physics2D.gravity = gravity;
+        rigid.gravityScale = 2f;
+        leveringState = LeveringState.fall;
     }
 
     protected virtual bool IsGrounded()

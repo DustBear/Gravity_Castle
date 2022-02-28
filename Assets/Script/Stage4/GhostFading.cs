@@ -10,10 +10,12 @@ public class GhostFading : MonoBehaviour
     [SerializeField] float keepFadeInTime;
     [SerializeField] float keepFadeOutTime;
     SpriteRenderer sprite;
+    BoxCollider2D collid;
 
     void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
+        collid = GetComponent<BoxCollider2D>();
         Color color = sprite.color;
         color.a = maxTransparency;
         sprite.color = color;
@@ -30,12 +32,13 @@ public class GhostFading : MonoBehaviour
         while (true)
         {
             // Fade in
+            collid.enabled = true;
             for (float f = 0; f <= maxTransparency; f += 0.1f)
             {
                 Color color = sprite.color;
                 color.a = f;
                 sprite.color = color;
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.05f);
             }
             yield return new WaitForSeconds(keepFadeInTime);
 
@@ -45,8 +48,9 @@ public class GhostFading : MonoBehaviour
                 Color color = sprite.color;
                 color.a = f;
                 sprite.color = color;
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.05f);
             }
+            collid.enabled = false;
             yield return new WaitForSeconds(keepFadeOutTime);
         }
     }

@@ -1,13 +1,16 @@
 fileFormatVersion: 2
-guid: e81a68497fc5da24eb6c8fd087e67b10
+guid: 43687d39fdaadf945bebbdc651a915e6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3539382984382863936
-    second: outline3_0
+      213: 449568398592916575
+    second: backwall5_0
   - first:
-      213: 1610697417996489070
-    second: outline3_1
+      213: -3263485287587119797
+    second: backwall5_1
+  - first:
+      213: -6670265302110176321
+    second: backwall5_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -52,7 +55,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -71,7 +74,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -83,7 +86,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 4096
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -95,7 +98,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
-    maxTextureSize: 4096
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -109,13 +112,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: outline3_0
+      name: backwall5_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1184
-        height: 704
+        width: 3584
+        height: 3264
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -123,20 +126,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 04ad334621a6e1130800000000000000
-      internalID: 3539382984382863936
+      spriteID: f5c3f5c93103d3600800000000000000
+      internalID: 449568398592916575
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: outline3_1
+      name: backwall5_1
       rect:
         serializedVersion: 2
-        x: 1184
+        x: 3584
         y: 0
-        width: 1040
-        height: 704
+        width: 3392
+        height: 3264
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -144,8 +147,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e61d15094c85a5610800000000000000
-      internalID: 1610697417996489070
+      spriteID: b4df7afeb65c5b2d0800000000000000
+      internalID: -3263485287587119797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: backwall5_2
+      rect:
+        serializedVersion: 2
+        x: 6976
+        y: 0
+        width: 3456
+        height: 3264
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbbfb1e5c057e63a0800000000000000
+      internalID: -6670265302110176321
       vertices: []
       indices: 
       edges: []

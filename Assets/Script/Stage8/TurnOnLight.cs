@@ -14,6 +14,11 @@ public class TurnOnLight : MonoBehaviour
         {
             globalLight.intensity = 1f;
             playerLight.intensity = 0f;
+            Devil devil = FindObjectOfType<Devil>();
+            if (devil != null)
+            {
+                devil.enabled = true;
+            }
             Destroy(gameObject);
         }
     }
@@ -35,6 +40,11 @@ public class TurnOnLight : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         GameManager.instance.curAchievementNum = 29;
+        Devil devil = FindObjectOfType<Devil>();
+        if (devil != null)
+        {
+            devil.enabled = true;
+        }
         Destroy(gameObject);
     }
 }
