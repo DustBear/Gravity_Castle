@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -36,10 +37,34 @@ public class GameManager : Singleton<GameManager>
         DontDestroyOnLoad(gameObject);
         curIsShaked = new bool[shakedFloorNum];
         storedIsShaked = new bool[shakedFloorNum];
+    }
+
+    void Start()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void Init()
+    {
+        isDie = false;;
+        curAchievementNum = 0;
+        isChangeGravityDir = false;
+        nextScene = 0;
+        nextPos = new Vector2(-161.5f, -7f);
+        nextGravityDir = Vector2.down;
+        nextRopingState = Player.RopingState.idle;
+        nextLeveringState = Player.LeveringState.idle;
+        nextIsJumping = false;
         respawnScene = 1;
         respawnPos = nextPos;
         respawnGravityDir = nextGravityDir;
         respawnRopingState = nextRopingState;
+        isCliffChecked = false;
+        for (int i = 0; i < shakedFloorNum; i++)
+        {
+            curIsShaked[i] = false;
+            storedIsShaked[i] = false;
+        }
     }
 
     public void InitShakedFloorInfo()

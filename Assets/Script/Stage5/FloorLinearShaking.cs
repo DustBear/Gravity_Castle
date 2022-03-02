@@ -21,13 +21,16 @@ public class FloorLinearShaking : FloorShaking
 
     protected override void Idle()
     {
-        nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
-        // if floor arrive target position, convert targetPosIdx to next targetPosIdx
-        if (Vector2.Distance(nextPos, pos[targetPosIdx]) < 0.1f)
+        if (!GameManager.instance.isChangeGravityDir)
         {
-            targetPosIdx = (targetPosIdx + 1) % pos.Length;
+            nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
+            // if floor arrive target position, convert targetPosIdx to next targetPosIdx
+            if (Vector2.Distance(nextPos, pos[targetPosIdx]) < 0.1f)
+            {
+                targetPosIdx = (targetPosIdx + 1) % pos.Length;
+            }
+            transform.position = nextPos;
         }
-        transform.position = nextPos;
         base.Idle();
     }
 

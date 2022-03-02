@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyDefault : MonoBehaviour
 {
     Player player;
-    RaycastHit2D rayHitWallUp, rayHitWallDown, rayHitPlatform, rayHitPlayerUp;
+    RaycastHit2D rayHitWallDown, rayHitPlatform, rayHitPlayerUp;
     Rigidbody2D rigid;
     SpriteRenderer sprite;
     SpriteRenderer spriteLever;
@@ -27,12 +27,16 @@ public class EnemyDefault : MonoBehaviour
 
     void Start() {
         StartCoroutine(Moving());
-        AutoChangeDir();
     }
 
     void OnCollisionEnter2D(Collision2D other) {
         if (other.collider != null) {
             isCollide = true;
+            if (other.collider.tag == "Player" && rayHitPlayerUp.collider == null)
+            {
+                GameManager.instance.isDie = true;
+                UIManager.instance.FadeOut();
+            }
         }
     }
 
@@ -67,18 +71,16 @@ public class EnemyDefault : MonoBehaviour
             
             // Change direction
             if (isLeft) {
-                rayHitWallUp = Physics2D.Raycast(transform.position + transform.up * sizeY * 0.4f - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
-                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.4f - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
+                rayHitWallDown = Physics2D.Raycast(transform.position - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 18 | 1 << 19);
                 //rayHitWall = Physics2D.BoxCast(transform.position - transform.right * sizeX * 0.6f, new Vector2(0.05f, sizeY * 0.35f), transform.rotation.z, -transform.right, 0f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
                 rayHitPlatform = Physics2D.Raycast(transform.position - transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, ~(1 << 18));
             }
             else {
-                rayHitWallUp = Physics2D.Raycast(transform.position + transform.up * sizeY * 0.4f + transform.right * sizeX * 0.6f, transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
-                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.4f + transform.right * sizeX * 0.6f, transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
+                rayHitWallDown = Physics2D.Raycast(transform.position + transform.right * sizeX * 0.6f, transform.right, 0.1f, 1 << 3 | 1 << 18 | 1 << 19);
                 //rayHitWall = Physics2D.BoxCast(transform.position + transform.right * sizeX * 0.6f, new Vector2(0.05f, sizeY * 0.35f), transform.rotation.z, transform.right, 0f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
                 rayHitPlatform = Physics2D.Raycast(transform.position + transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, ~(1 << 18));
             }
-            if (rayHitWallUp.collider != null || rayHitWallDown.collider != null || rayHitPlatform.collider == null) {
+            if (rayHitWallDown.collider != null || rayHitPlatform.collider == null) {
                 isLeft = !isLeft;
             }
             // move toward player
@@ -88,7 +90,7 @@ public class EnemyDefault : MonoBehaviour
                     isLeft = !isLeft;
                 }
             }
-            rayHitPlayerUp = Physics2D.BoxCast(transform.position, new Vector2(sizeX, sizeY), transform.rotation.eulerAngles.z, transform.up, 0.1f, 1 << 10);
+            rayHitPlayerUp = Physics2D.BoxCast(transform.position + transform.up * sizeY * 0.5f, new Vector2(sizeX * 0.8f, sizeY), transform.rotation.eulerAngles.z, transform.up, 0.1f, 1 << 10);
             yield return null;
         }
         if (rayHitPlayerUp.collider != null) {
@@ -118,35 +120,12 @@ public class EnemyDefault : MonoBehaviour
 
     IEnumerator Destroyed() {
         sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0.5f);
-        if (transform.childCount != 0) {
-            spriteLever = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
-            spriteLever.color = new Color(spriteLever.color.r, spriteLever.color.g, spriteLever.color.b, 0.5f);
-        }
-        Invoke("Erase", 1f);
+        Destroy(gameObject , 1f);
         while (true) {
             Color color = sprite.color;
             color.a = 0.5f - color.a;
             sprite.color = color;
-            if (transform.childCount != 0) {
-                Color colorLever = spriteLever.color;
-                colorLever.a = 0.5f - colorLever.a;
-                spriteLever.color = colorLever;
-            }
             yield return new WaitForSeconds(0.02f);
         }
-    }
-
-    void Erase() {
-        if (transform.childCount != 0) {
-            Transform lever = transform.GetChild(1);
-            lever.parent = null;
-            lever.gameObject.SetActive(true); 
-        }
-        Destroy(gameObject);
-    }
-
-    void AutoChangeDir() {
-        isLeft = !isLeft;
-        Invoke("AutoChangeDir", Random.Range(3, 10));
     }
 }

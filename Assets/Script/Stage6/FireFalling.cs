@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class FireFalling : MonoBehaviour
 {
@@ -12,7 +11,6 @@ public class FireFalling : MonoBehaviour
     GameObject player;
     Rigidbody2D rigid;
     BoxCollider2D collid;
-    Scene originScene;
     bool isFinish;
     bool isApplyRotating;
 
@@ -30,13 +28,21 @@ public class FireFalling : MonoBehaviour
         }
         rigid.gravityScale = 1f;
         collid.isTrigger = false;
-        originScene = SceneManager.GetActiveScene();
         isFinish = false;
     }
 
     void Update()
     {
-        transform.rotation = player.transform.rotation;
+        // If scene changes, then erase all activated fires
+        if (player == null)
+        {
+            gameObject.SetActive(false);
+            ObjManager.instance.ReturnObj(ObjManager.ObjType.fireFalling, gameObject);
+        }
+        else
+        {
+            transform.rotation = player.transform.rotation;
+        }
 
         if (isApplyRotating)
         {
@@ -46,13 +52,6 @@ public class FireFalling : MonoBehaviour
         else
         {
             rigid.gravityScale = 1f;
-        }
-
-        // If scene changes, then erase all activated fires
-        if (originScene != SceneManager.GetActiveScene())
-        {
-            gameObject.SetActive(false);
-            ObjManager.instance.ReturnObj(ObjManager.ObjType.fireFalling, gameObject);
         }
 
         // Change isApplyRotating to fit isRotating

@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyShot : MonoBehaviour
 {
     Player player;
-    RaycastHit2D rayHitWallUp, rayHitWallDown, rayHitPlatform, rayHitPlayerUp;
+    RaycastHit2D rayHitWallDown, rayHitPlatform, rayHitPlayerUp;
     Rigidbody2D rigid;
     SpriteRenderer sprite;
     SpriteRenderer spriteLever;
@@ -37,6 +37,11 @@ public class EnemyShot : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other) {
         if (other.collider != null) {
             isCollide = true;
+            if (other.collider.tag == "Player" && rayHitPlayerUp.collider == null)
+            {
+                GameManager.instance.isDie = true;
+                UIManager.instance.FadeOut();
+            }
         }
     }
 
@@ -75,18 +80,16 @@ public class EnemyShot : MonoBehaviour
             
             // Change direction
             if (isLeft) {
-                rayHitWallUp = Physics2D.Raycast(transform.position + transform.up * sizeY * 0.4f - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
                 rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.4f - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
                 //rayHitWall = Physics2D.BoxCast(transform.position - transform.right * sizeX * 0.6f, new Vector2(0.05f, sizeY * 0.2f), transform.rotation.z, -transform.right, 0f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
                 rayHitPlatform = Physics2D.Raycast(transform.position - transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, ~(1 << 18));
             }
             else {
-                rayHitWallUp = Physics2D.Raycast(transform.position + transform.up * sizeY * 0.4f - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
-                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.4f - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
+                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.4f - transform.right * sizeX * 0.6f, transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
                 //rayHitWall = Physics2D.BoxCast(transform.position + transform.right * sizeX * 0.6f, new Vector2(0.05f, sizeY * 0.2f), transform.rotation.z, transform.right, 0f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
                 rayHitPlatform = Physics2D.Raycast(transform.position + transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, ~(1 << 18));
             }
-            if (rayHitWallUp.collider != null || rayHitWallDown.collider != null || rayHitPlatform.collider == null) {
+            if (rayHitWallDown.collider != null || rayHitPlatform.collider == null) {
                 isLeft = !isLeft;
             }
             else if (Mathf.Abs(Vector2.Dot(transform.up, transform.position - player.transform.position)) < 1f && Vector2.Distance(transform.position, player.transform.position) < 5f) {
@@ -95,7 +98,7 @@ public class EnemyShot : MonoBehaviour
                     isLeft = !isLeft;
                 }
             }
-            rayHitPlayerUp = Physics2D.BoxCast(transform.position, new Vector2(sizeX, sizeY), transform.rotation.eulerAngles.z, transform.up, 0.1f, 1 << 10);
+            rayHitPlayerUp = Physics2D.BoxCast(transform.position + transform.up * sizeY * 0.2f, new Vector2(sizeX * 0.6f, sizeY), transform.rotation.eulerAngles.z, transform.up, 0.1f, 1 << 10);
             yield return null;
         }
         if (rayHitPlayerUp.collider != null) {

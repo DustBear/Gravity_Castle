@@ -13,19 +13,25 @@ public class FireLauncherLasting : MonoBehaviour
     
     void Start() {
         // Create fire
-        for (float f = leftPos.y; f <= rightPos.y; f += 0.5f)
+        if (!isVertical)
         {
-            GameObject newFire = ObjManager.instance.GetObj(ObjManager.ObjType.fire);
-            if (!isVertical)
+            for (float f = leftPos.x; f <= rightPos.x; f += 0.5f)
             {
+                GameObject newFire = ObjManager.instance.GetObj(ObjManager.ObjType.fire);
                 newFire.transform.position = new Vector2(f, transform.position.y);
+                newFire.transform.parent = gameObject.transform;
+                newFire.SetActive(true);
             }
-            else
+        }
+        else
+        {
+            for (float f = leftPos.y; f <= rightPos.y; f += 0.5f)
             {
+                GameObject newFire = ObjManager.instance.GetObj(ObjManager.ObjType.fire);
                 newFire.transform.position = new Vector2(transform.position.x, f);
+                newFire.transform.parent = gameObject.transform;
+                newFire.SetActive(true);
             }
-            newFire.transform.parent = gameObject.transform;
-            newFire.SetActive(true);
         }
 
         // Start to move

@@ -16,6 +16,9 @@ public class FloorShaking : MonoBehaviour
     protected Vector2 nextPos;
     protected float time;
 
+    bool isGravityDirChanged;
+    Vector2 storedVel;
+
     virtual protected void Awake() {
         if (GameManager.instance.curIsShaked[floorNum]) {
             Destroy(gameObject);
@@ -129,6 +132,19 @@ public class FloorShaking : MonoBehaviour
 
     virtual protected void Falling()
     {
+        if (!isGravityDirChanged && GameManager.instance.isChangeGravityDir)
+        {
+            rigid.gravityScale = 0f;
+            storedVel = rigid.velocity;
+            rigid.velocity = Vector2.zero;
+            isGravityDirChanged = true;
+        }
+        else if (isGravityDirChanged && !GameManager.instance.isChangeGravityDir)
+        {
+            rigid.gravityScale = 2f;
+            rigid.velocity = storedVel;
+            isGravityDirChanged = false;
+        }
         RaycastHit2D rayHitPlatform;
         if (Physics2D.gravity == new Vector2(-9.8f, 0f))
         {

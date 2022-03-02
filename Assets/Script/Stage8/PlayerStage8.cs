@@ -88,16 +88,15 @@ public class PlayerStage8 : Player
     protected override void OnCollisionEnter2D(Collision2D other)
     {
         base.OnCollisionEnter2D(other);
+        if (other.collider.CompareTag("Devil") || other.collider.CompareTag("Projectile")) {
+            GameManager.instance.isDie = true;
+            UIManager.instance.FadeOut();
+        }
     }
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);
-
-        if (other.CompareTag("Devil")) {
-            GameManager.instance.isDie = true;
-            UIManager.instance.FadeOut();
-        }
     }
 
     protected override void OnTriggerExit2D(Collider2D other)
@@ -110,9 +109,9 @@ public class PlayerStage8 : Player
         base.Lever();
     }
 
-    protected override bool IsGrounded()
+    protected override void IsGrounded()
     {
-       return base.IsGrounded();
+       base.IsGrounded();
     }
 
     public IEnumerator DevilUsingLever(float targetRot)
@@ -152,7 +151,7 @@ public class PlayerStage8 : Player
         // Fall
         isDevilFalling = true;
         rigid.gravityScale = 2;
-        while (!IsGrounded() && !isBlackHole)
+        while (!isGrounded && !isBlackHole)
         {
             yield return null;
         }
@@ -201,7 +200,7 @@ public class PlayerStage8 : Player
         {
             rigid.gravityScale = 2f;
         }
-        while (!IsGrounded())
+        while (!isGrounded)
         {
             yield return null;
         }

@@ -24,31 +24,34 @@ public class ObjManager : Singleton<ObjManager>
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-
         arrowQueue = new Queue<GameObject>();
         cannonQueue = new Queue<GameObject>();
         fireQueue = new Queue<GameObject>();
         fireFallingQueue = new Queue<GameObject>();
-        
-        for (int i = 0; i < arrowNum; i++) {
+
+        for (int i = 0; i < arrowNum; i++)
+        {
             GameObject newObj = Instantiate(arrow);
             DontDestroyOnLoad(newObj);
             arrowQueue.Enqueue(newObj);
             newObj.SetActive(false);
         }
-        for (int i = 0; i < cannonNum; i++) {
+        for (int i = 0; i < cannonNum; i++)
+        {
             GameObject newObj = Instantiate(cannon);
             DontDestroyOnLoad(newObj);
             cannonQueue.Enqueue(newObj);
             newObj.SetActive(false);
         }
-        for (int i = 0; i < fireNum; i++) {
+        for (int i = 0; i < fireNum; i++)
+        {
             GameObject newObj = Instantiate(fire);
             DontDestroyOnLoad(newObj);
             fireQueue.Enqueue(newObj);
             newObj.SetActive(false);
         }
-        for (int i = 0; i < fireFallingNum; i++) {
+        for (int i = 0; i < fireFallingNum; i++)
+        {
             GameObject newObj = Instantiate(fireFalling);
             DontDestroyOnLoad(newObj);
             fireFallingQueue.Enqueue(newObj);

@@ -18,7 +18,16 @@ public class FireNotFalling : MonoBehaviour
 
     void Update()
     {
-        transform.rotation = player.transform.rotation;
+       // If scene changes, then erase all activated fires
+        if (player == null)
+        {
+            gameObject.SetActive(false);
+            ObjManager.instance.ReturnObj(ObjManager.ObjType.fire, gameObject);
+        }
+        else
+        {
+            transform.rotation = player.transform.rotation;
+        }
     }
 
     public void StopParticle()

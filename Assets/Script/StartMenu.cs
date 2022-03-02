@@ -6,9 +6,8 @@ using UnityEngine.UI;
 
 public class StartMenu : MonoBehaviour
 {
-
     public void OnClickStartGame() {
-        GameManager.instance.curAchievementNum = 0;
+        GameManager.instance.Init();
         SceneManager.LoadScene(1);
     }
 

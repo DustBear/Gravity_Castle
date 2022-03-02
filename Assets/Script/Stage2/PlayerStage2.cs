@@ -39,9 +39,9 @@ public class PlayerStage2 : Player
         base.OnTriggerExit2D(other);
     }
 
-    protected override bool IsGrounded()
+    protected override void IsGrounded()
     {
         RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 3 | 1 << 16 | 1 << 6 | 1 << 7 | 1 << 15);
-        return rayHit.collider != null;
+        isGrounded = rayHit.collider != null;
     }
 }

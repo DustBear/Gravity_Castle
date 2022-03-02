@@ -1,13 +1,16 @@
 fileFormatVersion: 2
-guid: dea578150e97fe248a7777edd6dcbecd
+guid: a48c8068a1a7cc449977b646b5949b6a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6381080754006798235
-    second: outline3 1_0
+      213: -410891490212249995
+    second: backwall2_0
   - first:
-      213: 7203746450960475260
-    second: outline3 1_1
+      213: 650294684425535281
+    second: backwall2_1
+  - first:
+      213: 1887811346233812520
+    second: backwall2_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -109,13 +112,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: outline3 1_0
+      name: backwall2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1184
-        height: 704
+        width: 880
+        height: 496
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -123,20 +126,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b9f28a923272e8850800000000000000
-      internalID: 6381080754006798235
+      spriteID: 57efaacdd583c4af0800000000000000
+      internalID: -410891490212249995
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: outline3 1_1
+      name: backwall2_1
       rect:
         serializedVersion: 2
-        x: 1184
+        x: 880
         y: 0
-        width: 1040
-        height: 704
+        width: 625
+        height: 496
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -144,8 +147,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c74ea75ea39d8f360800000000000000
-      internalID: 7203746450960475260
+      spriteID: 13f3280f19f460900800000000000000
+      internalID: 650294684425535281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: backwall2_2
+      rect:
+        serializedVersion: 2
+        x: 1505
+        y: 0
+        width: 1071
+        height: 496
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 826e737da6ad23a10800000000000000
+      internalID: 1887811346233812520
       vertices: []
       indices: 
       edges: []

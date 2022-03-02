@@ -11,7 +11,6 @@ TagManager:
   - Spike
   - Key1
   - Key2
-  - Canvas
   - KeyBox1
   - KeyBox2
   - Platform
@@ -25,9 +24,8 @@ TagManager:
   - Ghost
   - Projectile
   - IcePlatform
-  - Door1
-  - Door2
   - Devil
+  - Fire
   layers:
   - Default
   - TransparentFX
@@ -37,7 +35,7 @@ TagManager:
   - UI
   - Launcher
   - Projectile
-  - Bounce
+  - 
   - IcePlatform
   - Player
   - ChangeScene
@@ -62,11 +60,11 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: TransParent
-    uniqueID: 1160230747
-    locked: 0
   - name: Background
     uniqueID: 2873726937
+    locked: 0
+  - name: Backwall
+    uniqueID: 1621383683
     locked: 0
   - name: Rope
     uniqueID: 1476648101

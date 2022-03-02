@@ -42,6 +42,15 @@ public class IcePlatform : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!isFired && other.gameObject.CompareTag("Fire"))
+        {
+            StartFired(other.transform.position);
+            isFired = true;
+        }
+    }
+
     void StartFired(Vector2 startingPos)
     {
         // Set starting position of fire on the ice platform
@@ -144,22 +153,22 @@ public class IcePlatform : MonoBehaviour
             // Check whether current position is end of ice platform
             if (!isVertical)
             {
-                if (leftPos.x < leftmostPos.x)
+                if (leftPos.x <= leftmostPos.x)
                 {
                     isFinishLeft = true;
                 }
-                if (rightPos.x > rightmostPos.x)
+                if (rightPos.x >= rightmostPos.x)
                 {
                     isFinishRight = true;
                 }
             }
             else
             {
-                if (leftPos.y < leftmostPos.y)
+                if (leftPos.y <= leftmostPos.y)
                 {
                     isFinishLeft = true;
                 }
-                if (rightPos.y > rightmostPos.y)
+                if (rightPos.y >= rightmostPos.y)
                 {
                     isFinishRight = true;
                 }

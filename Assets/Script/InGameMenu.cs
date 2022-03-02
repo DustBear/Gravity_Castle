@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InGameMenu : MonoBehaviour
 {
@@ -14,10 +15,8 @@ public class InGameMenu : MonoBehaviour
     }
 
     public void OnClickExit() {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        GameManager.instance.curAchievementNum = -1;
+        SceneManager.LoadScene(0);
+        gameObject.SetActive(false);
     }
 }

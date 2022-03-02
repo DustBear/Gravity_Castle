@@ -5,10 +5,16 @@ using UnityEngine;
 public class FireLauncher : MonoBehaviour
 {
     [SerializeField] float timeInterval;
+    IEnumerator coroutine;
+
+    void Awake()
+    {
+        coroutine = LaunchFire();
+    }
 
     void OnEnable()
     {
-        StartCoroutine(LaunchFire());
+        StartCoroutine(coroutine);
     }
 
     IEnumerator LaunchFire()
@@ -20,5 +26,9 @@ public class FireLauncher : MonoBehaviour
             fireFalling.SetActive(true);
             yield return new WaitForSeconds(timeInterval);
         }
+    }
+
+    void OnDisable() {
+        StopCoroutine(coroutine);
     }
 }

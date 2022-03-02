@@ -70,9 +70,9 @@ public class PlayerStage4 : Player
         base.OnTriggerExit2D(other);
     }
 
-    protected override bool IsGrounded()
+    protected override void IsGrounded()
     {
-       return base.IsGrounded();
+       base.IsGrounded();
     }
 
     void GhostUsingLever() {
@@ -81,7 +81,7 @@ public class PlayerStage4 : Player
             transform.eulerAngles = Vector3.zero;
             Physics2D.gravity = new Vector2(0, -9.8f);
             rigid.gravityScale = 2;
-            if (IsGrounded()) {
+            if (isGrounded) {
                 isGhostRotating = false;
             }
         }

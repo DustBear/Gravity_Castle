@@ -24,11 +24,21 @@ public class PlayerStage6 : Player
     protected override void OnCollisionEnter2D(Collision2D other)
     {
         base.OnCollisionEnter2D(other);
+        if (other.gameObject.tag == "Projectile")
+        {
+            GameManager.instance.isDie = true;
+            UIManager.instance.FadeOut();
+        }
     }
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         base.OnTriggerEnter2D(other);
+        if (other.gameObject.tag == "Fire")
+        {
+            GameManager.instance.isDie = true;
+            UIManager.instance.FadeOut();
+        }
     }
 
     protected override void OnTriggerExit2D(Collider2D other)
@@ -69,7 +79,7 @@ public class PlayerStage6 : Player
         }
     }
 
-    protected override bool IsGrounded()
+    protected override void IsGrounded()
     {
         RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 3 | 1 << 16 | 1 << 19);
         
@@ -81,6 +91,6 @@ public class PlayerStage6 : Player
         else {
             isRayHitIce = false;
         }
-        return rayHit.collider != null || rayHitIcePlatform.collider;
+        isGrounded = rayHit.collider != null || rayHitIcePlatform.collider;
     }
 }

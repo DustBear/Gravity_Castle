@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: f00513a44ec8990429df47cd0dbb6456
+guid: f1405425b2d5e4348b6e1d004c9dc4f4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7727227470495054807
-    second: background3 1_0
+      213: 7895823302153915536
+    second: backwall8_2_0
   - first:
-      213: 9025727280692782297
-    second: background3 1_1
+      213: -716847474957025301
+    second: backwall8_2_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -71,7 +71,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -83,7 +83,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -95,7 +95,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -109,13 +109,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: background3 1_0
+      name: backwall8_2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1184
-        height: 704
+        width: 1456
+        height: 496
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -123,20 +123,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7db7f7d9170ac3b60800000000000000
-      internalID: 7727227470495054807
+      spriteID: 09cc22e9579939d60800000000000000
+      internalID: 7895823302153915536
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: background3 1_1
+      name: backwall8_2_1
       rect:
         serializedVersion: 2
-        x: 1184
-        y: 0
-        width: 1040
-        height: 704
+        x: 0
+        y: 496
+        width: 1456
+        height: 1344
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -144,8 +144,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9d4ee353423d14d70800000000000000
-      internalID: 9025727280692782297
+      spriteID: beffc01050f3d06f0800000000000000
+      internalID: -716847474957025301
       vertices: []
       indices: 
       edges: []

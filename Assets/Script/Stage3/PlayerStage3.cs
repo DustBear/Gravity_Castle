@@ -21,6 +21,7 @@ public class PlayerStage3 : Player
     {
         if (!GameManager.instance.isDie)
         {
+            IsGrounded();
             if (!isJumping && ropingState == RopingState.idle)
             {
                 Lever();
@@ -84,9 +85,9 @@ public class PlayerStage3 : Player
         }
     }
 
-    protected override bool IsGrounded()
+    protected override void IsGrounded()
     {
         RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 3 | 1 << 12 | 1 << 16);
-        return rayHit.collider != null;
+        isGrounded = rayHit.collider != null;
     }
 }

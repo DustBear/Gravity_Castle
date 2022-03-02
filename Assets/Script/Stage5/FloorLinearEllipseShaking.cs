@@ -30,22 +30,25 @@ public class FloorLinearEllipseShaking : FloorShaking
 
     protected override void Idle()
     {
-        // linear moved position
-        nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
-        // add ellipse moved position
-        movingTime += Time.deltaTime;
-        if (!counterClockWise)
+        if (!GameManager.instance.isChangeGravityDir)
         {
-            transform.position = nextPos + new Vector2(xRad * Mathf.Sin(movingTime * ellipseSpeed), yRad * Mathf.Cos(movingTime * ellipseSpeed));
-        }
-        else
-        {
-            transform.position = nextPos + new Vector2(xRad * Mathf.Sin(-movingTime * ellipseSpeed), yRad * Mathf.Cos(-movingTime * ellipseSpeed));
-        }
-        // if floor arrive target position, convert targetPosIdx to next targetPosIdx
-        if (nextPos == pos[targetPosIdx])
-        {
-            targetPosIdx = (targetPosIdx + 1) % pos.Length;
+            // linear moved position
+            nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
+            // add ellipse moved position
+            movingTime += Time.deltaTime;
+            if (!counterClockWise)
+            {
+                transform.position = nextPos + new Vector2(xRad * Mathf.Sin(movingTime * ellipseSpeed), yRad * Mathf.Cos(movingTime * ellipseSpeed));
+            }
+            else
+            {
+                transform.position = nextPos + new Vector2(xRad * Mathf.Sin(-movingTime * ellipseSpeed), yRad * Mathf.Cos(-movingTime * ellipseSpeed));
+            }
+            // if floor arrive target position, convert targetPosIdx to next targetPosIdx
+            if (nextPos == pos[targetPosIdx])
+            {
+                targetPosIdx = (targetPosIdx + 1) % pos.Length;
+            }
         }
         base.Idle();
     }

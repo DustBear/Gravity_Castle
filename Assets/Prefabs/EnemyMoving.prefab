@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 8272607903455590972}
   - component: {fileID: 8272607903455590973}
   - component: {fileID: 1277774747587596979}
+  - component: {fileID: 2291193820658862752}
   m_Layer: 18
   m_Name: EnemyMoving
   m_TagString: Enemy
@@ -111,7 +112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c69b367539d102e43a8de91102e13d84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDestroyed: 0
   speed: 1.5
   startMv: 0
 --- !u!50 &8272607903455590973
@@ -161,6 +161,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8125, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &2291193820658862752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8272607903455590945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61031af257a026744a1bff332c81eb16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  startMv: 0
 --- !u!1001 &3658916250265395445
 PrefabInstance:
   m_ObjectHideFlags: 0

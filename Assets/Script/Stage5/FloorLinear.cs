@@ -15,9 +15,13 @@ public class FloorLinear : MonoBehaviour
 
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
-        if ((Vector2)transform.position == pos[targetPosIdx]) {
-            targetPosIdx = (targetPosIdx + 1) % pos.Length;
+        if (!GameManager.instance.isChangeGravityDir)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
+            if ((Vector2)transform.position == pos[targetPosIdx])
+            {
+                targetPosIdx = (targetPosIdx + 1) % pos.Length;
+            }
         }
     }
 }

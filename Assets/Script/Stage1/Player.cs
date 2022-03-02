@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     protected Rigidbody2D rigid;
     protected SpriteRenderer sprite;
     protected Animator animator;
+    protected bool isGrounded;
 
     // Collision
     protected bool isCollideRope;
@@ -78,6 +79,7 @@ public class Player : MonoBehaviour
     {
         if (!GameManager.instance.isDie)
         {
+            IsGrounded();
             if (!isJumping && ropingState == RopingState.idle)
             {
                 Lever();
@@ -190,7 +192,7 @@ public class Player : MonoBehaviour
                     isFalling = true;
                 }
             }
-            else if (IsGrounded())
+            else if (isGrounded)
             {
                 animator.SetBool("isJumping", false);
                 isJumping = false;
@@ -199,7 +201,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    protected void Rope()
+    protected virtual void Rope()
     {
         switch (ropingState)
         {
@@ -440,7 +442,7 @@ public class Player : MonoBehaviour
                 break;
 
             case LeveringState.fall:
-                if (IsGrounded())
+                if (isGrounded)
                 {
                     leveringState = LeveringState.idle;
                 }
@@ -478,9 +480,9 @@ public class Player : MonoBehaviour
         leveringState = LeveringState.fall;
     }
 
-    protected virtual bool IsGrounded()
+    protected virtual void IsGrounded()
     {
         RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 3 | 1 << 16);
-        return rayHit.collider != null;
+        isGrounded = rayHit.collider != null;
     }
 }
