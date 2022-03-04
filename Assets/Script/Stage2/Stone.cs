@@ -14,7 +14,11 @@ public class Stone : MonoBehaviour
 
     void Update()
     {
-        if (isCollideCannonHome)
+        if (GameManager.instance.curAchievementNum >= 7)
+        {
+            transform.position = new Vector2(-175.6f, 6f);
+        }
+        else if (isCollideCannonHome)
         {
             transform.position = new Vector2(-175.6f, transform.position.y);
         }

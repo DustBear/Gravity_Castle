@@ -8,7 +8,6 @@ public class Player : MonoBehaviour
     [SerializeField] protected GameObject rightArrow;
     protected Rigidbody2D rigid;
     protected SpriteRenderer sprite;
-    protected Animator animator;
     protected bool isGrounded;
 
     // Collision
@@ -42,7 +41,6 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
     }
 
     virtual protected void Start()
@@ -57,6 +55,12 @@ public class Player : MonoBehaviour
             transform.eulerAngles = Vector3.forward * transform.eulerAngles.z;
             leveringState = GameManager.instance.nextLeveringState;
             isJumping = GameManager.instance.nextIsJumping;
+
+            if (GameManager.instance.nextRopingState != RopingState.idle)
+            {
+                rigid.gravityScale = 0f;
+                shouldRope = true;
+            }
         }
         // Respawn after Dying
         else
@@ -66,12 +70,6 @@ public class Player : MonoBehaviour
             transform.up = -GameManager.instance.respawnGravityDir;
             transform.eulerAngles = Vector3.forward * transform.eulerAngles.z;
             GameManager.instance.isDie = false;
-        }
-
-        if (GameManager.instance.nextRopingState != RopingState.idle)
-        {
-            rigid.gravityScale = 0f;
-            shouldRope = true;
         }
     }
 
@@ -145,14 +143,14 @@ public class Player : MonoBehaviour
         rigid.velocity = transform.TransformDirection(locVel);
 
         // Animation
-        if (InputManager.instance.horizontal != 0)
-        {
-            animator.SetBool("isWalking", true);
-        }
-        else
-        {
-            animator.SetBool("isWalking", false);
-        }
+        // if (InputManager.instance.horizontal != 0)
+        // {
+        //     animator.SetBool("isWalking", true);
+        // }
+        // else
+        // {
+        //     animator.SetBool("isWalking", false);
+        // }
         if (InputManager.instance.horizontal == 1)
         {
             sprite.flipX = false;
@@ -177,7 +175,7 @@ public class Player : MonoBehaviour
             {
                 rigid.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
             }
-            animator.SetBool("isJumping", true);
+            // animator.SetBool("isJumping", true);
             isJumping = true;
         }
 
@@ -194,7 +192,7 @@ public class Player : MonoBehaviour
             }
             else if (isGrounded)
             {
-                animator.SetBool("isJumping", false);
+                // animator.SetBool("isJumping", false);
                 isJumping = false;
                 isFalling = false;
             }
@@ -306,7 +304,7 @@ public class Player : MonoBehaviour
                     && lever.transform.eulerAngles.z == transform.eulerAngles.z)
                 {
                     rigid.velocity = Vector2.zero;
-                    animator.SetBool("isWalking", true);
+                    // animator.SetBool("isWalking", true);
                     switch (lever.transform.eulerAngles.z)
                     {
                         case 0f:
@@ -452,7 +450,7 @@ public class Player : MonoBehaviour
 
     protected virtual void FinishMovingToLever()
     {
-        animator.SetBool("isWalking", false);
+        // animator.SetBool("isWalking", false);
         leftArrow.SetActive(true);
         rightArrow.SetActive(true);
         leveringState = LeveringState.selectGravityDir;
@@ -482,7 +480,7 @@ public class Player : MonoBehaviour
 
     protected virtual void IsGrounded()
     {
-        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 3 | 1 << 16);
+        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 16);
         isGrounded = rayHit.collider != null;
     }
 }

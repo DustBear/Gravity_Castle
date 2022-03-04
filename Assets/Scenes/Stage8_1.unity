@@ -385,9 +385,9 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingLayerID: 1476648101
+  m_SortingLayer: -6
+  m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -3167,7 +3167,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 576231503}
   m_LocalRotation: {x: 0, y: -0, z: 0.7071068, w: -0.7071068}
-  m_LocalPosition: {x: -145.58, y: 2, z: 0}
+  m_LocalPosition: {x: -145.5, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2097177425}
@@ -4286,7 +4286,7 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_LightVolumeOpacity: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: d99749ab035aa460a5dc035861d9c12eab50480fdb0ad3c59508b7385b7e6d70000000008977b1d8
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
   m_LightOrder: 0
@@ -20758,11 +20758,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -149.42
+      value: -80.1
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -24.99
+      value: -13.8
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.z
@@ -20798,11 +20798,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011351, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_SortingLayer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5135453547917011351, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 0
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011351, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_Materials.Array.data[0]

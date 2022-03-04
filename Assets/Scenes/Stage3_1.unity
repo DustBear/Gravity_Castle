@@ -1397,6 +1397,10 @@ PrefabInstance:
       propertyPath: ShapeModule.m_Scale.z
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8898932782436831877, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -2401,6 +2405,10 @@ PrefabInstance:
       propertyPath: ShapeModule.m_Scale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8898932782436831877, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -2564,9 +2572,9 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8898932782436831877, guid: 78db22841d794b14ba04a74772953745, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78db22841d794b14ba04a74772953745, type: 3}
 --- !u!4 &396071173 stripped
@@ -2737,6 +2745,10 @@ PrefabInstance:
     - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: ShapeModule.m_Scale.z
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8898932782436831877, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -3212,6 +3224,10 @@ PrefabInstance:
     - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: ShapeModule.m_Scale.z
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8898932782436831877, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -4088,6 +4104,10 @@ PrefabInstance:
       propertyPath: ShapeModule.m_Scale.z
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8898932782436831877, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -4415,6 +4435,10 @@ PrefabInstance:
     - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: ShapeModule.m_Scale.z
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8898932782436831877, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -13833,11 +13857,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -151.3
+      value: -136.1
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13
+      value: -10.1
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.z
@@ -14057,6 +14081,10 @@ PrefabInstance:
     - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: ShapeModule.m_Scale.z
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8898932782436831877, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_Materials.Array.data[0]

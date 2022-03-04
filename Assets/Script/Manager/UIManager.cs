@@ -61,5 +61,15 @@ public class UIManager : Singleton<UIManager>
     public void OnOffInGameMenu()
     {
         inGameMenu.SetActive(!inGameMenu.activeSelf);
+        if (inGameMenu.activeSelf)
+        {
+            Time.timeScale = 0f;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 }

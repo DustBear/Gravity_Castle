@@ -148,7 +148,7 @@ public class PlayerStage5 : Player
                     && lever.transform.eulerAngles.z == transform.eulerAngles.z)
                 {
                     rigid.velocity = Vector2.zero;
-                    animator.SetBool("isWalking", true);
+                    // animator.SetBool("isWalking", true);
                     switch (lever.transform.eulerAngles.z)
                     {
                         case 0f:
@@ -294,7 +294,7 @@ public class PlayerStage5 : Player
 
     protected override void IsGrounded()
     {
-        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 3);
+        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
 
         // MovingPlatform
         RaycastHit2D rayHitMovingPlatform = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 16);

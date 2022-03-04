@@ -52,29 +52,33 @@ public class PlayerStage8 : Player
 
     protected override void Update()
     {
-        if (!GameManager.instance.isDie && !isDevilRotating && !isBlackHole)
+        if (!GameManager.instance.isDie)
         {
-            if (!isJumping && ropingState == RopingState.idle)
+            IsGrounded();
+            if (!isDevilRotating && !isBlackHole && !isBlackHoleFalling)
             {
-                Lever();
-            }
-            if (leveringState == LeveringState.idle)
-            {
-                Rope();
-                if (ropingState != RopingState.access)
+                if (!isJumping && ropingState == RopingState.idle)
                 {
-                    Jump();
+                    Lever();
                 }
-                if (ropingState == RopingState.idle)
+                if (leveringState == LeveringState.idle)
                 {
-                    Walk();
+                    Rope();
+                    if (ropingState != RopingState.access)
+                    {
+                        Jump();
+                    }
+                    if (ropingState == RopingState.idle)
+                    {
+                        Walk();
+                    }
                 }
             }
         }
         if (InputManager.instance.isInputBlocked)
         {
             rigid.velocity = Vector2.left * walkSpeed;
-            animator.SetBool("isWalking", true);
+            // animator.SetBool("isWalking", true);
             sprite.flipX = false;
             if (transform.position.x < -158f)
             {
@@ -134,6 +138,7 @@ public class PlayerStage8 : Player
             }
             yield return null;
         }
+        transform.eulerAngles = Vector3.forward * targetRot;
 
         // Set gravity
         Vector2 gravity = -transform.up * 9.8f;
@@ -204,5 +209,6 @@ public class PlayerStage8 : Player
         {
             yield return null;
         }
+        isBlackHoleFalling = false;
     }
 }

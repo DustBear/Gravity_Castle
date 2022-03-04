@@ -3341,7 +3341,7 @@ SpriteRenderer:
   m_SortingLayerID: -659458167
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -6724901840263831054, guid: 2b05f177dfbe86b41877317012d8d6b0, type: 3}
+  m_Sprite: {fileID: 1591235939239273241, guid: 23ae57b4682f6824da3355d8e42f8efa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3431,7 +3431,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825308, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: mapMinY
-      value: -10
+      value: -14
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825311, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_Name
@@ -3734,6 +3734,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1060706906106094782, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 1.0625
+      objectReference: {fileID: 0}
+    - target: {fileID: -1060706906106094782, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 1.375
+      objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011346, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3744,11 +3752,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -184.34
+      value: -184.55
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.55
+      value: 0.23
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3781,6 +3789,18 @@ PrefabInstance:
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5135453547917011351, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+      propertyPath: m_Size.x
+      value: 1.0625
+      objectReference: {fileID: 0}
+    - target: {fileID: 5135453547917011351, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+      propertyPath: m_Size.y
+      value: 1.375
+      objectReference: {fileID: 0}
+    - target: {fileID: 5135453547917011351, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011351, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_Materials.Array.data[0]

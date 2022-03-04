@@ -16,6 +16,14 @@ public class Projectile : MonoBehaviour
 
     void OnEnable() {
         originScene = SceneManager.GetActiveScene();
+        if (type == ObjManager.ObjType.arrow)
+        {
+            rigid.gravityScale = 2f;
+        }
+        else if (type == ObjManager.ObjType.cannon)
+        {
+            rigid.gravityScale = 0f;
+        }
         rigid.AddForce(transform.up * firePower, ForceMode2D.Impulse);
         StartCoroutine(StopWhileChangingGravityDir());
     }

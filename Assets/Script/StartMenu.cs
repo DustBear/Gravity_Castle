@@ -8,6 +8,7 @@ public class StartMenu : MonoBehaviour
 {
     public void OnClickStartGame() {
         GameManager.instance.Init();
+        Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene(1);
     }
 

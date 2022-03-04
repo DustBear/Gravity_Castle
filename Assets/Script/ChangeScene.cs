@@ -14,7 +14,7 @@ public class ChangeScene : MonoBehaviour
     }
 
     void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Player")) {
+        if (other.gameObject.CompareTag("Player") && !GameManager.instance.isDie) {
             GameManager.instance.nextPos.x = player.transform.position.x + deltaPos.x;
             GameManager.instance.nextPos.y = player.transform.position.y + deltaPos.y;
             GameManager.instance.nextGravityDir = Physics2D.gravity.normalized;

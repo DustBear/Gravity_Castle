@@ -77,7 +77,8 @@ public class PlayerStage4 : Player
 
     void GhostUsingLever() {
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 8.0f);
-        if (Mathf.RoundToInt(transform.eulerAngles.z) == 0) {
+        int angle = Mathf.RoundToInt(transform.eulerAngles.z);
+        if (angle == 0 || angle == 360 ) {
             transform.eulerAngles = Vector3.zero;
             Physics2D.gravity = new Vector2(0, -9.8f);
             rigid.gravityScale = 2;

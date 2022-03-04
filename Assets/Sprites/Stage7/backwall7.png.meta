@@ -1,16 +1,7 @@
 fileFormatVersion: 2
-guid: 2b05f177dfbe86b41877317012d8d6b0
+guid: e490cb7b8c0d97c448c156c82826e372
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -6724901840263831054
-    second: outline_0
-  - first:
-      213: -8130563302095499159
-    second: outline_1
-  - first:
-      213: 1716872661175303876
-    second: outline_2
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -50,7 +41,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -74,7 +65,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -86,7 +77,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -98,7 +89,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -110,70 +101,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: outline_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 992
-        height: 432
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2f124b508695ca2a0800000000000000
-      internalID: -6724901840263831054
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: outline_1
-      rect:
-        serializedVersion: 2
-        x: 992
-        y: 0
-        width: 1360
-        height: 432
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 96055ca11cf6a2f80800000000000000
-      internalID: -8130563302095499159
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: outline_2
-      rect:
-        serializedVersion: 2
-        x: 2352
-        y: 0
-        width: 992
-        height: 432
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4cefee5c69e83d710800000000000000
-      internalID: 1716872661175303876
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []

@@ -6,7 +6,7 @@ public class CameraShake : MonoBehaviour
 {
     MainCamera mainCamera;
     Player player;
-    [SerializeField] GameObject stone;
+    [SerializeField] Rigidbody2D stoneRigid;
     [SerializeField] float shakeRange;
     [SerializeField] float shakeDuration;
 
@@ -29,6 +29,6 @@ public class CameraShake : MonoBehaviour
     void StopShake() {
         CancelInvoke("StartShake");
         mainCamera.enabled = true;
-        stone.SetActive(true);
+        stoneRigid.gravityScale = 2f;
     }
 }
