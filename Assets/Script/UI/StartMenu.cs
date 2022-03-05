@@ -6,21 +6,28 @@ using UnityEngine.UI;
 
 public class StartMenu : MonoBehaviour
 {
-    public void OnClickStartGame() {
-        GameManager.instance.Init();
-        Cursor.lockState = CursorLockMode.Locked;
-        SceneManager.LoadScene(1);
+    public void OnClickNewGame()
+    {
+        DataManager.instance.CheckSavedGame(true);
     }
 
-    public void OnClickTutorial() {
+    public void OnClickLoadGame()
+    {
+        DataManager.instance.CheckSavedGame(false);
+    }
+
+    public void OnClickTutorial()
+    {
         Debug.Log("Start Tutorial!");
     }
 
-    public void OnClickOption() {
-        Debug.Log("Start Option!");
+    public void OnClickSetting()
+    {
+        Debug.Log("Start Setting!");
     }
 
-    public void OnClickExit() {
+    public void OnClickExit()
+    {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

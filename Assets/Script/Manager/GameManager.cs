@@ -44,27 +44,33 @@ public class GameManager : Singleton<GameManager>
         SceneManager.LoadScene(0);
     }
 
-    public void Init()
+    public void StartGame(bool isNewGame)
     {
-        isDie = false;;
-        curAchievementNum = 0;
+        if (isNewGame)
+        {
+            curAchievementNum = 0;
+            nextScene = 1;
+            nextPos = new Vector2(-161.5f, -7f);
+            nextGravityDir = Vector2.down;
+            isCliffChecked = false;
+            for (int i = 0; i < shakedFloorNum; i++)
+            {
+                curIsShaked[i] = false;
+                storedIsShaked[i] = false;
+            }
+        }
+        isDie = false;
         isChangeGravityDir = false;
-        nextScene = 0;
-        nextPos = new Vector2(-161.5f, -7f);
-        nextGravityDir = Vector2.down;
         nextRopingState = Player.RopingState.idle;
         nextLeveringState = Player.LeveringState.idle;
         nextIsJumping = false;
-        respawnScene = 1;
+        respawnScene = nextScene;
         respawnPos = nextPos;
         respawnGravityDir = nextGravityDir;
         respawnRopingState = nextRopingState;
-        isCliffChecked = false;
-        for (int i = 0; i < shakedFloorNum; i++)
-        {
-            curIsShaked[i] = false;
-            storedIsShaked[i] = false;
-        }
+
+        Cursor.lockState = CursorLockMode.Locked;
+        SceneManager.LoadScene(nextScene);
     }
 
     public void InitShakedFloorInfo()

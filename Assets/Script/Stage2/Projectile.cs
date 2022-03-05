@@ -24,6 +24,7 @@ public class Projectile : MonoBehaviour
         {
             rigid.gravityScale = 0f;
         }
+        if (type == ObjManager.ObjType.arrow)
         rigid.AddForce(transform.up * firePower, ForceMode2D.Impulse);
         StartCoroutine(StopWhileChangingGravityDir());
     }
@@ -36,6 +37,9 @@ public class Projectile : MonoBehaviour
         if (type == ObjManager.ObjType.arrow && !GameManager.instance.isChangeGravityDir) {
             float angle = Mathf.Atan2(rigid.velocity.y, rigid.velocity.x);
             transform.localEulerAngles = new Vector3(0, 0, 90f + angle * 180f / Mathf.PI);
+        }
+        if (type == ObjManager.ObjType.cannon && !GameManager.instance.isChangeGravityDir) {
+            transform.position += transform.up * 10f * Time.deltaTime;
         }
     }
 

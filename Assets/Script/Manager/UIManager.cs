@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class UIManager : Singleton<UIManager>
 {
     [SerializeField] GameObject inGameMenu;
+    [SerializeField] GameObject existSavedGame;
+    [SerializeField] GameObject noSavedGame;
     [SerializeField] Image fade;
     IEnumerator fadeCoroutine;
 
@@ -39,7 +41,6 @@ public class UIManager : Singleton<UIManager>
         fade.color = color; 
         while (color.a > 0f)
         {
-            //color = fade.color;
             color.a -= 0.05f;
             fade.color = color;
             yield return new WaitForSeconds(0.1f);
@@ -71,5 +72,15 @@ public class UIManager : Singleton<UIManager>
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.Locked;
         }
+    }
+
+    public void ExistSavedGame()
+    {
+        existSavedGame.SetActive(true);
+    }
+
+    public void NoSavedGame()
+    {
+        noSavedGame.SetActive(true);
     }
 }
