@@ -353,6 +353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   achievementNum: 25
+  player: {fileID: 0}
 --- !u!95 &39898753
 Animator:
   serializedVersion: 3
@@ -2169,6 +2170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   achievementNum: 27
+  player: {fileID: 0}
 --- !u!95 &574386763
 Animator:
   serializedVersion: 3
@@ -49632,6 +49634,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: {fileID: 574386762}
   boxHeadAnimator: {fileID: 1724561886}
+  player: {fileID: 0}
 --- !u!61 &1081289657
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -54848,6 +54851,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: {fileID: 39898752}
   boxHeadAnimator: {fileID: 2144216152}
+  player: {fileID: 0}
 --- !u!61 &1446408929
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -55822,11 +55826,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -145.3
+      value: -68.5
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 82.6
+      value: -16.8
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.z

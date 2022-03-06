@@ -6,8 +6,9 @@ public class KeyBox : MonoBehaviour
 {
     [SerializeField] Key key;
     [SerializeField] Animator boxHeadAnimator;
+    [SerializeField] Transform player;
     Animator boxBodyAnimator;
-    bool isCollidePlayer;
+    bool isKeyBoxOpened;
 
     void Awake()
     {
@@ -20,38 +21,22 @@ public class KeyBox : MonoBehaviour
         if (GameManager.instance.curAchievementNum >= key.achievementNum) {
             boxBodyAnimator.SetBool("getKey", true);
             boxHeadAnimator.SetBool("getKey", true);
-            this.enabled = false;
-        }
-        else {
-            StartCoroutine(ActivateKey());
+            isKeyBoxOpened = true;
         }
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Player"))
+        if (!isKeyBoxOpened && other.CompareTag("Player") && transform.eulerAngles.z == player.eulerAngles.z)
         {
-            isCollidePlayer = true;
+            isKeyBoxOpened = true;
+            boxBodyAnimator.SetBool("allowKey", true);
+            boxHeadAnimator.SetBool("allowKey", true);
+            Invoke("ActivateKey", 0.9f);
         }
     }
 
-    void OnTriggerExit2D(Collider2D other) {
-        if (other.CompareTag("Player"))
-        {
-            isCollidePlayer = false;
-        }
-    }
-
-    IEnumerator ActivateKey()
+    void ActivateKey()
     {
-        // Open keybox
-        while (!isCollidePlayer || Vector2.Distance(transform.up, -Physics2D.gravity.normalized) > 0.1f)
-        {
-            yield return null;
-        }
-        boxBodyAnimator.SetBool("allowKey", true);
-        boxHeadAnimator.SetBool("allowKey", true);
-        yield return new WaitForSeconds(0.9f);
         key.gameObject.SetActive(true);
-        this.enabled = false;
     }
 }

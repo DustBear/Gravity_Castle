@@ -35,6 +35,7 @@ public class Door : MonoBehaviour
                 {
                     GameManager.instance.UpdateShakedFloorInfo();
                 }
+                DataManager.instance.SaveData();
             }
         }
     }

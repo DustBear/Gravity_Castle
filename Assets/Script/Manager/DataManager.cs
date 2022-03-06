@@ -89,9 +89,4 @@ public class DataManager : MonoBehaviour
         GameManager.instance.isCliffChecked = gameData.isCliffChecked;
         GameManager.instance.storedIsShaked = gameData.storedIsShaked;
     }
-
-    void OnApplicationQuit()
-    {
-        SaveData();
-    }
 }

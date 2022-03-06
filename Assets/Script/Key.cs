@@ -6,13 +6,12 @@ using UnityEngine.SceneManagement;
 public class Key : MonoBehaviour
 {
     public int achievementNum;
-    GameObject player;
+    [SerializeField] Transform player;
     Rigidbody2D rigid;
     SpriteRenderer sprite;
 
     void Awake()
     {
-        player = GameObject.FindWithTag("Player");
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
     }
@@ -28,12 +27,13 @@ public class Key : MonoBehaviour
         {
             GameManager.instance.curAchievementNum = achievementNum;
             GameManager.instance.respawnScene = SceneManager.GetActiveScene().buildIndex;
-            GameManager.instance.respawnPos = player.transform.position;
+            GameManager.instance.respawnPos = player.position;
             GameManager.instance.respawnGravityDir = Physics2D.gravity.normalized;
             if (achievementNum >= 17 && achievementNum <= 20) // Stage5
             {
                 GameManager.instance.UpdateShakedFloorInfo();
             }
+            DataManager.instance.SaveData();
             Destroy(gameObject);
         }
     }
@@ -45,9 +45,9 @@ public class Key : MonoBehaviour
         {
             yield return null;
         }
-        
         sprite.sortingLayerName = "Key";
-        // enable collision between player and key
-        Physics2D.IgnoreLayerCollision(10, 13, false);
+        
+        // Enable collision between player and key
+        Physics2D.IgnoreLayerCollision(13, 10, false);
     }
 }

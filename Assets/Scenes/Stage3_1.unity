@@ -1507,6 +1507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   achievementNum: 9
+  player: {fileID: 0}
 --- !u!95 &95104265
 Animator:
   serializedVersion: 3
@@ -2088,6 +2089,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: {fileID: 95104264}
   boxHeadAnimator: {fileID: 46230831}
+  player: {fileID: 0}
 --- !u!61 &295438487
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13857,11 +13859,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -136.1
+      value: -140.7
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -10.1
+      value: -10.2
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.z

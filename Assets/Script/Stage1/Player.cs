@@ -77,6 +77,11 @@ public class Player : MonoBehaviour
     {
         if (!GameManager.instance.isDie)
         {
+            Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+            if (locVel.y <= -30f)
+            {
+                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -30f));
+            }
             IsGrounded();
             if (!isJumping && ropingState == RopingState.idle)
             {
@@ -240,7 +245,7 @@ public class Player : MonoBehaviour
                 if (!isCollideRope || isJumping)
                 {
                     transform.parent = null;
-                    rigid.gravityScale = 2;
+                    rigid.gravityScale = 4;
                     ropingState = RopingState.idle;
                 }
                 else
@@ -474,7 +479,7 @@ public class Player : MonoBehaviour
             gravity.y = 0f;
         }
         Physics2D.gravity = gravity;
-        rigid.gravityScale = 2f;
+        rigid.gravityScale = 4f;
         leveringState = LeveringState.fall;
     }
 
