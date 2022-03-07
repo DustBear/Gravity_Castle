@@ -84,7 +84,7 @@ public class PlayerStage5 : Player
                 if (isJumping)
                 {
                     transform.parent = null;
-                    rigid.gravityScale = 2;
+                    rigid.gravityScale = 4;
                     ropingState = RopingState.idle;
                 }
                 else

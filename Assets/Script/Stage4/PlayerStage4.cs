@@ -20,6 +20,11 @@ public class PlayerStage4 : Player
     {
         if (!GameManager.instance.isDie)
         {
+            Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+            if (locVel.y <= -20f)
+            {
+                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
+            }
             if (!isGhostRotating)
             {
                 if (!isJumping && ropingState == RopingState.idle)
@@ -81,7 +86,7 @@ public class PlayerStage4 : Player
         if (angle == 0 || angle == 360 ) {
             transform.eulerAngles = Vector3.zero;
             Physics2D.gravity = new Vector2(0, -9.8f);
-            rigid.gravityScale = 2;
+            rigid.gravityScale = 4;
             if (isGrounded) {
                 isGhostRotating = false;
             }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerStage3 : Player 
 {
+    [SerializeField] float windForce;
     bool isHorizontalWind;
     bool isVerticalWind;
 
@@ -21,6 +22,11 @@ public class PlayerStage3 : Player
     {
         if (!GameManager.instance.isDie)
         {
+            Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+            if (locVel.y <= -20f)
+            {
+                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
+            }
             IsGrounded();
             if (!isJumping && ropingState == RopingState.idle)
             {
@@ -61,16 +67,16 @@ public class PlayerStage3 : Player
     void OnTriggerStay2D(Collider2D other) {
         if (ropingState == RopingState.idle) {
             if (other.CompareTag("UpWind")) {
-                rigid.AddForce(Vector2.up * 50.0f, ForceMode2D.Force);
+                rigid.AddForce(Vector2.up * windForce, ForceMode2D.Force);
             }
             else if (other.CompareTag("DownWind")) {
-                rigid.AddForce(Vector2.down * 50.0f, ForceMode2D.Force);
+                rigid.AddForce(Vector2.down * windForce, ForceMode2D.Force);
             }
             else if (other.CompareTag("RightWind")) {
-                rigid.AddForce(Vector2.right * 50.0f, ForceMode2D.Force);
+                rigid.AddForce(Vector2.right * windForce, ForceMode2D.Force);
             }
             else if (other.CompareTag("LeftWind")) {
-                rigid.AddForce(Vector2.left * 50.0f, ForceMode2D.Force);
+                rigid.AddForce(Vector2.left * windForce, ForceMode2D.Force);
             }
         }
     }

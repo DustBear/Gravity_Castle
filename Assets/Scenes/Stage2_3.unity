@@ -264,6 +264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   achievementNum: 7
+  player: {fileID: 1822933438}
 --- !u!95 &76727703
 Animator:
   serializedVersion: 3
@@ -320,8 +321,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 951519381
-  m_SortingLayer: -2
+  m_SortingLayerID: 256397483
+  m_SortingLayer: -4
   m_SortingOrder: 1
   m_Sprite: {fileID: 1694913177206695654, guid: 80a93b432193e4d4c9a5b9582272d440, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -6257,6 +6258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: {fileID: 76727702}
   boxHeadAnimator: {fileID: 744215443}
+  player: {fileID: 1822933438}
 --- !u!61 &865843250
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8326,7 +8328,7 @@ MonoBehaviour:
   leftArrow: {fileID: 1859330498}
   rightArrow: {fileID: 1569770750}
   walkSpeed: 6
-  jumpPower: 9.5
+  jumpPower: 14
   isJumping: 0
   ropingState: 0
   ropeSpeed: 4
@@ -8479,6 +8481,11 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: -5759503169634568024, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+--- !u!4 &1822933438 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+  m_PrefabInstance: {fileID: 1822933437}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1856028624
 GameObject:
   m_ObjectHideFlags: 0

@@ -78,9 +78,9 @@ public class Player : MonoBehaviour
         if (!GameManager.instance.isDie)
         {
             Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-            if (locVel.y <= -30f)
+            if (locVel.y <= -20f)
             {
-                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -30f));
+                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
             }
             IsGrounded();
             if (!isJumping && ropingState == RopingState.idle)

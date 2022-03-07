@@ -54,6 +54,11 @@ public class PlayerStage8 : Player
     {
         if (!GameManager.instance.isDie)
         {
+            Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+            if (locVel.y <= -20f)
+            {
+                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
+            }
             IsGrounded();
             if (!isDevilRotating && !isBlackHole && !isBlackHoleFalling)
             {
@@ -155,7 +160,7 @@ public class PlayerStage8 : Player
 
         // Fall
         isDevilFalling = true;
-        rigid.gravityScale = 2;
+        rigid.gravityScale = 4;
         while (!isGrounded && !isBlackHole)
         {
             yield return null;
@@ -203,7 +208,7 @@ public class PlayerStage8 : Player
         isBlackHole = false;
         if (!isDevilRotating || isDevilFalling)
         {
-            rigid.gravityScale = 2f;
+            rigid.gravityScale = 4f;
         }
         while (!isGrounded)
         {
