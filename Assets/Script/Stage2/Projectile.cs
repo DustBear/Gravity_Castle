@@ -30,7 +30,7 @@ public class Projectile : MonoBehaviour
     }
 
     void Update() {
-        if (originScene != SceneManager.GetActiveScene()) {
+        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.isDie) {
             gameObject.SetActive(false);
             ObjManager.instance.ReturnObj(type, gameObject);
         }

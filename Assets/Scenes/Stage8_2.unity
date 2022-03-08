@@ -422,7 +422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 289294161}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &65019963
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1496,7 +1496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraShake: {fileID: 0}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
   shakeDir: 10
   targetDir: 0
 --- !u!61 &264050682
@@ -2433,7 +2433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 65019960}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &289294163
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6344,7 +6344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraShake: {fileID: 0}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
   shakeDir: -10
   targetDir: 0
 --- !u!61 &509813235
@@ -7185,7 +7185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 807393583}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &589901145
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -7732,7 +7732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 1933353284}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &696882437
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -8061,7 +8061,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 1996352491}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &763802891
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -37014,7 +37014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7308844901839084a8e84c27706a2b9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 852739300}
+  player: {fileID: 0}
   laser: {fileID: 1164118289}
   cameraShake: {fileID: 0}
 --- !u!61 &787164573
@@ -37248,7 +37248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 1029951654}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &800683791
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -37365,7 +37365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 589901142}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &807393585
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -37522,20 +37522,16 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: -5759503169634568024, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 834770351460883921, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 7537917191080837629, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 3723249230890046265, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 2632340014701241173, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 3127998716914802067, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 9210529107771294332, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
---- !u!1 &852739296 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5135453548562255226, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-  m_PrefabInstance: {fileID: 852739295}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &852739297 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-  m_PrefabInstance: {fileID: 852739295}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &852739298 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5135453549317223075, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
   m_PrefabInstance: {fileID: 852739295}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &852739299 stripped
@@ -37543,28 +37539,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5135453547917011346, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
   m_PrefabInstance: {fileID: 852739295}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &852739300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 852739299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f488c1c3f883c4c4498d81ef4b2345dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftArrow: {fileID: 852739298}
-  rightArrow: {fileID: 852739296}
-  walkSpeed: 6
-  jumpPower: 14
-  isJumping: 0
-  ropingState: 0
-  ropeSpeed: 4
-  leveringState: 0
-  isDevilRotating: 0
-  isBlackHole: 0
 --- !u!1001 &853546618
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38036,7 +38010,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 800683789}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &1029951656
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -38219,7 +38193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 1862568985}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &1114018204
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -38484,7 +38458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 1295388139}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &1142474300
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -38979,7 +38953,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 1461175195}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &1278713105
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -39096,7 +39070,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 1142474297}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &1295388142
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -39203,7 +39177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5840489034855d43b05504ae6415884, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 852739300}
+  player: {fileID: 0}
   shakeDuration: 3
   shakeRange: 0.05
   isShaked: 0
@@ -39354,7 +39328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraShake: {fileID: 0}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
   shakeDir: 10
   targetDir: 270
 --- !u!61 &1419969654
@@ -39604,7 +39578,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 1278713102}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &1461175198
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -40822,7 +40796,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraShake: {fileID: 0}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
   shakeDir: -10
   targetDir: 270
 --- !u!61 &1656703399
@@ -41194,7 +41168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraShake: {fileID: 0}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
   shakeDir: 10
   targetDir: 270
 --- !u!61 &1777886560
@@ -41402,7 +41376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 1114018202}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &1862568988
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -41519,7 +41493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 2098194428}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &1889144731
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -42226,7 +42200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 696882434}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &1933353286
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -42343,7 +42317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 763802889}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &1996352493
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -42967,7 +42941,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBlackHole: {fileID: 1889144729}
-  player: {fileID: 852739300}
+  player: {fileID: 0}
 --- !u!58 &2098194430
 CircleCollider2D:
   m_ObjectHideFlags: 0

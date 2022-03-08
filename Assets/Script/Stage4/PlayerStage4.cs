@@ -20,11 +20,12 @@ public class PlayerStage4 : Player
     {
         if (!GameManager.instance.isDie)
         {
-            Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-            if (locVel.y <= -20f)
-            {
-                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
-            }
+            // Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+            // if (locVel.y <= -20f)
+            // {
+            //     rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
+            // }
+            IsGrounded();
             if (!isGhostRotating)
             {
                 if (!isJumping && ropingState == RopingState.idle)

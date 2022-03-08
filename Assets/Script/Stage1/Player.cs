@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     // Walk
     [SerializeField] protected float walkSpeed;
 
-    // jump
+    // Jump
     [SerializeField] protected float jumpPower;
     [HideInInspector] public bool isJumping;
     protected bool isFalling;
@@ -77,11 +77,11 @@ public class Player : MonoBehaviour
     {
         if (!GameManager.instance.isDie)
         {
-            Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-            if (locVel.y <= -20f)
-            {
-                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
-            }
+            // Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+            // if (locVel.y <= -20f)
+            // {
+            //     rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
+            // }
             IsGrounded();
             if (!isJumping && ropingState == RopingState.idle)
             {
@@ -245,7 +245,7 @@ public class Player : MonoBehaviour
                 if (!isCollideRope || isJumping)
                 {
                     transform.parent = null;
-                    rigid.gravityScale = 4;
+                    rigid.gravityScale = 2f;
                     ropingState = RopingState.idle;
                 }
                 else
@@ -479,7 +479,7 @@ public class Player : MonoBehaviour
             gravity.y = 0f;
         }
         Physics2D.gravity = gravity;
-        rigid.gravityScale = 4f;
+        rigid.gravityScale = 2f;
         leveringState = LeveringState.fall;
     }
 

@@ -29,6 +29,6 @@ public class CameraShake : MonoBehaviour
     void StopShake() {
         CancelInvoke("StartShake");
         mainCamera.enabled = true;
-        stoneRigid.gravityScale = 4f;
+        stoneRigid.gravityScale = 2f;
     }
 }

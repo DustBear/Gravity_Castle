@@ -492,7 +492,7 @@ PrefabInstance:
     - target: {fileID: 5983590066724975570, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1267929419}
     - target: {fileID: 5983590066724975572, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -663,7 +663,7 @@ PrefabInstance:
     - target: {fileID: 5983590066724975570, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1267929419}
     - target: {fileID: 5983590066724975572, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -809,42 +809,13 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: -5759503169634568024, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 3236158155534579839, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 7537917191080837629, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 834770351460883921, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 2632340014701241173, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 3127998716914802067, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 9210529107771294332, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
---- !u!1 &237062346 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5135453547917011346, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-  m_PrefabInstance: {fileID: 237062345}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &237062347 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5135453548562255226, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-  m_PrefabInstance: {fileID: 237062345}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &237062348 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5135453549317223075, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-  m_PrefabInstance: {fileID: 237062345}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &237062349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 237062346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0a6b02f7899753489ef1546279c51e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftArrow: {fileID: 237062348}
-  rightArrow: {fileID: 237062347}
-  walkSpeed: 6
-  jumpPower: 14
-  isJumping: 0
-  ropingState: 0
-  ropeSpeed: 4
-  leveringState: 0
 --- !u!1001 &255861106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -956,7 +927,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 3
   - 3
@@ -987,7 +958,7 @@ PrefabInstance:
     - target: {fileID: 5983590066724975570, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1267929419}
     - target: {fileID: 5983590066724975572, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_RootOrder
       value: 17
@@ -1371,7 +1342,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 1.5
   - 1.5
@@ -4867,7 +4838,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 2.5
   - 2.5
@@ -5253,7 +5224,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 2.5
   - 2.5
@@ -6183,7 +6154,7 @@ PrefabInstance:
     - target: {fileID: 5983590066724975570, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1267929419}
     - target: {fileID: 5983590066724975572, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -6232,6 +6203,10 @@ PrefabInstance:
       propertyPath: m_Size.x
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5983590066724975573, guid: 96228dd336575f443934fc7444affd1d, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ae0842f894013bc4b8a21848ef0c8632, type: 3}
     - target: {fileID: 5983590066724975573, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -6347,7 +6322,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 2.5
   - 2.5
@@ -6658,7 +6633,7 @@ PrefabInstance:
     - target: {fileID: 5983590066724975570, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1267929419}
     - target: {fileID: 5983590066724975572, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_RootOrder
       value: 21
@@ -6834,7 +6809,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 1.5
   - 1.5
@@ -6942,7 +6917,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 2.5
   - 2.5
@@ -7272,7 +7247,7 @@ PrefabInstance:
     - target: {fileID: 5983590066724975570, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1267929419}
     - target: {fileID: 5983590066724975572, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -7321,6 +7296,10 @@ PrefabInstance:
       propertyPath: m_Size.x
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5983590066724975573, guid: 96228dd336575f443934fc7444affd1d, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ae0842f894013bc4b8a21848ef0c8632, type: 3}
     - target: {fileID: 5983590066724975573, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -7560,7 +7539,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 1.5
   - 1.5
@@ -7888,7 +7867,7 @@ PrefabInstance:
     - target: {fileID: 5983590066724975570, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1267929419}
     - target: {fileID: 5983590066724975572, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_RootOrder
       value: 19
@@ -8610,6 +8589,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
+--- !u!114 &1267929419 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4380298031898825308, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
+  m_PrefabInstance: {fileID: 1267929418}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19f50dfc9bd683c4bb69c0395781c7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1276189209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8693,7 +8683,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 2.5
   - 2.5
@@ -8735,7 +8725,7 @@ PrefabInstance:
     - target: {fileID: 5983590066724975570, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1267929419}
     - target: {fileID: 5983590066724975572, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_RootOrder
       value: 18
@@ -9379,7 +9369,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 2.5
   - 2.5
@@ -9426,7 +9416,7 @@ PrefabInstance:
     - target: {fileID: 5983590066724975570, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1267929419}
     - target: {fileID: 5983590066724975572, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_RootOrder
       value: 12
@@ -9846,7 +9836,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 2.5
   - 2.5
@@ -10113,7 +10103,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 4
   - 4
@@ -10813,7 +10803,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 1.5
   - 1.5
@@ -10844,7 +10834,7 @@ PrefabInstance:
     - target: {fileID: 5983590066724975570, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1267929419}
     - target: {fileID: 5983590066724975572, guid: 96228dd336575f443934fc7444affd1d, type: 3}
       propertyPath: m_RootOrder
       value: 16
@@ -22099,7 +22089,7 @@ MonoBehaviour:
   shakeRange: 0.05
   shakeDuration: 0.5
   waitingTime: 0.5
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1267929419}
   speed:
   - 2.5
   - 2.5
