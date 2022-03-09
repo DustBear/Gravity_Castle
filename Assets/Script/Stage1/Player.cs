@@ -485,7 +485,7 @@ public class Player : MonoBehaviour
 
     protected virtual void IsGrounded()
     {
-        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 16);
+        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.8f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 16);
         isGrounded = rayHit.collider != null;
     }
 }

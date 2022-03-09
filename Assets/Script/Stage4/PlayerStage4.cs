@@ -87,13 +87,13 @@ public class PlayerStage4 : Player
         if (angle == 0 || angle == 360 ) {
             transform.eulerAngles = Vector3.zero;
             Physics2D.gravity = new Vector2(0, -9.8f);
-            rigid.gravityScale = 4;
+            rigid.gravityScale = 2f;
             if (isGrounded) {
                 isGhostRotating = false;
             }
         }
         else {
-            rigid.gravityScale = 0;
+            rigid.gravityScale = 0f;
             rigid.velocity = Vector2.zero;
         }
     }

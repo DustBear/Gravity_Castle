@@ -84,7 +84,7 @@ public class PlayerStage5 : Player
                 if (isJumping)
                 {
                     transform.parent = null;
-                    rigid.gravityScale = 4;
+                    rigid.gravityScale = 2f;
                     ropingState = RopingState.idle;
                 }
                 else
@@ -294,10 +294,10 @@ public class PlayerStage5 : Player
 
     protected override void IsGrounded()
     {
-        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
+        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.8f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
 
         // MovingPlatform
-        RaycastHit2D rayHitMovingPlatform = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 16);
+        RaycastHit2D rayHitMovingPlatform = Physics2D.BoxCast(transform.position, new Vector2(0.8f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 16);
         if (rayHitMovingPlatform.collider != null && !GameManager.instance.isChangeGravityDir)
         {
             transform.parent = rayHitMovingPlatform.collider.transform;

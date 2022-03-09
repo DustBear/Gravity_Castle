@@ -23,9 +23,19 @@ public class FloorLinearEllipseShaking : FloorShaking
         nextPos = pos[0];
     }
 
+    protected override void Start()
+    {
+        base.Start();
+    }
+
     protected override void Update()
     {
         base.Update();
+    }
+
+    protected override void OnCollisionEnter2D(Collision2D other)
+    {
+        base.OnCollisionEnter2D(other);
     }
 
     protected override void Idle()

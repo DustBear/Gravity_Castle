@@ -14,9 +14,19 @@ public class FloorLinearShaking : FloorShaking
         transform.position = pos[(targetPosIdx + pos.Length - 1) % pos.Length];
     }
 
+    protected override void Start()
+    {
+        base.Start();
+    }
+
     protected override void Update()
     {
         base.Update();
+    }
+
+    protected override void OnCollisionEnter2D(Collision2D other)
+    {
+        base.OnCollisionEnter2D(other);
     }
 
     protected override void Idle()

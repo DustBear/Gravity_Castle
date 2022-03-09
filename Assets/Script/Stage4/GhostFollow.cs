@@ -6,18 +6,22 @@ public class GhostFollow : MonoBehaviour
 {
     [SerializeField] PlayerStage4 player;
     [SerializeField] float speed;
+    SpriteRenderer render;
     Vector2 targetPos;
 
     void Awake()
     {
-        if (GameManager.instance.curAchievementNum == 15) {
-            transform.position = new Vector2(-162.4f, 10.4f);
-        }
-        targetPos = transform.position;
+        
+        render = GetComponent<SpriteRenderer>();
     }
 
     void Start()
     {
+        if (GameManager.instance.curAchievementNum == 15)
+        {
+            transform.position = new Vector2(-162.4f, 10.4f);
+        }
+        targetPos = transform.position;
         StartCoroutine(IncreaseSpeed());
     }
 
@@ -53,5 +57,10 @@ public class GhostFollow : MonoBehaviour
             yield return new WaitForSeconds(5f);
         }
         speed = 5f;
+        Color color = render.color;
+        color.g = 0.3f;
+        color.b = 0.3f;
+        color.a = 1;
+        render.color = color;
     }
 }

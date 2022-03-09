@@ -41,7 +41,7 @@ public class PlayerStage2 : Player
 
     protected override void IsGrounded()
     {
-        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 16 | 1 << 6 | 1 << 7 | 1 << 15);
+        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.8f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 16 | 1 << 6 | 1 << 7 | 1 << 15);
         isGrounded = rayHit.collider != null;
     }
 }

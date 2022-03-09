@@ -160,7 +160,7 @@ public class PlayerStage8 : Player
 
         // Fall
         isDevilFalling = true;
-        rigid.gravityScale = 4;
+        rigid.gravityScale = 2f;
         while (!isGrounded && !isBlackHole)
         {
             yield return null;

@@ -15,18 +15,25 @@ public class FloorShaking : MonoBehaviour
     protected State state;
     protected Vector2 nextPos;
     protected float time;
+    protected float shakeDegreeX;
+    protected float shakeDegreeY;
 
     bool isGravityDirChanged;
     Vector2 storedVel;
 
     virtual protected void Awake() {
-        if (GameManager.instance.curIsShaked[floorNum]) {
-            Destroy(gameObject);
-        }
         rigid = GetComponent<Rigidbody2D>();
         nextPos = transform.position;
         state = State.idle;
         render = GetComponent<SpriteRenderer>();
+    }
+
+    virtual protected void Start()
+    {
+        if (GameManager.instance.curIsShaked[floorNum])
+        {
+            Destroy(gameObject);
+        }
     }
 
     virtual protected void Update() {
@@ -48,30 +55,38 @@ public class FloorShaking : MonoBehaviour
         }
     }
 
-    virtual protected void Idle()
-    {
-        RaycastHit2D rayHitPlayer;
-        if (Physics2D.gravity == new Vector2(-9.8f, 0f))
-        {
-            rayHitPlayer = Physics2D.BoxCast(new Vector2(transform.position.x + transform.localScale.x / 2f + 0.1f, transform.position.y), new Vector2(0.01f, transform.localScale.y * 0.7f), 0f, Vector2.right, 0.5f, 1 << 10);
-        }
-        else if (Physics2D.gravity == new Vector2(9.8f, 0f))
-        {
-            rayHitPlayer = Physics2D.BoxCast(new Vector2(transform.position.x - transform.localScale.x / 2f - 0.1f, transform.position.y), new Vector2(0.01f, transform.localScale.y * 0.7f), 0f, Vector2.left, 0.5f, 1 << 10);
-        }
-        else if (Physics2D.gravity == new Vector2(0f, 9.8f))
-        {
-            rayHitPlayer = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y - transform.localScale.y / 2f - 0.1f), new Vector2(transform.localScale.x * 0.7f, 0.01f), 0f, Vector2.down, 0.5f, 1 << 10);
-        }
-        else
-        {
-            rayHitPlayer = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y + transform.localScale.y / 2f + 0.1f), new Vector2(transform.localScale.x * 0.7f, 0.01f), 0f, Vector2.up, 0.5f, 1 << 10);
-        }
-        if (rayHitPlayer.collider != null)
+    virtual protected void OnCollisionEnter2D(Collision2D other) {
+        if (other.collider != null && other.gameObject.CompareTag("Player"))
         {
             GameManager.instance.curIsShaked[floorNum] = true;
             state = State.waiting;
         }
+    }
+
+    virtual protected void Idle()
+    {
+        // RaycastHit2D rayHitPlayer;
+        // if (Physics2D.gravity == new Vector2(-9.8f, 0f))
+        // {
+        //     rayHitPlayer = Physics2D.BoxCast(new Vector2(transform.position.x + transform.localScale.x / 2f + 0.1f, transform.position.y), new Vector2(0.01f, transform.localScale.y * 0.7f), 0f, Vector2.right, 0.5f, 1 << 10);
+        // }
+        // else if (Physics2D.gravity == new Vector2(9.8f, 0f))
+        // {
+        //     rayHitPlayer = Physics2D.BoxCast(new Vector2(transform.position.x - transform.localScale.x / 2f - 0.1f, transform.position.y), new Vector2(0.01f, transform.localScale.y * 0.7f), 0f, Vector2.left, 0.5f, 1 << 10);
+        // }
+        // else if (Physics2D.gravity == new Vector2(0f, 9.8f))
+        // {
+        //     rayHitPlayer = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y - transform.localScale.y / 2f - 0.1f), new Vector2(transform.localScale.x * 0.7f, 0.01f), 0f, Vector2.down, 0.5f, 1 << 10);
+        // }
+        // else
+        // {
+        //     rayHitPlayer = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y + transform.localScale.y / 2f + 0.1f), new Vector2(transform.localScale.x * 0.7f, 0.01f), 0f, Vector2.up, 0.5f, 1 << 10);
+        // }
+        // if (rayHitPlayer.collider != null)
+        // {
+        //     GameManager.instance.curIsShaked[floorNum] = true;
+        //     state = State.waiting;
+        // }
     }
 
     virtual protected void Waiting()
@@ -89,33 +104,31 @@ public class FloorShaking : MonoBehaviour
         time += Time.deltaTime;
         if (Physics2D.gravity.x == 0)
         {
-            if (mainCamera.shakedX == 0f)
+            if (shakeDegreeX == 0f)
             {
-                mainCamera.shakedX = shakeRange;
+                shakeDegreeX = shakeRange;
             }
             else
             {
-                mainCamera.shakedX *= -1;
+                shakeDegreeX *= -1;
             }
-            mainCamera.shakedY = 0f;
+            transform.position = nextPos + Vector2.right * shakeDegreeX;
         }
         else
         {
-            mainCamera.shakedX = 0f;
-            if (mainCamera.shakedY == 0f)
+            if (shakeDegreeY == 0f)
             {
-                mainCamera.shakedY = shakeRange;
+                shakeDegreeY = shakeRange;
             }
             else
             {
-                mainCamera.shakedY *= -1;
+                shakeDegreeY *= -1;
             }
+            transform.position = nextPos + Vector2.up * shakeDegreeY;
         }
-        transform.position = nextPos + new Vector2(mainCamera.shakedX, mainCamera.shakedY);
+
         if (time >= shakeDuration)
         {
-            mainCamera.shakedX = 0f;
-            mainCamera.shakedY = 0f;
             transform.position = nextPos;
             if (Physics2D.gravity.x == 0)
             {
@@ -150,25 +163,25 @@ public class FloorShaking : MonoBehaviour
         {
             rigid.constraints = ~RigidbodyConstraints2D.FreezePositionX;
             rigid.constraints = RigidbodyConstraints2D.FreezePositionY;
-            rayHitPlatform = Physics2D.BoxCast(new Vector2(transform.position.x - transform.localScale.x / 2f - 0.1f, transform.position.y), new Vector2(0.01f, transform.localScale.y * 0.6f), 0f, Vector2.left, 0.5f);
+            rayHitPlatform = Physics2D.BoxCast(new Vector2(transform.position.x - transform.localScale.x / 2f - 0.1f, transform.position.y), new Vector2(0.01f, transform.localScale.y * 0.6f), 0f, Vector2.left, 0.5f, 1 << 3 | 1 << 16);
         }
         else if (Physics2D.gravity == new Vector2(9.8f, 0f))
         {
             rigid.constraints = ~RigidbodyConstraints2D.FreezePositionX;
             rigid.constraints = RigidbodyConstraints2D.FreezePositionY;
-            rayHitPlatform = Physics2D.BoxCast(new Vector2(transform.position.x + transform.localScale.x / 2f + 0.1f, transform.position.y), new Vector2(0.01f, transform.localScale.y * 0.6f), 0f, Vector2.right, 0.5f);
+            rayHitPlatform = Physics2D.BoxCast(new Vector2(transform.position.x + transform.localScale.x / 2f + 0.1f, transform.position.y), new Vector2(0.01f, transform.localScale.y * 0.6f), 0f, Vector2.right, 0.5f, 1 << 3 | 1 << 16);
         }
         else if (Physics2D.gravity == new Vector2(0f, 9.8f))
         {
             rigid.constraints = RigidbodyConstraints2D.FreezePositionX;
             rigid.constraints = ~RigidbodyConstraints2D.FreezePositionY;
-            rayHitPlatform = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y + transform.localScale.y / 2f + 0.1f), new Vector2(transform.localScale.x * 0.6f, 0.01f), 0f, Vector2.up, 0.5f);
+            rayHitPlatform = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y + transform.localScale.y / 2f + 0.1f), new Vector2(transform.localScale.x * 0.6f, 0.01f), 0f, Vector2.up, 0.5f, 1 << 3 | 1 << 16);
         }
         else
         {
             rigid.constraints = RigidbodyConstraints2D.FreezePositionX;
             rigid.constraints = ~RigidbodyConstraints2D.FreezePositionY;
-            rayHitPlatform = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y - transform.localScale.y / 2f - 0.1f), new Vector2(transform.localScale.x * 0.6f, 0.01f), 0f, Vector2.down, 0.5f);
+            rayHitPlatform = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y - transform.localScale.y / 2f - 0.1f), new Vector2(transform.localScale.x * 0.6f, 0.01f), 0f, Vector2.down, 0.5f, 1 << 3 | 1 << 16);
         }
         if (rayHitPlatform.collider != null)
         {
@@ -177,16 +190,28 @@ public class FloorShaking : MonoBehaviour
         }
     }
 
-    protected IEnumerator FadeOut() {
-        for (float f = 1.0f; f >= 0.0f; f -= 0.1f) {
+    protected IEnumerator FadeOut()
+    {
+        for (float f = 1.0f; f >= 0.0f; f -= 0.1f)
+        {
             Color color = render.material.color;
             color.a = f;
             render.material.color = color;
             yield return new WaitForSeconds(0.02f);
         }
-        for (int i = 0; i < transform.childCount; i++) {
+        for (int i = 0; i < transform.childCount; i++)
+        {
             Transform trans = transform.GetChild(i);
-            if (trans.CompareTag("Player")) {
+            if (trans.CompareTag("Player"))
+            {
+                trans.parent = null;
+            }
+            else if (trans.CompareTag("Lever"))
+            {
+                SpriteRenderer leverRenderer = trans.GetComponent<SpriteRenderer>();
+                BoxCollider2D leverCollider = trans.GetComponent<BoxCollider2D>();
+                leverRenderer.enabled = false;
+                leverCollider.enabled = false;
                 trans.parent = null;
             }
         }
