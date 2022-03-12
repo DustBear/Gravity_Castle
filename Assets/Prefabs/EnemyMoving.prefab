@@ -114,6 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1.5
   startMv: 0
+  achievementNum: 0
 --- !u!50 &8272607903455590973
 Rigidbody2D:
   serializedVersion: 4
@@ -175,6 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0
   startMv: 0
+  achievementNum: 0
 --- !u!1001 &3658916250265395445
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -294,7 +296,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5260450419321129311, guid: 5c2c72a98e726d348b9a5501db539166, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.141
+      value: -0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5260450419321129311, guid: 5c2c72a98e726d348b9a5501db539166, type: 3}
       propertyPath: m_LocalPosition.z

@@ -16,6 +16,7 @@ public class EnemyDefault : MonoBehaviour
     public float speed;
     public enum startMoving {dft, key1, door1, key2};
     public startMoving startMv;
+    [SerializeField] int achievementNum;
 
     void Awake() {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
@@ -26,6 +27,10 @@ public class EnemyDefault : MonoBehaviour
     }
 
     void Start() {
+        if (GameManager.instance.curAchievementNum > achievementNum)
+        {
+            Destroy(gameObject);
+        }
         StartCoroutine(Moving());
     }
 
@@ -90,7 +95,7 @@ public class EnemyDefault : MonoBehaviour
                     isLeft = !isLeft;
                 }
             }
-            rayHitPlayerUp = Physics2D.BoxCast(transform.position + transform.up * sizeY * 0.5f, new Vector2(sizeX * 0.8f, sizeY), transform.rotation.eulerAngles.z, transform.up, 0.1f, 1 << 10);
+            rayHitPlayerUp = Physics2D.BoxCast(transform.position, new Vector2(sizeX * 0.8f, 0.1f), transform.rotation.eulerAngles.z, transform.up, 0.7f, 1 << 10);
             yield return null;
         }
         if (rayHitPlayerUp.collider != null) {

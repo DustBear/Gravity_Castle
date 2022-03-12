@@ -35,6 +35,13 @@ public class Door : MonoBehaviour
                 {
                     GameManager.instance.UpdateShakedFloorInfo();
                 }
+                else if (achievementNum >= 21 && achievementNum <= 24) // Stage6
+                {
+                    GameManager.instance.UpdateIceInfo();
+                    GameManager.instance.UpdateDetectorInfo();
+                    GameManager.instance.UpdateButtonInfo();
+                    GameManager.instance.UpdatePosInfo();
+                }
                 DataManager.instance.SaveData();
             }
         }

@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
     virtual protected void Start()
     {
         UIManager.instance.FadeIn();
+        GameManager.instance.isChangeGravityDir = false;
         // Go to Next Scene
         if (!GameManager.instance.isDie)
         {

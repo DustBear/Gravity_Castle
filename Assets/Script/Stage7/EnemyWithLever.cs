@@ -16,6 +16,7 @@ public class EnemyWithLever : MonoBehaviour
     public float speed;
     public enum startMoving {dft, key1, door1, key2};
     public startMoving startMv;
+    [SerializeField] int achievementNum;
 
     void Awake() {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
@@ -26,6 +27,10 @@ public class EnemyWithLever : MonoBehaviour
     }
 
     void Start() {
+        if (GameManager.instance.curAchievementNum > achievementNum)
+        {
+            Destroy(gameObject);
+        }
         StartCoroutine(Moving());
     }
 
@@ -71,14 +76,14 @@ public class EnemyWithLever : MonoBehaviour
             
             // Change direction
             if (isLeft) {
-                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.4f - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 18 | 1 << 19);
+                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.3f - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 18 | 1 << 19);
                 //rayHitWall = Physics2D.BoxCast(transform.position - transform.right * sizeX * 0.6f, new Vector2(0.05f, sizeY * 0.35f), transform.rotation.z, -transform.right, 0f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
-                rayHitPlatform = Physics2D.Raycast(transform.position - transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, ~(1 << 18));
+                rayHitPlatform = Physics2D.Raycast(transform.position - transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, 1 << 3 | 1 << 19);
             }
             else {
-                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.4f + transform.right * sizeX * 0.6f, transform.right, 0.1f, 1 << 3 | 1 << 18 | 1 << 19);
+                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.3f + transform.right * sizeX * 0.6f, transform.right, 0.1f, 1 << 3 | 1 << 18 | 1 << 19);
                 //rayHitWall = Physics2D.BoxCast(transform.position + transform.right * sizeX * 0.6f, new Vector2(0.05f, sizeY * 0.35f), transform.rotation.z, transform.right, 0f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
-                rayHitPlatform = Physics2D.Raycast(transform.position + transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, ~(1 << 18));
+                rayHitPlatform = Physics2D.Raycast(transform.position + transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, 1 << 3 | 1 << 19);
             }
             if (rayHitWallDown.collider != null || rayHitPlatform.collider == null) {
                 isLeft = !isLeft;
@@ -142,21 +147,54 @@ public class EnemyWithLever : MonoBehaviour
         if (transform.childCount != 0) {
             Transform lever = transform.GetChild(1);
             lever.parent = null;
+            Vector2 leverPos = lever.transform.position;
             if (Mathf.Abs(lever.eulerAngles.z - 90f) < 1f)
             {
                 lever.eulerAngles = Vector3.forward * 90f;
+                if (leverPos.x > 0f)
+                {
+                    lever.transform.position = new Vector2((int)leverPos.x + 0.5f, leverPos.y);
+                }
+                else
+                {
+                    lever.transform.position = new Vector2((int)leverPos.x - 0.5f, leverPos.y);
+                }
             }
             else if (Mathf.Abs(lever.eulerAngles.z - 180f) < 1f)
             {
                 lever.eulerAngles = Vector3.forward * 180f;
+                if (leverPos.y > 0f)
+                {
+                    lever.transform.position = new Vector2(leverPos.x, (int)leverPos.y + 0.5f);
+                }
+                else
+                {
+                    lever.transform.position = new Vector2(leverPos.x, (int)leverPos.y - 0.5f);
+                }
             }
             else if (Mathf.Abs(lever.eulerAngles.z - 270f) < 1f)
             {
                 lever.eulerAngles = Vector3.forward * 270f;
+                if (leverPos.x > 0f)
+                {
+                    lever.transform.position = new Vector2((int)leverPos.x + 0.5f, leverPos.y);
+                }
+                else
+                {
+                    lever.transform.position = new Vector2((int)leverPos.x - 0.5f, leverPos.y);
+                }
             }
             else
             {
                 lever.eulerAngles = Vector3.zero;
+                if (leverPos.y > 0f)
+                {
+                    lever.transform.position = new Vector2(leverPos.x, (int)leverPos.y + 0.5f);
+                }
+                else
+                {
+                    lever.transform.position = new Vector2(leverPos.x, (int)leverPos.y - 0.5f);   
+                }
             }
             lever.gameObject.SetActive(true); 
         }

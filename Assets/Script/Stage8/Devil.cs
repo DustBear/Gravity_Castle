@@ -135,16 +135,34 @@ public class Devil : MonoBehaviour
         {
             yield return null;
         }
+        cameraShake.StartShaking(10f, 90f);
+        yield return wait;
+
+        SecondWalk(-8f);
+        Jump();
+        while (!PlayerIsGrounded())
+        {
+            yield return null;
+        }
+        cameraShake.StartShaking(10f, 180f);
+        yield return wait;
+
+        SecondWalk(-8f);
+        Jump();
+        while (!PlayerIsGrounded())
+        {
+            yield return null;
+        }
         cameraShake.StartShaking(-10f, 90f);
         yield return wait;
 
-        SecondWalk(-8f);
+        SecondWalk(8f);
         Jump();
         while (!PlayerIsGrounded())
         {
             yield return null;
         }
-        cameraShake.StartShaking(-10f, 180f);
+        cameraShake.StartShaking(10f, 180f);
         yield return wait;
 
         SecondWalk(-8f);
@@ -153,7 +171,7 @@ public class Devil : MonoBehaviour
         {
             yield return null;
         }
-        cameraShake.StartShaking(10f, 90f);
+        cameraShake.StartShaking(-10f, 90f);
         yield return wait;
 
         SecondWalk(8f);
@@ -162,25 +180,7 @@ public class Devil : MonoBehaviour
         {
             yield return null;
         }
-        cameraShake.StartShaking(-10f, 180f);
-        yield return wait;
-
-        SecondWalk(-8f);
-        Jump();
-        while (!PlayerIsGrounded())
-        {
-            yield return null;
-        }
-        cameraShake.StartShaking(10f, 90f);
-        yield return wait;
-
-        SecondWalk(8f);
-        Jump();
-        while (!PlayerIsGrounded())
-        {
-            yield return null;
-        }
-        cameraShake.StartShaking(-10f, 180f);
+        cameraShake.StartShaking(10f, 180f);
     }
 
     void Walk()
@@ -217,7 +217,7 @@ public class Devil : MonoBehaviour
 
     void Jump()
     {
-        rigid.AddForce(transform.up * 22f, ForceMode2D.Impulse);
+        rigid.AddForce(transform.up * 28f, ForceMode2D.Impulse);
     }
 
     void Launch()

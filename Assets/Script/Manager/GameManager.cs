@@ -24,11 +24,29 @@ public class GameManager : Singleton<GameManager>
     [HideInInspector] public Vector2 respawnGravityDir;
     [HideInInspector] public Player.RopingState respawnRopingState;
 
-    // shaked floor
-    [SerializeField] int shakedFloorNum;
+    // Shaked floor of stage5
+    public int shakedFloorNum;
     [HideInInspector] public bool[] curIsShaked;
     [HideInInspector] public bool[] storedIsShaked;
 
+    // Ice of stage6
+    public int iceNum;
+    [HideInInspector] public bool[] curIsMelted;
+    [HideInInspector] public bool[] storedIsMelted;
+
+    // Player detector of stage6
+    public int detectorNum;
+    [HideInInspector] public bool[] curIsDetected;
+    [HideInInspector] public bool[] storedIsDetected;
+
+    // Player detector button of stage6
+    public int buttonNum;
+    [HideInInspector] public bool[] curIsGreen;
+    [HideInInspector] public bool[] storedIsGreen;
+    [HideInInspector] public Vector2[] curPos;
+    [HideInInspector] public Vector2[] storedPos;
+
+    // Cliff of stage8
     [HideInInspector] public bool isCliffChecked;
 
     protected GameManager() {}
@@ -37,6 +55,14 @@ public class GameManager : Singleton<GameManager>
         DontDestroyOnLoad(gameObject);
         curIsShaked = new bool[shakedFloorNum];
         storedIsShaked = new bool[shakedFloorNum];
+        curIsMelted = new bool[iceNum];
+        storedIsMelted = new bool[iceNum];
+        curIsDetected = new bool[detectorNum];
+        storedIsDetected = new bool[detectorNum];
+        curIsGreen = new bool[buttonNum];
+        storedIsGreen = new bool[buttonNum];
+        curPos = new Vector2[buttonNum];
+        storedPos = new Vector2[buttonNum];
     }
 
     void Start()
@@ -57,6 +83,23 @@ public class GameManager : Singleton<GameManager>
             {
                 curIsShaked[i] = false;
                 storedIsShaked[i] = false;
+            }
+            for (int i = 0; i < iceNum; i++)
+            {
+                curIsMelted[i] = false;
+                storedIsMelted[i] = false;
+            }
+            for (int i = 0; i < detectorNum; i++)
+            {
+                curIsDetected[i] = false;
+                storedIsDetected[i] = false;
+            }
+            for (int i = 0; i < buttonNum; i++)
+            {
+                curIsGreen[i] = false;
+                storedIsGreen[i] = false;
+                curPos[i] = Vector2.zero;
+                storedPos[i] = Vector2.zero;
             }
         }
         isDie = false;
@@ -86,6 +129,70 @@ public class GameManager : Singleton<GameManager>
         for (int i = 0; i < shakedFloorNum; i++)
         {
             storedIsShaked[i] = curIsShaked[i];
+        }
+    }
+
+    public void InitIceInfo()
+    {
+        for (int i = 0; i < iceNum; i++)
+        {
+            curIsMelted[i] = storedIsMelted[i];
+        }
+    }
+
+    public void UpdateIceInfo()
+    {
+        for (int i = 0; i < iceNum; i++)
+        {
+            storedIsMelted[i] = curIsMelted[i];
+        }
+    }
+
+    public void InitDetectorInfo()
+    {
+        for (int i = 0; i < detectorNum; i++)
+        {
+            curIsDetected[i] = storedIsDetected[i];
+        }
+    }
+
+    public void UpdateDetectorInfo()
+    {
+        for (int i = 0; i < detectorNum; i++)
+        {
+            storedIsDetected[i] = curIsDetected[i];
+        }
+    }
+
+    public void InitButtonInfo()
+    {
+        for (int i = 0; i < buttonNum; i++)
+        {
+            curIsGreen[i] = storedIsGreen[i];
+        }
+    }
+
+    public void UpdateButtonInfo()
+    {
+        for (int i = 0; i < buttonNum; i++)
+        {
+            storedIsGreen[i] = curIsGreen[i];
+        }
+    }
+
+    public void InitPosInfo()
+    {
+        for (int i = 0; i < buttonNum; i++)
+        {
+            curPos[i] = storedPos[i];
+        }
+    }
+
+    public void UpdatePosInfo()
+    {
+        for (int i = 0; i < buttonNum; i++)
+        {
+            storedPos[i] = curPos[i];
         }
     }
 }

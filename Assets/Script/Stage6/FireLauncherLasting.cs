@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class FireLauncherLasting : MonoBehaviour
 {
+    [SerializeField] GameObject fire;
     [SerializeField] bool isVertical;
     [SerializeField] Vector2 leftPos;
     [SerializeField] Vector2 rightPos;
-    [SerializeField] Vector2 finalPos;
+    public Vector2 finalPos;
     [SerializeField] float curSpeed;
     [SerializeField] float deltaSpeed;
     
@@ -17,20 +18,16 @@ public class FireLauncherLasting : MonoBehaviour
         {
             for (float f = leftPos.x; f <= rightPos.x; f += 0.5f)
             {
-                GameObject newFire = ObjManager.instance.GetObj(ObjManager.ObjType.fire);
-                newFire.transform.position = new Vector2(f, transform.position.y);
-                newFire.transform.parent = gameObject.transform;
-                newFire.SetActive(true);
+                GameObject newFire = Instantiate(fire, new Vector2(f, transform.position.y), Quaternion.identity);
+                newFire.transform.parent = transform;
             }
         }
         else
         {
             for (float f = leftPos.y; f <= rightPos.y; f += 0.5f)
             {
-                GameObject newFire = ObjManager.instance.GetObj(ObjManager.ObjType.fire);
-                newFire.transform.position = new Vector2(transform.position.x, f);
-                newFire.transform.parent = gameObject.transform;
-                newFire.SetActive(true);
+                GameObject newFire = Instantiate(fire, new Vector2(transform.position.x, f), Quaternion.identity);
+                newFire.transform.parent = transform;
             }
         }
 

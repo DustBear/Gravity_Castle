@@ -6,6 +6,7 @@ public class PlayerStage8 : Player
 {
     [HideInInspector] public bool isDevilRotating;
     [HideInInspector] public bool isBlackHole;
+    [SerializeField] MainCamera mainCamera;
     BoxCollider2D collide;
     bool isDevilFalling;
     bool isBlackHoleFalling;
@@ -19,6 +20,7 @@ public class PlayerStage8 : Player
     protected override void Start()
     {
         UIManager.instance.FadeIn();
+        GameManager.instance.isChangeGravityDir = false;
         // Go to Next Scene
         if (!GameManager.instance.isDie)
         {
@@ -140,10 +142,19 @@ public class PlayerStage8 : Player
             if (!isBlackHole ||isBlackHoleFalling)
             {
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 0f, targetRot), Time.deltaTime * 8.0f);
+                if (mainCamera.shakedZ > 0f)
+                {
+                    mainCamera.shakedZ -= 0.5f;
+                }
+                else
+                {
+                    mainCamera.shakedZ += 0.5f;
+                }
             }
             yield return null;
         }
         transform.eulerAngles = Vector3.forward * targetRot;
+        mainCamera.shakedZ = 0f;
 
         // Set gravity
         Vector2 gravity = -transform.up * 9.8f;

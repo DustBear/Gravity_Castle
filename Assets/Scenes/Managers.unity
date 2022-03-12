@@ -357,7 +357,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825311, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4380298031898825308, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
@@ -577,6 +577,15 @@ MonoBehaviour:
   shakedFloorNum: 36
   curIsShaked: 000000000000000000000000000000000000000000000000000000000000000000000000
   storedIsShaked: 000000000000000000000000000000000000000000000000000000000000000000000000
+  iceNum: 58
+  curIsMelted: 
+  storedIsMelted: 
+  detectorNum: 6
+  curIsDetected: 
+  storedIsDetected: 
+  buttonNum: 11
+  curIsGreen: 
+  storedIsGreen: 
   isCliffChecked: 0
 --- !u!4 &444599439
 Transform:

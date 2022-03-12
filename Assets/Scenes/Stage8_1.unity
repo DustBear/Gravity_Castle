@@ -3047,7 +3047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0d60ca785411b845a0ab7b56e8dac95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraShake: {fileID: 0}
+  cameraShake: {fileID: 1522089617}
   player: {fileID: 1923821638}
   shakeDir: -10
   targetDir: 270
@@ -3353,7 +3353,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 876032914}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.6, y: -3.4, z: 245.26463}
+  m_LocalPosition: {x: 0.65, y: -3.8, z: 245.26463}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1692517309}
@@ -3371,7 +3371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0d60ca785411b845a0ab7b56e8dac95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraShake: {fileID: 0}
+  cameraShake: {fileID: 1522089617}
   player: {fileID: 1923821638}
   shakeDir: -10
   targetDir: 180
@@ -3388,7 +3388,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.8828125, y: 4.3938613}
+  m_Offset: {x: 1.0164909, y: 4.490535}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -3399,7 +3399,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.5885468, y: 2.08389}
+  m_Size: {x: 1.8559036, y: 1.890543}
   m_EdgeRadius: 0
 --- !u!1 &917003176
 GameObject:
@@ -4008,11 +4008,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825307, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -90.03
+      value: -110.8
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825307, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -14.9
+      value: -9.5
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825307, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4052,7 +4052,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825308, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: mapMaxY
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825308, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: mapMinX
@@ -4089,6 +4089,17 @@ MonoBehaviour:
   shakeDuration: 2.5
   shakeRange: 0.05
   isShaked: 0
+--- !u!114 &1522089618 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4380298031898825308, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
+  m_PrefabInstance: {fileID: 1522089615}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522089616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19f50dfc9bd683c4bb69c0395781c7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1533828732
 GameObject:
   m_ObjectHideFlags: 0
@@ -20689,6 +20700,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3236158155534579839, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 1522089618}
     - target: {fileID: 5135453547917011346, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_Name
       value: Player
@@ -20699,11 +20714,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -149.5
+      value: -149.2
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6
+      value: -5.2
       objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_LocalPosition.z

@@ -56,6 +56,11 @@ public class UIManager : Singleton<UIManager>
             fade.color = color;
             yield return new WaitForSeconds(0.1f);
         }
+        GameManager.instance.InitShakedFloorInfo();
+        GameManager.instance.InitIceInfo();
+        GameManager.instance.InitDetectorInfo();
+        GameManager.instance.InitButtonInfo();
+        GameManager.instance.InitPosInfo();
         SceneManager.LoadScene(GameManager.instance.respawnScene);
     }
 

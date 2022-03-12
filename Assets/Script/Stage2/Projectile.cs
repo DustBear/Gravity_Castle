@@ -31,8 +31,8 @@ public class Projectile : MonoBehaviour
 
     void Update() {
         if (originScene != SceneManager.GetActiveScene() || GameManager.instance.isDie) {
-            gameObject.SetActive(false);
             ObjManager.instance.ReturnObj(type, gameObject);
+            gameObject.SetActive(false);
         }
         if (type == ObjManager.ObjType.arrow && !GameManager.instance.isChangeGravityDir) {
             float angle = Mathf.Atan2(rigid.velocity.y, rigid.velocity.x);
@@ -44,8 +44,8 @@ public class Projectile : MonoBehaviour
     }
 
     void OnCollisionEnter2D(Collision2D other) {
-        gameObject.SetActive(false);
         ObjManager.instance.ReturnObj(type, gameObject);
+        gameObject.SetActive(false);
     }
 
     IEnumerator StopWhileChangingGravityDir()

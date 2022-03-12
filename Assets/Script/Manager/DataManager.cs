@@ -5,6 +5,13 @@ using System.IO;
 
 public class DataManager : MonoBehaviour
 {
+    public const string GameDataFileName = "GameData.json";
+    GameData gameData;
+    int shakedFloorNum;
+    int iceNum;
+    int detectorNum;
+    int buttonNum;
+
     static DataManager _instance;
     static public DataManager instance
     {
@@ -30,9 +37,19 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    public const string GameDataFileName = "GameData.json";
-
-    GameData gameData = new GameData();
+    public void Awake()
+    {
+        shakedFloorNum = GameManager.instance.shakedFloorNum;
+        iceNum = GameManager.instance.iceNum;
+        detectorNum = GameManager.instance.detectorNum;
+        buttonNum = GameManager.instance.buttonNum;
+        gameData = new GameData();
+        gameData.storedIsShaked = new bool[GameManager.instance.shakedFloorNum];
+        gameData.storedIsMelted = new bool[GameManager.instance.iceNum];
+        gameData.storedIsDetected = new bool[GameManager.instance.detectorNum];
+        gameData.storedIsGreen = new bool[GameManager.instance.buttonNum];
+        gameData.storedPos = new Vector2[GameManager.instance.buttonNum];
+    }
 
     public void CheckSavedGame(bool isNewGame)
     {
@@ -69,8 +86,23 @@ public class DataManager : MonoBehaviour
         gameData.respawnPos = GameManager.instance.respawnPos;
         gameData.respawnGravityDir = GameManager.instance.respawnGravityDir;
         gameData.isCliffChecked = GameManager.instance.isCliffChecked;
-        gameData.storedIsShaked = GameManager.instance.storedIsShaked;
-
+        for (int i = 0; i < shakedFloorNum; i++)
+        {
+            gameData.storedIsShaked[i] = GameManager.instance.storedIsShaked[i];
+        }
+        for (int i = 0; i < iceNum; i++)
+        {
+            gameData.storedIsMelted[i] = GameManager.instance.storedIsMelted[i];
+        }
+        for (int i = 0; i < detectorNum; i++)
+        {
+            gameData.storedIsDetected[i] = GameManager.instance.storedIsDetected[i];
+        }
+        for (int i = 0; i < buttonNum; i++)
+        {
+            gameData.storedIsGreen[i] = GameManager.instance.storedIsGreen[i];
+            gameData.storedPos[i] = GameManager.instance.storedPos[i];
+        }
         string ToJsonData = JsonUtility.ToJson(gameData);
         string filePath = Application.persistentDataPath + GameDataFileName;
         File.WriteAllText(filePath, ToJsonData);
@@ -87,6 +119,22 @@ public class DataManager : MonoBehaviour
         GameManager.instance.nextPos = gameData.respawnPos;
         GameManager.instance.nextGravityDir = gameData.respawnGravityDir;
         GameManager.instance.isCliffChecked = gameData.isCliffChecked;
-        GameManager.instance.storedIsShaked = gameData.storedIsShaked;
+        for (int i = 0; i < shakedFloorNum; i++)
+        {
+            GameManager.instance.storedIsShaked[i] = gameData.storedIsShaked[i];
+        }
+        for (int i = 0; i < iceNum; i++)
+        {
+            GameManager.instance.storedIsMelted[i] = gameData.storedIsMelted[i];
+        }
+        for (int i = 0; i < detectorNum; i++)
+        {
+            GameManager.instance.storedIsDetected[i] = gameData.storedIsDetected[i];
+        }
+        for (int i = 0; i < buttonNum; i++)
+        {
+            GameManager.instance.storedIsGreen[i] = gameData.storedIsGreen[i];
+            GameManager.instance.storedPos[i] = gameData.storedPos[i];
+        }
     }
 }

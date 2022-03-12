@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerDetectButton : MonoBehaviour
 {
+    [SerializeField] int buttonNum;
     [SerializeField] FireLauncher fireLauncher;
     [SerializeField] FireLauncherLinear fireLauncherLinear;
 
@@ -28,6 +29,19 @@ public class PlayerDetectButton : MonoBehaviour
                 rotationAngle = new Vector2(-1, 0);
                 break;
         }
+        fireLauncherLinear.buttonNum = buttonNum;
+    }
+
+    void Start()
+    {
+        if (GameManager.instance.curIsGreen[buttonNum])
+        {
+            render.color = new Color(0f, 1f, 0f, 1f);
+            isGreen = true;
+            fireLauncher.transform.position = GameManager.instance.storedPos[buttonNum];
+            fireLauncher.enabled = true;
+            fireLauncherLinear.enabled = false;
+        }
     }
 
     void Update() {
@@ -35,6 +49,7 @@ public class PlayerDetectButton : MonoBehaviour
         if (!isPressed && rayHit.collider != null && Physics2D.gravity.normalized == rotationAngle) {
             render.color = new Color(1 - render.color.r, 1 - render.color.g, 0f, 1f);
             isGreen = !isGreen;
+            GameManager.instance.curIsGreen[buttonNum] = isGreen;
             fireLauncher.enabled = isGreen;
             fireLauncherLinear.enabled = !isGreen;
             isPressed = true;

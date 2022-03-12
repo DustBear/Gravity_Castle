@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class IcePlatform : MonoBehaviour
 {
+    [SerializeField] int iceNum;
     [SerializeField] bool isVertical;
     [SerializeField] Vector2 leftmostPos;
     [SerializeField] Vector2 rightmostPos;
@@ -33,19 +34,19 @@ public class IcePlatform : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        if (GameManager.instance.curIsMelted[iceNum])
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void OnCollisionEnter2D(Collision2D other)
     {
         if (!isFired && other.gameObject.CompareTag("Projectile"))
         {
-            StartFired(other.transform.position);
-            isFired = true;
-        }
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!isFired && other.gameObject.CompareTag("Fire"))
-        {
+            GameManager.instance.curIsMelted[iceNum] = true;
             StartFired(other.transform.position);
             isFired = true;
         }
@@ -239,16 +240,18 @@ public class IcePlatform : MonoBehaviour
         {
             fireList[i].GetComponent<FireNotFalling>().StopParticle();
         }
-        Invoke("DeactivateFire", 1.0f); // 1.0f because we should wait particles to stop
+        Destroy(gameObject, 1.0f); // 1.0f because we should wait particles to stop
     }
 
-    void DeactivateFire()
+    void OnDestroy()
     {
         for (int i = 0; i < fireList.Count; i++)
         {
-            fireList[i].SetActive(false);
-            ObjManager.instance.ReturnObj(ObjManager.ObjType.fire, fireList[i]);
+            if (fireList[i].activeSelf)
+            {
+                fireList[i].SetActive(false);
+                ObjManager.instance.ReturnObj(ObjManager.ObjType.fire, fireList[i]);
+            }
         }
-        Destroy(gameObject);
     }
 }

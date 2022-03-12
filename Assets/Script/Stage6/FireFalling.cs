@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FireFalling : MonoBehaviour
 {
@@ -9,10 +10,10 @@ public class FireFalling : MonoBehaviour
     [SerializeField] ParticleSystem smokeParticle;
 
     GameObject player;
+    Scene originScene;
     Rigidbody2D rigid;
     BoxCollider2D collid;
     bool isFinish;
-    bool isApplyRotating;
 
     void Awake()
     {
@@ -22,11 +23,13 @@ public class FireFalling : MonoBehaviour
 
     void OnEnable()
     {
+        originScene = SceneManager.GetActiveScene();
         if (GameManager.instance.curAchievementNum >= 0)
         {
             player = GameObject.FindWithTag("Player");
         }
         rigid.gravityScale = 1f;
+        rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
         collid.isTrigger = false;
         isFinish = false;
     }
@@ -34,17 +37,17 @@ public class FireFalling : MonoBehaviour
     void Update()
     {
         // If scene changes, then erase all activated fires
-        if (player == null)
+        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.isDie)
         {
-            gameObject.SetActive(false);
             ObjManager.instance.ReturnObj(ObjManager.ObjType.fireFalling, gameObject);
+            gameObject.SetActive(false);
         }
         else
         {
             transform.rotation = player.transform.rotation;
         }
 
-        if (isApplyRotating)
+        if (GameManager.instance.isChangeGravityDir)
         {
             rigid.gravityScale = 0f;
             rigid.velocity = Vector2.zero;
@@ -52,16 +55,6 @@ public class FireFalling : MonoBehaviour
         else
         {
             rigid.gravityScale = 1f;
-        }
-
-        // Change isApplyRotating to fit isRotating
-        if (!isApplyRotating && GameManager.instance.isChangeGravityDir)
-        {
-            isApplyRotating = true;
-        }
-        if (isApplyRotating && !GameManager.instance.isChangeGravityDir)
-        {
-            isApplyRotating = false;
         }
     }
 
@@ -87,8 +80,8 @@ public class FireFalling : MonoBehaviour
         sparkParticle.Stop();
         smokeParticle.Stop();
         yield return new WaitForSeconds(0.4f); // Wait until fire particle goes on
-        gameObject.SetActive(false);
         ObjManager.instance.ReturnObj(ObjManager.ObjType.fireFalling, gameObject);
+        gameObject.SetActive(false);
     }
 
     IEnumerator EraseFire()
@@ -102,7 +95,7 @@ public class FireFalling : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
         rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
         collid.isTrigger = false;
-        gameObject.SetActive(false);
         ObjManager.instance.ReturnObj(ObjManager.ObjType.fireFalling, gameObject);
+        gameObject.SetActive(false);
     }
 }

@@ -19,6 +19,7 @@ public class EnemyShot : MonoBehaviour
     public GameObject missile;
     bool isMoving;
     bool isCollide;
+    [SerializeField] int achievementNum;
 
     void Awake() {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
@@ -29,9 +30,12 @@ public class EnemyShot : MonoBehaviour
     }
 
     void Start() {
+        if (GameManager.instance.curAchievementNum > achievementNum)
+        {
+            Destroy(gameObject);
+        }
         StartCoroutine(Moving());
         StartCoroutine(Shot());
-        AutoChangeDir();
     }
 
     void OnCollisionEnter2D(Collision2D other) {
@@ -80,18 +84,19 @@ public class EnemyShot : MonoBehaviour
             
             // Change direction
             if (isLeft) {
-                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.4f - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
+                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.3f - transform.right * sizeX * 0.6f, -transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
                 //rayHitWall = Physics2D.BoxCast(transform.position - transform.right * sizeX * 0.6f, new Vector2(0.05f, sizeY * 0.2f), transform.rotation.z, -transform.right, 0f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
-                rayHitPlatform = Physics2D.Raycast(transform.position - transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, ~(1 << 18));
+                rayHitPlatform = Physics2D.Raycast(transform.position - transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, 1 << 3 | 1 << 19);
             }
             else {
-                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.4f - transform.right * sizeX * 0.6f, transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
+                rayHitWallDown = Physics2D.Raycast(transform.position - transform.up * sizeY * 0.3f + transform.right * sizeX * 0.6f, transform.right, 0.1f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
                 //rayHitWall = Physics2D.BoxCast(transform.position + transform.right * sizeX * 0.6f, new Vector2(0.05f, sizeY * 0.2f), transform.rotation.z, transform.right, 0f, 1 << 3 | 1 << 10 | 1 << 18 | 1 << 19);
-                rayHitPlatform = Physics2D.Raycast(transform.position + transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, ~(1 << 18));
+                rayHitPlatform = Physics2D.Raycast(transform.position + transform.right * sizeX * 0.5f, -transform.up, sizeY * 0.6f, 1 << 3 | 1 << 19);
             }
             if (rayHitWallDown.collider != null || rayHitPlatform.collider == null) {
                 isLeft = !isLeft;
             }
+            // Move toward player
             else if (Mathf.Abs(Vector2.Dot(transform.up, transform.position - player.transform.position)) < 1f && Vector2.Distance(transform.position, player.transform.position) < 5f) {
                 if ((isLeft && Vector2.Dot(-transform.right, transform.position - player.transform.position) > 0)
                 || (!isLeft && Vector2.Dot(transform.right, transform.position - player.transform.position) > 0)) {
@@ -149,10 +154,5 @@ public class EnemyShot : MonoBehaviour
 
     void Erase() {
         Destroy(gameObject);
-    }
-
-    void AutoChangeDir() {
-        isLeft = !isLeft;
-        Invoke("AutoChangeDir", Random.Range(3, 10));
     }
 }

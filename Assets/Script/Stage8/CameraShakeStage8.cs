@@ -23,20 +23,14 @@ public class CameraShakeStage8 : MonoBehaviour
     IEnumerator Shake(float shakeDir, float targetDir)
     {
         isShaked = true;
-        float shakeDirDelta = shakeDir > 0f ? 0.003f : -0.003f;
+        float shakeDirDelta = shakeDir > 0f ? 0.05f : -0.05f;
         float stopShakingTime = Time.time + shakeDuration;
+        mainCamera.shakedZ = 0f;
         while (Time.time < stopShakingTime)
         {
-            mainCamera.shakedX = Random.value * shakeRange * 2 - shakeRange;
-            mainCamera.shakedY = Random.value * shakeRange * 2 - shakeRange;
-            mainCamera.shakedZ = Random.value * shakeDir;
-            shakeDir += shakeDirDelta;
+            mainCamera.shakedZ += shakeDirDelta;
             yield return new WaitForSeconds(0.005f);
         }
-
-        mainCamera.shakedX = 0f;
-        mainCamera.shakedY = 0f;
-        mainCamera.shakedZ = 0f;
         StartCoroutine(player.DevilUsingLever(targetDir));
         isShaked = false;
     }

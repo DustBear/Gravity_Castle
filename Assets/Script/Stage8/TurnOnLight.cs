@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Experimental.Rendering.Universal;
 
 public class TurnOnLight : MonoBehaviour
@@ -40,6 +41,9 @@ public class TurnOnLight : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         GameManager.instance.curAchievementNum = 29;
+        GameManager.instance.respawnScene = SceneManager.GetActiveScene().buildIndex;
+        GameManager.instance.respawnPos = transform.position;
+        GameManager.instance.respawnGravityDir = Physics2D.gravity.normalized;
         Devil devil = FindObjectOfType<Devil>();
         if (devil != null)
         {
