@@ -78,11 +78,11 @@ public class Player : MonoBehaviour
     {
         if (!GameManager.instance.isDie)
         {
-            // Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-            // if (locVel.y <= -20f)
-            // {
-            //     rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
-            // }
+            Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+            if (locVel.y <= -20f)
+            {
+                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
+            }
             IsGrounded();
             if (!isJumping && ropingState == RopingState.idle)
             {
@@ -170,7 +170,7 @@ public class Player : MonoBehaviour
     protected void Jump()
     {
         // Start jumping
-        if (InputManager.instance.jump && !isJumping)
+        if (InputManager.instance.jump && !isJumping && (isGrounded || ropingState == RopingState.move))
         {
             rigid.velocity = Vector2.zero;
             if (InputManager.instance.vertical == -1)
@@ -212,7 +212,7 @@ public class Player : MonoBehaviour
             case RopingState.idle:
                 if (InputManager.instance.vertical == 1 && isCollideRope || shouldRope)
                 {
-                    rigid.gravityScale = 0;
+                    rigid.gravityScale = 0f;
                     rigid.velocity = Vector2.zero;
                     if (rope == null)
                     {
@@ -246,7 +246,7 @@ public class Player : MonoBehaviour
                 if (!isCollideRope || isJumping)
                 {
                     transform.parent = null;
-                    rigid.gravityScale = 2f;
+                    rigid.gravityScale = 3f;
                     ropingState = RopingState.idle;
                 }
                 else
@@ -480,13 +480,13 @@ public class Player : MonoBehaviour
             gravity.y = 0f;
         }
         Physics2D.gravity = gravity;
-        rigid.gravityScale = 2f;
+        rigid.gravityScale = 3f;
         leveringState = LeveringState.fall;
     }
 
     protected virtual void IsGrounded()
     {
-        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.8f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 16);
+        RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 16);
         isGrounded = rayHit.collider != null;
     }
 }

@@ -10,7 +10,7 @@ public class SavePoint : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && transform.eulerAngles.z == player.eulerAngles.z)
+        if (other.CompareTag("Player") && transform.eulerAngles.z == player.eulerAngles.z && GameManager.instance.curAchievementNum == achievementNum - 1)
         {
             GameManager.instance.curAchievementNum = achievementNum;
             GameManager.instance.respawnScene = SceneManager.GetActiveScene().buildIndex;

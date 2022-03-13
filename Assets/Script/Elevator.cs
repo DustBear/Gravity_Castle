@@ -9,6 +9,8 @@ public class Elevator : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float waitingTime;
     [SerializeField] Transform player;
+    [SerializeField] ElevatorSensor elevatorSensor1;
+    [SerializeField] ElevatorSensor elevatorSensor2;
     Transform elevator;
     IEnumerator coroutine;
 
@@ -25,6 +27,7 @@ public class Elevator : MonoBehaviour
             StopCoroutine(coroutine);
             coroutine = Go();
             StartCoroutine(coroutine);
+            elevatorSensor1.MoveElevatorDoor(false);
         }
     }
 
@@ -46,6 +49,7 @@ public class Elevator : MonoBehaviour
             elevator.position = Vector2.Lerp(elevator.position, finishingPos, speed * Time.deltaTime);
             yield return null;
         }
+        elevatorSensor2.MoveElevatorDoor(true);
         elevator.position = finishingPos;
     }
 

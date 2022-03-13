@@ -109,7 +109,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0
-  m_GravityScale: 2
+  m_GravityScale: 3
   m_Material: {fileID: 6200000, guid: d2bbe9068fc32e041a0de98a61478c03, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -128,7 +128,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.050000012, y: 0.0032193065}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -156,7 +156,7 @@ MonoBehaviour:
   leftArrow: {fileID: 5135453549317223075}
   rightArrow: {fileID: 5135453548562255226}
   walkSpeed: 6
-  jumpPower: 9.5
+  jumpPower: 12
   isJumping: 0
   ropingState: 0
   ropeSpeed: 4
@@ -305,6 +305,7 @@ MonoBehaviour:
   leveringState: 0
   isDevilRotating: 0
   isBlackHole: 0
+  mainCamera: {fileID: 0}
 --- !u!1 &5135453548562255226
 GameObject:
   m_ObjectHideFlags: 0
