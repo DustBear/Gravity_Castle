@@ -41,6 +41,7 @@ public class Key : MonoBehaviour
                 GameManager.instance.UpdatePosInfo();
             }
             DataManager.instance.SaveData();
+            Physics2D.IgnoreLayerCollision(13, 10, true);
             Destroy(gameObject);
         }
     }
@@ -48,7 +49,7 @@ public class Key : MonoBehaviour
     IEnumerator BeforeGetKey()
     {
         // Wait until key falls
-        while (transform.InverseTransformDirection(rigid.velocity).y >= 0)
+        while (transform.InverseTransformDirection(rigid.velocity).y >= -0.1f)
         {
             yield return null;
         }

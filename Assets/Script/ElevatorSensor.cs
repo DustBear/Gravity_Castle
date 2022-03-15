@@ -38,6 +38,23 @@ public class ElevatorSensor : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D other) {
+        if (!isStarted && other.gameObject.CompareTag("Player") && transform.eulerAngles.z == player.eulerAngles.z)
+        {
+            if (sensorNum == 1)
+            {
+                StopCoroutine(coroutine2);
+                StartCoroutine(coroutine1);
+            }
+            else
+            {
+                StopCoroutine(coroutine1);
+                StartCoroutine(coroutine2);
+            }
+            isStarted = true;
+        }
+    }
+
     IEnumerator _MoveElevatorDoor(bool isGoingFinalPos)
     {
         Vector2 targetPos = isGoingFinalPos ? finalPos : originPos;
