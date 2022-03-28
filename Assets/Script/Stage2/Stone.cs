@@ -14,13 +14,20 @@ public class Stone : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.instance.curAchievementNum >= 7)
+        // Restrict velocity
+        if (rigid.bodyType == RigidbodyType2D.Dynamic)
         {
-            transform.position = new Vector2(-175.6f, 6f);
+            rigid.velocity = new Vector2(Mathf.Clamp(rigid.velocity.x, -20f, 20f), Mathf.Clamp(rigid.velocity.y, -20f, 20f));
+        }
+
+        // Fix position
+        if (GameManager.instance.curAchievementNum >= 17)
+        {
+            transform.position = new Vector2(-176f, 14f);
         }
         else if (isCollideCannonHome)
         {
-            transform.position = new Vector2(-175.6f, transform.position.y);
+            transform.position = new Vector2(-176f, transform.position.y);
         }
     }
     void OnCollisionEnter2D(Collision2D other)

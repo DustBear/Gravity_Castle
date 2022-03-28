@@ -51,6 +51,7 @@ public class ElevatorSensor : MonoBehaviour
                 StopCoroutine(coroutine1);
                 StartCoroutine(coroutine2);
             }
+            transform.position -= transform.up * 0.5f;
             isStarted = true;
         }
     }

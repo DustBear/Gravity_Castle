@@ -586,6 +586,8 @@ MonoBehaviour:
   buttonNum: 11
   curIsGreen: 
   storedIsGreen: 
+  curPos: []
+  storedPos: []
   isCliffChecked: 0
 --- !u!4 &444599439
 Transform:
@@ -1823,8 +1825,8 @@ MonoBehaviour:
   cannon: {fileID: 6815621349196668693, guid: 2129deb4bd32d0642a60040789cf5904, type: 3}
   fire: {fileID: 9056899700427346927, guid: 58087fe3f895e6b4f8ee0bd22c9d48f3, type: 3}
   fireFalling: {fileID: 8863233537826157524, guid: 5a86ae1164046814ab3ab0a2b955b509, type: 3}
-  arrowNum: 50
-  cannonNum: 50
+  arrowNum: 80
+  cannonNum: 100
   fireNum: 150
   fireFallingNum: 20
 --- !u!4 &1756655247
