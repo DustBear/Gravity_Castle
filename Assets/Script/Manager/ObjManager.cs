@@ -77,9 +77,11 @@ public class ObjManager : Singleton<ObjManager>
 
     public void ReturnObj(ObjType objType, GameObject obj)
     {
+        obj.SetActive(false);
         switch (objType)
         {
             case ObjType.arrow:
+                
                 arrowQueue.Enqueue(obj);
                 break;
             case ObjType.cannon:

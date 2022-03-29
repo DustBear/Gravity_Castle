@@ -249,7 +249,6 @@ public class IcePlatform : MonoBehaviour
         {
             if (fireList[i].activeSelf)
             {
-                fireList[i].SetActive(false);
                 ObjManager.instance.ReturnObj(ObjManager.ObjType.fire, fireList[i]);
             }
         }

@@ -111,6 +111,9 @@ public class Player : MonoBehaviour
         if (other.gameObject.tag == "Spike")
         {
             GameManager.instance.isDie = true;
+            ropingState = RopingState.idle;
+            leveringState = LeveringState.idle;
+            rigid.gravityScale = 3f;
             UIManager.instance.FadeOut();
         }
     }

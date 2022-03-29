@@ -27,7 +27,6 @@ public class Elevator : MonoBehaviour
             StopCoroutine(coroutine);
             coroutine = Go();
             StartCoroutine(coroutine);
-            elevatorSensor1.MoveElevatorDoor(false);
         }
     }
 
@@ -46,10 +45,9 @@ public class Elevator : MonoBehaviour
         yield return new WaitForSeconds(waitingTime);
         while (Vector2.Distance(elevator.position, finishingPos) > 0.1f)
         {
-            elevator.position = Vector2.Lerp(elevator.position, finishingPos, speed * Time.deltaTime);
+            elevator.position = Vector2.MoveTowards(elevator.position, finishingPos, speed * Time.deltaTime);
             yield return null;
         }
-        elevatorSensor2.MoveElevatorDoor(true);
         elevator.position = finishingPos;
     }
 
@@ -57,7 +55,7 @@ public class Elevator : MonoBehaviour
         yield return new WaitForSeconds(waitingTime);
         while (Vector2.Distance(elevator.position, startingPos) > 0.1f)
         {
-            elevator.position = Vector2.Lerp(elevator.position, startingPos, speed * Time.deltaTime);
+            elevator.position = Vector2.MoveTowards(elevator.position, startingPos, speed * Time.deltaTime);
             yield return null;
         }
         elevator.position = startingPos;

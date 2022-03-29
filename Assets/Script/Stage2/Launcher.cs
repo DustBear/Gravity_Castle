@@ -24,14 +24,14 @@ public class Launcher : MonoBehaviour
             while (gravityChangedCount > 0)
             {
                 gravityChangedCount--;
-                yield return new WaitForSeconds(0.64f);
+                yield return new WaitForSeconds(0.64f); // rotation time
             }
             GameObject curObj = ObjManager.instance.GetObj(type);
             curObj.transform.position = transform.position;
-            curObj.transform.rotation = transform.rotation;
+            curObj.transform.eulerAngles = transform.eulerAngles;
             Projectile projectile = curObj.GetComponent<Projectile>();
-            projectile.type = type;
             projectile.firePower = firePower;
+            projectile.fireDir = transform.up;
             curObj.SetActive(true);
             yield return new WaitForSeconds(timeInterval);
         }

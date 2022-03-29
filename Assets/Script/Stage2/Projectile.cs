@@ -5,10 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class Projectile : MonoBehaviour
 {
-    [HideInInspector] public ObjManager.ObjType type;
+    [SerializeField] ObjManager.ObjType type;
     [HideInInspector] public float firePower;
+    [HideInInspector] public Vector2 fireDir;
     Rigidbody2D rigid;
     Scene originScene;
+    bool curIsGravityChanged;
     
     void Awake() {
         rigid = GetComponent<Rigidbody2D>();
@@ -18,59 +20,50 @@ public class Projectile : MonoBehaviour
         originScene = SceneManager.GetActiveScene();
         if (type == ObjManager.ObjType.arrow)
         {
-            rigid.gravityScale = 2f;
+            rigid.AddForce(fireDir * firePower, ForceMode2D.Impulse);
         }
-        else if (type == ObjManager.ObjType.cannon)
-        {
-            rigid.gravityScale = 0f;
-        }
-        if (type == ObjManager.ObjType.arrow)
-        rigid.AddForce(transform.up * firePower, ForceMode2D.Impulse);
-        StartCoroutine(StopWhileChangingGravityDir());
     }
 
     void Update() {
-        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.isDie) {
+        // Erase projectile when scene is changed
+        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.isDie)
+        {
             ObjManager.instance.ReturnObj(type, gameObject);
-            gameObject.SetActive(false);
         }
-        if (type == ObjManager.ObjType.arrow && !GameManager.instance.isChangeGravityDir) {
-            float angle = Mathf.Atan2(rigid.velocity.y, rigid.velocity.x);
-            transform.localEulerAngles = new Vector3(0, 0, 90f + angle * 180f / Mathf.PI);
+
+        // Move arrow
+        if (type == ObjManager.ObjType.arrow)
+        {
+            if (!GameManager.instance.isChangeGravityDir)
+            {
+                // When gravity change is finished
+                if (curIsGravityChanged)
+                {
+                    rigid.AddForce(Physics2D.gravity.normalized * firePower, ForceMode2D.Impulse);
+                    rigid.gravityScale = 2f;
+                    curIsGravityChanged = false;
+                }
+
+                float angle = Mathf.Atan2(rigid.velocity.y, rigid.velocity.x);
+                transform.localEulerAngles = new Vector3(0, 0, 90f + angle * 180f / Mathf.PI);
+            }
+            // When gravity change is started
+            else if (!curIsGravityChanged)
+            {
+                rigid.gravityScale = 0f;
+                rigid.velocity = Vector2.zero;
+                curIsGravityChanged = true;
+            }
         }
-        if (type == ObjManager.ObjType.cannon && !GameManager.instance.isChangeGravityDir) {
+        // Move cannon
+        else if (type == ObjManager.ObjType.cannon && !GameManager.instance.isChangeGravityDir)
+        {
             transform.position += transform.up * 10f * Time.deltaTime;
         }
     }
 
-    void OnCollisionEnter2D(Collision2D other) {
-        ObjManager.instance.ReturnObj(type, gameObject);
-        gameObject.SetActive(false);
-    }
-
-    IEnumerator StopWhileChangingGravityDir()
+    void OnCollisionEnter2D(Collision2D other)
     {
-        while (true)
-        {
-            while (!GameManager.instance.isChangeGravityDir)
-            {
-                yield return null;
-            }
-            if (type == ObjManager.ObjType.arrow)
-            {
-                rigid.gravityScale = 0f;
-            }
-            Vector2 storeVel = rigid.velocity;
-            rigid.velocity = Vector2.zero;
-            while (GameManager.instance.isChangeGravityDir)
-            {
-                yield return null;
-            }
-            rigid.velocity = storeVel;
-            if (type == ObjManager.ObjType.arrow)
-            {
-                rigid.gravityScale = 2f;
-            }
-        }
+        ObjManager.instance.ReturnObj(type, gameObject);
     }
 }

@@ -40,7 +40,6 @@ public class FireFalling : MonoBehaviour
         if (originScene != SceneManager.GetActiveScene() || GameManager.instance.isDie)
         {
             ObjManager.instance.ReturnObj(ObjManager.ObjType.fireFalling, gameObject);
-            gameObject.SetActive(false);
         }
         else
         {
@@ -81,7 +80,6 @@ public class FireFalling : MonoBehaviour
         smokeParticle.Stop();
         yield return new WaitForSeconds(0.4f); // Wait until fire particle goes on
         ObjManager.instance.ReturnObj(ObjManager.ObjType.fireFalling, gameObject);
-        gameObject.SetActive(false);
     }
 
     IEnumerator EraseFire()
@@ -96,6 +94,5 @@ public class FireFalling : MonoBehaviour
         rigid.constraints = ~RigidbodyConstraints2D.FreezePosition;
         collid.isTrigger = false;
         ObjManager.instance.ReturnObj(ObjManager.ObjType.fireFalling, gameObject);
-        gameObject.SetActive(false);
     }
 }

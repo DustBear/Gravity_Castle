@@ -49,6 +49,7 @@ public class UIManager : Singleton<UIManager>
 
     IEnumerator _FadeOut()
     {
+        InputManager.instance.isInputBlocked = true;
         while (fade.color.a < 1f)
         {
             Color color = fade.color;
@@ -61,6 +62,7 @@ public class UIManager : Singleton<UIManager>
         GameManager.instance.InitDetectorInfo();
         GameManager.instance.InitButtonInfo();
         GameManager.instance.InitPosInfo();
+        InputManager.instance.isInputBlocked = false;
         SceneManager.LoadScene(GameManager.instance.respawnScene);
     }
 

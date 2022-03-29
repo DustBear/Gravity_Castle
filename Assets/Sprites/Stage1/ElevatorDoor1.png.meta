@@ -1,16 +1,19 @@
 fileFormatVersion: 2
-guid: 1ccf34e97c6be134b8ed0ac11ce4ba59
+guid: 397fbac009e9fcf419b36194a33b0e56
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2056975070064759275
-    second: outline1_0
+      213: 5711232607679894793
+    second: ElevatorDoor1_0
   - first:
-      213: -3833561377000301131
-    second: outline1_1
+      213: 834850840171322649
+    second: ElevatorDoor1_1
   - first:
-      213: 8977155317406142675
-    second: outline1_2
+      213: 921967788609036119
+    second: ElevatorDoor1_2
+  - first:
+      213: -7154833641832424136
+    second: ElevatorDoor1_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -74,7 +77,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -86,7 +89,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -98,7 +101,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -112,64 +115,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: outline1_0
+      name: ElevatorDoor1_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 7
         y: 0
-        width: 992
-        height: 432
+        width: 25
+        height: 176
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: be15b0b8de7db8c10800000000000000
-      internalID: 2056975070064759275
+      spriteID: 905536a1ccf524f40800000000000000
+      internalID: 5711232607679894793
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: outline1_1
+      name: ElevatorDoor1_1
       rect:
         serializedVersion: 2
-        x: 992
+        x: 39
         y: 0
-        width: 1360
-        height: 432
+        width: 25
+        height: 176
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5bd5d3b1d347ccac0800000000000000
-      internalID: -3833561377000301131
+      spriteID: 91d19d87a6cf59b00800000000000000
+      internalID: 834850840171322649
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: outline1_2
+      name: ElevatorDoor1_2
       rect:
         serializedVersion: 2
-        x: 2352
+        x: 71
         y: 0
-        width: 992
-        height: 432
+        width: 25
+        height: 176
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3d0908bb233459c70800000000000000
-      internalID: 8977155317406142675
+      spriteID: 75fd466a1dc7bcc00800000000000000
+      internalID: 921967788609036119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElevatorDoor1_3
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 0
+        width: 25
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83d509fe5bce4bc90800000000000000
+      internalID: -7154833641832424136
       vertices: []
       indices: 
       edges: []
