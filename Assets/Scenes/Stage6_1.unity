@@ -4995,7 +4995,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1421240359
-  m_SortingLayer: -8
+  m_SortingLayer: -9
   m_SortingOrder: 0
   m_Sprite: {fileID: -2320965383938589515, guid: 9780436585a92fa43aa5fec75a3c616b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -21555,6 +21555,8 @@ MonoBehaviour:
   speed: 1
   waitingTime: 1
   player: {fileID: 740662574}
+  elevatorSensor1: {fileID: 0}
+  elevatorSensor2: {fileID: 0}
 --- !u!1 &1874157625
 GameObject:
   m_ObjectHideFlags: 0
