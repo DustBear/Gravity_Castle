@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayerID: -976024869
   m_SortingLayer: -3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7485453407209300106, guid: 37feaecd344559e459b73e363328fb29, type: 3}
+  m_Sprite: {fileID: -4360435169211804448, guid: 684e84e98ed75d24caf8480a03fb541f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -128,11 +128,11 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.27}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5, y: 1.4375}
+    oldSize: {x: 2, y: 2}
     newSize: {x: 1.5, y: 1.4375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -196,7 +196,7 @@ MonoBehaviour:
   leftArrow: {fileID: 5135453549317223075}
   rightArrow: {fileID: 5135453548562255226}
   walkSpeed: 6
-  jumpPower: 12
+  jumpPower: 0
   isJumping: 0
   ropingState: 0
   ropeSpeed: 4
@@ -217,7 +217,7 @@ MonoBehaviour:
   leftArrow: {fileID: 5135453549317223075}
   rightArrow: {fileID: 5135453548562255226}
   walkSpeed: 6
-  jumpPower: 12
+  jumpPower: 0
   isJumping: 0
   ropingState: 0
   ropeSpeed: 4

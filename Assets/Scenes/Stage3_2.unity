@@ -399,6 +399,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3127998716914802067, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+      propertyPath: jumpPower
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 5135453547917011346, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3926,7 +3930,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1421240359
-  m_SortingLayer: -8
+  m_SortingLayer: -9
   m_SortingOrder: 0
   m_Sprite: {fileID: -8010657799410552898, guid: 386370332cd972e4ea1c599c9f6e50e7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -5981,7 +5985,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1621383683
-  m_SortingLayer: -7
+  m_SortingLayer: -8
   m_SortingOrder: 0
   m_Sprite: {fileID: 509482163912731600, guid: d8bebdfad04e0eb45bd58c3180189750, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
