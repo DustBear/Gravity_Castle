@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     protected Rigidbody2D rigid;
     protected SpriteRenderer sprite;
     protected bool isGrounded;
-    Animator ani;
+    public Animator ani;
 
     // Collision
     protected bool isCollideRope;
@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        ani = GetComponent<Animator>();
     }
 
     virtual protected void Start()
@@ -151,11 +152,12 @@ public class Player : MonoBehaviour
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
         locVel = new Vector2(InputManager.instance.horizontal * walkSpeed, locVel.y);
         rigid.velocity = transform.TransformDirection(locVel);
-        /*
+        
         // Animation
         if (InputManager.instance.horizontal != 0)
         {
              ani.SetBool("isWalking", true);
+             Debug.Log("walk");
         }
          else
         {
@@ -169,7 +171,7 @@ public class Player : MonoBehaviour
         {
             sprite.flipX = true;
         }
-         */
+         
     }
 
     protected void Jump()
@@ -186,7 +188,7 @@ public class Player : MonoBehaviour
             {
                 rigid.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
             }
-            // animator.SetBool("isJumping", true);
+            ani.SetBool("isJumping", true);
             isJumping = true;
         }
 
@@ -203,7 +205,7 @@ public class Player : MonoBehaviour
             }
             else if (isGrounded)
             {
-                // animator.SetBool("isJumping", false);
+                ani.SetBool("isJumping", false);
                 isJumping = false;
                 isFalling = false;
             }
