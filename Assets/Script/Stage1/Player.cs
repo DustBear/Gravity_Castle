@@ -42,7 +42,6 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
-        ani = GetComponent<Animator>();
     }
 
     virtual protected void Start()
@@ -152,7 +151,7 @@ public class Player : MonoBehaviour
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
         locVel = new Vector2(InputManager.instance.horizontal * walkSpeed, locVel.y);
         rigid.velocity = transform.TransformDirection(locVel);
-
+        /*
         // Animation
         if (InputManager.instance.horizontal != 0)
         {
@@ -170,6 +169,7 @@ public class Player : MonoBehaviour
         {
             sprite.flipX = true;
         }
+         */
     }
 
     protected void Jump()
