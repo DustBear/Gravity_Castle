@@ -157,7 +157,6 @@ public class Player : MonoBehaviour
         if (InputManager.instance.horizontal != 0)
         {
              ani.SetBool("isWalking", true);
-             Debug.Log("walk");
         }
          else
         {

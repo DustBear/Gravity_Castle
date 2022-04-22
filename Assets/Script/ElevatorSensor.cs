@@ -19,15 +19,25 @@ public class ElevatorSensor : MonoBehaviour
         coroutine2 = _MoveElevatorDoor(false);
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
-        if (!isStarted && other.CompareTag("Player") && transform.eulerAngles.z == player.eulerAngles.z)
+    void OnTriggerEnter2D(Collider2D other) { //엘리베이터 센서를 둘 다 trigger 로 수정하였음 
+        if(gameObject.name == "ElevatorSensor1") //elevatorSensor1은 2와 문의 작동방향이 반대이므로 따로 코드 작성 
+        {
+            if (!isStarted && other.CompareTag("Player") && transform.eulerAngles.z == player.eulerAngles.z)
+            {
+                StopCoroutine(coroutine2);
+                StartCoroutine(coroutine1);
+                isStarted = true;
+            }
+        }
+
+        else if(!isStarted && other.CompareTag("Player") && transform.eulerAngles.z == player.eulerAngles.z)
         {
             StopCoroutine(coroutine1);
             StartCoroutine(coroutine2);
             isStarted = true;
         }
     }
-
+    
     void OnCollisionEnter2D(Collision2D other) {
         if (!isStarted && other.gameObject.CompareTag("Player") && transform.eulerAngles.z == player.eulerAngles.z)
         {
@@ -37,7 +47,7 @@ public class ElevatorSensor : MonoBehaviour
             isStarted = true;
         }
     }
-
+    
     IEnumerator _MoveElevatorDoor(bool isOpened)
     {
         if (isOpened)
