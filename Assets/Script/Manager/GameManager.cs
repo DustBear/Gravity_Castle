@@ -77,7 +77,7 @@ public class GameManager : Singleton<GameManager>
             curAchievementNum = 0;
             nextScene = 1;
             //nextPos = new Vector2(-161.5f, -7f);
-            nextPos = new Vector2(-162.5f, -30.67f);
+            nextPos = new Vector2(-162.5f, -26.5f);
             nextGravityDir = Vector2.down;
             isCliffChecked = false;
             for (int i = 0; i < shakedFloorNum; i++)
