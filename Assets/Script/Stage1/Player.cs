@@ -80,12 +80,36 @@ public class Player : MonoBehaviour
     {
         if (!GameManager.instance.isDie)
         {
+            // Max y-velocity
             Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
             if (locVel.y <= -20f)
             {
                 rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
             }
+
+            // Animation
             IsGrounded();
+            ani.SetBool("isFloating", !isGrounded);
+            
+            AnimatorStateInfo aniState = ani.GetCurrentAnimatorStateInfo(0);
+            if (aniState.normalizedTime >= 1f)
+            {
+                if (aniState.IsName("Jump"))
+                {
+                    ani.SetBool("isJumping", false);
+                }
+                else if (isGrounded && aniState.IsName("Float")
+                && (leveringState != LeveringState.changeGravityDir1 || leveringState != LeveringState.changeGravityDir2))
+                {
+                    ani.SetBool("isLanding", true);
+                }
+                else if (aniState.IsName("Land"))
+                {
+                    ani.SetBool("isLanding", false);
+                }
+            }
+
+            // Walk, Jump, Rope, Lever
             if (!isJumping && ropingState == RopingState.idle)
             {
                 Lever();
@@ -186,9 +210,11 @@ public class Player : MonoBehaviour
             else
             {
                 rigid.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
+                ani.SetBool("isJumping", true);
             }
-            ani.SetBool("isJumping", true);
             isJumping = true;
+            ani.SetBool("isRopingVerticalIdle", false);
+            ani.SetBool("isRopingHorizontalIdle", false);
         }
 
         // Landing on the ground -> Finish jumping
@@ -204,7 +230,6 @@ public class Player : MonoBehaviour
             }
             else if (isGrounded)
             {
-                ani.SetBool("isJumping", false);
                 isJumping = false;
                 isFalling = false;
             }
@@ -227,11 +252,11 @@ public class Player : MonoBehaviour
                     Vector2 ropePos = rope.transform.position;
                     if (rope.CompareTag("VerticalRope"))
                     {
-                        destPos = new Vector2(ropePos.x - transform.up.x * 0.7f, transform.position.y);
+                        destPos = new Vector2(ropePos.x, transform.position.y);
                     }
                     else
                     {
-                        destPos = new Vector2(transform.position.x, ropePos.y - transform.up.y * 0.7f);
+                        destPos = new Vector2(transform.position.x, ropePos.y);
                     }
                     ropingState = RopingState.access;
                 }
@@ -245,6 +270,29 @@ public class Player : MonoBehaviour
                     transform.parent = rope.transform;
                     isJumping = false;
                     ropingState = RopingState.move;
+                    ani.SetBool("isFloating", false);
+                    if (Physics2D.gravity.normalized.y == 0f)
+                    {
+                        if (rope.CompareTag("VerticalRope"))
+                        {
+                            ani.SetBool("isRopingHorizontalIdle", true);
+                        }
+                        else
+                        {
+                            ani.SetBool("isRopingVerticalIdle", true);
+                        }
+                    }
+                    else
+                    {
+                        if (rope.CompareTag("VerticalRope"))
+                        {
+                            ani.SetBool("isRopingVerticalIdle", true);
+                        }
+                        else
+                        {
+                            ani.SetBool("isRopingHorizontalIdle", true);
+                        }
+                    }
                 }
                 break;
 
@@ -262,10 +310,12 @@ public class Player : MonoBehaviour
                     {
                         if (rope.CompareTag("VerticalRope"))
                         {
+                            HorizontalRopeAni();
                             rigid.velocity = new Vector2(0, -InputManager.instance.horizontal * ropeSpeed);
                         }
                         else
                         {
+                            VerticalRopeAni();
                             rigid.velocity = new Vector2(InputManager.instance.vertical * ropeSpeed, 0);
                         }
                     }
@@ -273,10 +323,12 @@ public class Player : MonoBehaviour
                     {
                         if (rope.CompareTag("VerticalRope"))
                         {
+                            HorizontalRopeAni();
                             rigid.velocity = new Vector2(0, InputManager.instance.horizontal * ropeSpeed);
                         }
                         else
                         {
+                            VerticalRopeAni();
                             rigid.velocity = new Vector2(-InputManager.instance.vertical * ropeSpeed, 0);
                         }
                     }
@@ -284,10 +336,12 @@ public class Player : MonoBehaviour
                     {
                         if (rope.CompareTag("VerticalRope"))
                         {
+                            VerticalRopeAni();
                             rigid.velocity = new Vector2(0, -InputManager.instance.vertical * ropeSpeed);
                         }
                         else
                         {
+                            HorizontalRopeAni();
                             rigid.velocity = new Vector2(-InputManager.instance.horizontal * ropeSpeed, 0);
                         }
                     }
@@ -295,10 +349,12 @@ public class Player : MonoBehaviour
                     {
                         if (rope.CompareTag("VerticalRope"))
                         {
+                            VerticalRopeAni();
                             rigid.velocity = new Vector2(0, InputManager.instance.vertical * ropeSpeed);
                         }
                         else
                         {
+                            HorizontalRopeAni();
                             rigid.velocity = new Vector2(InputManager.instance.horizontal * ropeSpeed, 0);
                         }
                     }
@@ -494,5 +550,29 @@ public class Player : MonoBehaviour
     {
         RaycastHit2D rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 16);
         isGrounded = rayHit.collider != null;
+    }
+
+    protected virtual void VerticalRopeAni()
+    {
+        if (InputManager.instance.vertical == 0)
+        {
+            ani.SetBool("isRopingVerticalMove", false);
+        }
+        else
+        {
+            ani.SetBool("isRopingVerticalMove", true);
+        }
+    }
+
+    protected virtual void HorizontalRopeAni()
+    {
+        if (InputManager.instance.horizontal == 0)
+        {
+            ani.SetBool("isRopingHorizontalMove", false);
+        }
+        else
+        {
+            ani.SetBool("isRopingHorizontalMove", true);
+        }
     }
 }
