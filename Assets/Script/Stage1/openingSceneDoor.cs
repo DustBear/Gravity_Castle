@@ -13,22 +13,29 @@ public class openingSceneDoor : MonoBehaviour
     public bool isColorBrighten;
     float curTime;
     public bool isDoorMove;
-
+    
     public Collider2D[] coll = new Collider2D[3];
     SpriteRenderer spr;
     Rigidbody2D rigid;
     void Start()
     {
         spr = player.GetComponent<SpriteRenderer>();
-
-        spr.sortingLayerID = SortingLayer.NameToID("stageStartPlayer"); //시작하면 플레이어는 엘리베이터 뒤 레이어에서 시작해야 함
-        spr.color = new Color(colorValue, colorValue, colorValue); //시작하면 플레이어 색은 어두움
-        transform.localPosition = new Vector2(0, startYpos);
-        isDoorMove = false;
         rigid = GetComponent<Rigidbody2D>();
+
+        if (player.transform.position.y <= -8) //씬이 처음 시작하는 것이 아니면 플레이어 sortingLayer, color 무시해야 함 
+        {
+            spr.sortingLayerID = SortingLayer.NameToID("stageStartPlayer"); //시작하면 플레이어는 엘리베이터 뒤 레이어에서 시작해야 함
+            spr.color = new Color(colorValue, colorValue, colorValue); //시작하면 플레이어 색은 어두움
+            transform.localPosition = new Vector2(0, startYpos);
+        }
+        else
+        {
+            transform.localPosition = new Vector2(0, finishYpos); //플레이어가 씬을 처음시작한 게 아니면 문은 올라간 채로 있어야 함 
+        }
+        
+        isDoorMove = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isDoorMove) 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class openingSceneEle : MonoBehaviour
 {
+    public GameObject player;
     public float speed;
     public float finishYpos;
     public bool isMove;
@@ -13,6 +14,13 @@ public class openingSceneEle : MonoBehaviour
     Rigidbody2D rigid;
     void Start()
     {
+        if(!(player.transform.position.y <= -8)) //씬을 처음 시작하는 것이 아니면 엘리베이터 움직이지 않음 
+        {
+            isMove = false;
+            transform.position = new Vector2(transform.position.x, finishYpos);
+            return;
+        }
+
         isMove = true;
         rigid = GetComponent<Rigidbody2D>();
     }
@@ -23,20 +31,14 @@ public class openingSceneEle : MonoBehaviour
         if (isArrived)
         {
             return; //엘리베이터가 도착했다면 더이상 고려할 것이 없다 
-        }
-        /*
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            isMove = true;
-        }
-        */
+        }      
         if (isMove)
         {
             elevatorMove();
         }
 
        
-        if(transform.position.y >= finishYpos)
+        if((transform.position.y >= finishYpos)&&isMove) //움직이다가 정지하는 것이 아니라 이미 도착해서 움직이지 않는 것이라면 문을 다시 올릴 필요가 없다 
         {
             rigid.velocity = new Vector2(0,0); //finishYpos에 도착하면 엘리베이터 정지 
             isMove = false; //isMove 는 false로 설정 
