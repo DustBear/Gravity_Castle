@@ -22,12 +22,35 @@ public class PlayerStage3 : Player
     {
         if (!GameManager.instance.isDie)
         {
-            // Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-            // if (locVel.y <= -20f)
-            // {
-            //     rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
-            // }
+            // Max y-velocity
+            Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+            if (locVel.y <= -20f)
+            {
+                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
+            }
+
+            // Animation
             IsGrounded();
+            ani.SetBool("isFloating", !isGrounded);
+            
+            AnimatorStateInfo aniState = ani.GetCurrentAnimatorStateInfo(0);
+            if (aniState.normalizedTime >= 1f)
+            {
+                if (aniState.IsName("Jump"))
+                {
+                    ani.SetBool("isJumping", false);
+                }
+                else if (isGrounded && aniState.IsName("Float")
+                && (leveringState != LeveringState.changeGravityDir1 || leveringState != LeveringState.changeGravityDir2))
+                {
+                    ani.SetBool("isLanding", true);
+                }
+                else if (aniState.IsName("Land"))
+                {
+                    ani.SetBool("isLanding", false);
+                }
+            }
+            
             if (!isJumping && ropingState == RopingState.idle)
             {
                 Lever();
