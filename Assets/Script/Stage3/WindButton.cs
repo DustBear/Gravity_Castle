@@ -78,7 +78,7 @@ public class WindButton : MonoBehaviour
 
     IEnumerator ChangeIntoGreen()
     {
-        var wait = new WaitForSeconds(0.1f);
+        var wait = new WaitForSeconds(0.12f);
 
         isGreen = false;
         isColorChanging = true;
