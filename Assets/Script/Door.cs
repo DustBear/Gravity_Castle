@@ -18,31 +18,16 @@ public class Door : MonoBehaviour
     }
 
     void Start() {
-        if (GameManager.instance.curAchievementNum >= achievementNum) {
+        if (GameManager.instance.gameData.curAchievementNum >= achievementNum) {
             Destroy(gameObject);
         }
     }
 
     void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.CompareTag("Player")) {
-            if (GameManager.instance.curAchievementNum == achievementNum - 1) {
+            if (GameManager.instance.gameData.curAchievementNum == achievementNum - 1) {
                 StartCoroutine(FadeOut());
-                GameManager.instance.curAchievementNum = achievementNum;
-                GameManager.instance.respawnScene = SceneManager.GetActiveScene().buildIndex;
-                GameManager.instance.respawnPos = player.transform.position;
-                GameManager.instance.respawnGravityDir = Physics2D.gravity.normalized;
-                if (achievementNum >= 17 && achievementNum <= 20) // Stage5
-                {
-                    GameManager.instance.UpdateShakedFloorInfo();
-                }
-                else if (achievementNum >= 21 && achievementNum <= 24) // Stage6
-                {
-                    GameManager.instance.UpdateIceInfo();
-                    GameManager.instance.UpdateDetectorInfo();
-                    GameManager.instance.UpdateButtonInfo();
-                    GameManager.instance.UpdatePosInfo();
-                }
-                DataManager.instance.SaveData();
+                GameManager.instance.SaveData(achievementNum, player.transform.position);
             }
         }
     }

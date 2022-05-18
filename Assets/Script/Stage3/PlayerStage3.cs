@@ -20,7 +20,7 @@ public class PlayerStage3 : Player
 
     protected override void Update()
     {
-        if (!GameManager.instance.isDie)
+        if (!GameManager.instance.shouldStartAtSavePoint)
         {
             // Max y-velocity
             Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);

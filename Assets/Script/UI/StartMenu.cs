@@ -8,12 +8,12 @@ public class StartMenu : MonoBehaviour
 {
     public void OnClickNewGame()
     {
-        DataManager.instance.CheckSavedGame(true);
+        GameManager.instance.CheckSavedGame(false);
     }
 
     public void OnClickLoadGame()
     {
-        DataManager.instance.CheckSavedGame(false);
+        GameManager.instance.CheckSavedGame(true);
     }
 
     public void OnClickTutorial()
@@ -26,6 +26,7 @@ public class StartMenu : MonoBehaviour
         Debug.Log("Start Setting!");
     }
 
+    // 게임 종료 시 Editor 상에서의 종료인지, 빌드 파일 상에서의 종료인지 구분
     public void OnClickExit()
     {
 #if UNITY_EDITOR

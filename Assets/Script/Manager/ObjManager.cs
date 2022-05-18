@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 오브젝트 풀링
 public class ObjManager : Singleton<ObjManager>
 {
     [HideInInspector] public enum ObjType {arrow, cannon, fire, fireFalling};
@@ -18,43 +19,29 @@ public class ObjManager : Singleton<ObjManager>
     Queue<GameObject> cannonQueue;
     Queue<GameObject> fireQueue;
     Queue<GameObject> fireFallingQueue;
-    
-    protected ObjManager() {}
 
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
         arrowQueue = new Queue<GameObject>();
         cannonQueue = new Queue<GameObject>();
         fireQueue = new Queue<GameObject>();
         fireFallingQueue = new Queue<GameObject>();
 
-        for (int i = 0; i < arrowNum; i++)
+        InitObjPool(arrowNum, ref arrow, ref arrowQueue);
+        InitObjPool(cannonNum, ref cannon, ref cannonQueue);
+        InitObjPool(fireNum, ref fire, ref fireQueue);
+        InitObjPool(fireFallingNum, ref fireFalling, ref fireFallingQueue);
+    }
+
+    void InitObjPool(int objNum, ref GameObject obj, ref Queue<GameObject> queue)
+    {
+        for (int i = 0; i < objNum; i++)
         {
-            GameObject newObj = Instantiate(arrow);
+            GameObject newObj = Instantiate(obj);
             DontDestroyOnLoad(newObj);
-            arrowQueue.Enqueue(newObj);
-            newObj.SetActive(false);
-        }
-        for (int i = 0; i < cannonNum; i++)
-        {
-            GameObject newObj = Instantiate(cannon);
-            DontDestroyOnLoad(newObj);
-            cannonQueue.Enqueue(newObj);
-            newObj.SetActive(false);
-        }
-        for (int i = 0; i < fireNum; i++)
-        {
-            GameObject newObj = Instantiate(fire);
-            DontDestroyOnLoad(newObj);
-            fireQueue.Enqueue(newObj);
-            newObj.SetActive(false);
-        }
-        for (int i = 0; i < fireFallingNum; i++)
-        {
-            GameObject newObj = Instantiate(fireFalling);
-            DontDestroyOnLoad(newObj);
-            fireFallingQueue.Enqueue(newObj);
+            queue.Enqueue(newObj);
             newObj.SetActive(false);
         }
     }

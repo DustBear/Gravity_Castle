@@ -11,7 +11,7 @@ public class TurnOnLight : MonoBehaviour
 
     void Start()
     {
-        if (GameManager.instance.curAchievementNum >= 29)
+        if (GameManager.instance.gameData.curAchievementNum >= 29)
         {
             globalLight.intensity = 1f;
             playerLight.intensity = 0f;
@@ -40,10 +40,10 @@ public class TurnOnLight : MonoBehaviour
             playerLight.intensity -= 0.02f;
             yield return new WaitForSeconds(0.05f);
         }
-        GameManager.instance.curAchievementNum = 29;
-        GameManager.instance.respawnScene = SceneManager.GetActiveScene().buildIndex;
-        GameManager.instance.respawnPos = transform.position;
-        GameManager.instance.respawnGravityDir = Physics2D.gravity.normalized;
+        GameManager.instance.gameData.curAchievementNum = 29;
+        GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex;
+        GameManager.instance.gameData.respawnPos = transform.position;
+        GameManager.instance.gameData.respawnGravityDir = Physics2D.gravity.normalized;
         Devil devil = FindObjectOfType<Devil>();
         if (devil != null)
         {

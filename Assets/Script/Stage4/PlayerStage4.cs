@@ -18,7 +18,7 @@ public class PlayerStage4 : Player
 
     protected override void Update()
     {
-        if (!GameManager.instance.isDie)
+        if (!GameManager.instance.shouldStartAtSavePoint)
         {
             // Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
             // if (locVel.y <= -20f)
@@ -65,7 +65,7 @@ public class PlayerStage4 : Player
             SpriteRenderer renderer = other.GetComponent<SpriteRenderer>();
             if (renderer.color.a != 0f)
             {
-                GameManager.instance.isDie = true;
+                GameManager.instance.shouldStartAtSavePoint = true;
                 UIManager.instance.FadeOut();
             }
         }

@@ -446,34 +446,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0ab97c1508bbdd46a2037002214aaba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDie: 0
-  curAchievementNum: -1
-  isChangeGravityDir: 0
-  nextScene: 0
-  nextPos: {x: -161.5, y: -7}
-  nextGravityDir: {x: 0, y: -1}
-  nextRopingState: 0
-  nextLeveringState: 0
-  nextIsJumping: 0
-  respawnScene: 0
-  respawnPos: {x: 0, y: 0}
-  respawnGravityDir: {x: 0, y: 0}
-  respawnRopingState: 0
   shakedFloorNum: 36
-  curIsShaked: 000000000000000000000000000000000000000000000000000000000000000000000000
-  storedIsShaked: 000000000000000000000000000000000000000000000000000000000000000000000000
   iceNum: 58
-  curIsMelted: 
-  storedIsMelted: 
   detectorNum: 6
-  curIsDetected: 
-  storedIsDetected: 
   buttonNum: 11
-  curIsGreen: 
-  storedIsGreen: 
-  curPos: []
-  storedPos: []
   isCliffChecked: 0
+  firstStartPos: {x: -162.5, y: -26.5}
+  firstRespawnPos: {x: -162.5, y: -6.5}
 --- !u!4 &444599439
 Transform:
   m_ObjectHideFlags: 0
@@ -775,36 +754,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 635931581}
   m_CullTransparentMesh: 1
---- !u!1 &739693922
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 739693923}
-  m_Layer: 0
-  m_Name: DataManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &739693923
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 739693922}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -93.401535, y: 13.541241, z: -72.1987}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &858874934
 GameObject:
   m_ObjectHideFlags: 0
@@ -834,13 +783,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a05d82240105f05448d9378b8150ee39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontal: 0
-  horizontalDown: 0
-  vertical: 0
-  verticalDown: 0
-  jump: 0
-  esc: 0
-  isInputBlocked: 0
 --- !u!4 &858874936
 Transform:
   m_ObjectHideFlags: 0

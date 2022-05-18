@@ -26,11 +26,11 @@ public class Devil : MonoBehaviour
 
     IEnumerator StartLaunch()
     {
-        while (GameManager.instance.curAchievementNum <= 30)
+        while (GameManager.instance.gameData.curAchievementNum <= 30)
         {
             yield return new WaitForSeconds(3f);
         }
-        if (GameManager.instance.curAchievementNum <= 32)
+        if (GameManager.instance.gameData.curAchievementNum <= 32)
         {
             isLaserStarted = true;
         }
@@ -41,7 +41,7 @@ public class Devil : MonoBehaviour
         transform.rotation = player.transform.rotation;
         if (!isSecondBehaviourStarted)
         {
-            if (GameManager.instance.curAchievementNum == 33 && GameManager.instance.isCliffChecked && player.transform.position.x > -115f)
+            if (GameManager.instance.gameData.curAchievementNum == 33 && GameManager.instance.isCliffChecked && player.transform.position.x > -115f)
             {
                 StopCoroutine(coroutine);
                 rigid.gravityScale = 2f;
@@ -75,7 +75,7 @@ public class Devil : MonoBehaviour
 
     public IEnumerator Behaviour()
     {
-        while (GameManager.instance.curAchievementNum != 33)
+        while (GameManager.instance.gameData.curAchievementNum != 33)
         {
             Walk();
             Jump();

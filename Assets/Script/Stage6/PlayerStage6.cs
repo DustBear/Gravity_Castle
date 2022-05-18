@@ -26,7 +26,7 @@ public class PlayerStage6 : Player
         base.OnCollisionEnter2D(other);
         if (other.gameObject.tag == "Projectile")
         {
-            GameManager.instance.isDie = true;
+            GameManager.instance.shouldStartAtSavePoint = true;
             UIManager.instance.FadeOut();
         }
     }
@@ -36,7 +36,7 @@ public class PlayerStage6 : Player
         base.OnTriggerEnter2D(other);
         if (other.gameObject.tag == "Fire")
         {
-            GameManager.instance.isDie = true;
+            GameManager.instance.shouldStartAtSavePoint = true;
             UIManager.instance.FadeOut();
         }
     }

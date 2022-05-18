@@ -15,7 +15,7 @@ public class FireNotFalling : MonoBehaviour
     }
 
     void OnEnable() {
-        if (GameManager.instance.curAchievementNum >= 0)
+        if (GameManager.instance.gameData.curAchievementNum >= 0)
         {
             player = GameObject.FindWithTag("Player");
         }

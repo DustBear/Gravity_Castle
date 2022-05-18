@@ -22,7 +22,7 @@ public class PlayerStage8 : Player
         UIManager.instance.FadeIn();
         GameManager.instance.isChangeGravityDir = false;
         // Go to Next Scene
-        if (!GameManager.instance.isDie)
+        if (!GameManager.instance.shouldStartAtSavePoint)
         {
             transform.position = GameManager.instance.nextPos;
             Physics2D.gravity = GameManager.instance.nextGravityDir * 9.8f;
@@ -34,12 +34,12 @@ public class PlayerStage8 : Player
         // Respawn after Dying
         else
         {
-            transform.position = GameManager.instance.respawnPos;
-            Physics2D.gravity = GameManager.instance.respawnGravityDir * 9.8f;
-            transform.up = -GameManager.instance.respawnGravityDir;
+            transform.position = GameManager.instance.gameData.respawnPos;
+            Physics2D.gravity = GameManager.instance.gameData.respawnGravityDir * 9.8f;
+            transform.up = -GameManager.instance.gameData.respawnGravityDir;
             transform.eulerAngles = Vector3.forward * transform.eulerAngles.z;
-            GameManager.instance.isDie = false;
-            if (GameManager.instance.curAchievementNum == 33 && !GameManager.instance.isCliffChecked)
+            GameManager.instance.shouldStartAtSavePoint = false;
+            if (GameManager.instance.gameData.curAchievementNum == 33 && !GameManager.instance.isCliffChecked)
             {
                 InputManager.instance.isInputBlocked = true;
             }
@@ -54,7 +54,7 @@ public class PlayerStage8 : Player
 
     protected override void Update()
     {
-        if (!GameManager.instance.isDie)
+        if (!GameManager.instance.shouldStartAtSavePoint)
         {
             // Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
             // if (locVel.y <= -20f)
@@ -100,7 +100,7 @@ public class PlayerStage8 : Player
     {
         base.OnCollisionEnter2D(other);
         if (other.collider.CompareTag("Devil") || other.collider.CompareTag("Projectile")) {
-            GameManager.instance.isDie = true;
+            GameManager.instance.shouldStartAtSavePoint = true;
             UIManager.instance.FadeOut();
         }
     }

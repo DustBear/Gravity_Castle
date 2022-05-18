@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
 {
     [SerializeField] protected GameObject leftArrow;
     [SerializeField] protected GameObject rightArrow;
+    [SerializeField] protected float defaultGravityScale = 3f;
+    [SerializeField] protected float maxVelocity = 20f;
     protected Rigidbody2D rigid;
     protected SpriteRenderer sprite;
     protected bool isGrounded;
@@ -50,7 +52,7 @@ public class Player : MonoBehaviour
         UIManager.instance.FadeIn();
         GameManager.instance.isChangeGravityDir = false;
         // Go to Next Scene
-        if (!GameManager.instance.isDie)
+        if (!GameManager.instance.shouldStartAtSavePoint)
         {
             transform.position = GameManager.instance.nextPos;
             Physics2D.gravity = GameManager.instance.nextGravityDir * 9.8f;
@@ -65,68 +67,62 @@ public class Player : MonoBehaviour
                 shouldRope = true;
             }
         }
-        // Respawn after Dying
         else
         {
-            transform.position = GameManager.instance.respawnPos;
-            Physics2D.gravity = GameManager.instance.respawnGravityDir * 9.8f;
-            transform.up = -GameManager.instance.respawnGravityDir;
+            transform.position = GameManager.instance.gameData.respawnPos;
+            Physics2D.gravity = GameManager.instance.gameData.respawnGravityDir * 9.8f;
+            transform.up = -GameManager.instance.gameData.respawnGravityDir;
             transform.eulerAngles = Vector3.forward * transform.eulerAngles.z;
-            GameManager.instance.isDie = false;
+            GameManager.instance.shouldStartAtSavePoint = false;
         }
     }
 
     virtual protected void Update()
     {
-        if (!GameManager.instance.isDie)
+        if (GameManager.instance.shouldStartAtSavePoint) return;
+
+        // 최대 속도 제한
+        rigid.velocity = Vector2.ClampMagnitude(rigid.velocity, maxVelocity);
+
+        // Animation
+        IsGrounded();
+        ani.SetBool("isFloating", !isGrounded);
+
+        AnimatorStateInfo aniState = ani.GetCurrentAnimatorStateInfo(0);
+        if (aniState.normalizedTime >= 1f)
         {
-            // Max y-velocity
-            Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
-            if (locVel.y <= -20f)
+            if (aniState.IsName("Jump"))
             {
-                rigid.velocity = transform.TransformDirection(new Vector2(locVel.x, -20f));
+                ani.SetBool("isJumping", false);
             }
+            else if (isGrounded && aniState.IsName("Float")
+            && (leveringState != LeveringState.changeGravityDir1 || leveringState != LeveringState.changeGravityDir2))
+            {
+                ani.SetBool("isLanding", true);
+            }
+            else if (aniState.IsName("Land"))
+            {
+                ani.SetBool("isLanding", false);
+            }
+        }
 
-            // Animation
-            IsGrounded();
-            ani.SetBool("isFloating", !isGrounded);
-            
-            AnimatorStateInfo aniState = ani.GetCurrentAnimatorStateInfo(0);
-            if (aniState.normalizedTime >= 1f)
+        // Walk, Jump, Rope, Lever
+        if (!isJumping && ropingState == RopingState.idle)
+        {
+            Lever();
+        }
+        if (leveringState == LeveringState.idle)
+        {
+            Rope();
+            if (!shouldRope)
             {
-                if (aniState.IsName("Jump"))
+                if (ropingState != RopingState.access)
                 {
-                    ani.SetBool("isJumping", false);
+                    Jump();
                 }
-                else if (isGrounded && aniState.IsName("Float")
-                && (leveringState != LeveringState.changeGravityDir1 || leveringState != LeveringState.changeGravityDir2))
+                if (ropingState == RopingState.idle)
                 {
-                    ani.SetBool("isLanding", true);
-                }
-                else if (aniState.IsName("Land"))
-                {
-                    ani.SetBool("isLanding", false);
-                }
-            }
-
-            // Walk, Jump, Rope, Lever
-            if (!isJumping && ropingState == RopingState.idle)
-            {
-                Lever();
-            }
-            if (leveringState == LeveringState.idle)
-            {
-                Rope();
-                if (!shouldRope)
-                {
-                    if (ropingState != RopingState.access)
-                    {
-                        Jump();
-                    }
-                    if (ropingState == RopingState.idle)
-                    {
-                        Walk();
-                    }
+                    Walk();
                 }
             }
         }
@@ -134,12 +130,13 @@ public class Player : MonoBehaviour
 
     virtual protected void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.tag == "Spike")
+        // Spike와 부딫히면 사망
+        if (other.gameObject.CompareTag("Spike"))
         {
-            GameManager.instance.isDie = true;
+            GameManager.instance.shouldStartAtSavePoint = true;
             ropingState = RopingState.idle;
             leveringState = LeveringState.idle;
-            rigid.gravityScale = 3f;
+            rigid.gravityScale = defaultGravityScale;
             UIManager.instance.FadeOut();
         }
     }
@@ -241,6 +238,8 @@ public class Player : MonoBehaviour
         switch (ropingState)
         {
             case RopingState.idle:
+                // rope에 매달리려는 시도가 있거나
+                // 이전 씬에서 로프에 접근한 상태로 현재 씬으로 넘어온 경우(shouldRope)
                 if (InputManager.instance.vertical == 1 && isCollideRope || shouldRope)
                 {
                     rigid.gravityScale = 0f;
@@ -249,6 +248,7 @@ public class Player : MonoBehaviour
                     {
                         break;
                     }
+                    // 매달려야 하는 위치 설정(destPos)
                     Vector2 ropePos = rope.transform.position;
                     if (rope.CompareTag("VerticalRope"))
                     {
@@ -258,18 +258,22 @@ public class Player : MonoBehaviour
                     {
                         destPos = new Vector2(transform.position.x, ropePos.y);
                     }
+
                     ropingState = RopingState.access;
                 }
                 break;
 
             case RopingState.access:
                 transform.position = Vector2.MoveTowards(transform.position, destPos, Time.deltaTime * 8f);
+                // 플레이어가 rope에 근접했을 때
                 if (Vector2.Distance(transform.position, destPos) < 0.1f)
                 {
+                    // 플레이어를 rope로 완전히 이동시킴
                     transform.position = destPos;
                     transform.parent = rope.transform;
                     isJumping = false;
-                    ropingState = RopingState.move;
+
+                    // float 애니메이션 멈추고 rope에 매달리는 애니메이션 실행
                     ani.SetBool("isFloating", false);
                     if (Physics2D.gravity.normalized.y == 0f)
                     {
@@ -293,16 +297,20 @@ public class Player : MonoBehaviour
                             ani.SetBool("isRopingHorizontalIdle", true);
                         }
                     }
+                    
+                    ropingState = RopingState.move;
                 }
                 break;
 
             case RopingState.move:
+                // Rope에서 떨어질 때
                 if (!isCollideRope || isJumping)
                 {
                     transform.parent = null;
-                    rigid.gravityScale = 3f;
+                    rigid.gravityScale = defaultGravityScale;
                     ropingState = RopingState.idle;
                 }
+                // Rope에 매달린 상태. 이동 가능
                 else
                 {
                     shouldRope = false;
@@ -372,7 +380,6 @@ public class Player : MonoBehaviour
                     && lever.transform.eulerAngles.z == transform.eulerAngles.z)
                 {
                     rigid.velocity = Vector2.zero;
-                    // animator.SetBool("isWalking", true);
                     switch (lever.transform.eulerAngles.z)
                     {
                         case 0f:

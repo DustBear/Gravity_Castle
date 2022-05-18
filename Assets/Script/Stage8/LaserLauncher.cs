@@ -14,11 +14,11 @@ public class LaserLauncher : MonoBehaviour
 
     IEnumerator StartLaunch()
     {
-        while (GameManager.instance.curAchievementNum <= 30)
+        while (GameManager.instance.gameData.curAchievementNum <= 30)
         {
             yield return new WaitForSeconds(3f);
         }
-        if (GameManager.instance.curAchievementNum <= 32)
+        if (GameManager.instance.gameData.curAchievementNum <= 32)
         {
             Launch();
         }

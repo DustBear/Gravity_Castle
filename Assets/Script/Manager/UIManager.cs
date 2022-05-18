@@ -12,14 +12,13 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] Image fade;
     IEnumerator fadeCoroutine;
 
-    protected UIManager() {}
-
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
         fadeCoroutine = _FadeIn();
     }
 
+    // Fade in과 Fade out이 동시에 실행될 수 없게 하였음
     public void FadeIn()
     {
         StopCoroutine(fadeCoroutine);
@@ -36,6 +35,7 @@ public class UIManager : Singleton<UIManager>
 
     IEnumerator _FadeIn()
     {
+        var wait = new WaitForSeconds(0.1f);
         Color color = fade.color;
         color.a = 1f;
         fade.color = color; 
@@ -43,37 +43,36 @@ public class UIManager : Singleton<UIManager>
         {
             color.a -= 0.05f;
             fade.color = color;
-            yield return new WaitForSeconds(0.1f);
+            yield return wait;
         }
     }
 
     IEnumerator _FadeOut()
     {
         InputManager.instance.isInputBlocked = true;
+
+        var wait = new WaitForSeconds(0.1f);
         while (fade.color.a < 1f)
         {
             Color color = fade.color;
             color.a += 0.05f;
             fade.color = color;
-            yield return new WaitForSeconds(0.1f);
+            yield return wait;
         }
-        GameManager.instance.InitShakedFloorInfo();
-        GameManager.instance.InitIceInfo();
-        GameManager.instance.InitDetectorInfo();
-        GameManager.instance.InitButtonInfo();
-        GameManager.instance.InitPosInfo();
-        InputManager.instance.isInputBlocked = false;
-        SceneManager.LoadScene(GameManager.instance.respawnScene);
+
+        GameManager.instance.StartGame(false);
     }
 
     public void OnOffInGameMenu()
     {
         inGameMenu.SetActive(!inGameMenu.activeSelf);
+        // 인게임 메뉴 팝업창 활성화 시 일시정지
         if (inGameMenu.activeSelf)
         {
             Time.timeScale = 0f;
             Cursor.lockState = CursorLockMode.None;
         }
+        // 인게임 메뉴 팝업창 비활성화 시 다시 재생
         else
         {
             Time.timeScale = 1f;
@@ -81,11 +80,13 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    // New Game 버튼을 눌렀는데 이미 저장된 게임이 있을 경우 팝업창 활성화
     public void ExistSavedGame()
     {
         existSavedGame.SetActive(true);
     }
 
+    // Load Game 버튼을 눌렀는데 저장된 게임이 없을 경우 팝업창 활성화
     public void NoSavedGame()
     {
         noSavedGame.SetActive(true);

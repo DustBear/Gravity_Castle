@@ -1,19 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InputManager : Singleton<InputManager>
 {
-    protected InputManager() {}
+    [HideInInspector] public float horizontal {get; private set;}
+    [HideInInspector] public bool horizontalDown {get; private set;}
+    [HideInInspector] public float vertical {get; private set;}
+    [HideInInspector] public bool verticalDown {get; private set;}
+    [HideInInspector] public bool jump {get; private set;}
+    [HideInInspector] public bool esc {get; private set;}
 
-    [HideInInspector] public float horizontal;
-    [HideInInspector] public bool horizontalDown;
-    [HideInInspector] public float vertical;
-    [HideInInspector] public bool verticalDown;
-    [HideInInspector] public bool jump;
-    [HideInInspector] public bool esc;
-
-    [HideInInspector] public bool isInputBlocked;
+    [HideInInspector] public bool isInputBlocked {get; set;}
 
     void Awake()
     {
@@ -38,9 +37,10 @@ public class InputManager : Singleton<InputManager>
             verticalDown = false;
             jump = false;
         }
+        
+        // 게임 진행중에 esc 누르면 메뉴 온오프 가능
         esc = Input.GetButtonDown("Cancel");
-
-        if (esc && GameManager.instance.curAchievementNum >= 0)
+        if (esc && SceneManager.GetActiveScene().name != "MainMenu")
         {
             UIManager.instance.OnOffInGameMenu();
         }

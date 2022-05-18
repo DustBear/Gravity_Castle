@@ -11,7 +11,7 @@ public class StoneSensor : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (!isShaked && GameManager.instance.curAchievementNum < 17 && other.CompareTag("Player"))
+        if (!isShaked && GameManager.instance.gameData.curAchievementNum < 17 && other.CompareTag("Player"))
         {
             StartCoroutine(StartShake());
         }

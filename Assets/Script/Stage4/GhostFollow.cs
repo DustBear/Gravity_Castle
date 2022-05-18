@@ -17,7 +17,7 @@ public class GhostFollow : MonoBehaviour
 
     void Start()
     {
-        if (GameManager.instance.curAchievementNum == 15)
+        if (GameManager.instance.gameData.curAchievementNum == 15)
         {
             transform.position = new Vector2(-162.4f, 10.4f);
         }
@@ -27,7 +27,7 @@ public class GhostFollow : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.instance.curAchievementNum >= 14)
+        if (GameManager.instance.gameData.curAchievementNum >= 14)
         {
             // Timing when player start to fall after using lever
             if (GameManager.instance.isChangeGravityDir)
@@ -41,7 +41,7 @@ public class GhostFollow : MonoBehaviour
             }
 
             // Finish follow
-            if (GameManager.instance.curAchievementNum >= 15 && (Vector2)transform.position == targetPos && Physics2D.gravity.normalized != Vector2.down)
+            if (GameManager.instance.gameData.curAchievementNum >= 15 && (Vector2)transform.position == targetPos && Physics2D.gravity.normalized != Vector2.down)
             {
                 player.isGhostRotating = true;
             }
@@ -52,7 +52,7 @@ public class GhostFollow : MonoBehaviour
 
     IEnumerator IncreaseSpeed()
     {
-        while (GameManager.instance.curAchievementNum != 15)
+        while (GameManager.instance.gameData.curAchievementNum != 15)
         {
             yield return new WaitForSeconds(5f);
         }

@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class InGameMenu : MonoBehaviour
 {
-    public void OnClickExit() {
-        DataManager.instance.SaveData();
+    // 일시정지 해제 후 메인메뉴로
+    public void OnClickExit()
+    {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("MainMenu");
         gameObject.SetActive(false);
     }
 }

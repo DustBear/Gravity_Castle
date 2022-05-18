@@ -18,7 +18,7 @@ public class KeyBox : MonoBehaviour
     void Start()
     {
         // If player have already obtained the key, start scene with the keybox open
-        if (GameManager.instance.curAchievementNum >= key.achievementNum) {
+        if (GameManager.instance.gameData.curAchievementNum >= key.achievementNum) {
             boxBodyAnimator.SetBool("getKey", true);
             boxHeadAnimator.SetBool("getKey", true);
             isKeyBoxOpened = true;

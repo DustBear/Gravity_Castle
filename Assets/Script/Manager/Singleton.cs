@@ -4,31 +4,30 @@ using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    protected static T _instance;
-    static bool isAppQuit;
+    static T _instance;
 
     public static T instance
     {
         get
         {
-            if (isAppQuit)
-            {
-                return null;
-            }
             if (_instance == null)
             {
-                _instance = FindObjectOfType<T>();
+                // type 이름으로 찾기
+                GameObject obj;
+                obj = GameObject.Find(typeof(T).Name);
+                // 없으면 만들기
+                if (obj == null)
+                {
+                    obj = new GameObject(typeof(T).Name);
+                    _instance = obj.AddComponent<T>();
+                }
+                // 있으면 GetComponent
+                else
+                {
+                    _instance = obj.GetComponent<T>();
+                }
             }
             return _instance;
         }
-    }
-
-    void OnApplicationQuit()
-    {
-        isAppQuit = true;
-    }
-
-    void OnDestroy() {
-        isAppQuit = true;
     }
 }

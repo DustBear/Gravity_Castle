@@ -25,22 +25,7 @@ public class Key : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            GameManager.instance.curAchievementNum = achievementNum;
-            GameManager.instance.respawnScene = SceneManager.GetActiveScene().buildIndex;
-            GameManager.instance.respawnPos = player.position;
-            GameManager.instance.respawnGravityDir = Physics2D.gravity.normalized;
-            if (achievementNum >= 17 && achievementNum <= 20) // Stage5
-            {
-                GameManager.instance.UpdateShakedFloorInfo();
-            }
-            else if (achievementNum >= 21 && achievementNum <= 24) // Stage6
-            {
-                GameManager.instance.UpdateIceInfo();
-                GameManager.instance.UpdateDetectorInfo();
-                GameManager.instance.UpdateButtonInfo();
-                GameManager.instance.UpdatePosInfo();
-            }
-            DataManager.instance.SaveData();
+            GameManager.instance.SaveData(achievementNum, player.position);
             Physics2D.IgnoreLayerCollision(13, 10, true);
             Destroy(gameObject);
         }

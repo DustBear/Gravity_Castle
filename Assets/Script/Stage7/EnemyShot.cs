@@ -30,7 +30,7 @@ public class EnemyShot : MonoBehaviour
     }
 
     void Start() {
-        if (GameManager.instance.curAchievementNum > achievementNum)
+        if (GameManager.instance.gameData.curAchievementNum > achievementNum)
         {
             Destroy(gameObject);
         }
@@ -43,7 +43,7 @@ public class EnemyShot : MonoBehaviour
             isCollide = true;
             if (other.collider.tag == "Player" && rayHitPlayerUp.collider == null)
             {
-                GameManager.instance.isDie = true;
+                GameManager.instance.shouldStartAtSavePoint = true;
                 UIManager.instance.FadeOut();
             }
         }
@@ -58,17 +58,17 @@ public class EnemyShot : MonoBehaviour
     IEnumerator Moving() {
         switch (startMv) {
             case startMoving.key1:
-                while (GameManager.instance.curAchievementNum < 25) {
+                while (GameManager.instance.gameData.curAchievementNum < 25) {
                     yield return new WaitForSeconds(0.5f);
                 }
                 break;
             case startMoving.door1:
-                while (GameManager.instance.curAchievementNum < 26) {
+                while (GameManager.instance.gameData.curAchievementNum < 26) {
                     yield return new WaitForSeconds(0.5f);
                 }
                 break;
             case startMoving.key2:
-                while (GameManager.instance.curAchievementNum < 27) {
+                while (GameManager.instance.gameData.curAchievementNum < 27) {
                     yield return new WaitForSeconds(0.5f);
                 }
                 break;

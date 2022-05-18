@@ -23,7 +23,7 @@ public class PlayerStage5 : Player
     {
         if (other.gameObject.tag == "Spike")
         {
-            GameManager.instance.isDie = true;
+            GameManager.instance.shouldStartAtSavePoint = true;
             UIManager.instance.FadeOut();
         }
     }
@@ -33,7 +33,7 @@ public class PlayerStage5 : Player
         base.OnTriggerEnter2D(other);
         if (other.tag == "Spike")
         {
-            GameManager.instance.isDie = true;
+            GameManager.instance.shouldStartAtSavePoint = true;
             UIManager.instance.FadeOut();
         }
     }

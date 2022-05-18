@@ -22,7 +22,7 @@ public class PlayerStage7 : Player
     protected override void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.tag == "Spike" || other.gameObject.tag == "Projectile") {
-            GameManager.instance.isDie = true;
+            GameManager.instance.shouldStartAtSavePoint = true;
             UIManager.instance.FadeOut();
         }
     }

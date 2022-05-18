@@ -24,7 +24,7 @@ public class FireFalling : MonoBehaviour
     void OnEnable()
     {
         originScene = SceneManager.GetActiveScene();
-        if (GameManager.instance.curAchievementNum >= 0)
+        if (GameManager.instance.gameData.curAchievementNum >= 0)
         {
             player = GameObject.FindWithTag("Player");
         }
@@ -37,7 +37,7 @@ public class FireFalling : MonoBehaviour
     void Update()
     {
         // If scene changes, then erase all activated fires
-        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.isDie)
+        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.shouldStartAtSavePoint)
         {
             ObjManager.instance.ReturnObj(ObjManager.ObjType.fireFalling, gameObject);
         }

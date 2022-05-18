@@ -23,7 +23,7 @@ public class PlayerStage2 : Player
     {
         if (other.gameObject.tag == "Spike" || other.gameObject.tag == "Projectile")
         {
-            GameManager.instance.isDie = true;
+            GameManager.instance.shouldStartAtSavePoint = true;
             ropingState = RopingState.idle;
             leveringState = LeveringState.idle;
             rigid.gravityScale = 3f;

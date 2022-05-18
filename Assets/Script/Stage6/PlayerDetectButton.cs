@@ -38,7 +38,7 @@ public class PlayerDetectButton : MonoBehaviour
         {
             render.color = new Color(0f, 1f, 0f, 1f);
             isGreen = true;
-            fireLauncher.transform.position = GameManager.instance.storedPos[buttonNum];
+            fireLauncher.transform.position = GameManager.instance.gameData.storedPos[buttonNum];
             fireLauncher.enabled = true;
             fireLauncherLinear.enabled = false;
         }
