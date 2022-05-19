@@ -24,19 +24,15 @@ public class ObjManager : Singleton<ObjManager>
     {
         DontDestroyOnLoad(gameObject);
 
-        arrowQueue = new Queue<GameObject>();
-        cannonQueue = new Queue<GameObject>();
-        fireQueue = new Queue<GameObject>();
-        fireFallingQueue = new Queue<GameObject>();
-
-        InitObjPool(arrowNum, ref arrow, ref arrowQueue);
-        InitObjPool(cannonNum, ref cannon, ref cannonQueue);
-        InitObjPool(fireNum, ref fire, ref fireQueue);
-        InitObjPool(fireFallingNum, ref fireFalling, ref fireFallingQueue);
+        InitPool(arrowNum, ref arrow, ref arrowQueue);
+        InitPool(cannonNum, ref cannon, ref cannonQueue);
+        InitPool(fireNum, ref fire, ref fireQueue);
+        InitPool(fireFallingNum, ref fireFalling, ref fireFallingQueue);
     }
 
-    void InitObjPool(int objNum, ref GameObject obj, ref Queue<GameObject> queue)
+    void InitPool(int objNum, ref GameObject obj, ref Queue<GameObject> queue)
     {
+        queue = new Queue<GameObject>();
         for (int i = 0; i < objNum; i++)
         {
             GameObject newObj = Instantiate(obj);
@@ -68,7 +64,6 @@ public class ObjManager : Singleton<ObjManager>
         switch (objType)
         {
             case ObjType.arrow:
-                
                 arrowQueue.Enqueue(obj);
                 break;
             case ObjType.cannon:

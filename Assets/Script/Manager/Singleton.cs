@@ -12,19 +12,12 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         {
             if (_instance == null)
             {
-                // type 이름으로 찾기
-                GameObject obj;
-                obj = GameObject.Find(typeof(T).Name);
+                _instance = FindObjectOfType<T>();
                 // 없으면 만들기
-                if (obj == null)
+                if (_instance == null)
                 {
-                    obj = new GameObject(typeof(T).Name);
+                    GameObject obj = new GameObject(typeof(T).Name);
                     _instance = obj.AddComponent<T>();
-                }
-                // 있으면 GetComponent
-                else
-                {
-                    _instance = obj.GetComponent<T>();
                 }
             }
             return _instance;
