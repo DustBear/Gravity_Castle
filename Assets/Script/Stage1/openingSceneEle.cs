@@ -11,10 +11,15 @@ public class openingSceneEle : MonoBehaviour
     bool isArrived=false;
     public GameObject elevatorDoor;
     public Collider2D[] coll = new Collider2D[3];
+    public float Active_Threshold;
+    public float startYpos;
     Rigidbody2D rigid;
+
     void Start()
     {
-        if(!(player.transform.position.y <= -8)) //씬을 처음 시작하는 것이 아니면 엘리베이터 움직이지 않음 
+        transform.position = new Vector2(transform.position.x, startYpos);
+
+        if(!(player.transform.position.y <= Active_Threshold)) //씬을 처음 시작하는 것이 아니면 엘리베이터 움직이지 않음 
         {
             isMove = false;
             transform.position = new Vector2(transform.position.x, finishYpos);
