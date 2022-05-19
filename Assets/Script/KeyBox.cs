@@ -6,13 +6,14 @@ public class KeyBox : MonoBehaviour
 {
     [SerializeField] Key key;
     [SerializeField] Animator boxHeadAnimator;
-    [SerializeField] Transform player;
+    Transform player;
     Animator boxBodyAnimator;
     bool isKeyBoxOpened;
 
     void Awake()
     {
         boxBodyAnimator = GetComponent<Animator>();
+        player = GameObject.FindWithTag("Player").transform;
     }
 
     void Start()

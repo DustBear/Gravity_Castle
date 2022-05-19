@@ -1175,7 +1175,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 426569748}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 67.67, y: -36.68, z: 888.43445}
+  m_LocalPosition: {x: 67.78, y: -36.68, z: 888.43445}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 59889778}
@@ -1240,7 +1240,7 @@ SpriteRenderer:
   m_SortingLayerID: 256397483
   m_SortingLayer: -5
   m_SortingOrder: 2
-  m_Sprite: {fileID: -6330954139856862804, guid: 0dda9429f3b8f2d4cb5eff05fab15808, type: 3}
+  m_Sprite: {fileID: 5052234236794966380, guid: 66b854e9d7d1be542a0abd255a162774, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4146,11 +4146,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1111063479051333104, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.7
+      value: 6.3
       objectReference: {fileID: 0}
     - target: {fileID: 1111063479051333104, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1111063479051333104, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4158,11 +4158,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1168494902145406732, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_Size.x
-      value: 0.73555404
+      value: 0.6561321
       objectReference: {fileID: 0}
     - target: {fileID: 1168494902145406732, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_Offset.x
-      value: -0.21711513
+      value: -0.2568261
       objectReference: {fileID: 0}
     - target: {fileID: 1168494902145406733, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_LocalScale.x
@@ -4278,7 +4278,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - target: {fileID: 1184893297765902887, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: ShapeModule.m_Scale.z
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2399911673507156842, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: m_Color.b
@@ -4294,6 +4294,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6341081728184936303, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: isGreen
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6341081728184936303, guid: 78db22841d794b14ba04a74772953745, type: 3}
+      propertyPath: isButtonType2
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8898932782436831877, guid: 78db22841d794b14ba04a74772953745, type: 3}
@@ -21611,7 +21615,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1770151082}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 67.19, y: -36.68, z: 888.43445}
+  m_LocalPosition: {x: 67.81, y: -36.68, z: 888.43445}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 59889778}
@@ -21631,7 +21635,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: {fileID: 1205939179}
   boxHeadAnimator: {fileID: 426569750}
-  player: {fileID: 106761936}
 --- !u!61 &1770151085
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -21649,7 +21652,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.5625, y: 0.375}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 0.5625, y: 0.375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -21717,7 +21720,7 @@ SpriteRenderer:
   m_SortingLayerID: 256397483
   m_SortingLayer: -5
   m_SortingOrder: 0
-  m_Sprite: {fileID: 4727633781103762509, guid: 0dda9429f3b8f2d4cb5eff05fab15808, type: 3}
+  m_Sprite: {fileID: -8739759723142395536, guid: af0bc9979ed2bbc419fbcae95aa47637, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -22158,6 +22161,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6341081728184936303, guid: 78db22841d794b14ba04a74772953745, type: 3}
       propertyPath: isGreen
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6341081728184936303, guid: 78db22841d794b14ba04a74772953745, type: 3}
+      propertyPath: isButtonType2
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8898932782436831877, guid: 78db22841d794b14ba04a74772953745, type: 3}

@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class ElevatorSensor : MonoBehaviour
 {
-    [SerializeField] Transform player;
     [SerializeField] Transform elevatorDoor;
     [SerializeField] Animator elevatorDoorAnim;
     [SerializeField] Vector2 openedPos;
     [SerializeField] Vector2 closedPos;
+    Transform player;
     bool isStarted;
     IEnumerator coroutine1;
     IEnumerator coroutine2;
 
     void Awake()
     {
+        player = GameObject.FindWithTag("Player").transform;
         coroutine1 = _MoveElevatorDoor(true);
         coroutine2 = _MoveElevatorDoor(false);
     }
