@@ -9,6 +9,9 @@ public class GhostFollow : MonoBehaviour
     SpriteRenderer render;
     Vector2 targetPos;
 
+    public int activeNum; //유령이 작동 시작하는 시점 
+    public int level_IncreaseNum; //유령이 강화되는 시점
+
     void Awake()
     {
         
@@ -17,7 +20,7 @@ public class GhostFollow : MonoBehaviour
 
     void Start()
     {
-        if (GameManager.instance.gameData.curAchievementNum == 15)
+        if (GameManager.instance.gameData.curAchievementNum == level_IncreaseNum)
         {
             transform.position = new Vector2(-162.4f, 10.4f);
         }
@@ -27,7 +30,7 @@ public class GhostFollow : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.instance.gameData.curAchievementNum >= 14)
+        if (GameManager.instance.gameData.curAchievementNum >= activeNum)
         {
             // Timing when player start to fall after using lever
             if (GameManager.instance.isChangeGravityDir)
@@ -41,7 +44,7 @@ public class GhostFollow : MonoBehaviour
             }
 
             // Finish follow
-            if (GameManager.instance.gameData.curAchievementNum >= 15 && (Vector2)transform.position == targetPos && Physics2D.gravity.normalized != Vector2.down)
+            if (GameManager.instance.gameData.curAchievementNum >= activeNum && (Vector2)transform.position == targetPos && Physics2D.gravity.normalized != Vector2.down)
             {
                 player.isGhostRotating = true;
             }
@@ -52,7 +55,7 @@ public class GhostFollow : MonoBehaviour
 
     IEnumerator IncreaseSpeed()
     {
-        while (GameManager.instance.gameData.curAchievementNum != 15)
+        while (GameManager.instance.gameData.curAchievementNum < level_IncreaseNum)
         {
             yield return new WaitForSeconds(5f);
         }

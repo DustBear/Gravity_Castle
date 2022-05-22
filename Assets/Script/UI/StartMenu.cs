@@ -6,6 +6,113 @@ using UnityEngine.UI;
 
 public class StartMenu : MonoBehaviour
 {
+    public GameObject titleMenu;
+
+    public GameObject gameMenu;
+    //public Button[] gameMenuButton = new Button[4];
+    public Text[] gameMenuButtonText = new Text[4];
+    public Button[] gameMenuButton = new Button[4];
+
+    public GameObject quickMenu;
+    public GameObject titleImage; //배경 영상 
+    public GameObject fadeCover;
+    public float fadeSpeed;
+    public GameObject gameMenuText; //'아무 버튼이나 눌러 시작하세요' 버튼 ~> 깜빡여야 함 
+
+    Color fadeCoverColor;
+
+    public bool isTitleMenuOpen;
+    public bool isGameMenuOpen;
+    public bool isQuickMenuOpen;
+    private void Start()
+    {
+        isTitleMenuOpen = true;
+        titleMenu.SetActive(true);
+        isGameMenuOpen = false;
+        gameMenu.SetActive(false);
+        isQuickMenuOpen = false;
+        quickMenu.SetActive(false);
+
+        fadeCoverColor = fadeCover.GetComponent<Image>().color;
+        fadeCoverColor = new Color(0, 0, 0, 0); //처음에는 투명
+        
+        for (int index = 0; index <= 3; index++)
+        {
+            gameMenuButtonText[index].color = new Color(1, 1, 1, 0);
+        }
+        for (int index = 0; index <= 3; index++)
+        {
+            gameMenuButton[index].GetComponent<Image>().color = new Color(1, 1, 1, 0);
+        }
+        StartCoroutine("blink");
+    }
+
+    private void Update()
+    {
+        if (Input.anyKeyDown && isTitleMenuOpen)
+        {
+            titleMenu.SetActive(false);
+            isTitleMenuOpen = false;
+            StartCoroutine("gameMenuOpen");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && isQuickMenuOpen)
+        {
+            quickMenu.SetActive(false);
+            isQuickMenuOpen = false;
+        }
+    }
+
+    IEnumerator gameMenuOpen() //메뉴 열고 닫는 중간에 페이드인/아웃 효과 있어야 함 
+    {
+        isGameMenuOpen = true;
+        gameMenu.SetActive(true);
+ 
+        //페이드인
+        while (fadeCoverColor.a <= 1) //투명도가 1이 될 때 까지 계속 투명도 높임 
+        {
+            fadeCoverColor = new Color(0, 0, 0, fadeCoverColor.a + fadeSpeed);
+            for(int index=0; index <=3; index++)
+            {
+                gameMenuButtonText[index].color = new Color(1, 1, 1, gameMenuButtonText[index].color.a + fadeSpeed);
+            }
+            for (int index = 0; index <= 3; index++)
+            {
+                gameMenuButton[index].GetComponent<Image>().color = new Color(1, 1, 1, gameMenuButton[index].GetComponent<Image>().color.a + fadeSpeed);
+            }
+            yield return new WaitForFixedUpdate();
+        }              
+    }
+
+    IEnumerator blink() //시작 버튼 깜빡이게 만듦
+    {
+        if (isGameMenuOpen)
+        {
+            yield return null;
+        }
+        while (true)
+        {
+            gameMenuText.SetActive(true);
+            yield return new WaitForSeconds(0.5f);
+            gameMenuText.SetActive(false);
+            yield return new WaitForSeconds(0.5f);
+        }      
+    }
+
+    public void openQuickMenu()
+    {
+        if (isQuickMenuOpen)
+        {
+            quickMenu.SetActive(false);
+            isQuickMenuOpen = false;
+        }
+        else if (!isQuickMenuOpen)
+        {
+            quickMenu.SetActive(true);
+            isQuickMenuOpen = true;
+        }
+    }
+
     public void OnClickNewGame()
     {
         GameManager.instance.CheckSavedGame(false);

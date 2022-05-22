@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 // 테스트를 편리하게 하기 위한 스크립트
 // 원하는 스테이지로 바로 이동 가능
@@ -37,4 +38,16 @@ public class Test : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene(GameManager.instance.nextScene);
     }
+
+    private void Start()
+    {
+      
+    }
+
+    private void Update()
+    {
+       
+    }
+
+   
 }
