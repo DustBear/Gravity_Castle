@@ -49,6 +49,24 @@ public class PlayerStage4 : Player
             {
                 GhostUsingLever();
             }
+
+            AnimatorStateInfo aniState = ani.GetCurrentAnimatorStateInfo(0);
+            if (aniState.normalizedTime >= 1f)
+            {
+                if (aniState.IsName("Jump"))
+                {
+                    ani.SetBool("isJumping", false);
+                }
+                else if (isGrounded && aniState.IsName("Float")
+                && (leveringState != LeveringState.changeGravityDir1 || leveringState != LeveringState.changeGravityDir2))
+                {
+                    ani.SetBool("isLanding", true);
+                }
+                else if (aniState.IsName("Land"))
+                {
+                    ani.SetBool("isLanding", false);
+                }
+            }
         }
     }
 

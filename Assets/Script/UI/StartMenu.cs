@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class StartMenu : MonoBehaviour
 {
@@ -10,8 +11,9 @@ public class StartMenu : MonoBehaviour
 
     public GameObject gameMenu;
     //public Button[] gameMenuButton = new Button[4];
-    public Text[] gameMenuButtonText = new Text[4];
+    public TextMeshProUGUI[] gameMenuButtonText = new TextMeshProUGUI[4];
     public Button[] gameMenuButton = new Button[4];
+    public TextMeshProUGUI settingExp;
 
     public GameObject quickMenu;
     public GameObject titleImage; //배경 영상 
@@ -118,6 +120,11 @@ public class StartMenu : MonoBehaviour
         GameManager.instance.CheckSavedGame(false);
     }
 
+    public void newStart() //스테이지1 이전에 튜토리얼이 삽입된 버전 
+    {
+        SceneManager.LoadScene(24); //튜토리얼은 24번째 씬 
+    }
+
     public void OnClickLoadGame()
     {
         GameManager.instance.CheckSavedGame(true);
@@ -130,7 +137,14 @@ public class StartMenu : MonoBehaviour
 
     public void OnClickSetting()
     {
-        Debug.Log("Start Setting!");
+        settingExp.gameObject.SetActive(true);
+        Invoke("settingMessageOff", 3f);
+
+        //Debug.Log("Start Setting!");
+    }
+    void settingMessageOff()
+    {
+        settingExp.gameObject.SetActive(false);
     }
 
     // 게임 종료 시 Editor 상에서의 종료인지, 빌드 파일 상에서의 종료인지 구분

@@ -31,8 +31,12 @@ public class openingSceneDoor : MonoBehaviour
         stageIntro.GetComponent<Text>().color = new Color(1, 1, 1, 0); //인트로 끔 
         stageIntroDeco.GetComponent<Image>().color = new Color(1, 1, 1, 0); //인트로 데코 끔        
 
+        player = GameObject.Find("Player");
+
         if (player.transform.position.y <= Active_Threshold) //씬이 처음 시작하는 것이면
         {
+            Debug.Log(player.transform.position.y);
+            Debug.Log("playertoStart");
             spr.sortingLayerID = SortingLayer.NameToID("stageStartPlayer"); //플레이어는 엘리베이터 뒤 레이어에서 시작해야 함
             isElevatorArrived = false; //아직 도착 안함
             spr.color = colorValue; //시작하면 플레이어 색은 어두움
@@ -40,6 +44,8 @@ public class openingSceneDoor : MonoBehaviour
         }
         else
         {
+            Debug.Log(player.transform.position.y);
+            Debug.Log("playertoPlayer");
             spr.sortingLayerID = SortingLayer.NameToID("Player"); //플레이어 레이어 초기화(플레이어로)
             isElevatorArrived = true;
             transform.position = new Vector2(transform.position.x, finishYpos); //플레이어가 씬을 처음시작한 게 아니면 문은 올라간 채로 있어야 함 
