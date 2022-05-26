@@ -348,7 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curAchievementNum: 0
+  curStageNum: 1
   nextScene: 1
   nextPos: {x: -162.5, y: -26.5}
   nextGravityDir: {x: 0, y: -1}
@@ -656,7 +656,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curAchievementNum: 11
+  curStageNum: 2
   nextScene: 4
   nextPos: {x: -105.5, y: -36.5}
   nextGravityDir: {x: 0, y: -1}
@@ -976,7 +976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curAchievementNum: 29
+  curStageNum: 4
   nextScene: 10
   nextPos: {x: -174.5, y: -32.5}
   nextGravityDir: {x: 0, y: -1}
@@ -3892,6 +3892,7 @@ GameObject:
   - component: {fileID: 1632247569}
   - component: {fileID: 1632247568}
   - component: {fileID: 1632247567}
+  - component: {fileID: 1632247570}
   m_Layer: 5
   m_Name: 5
   m_TagString: Untagged
@@ -3963,7 +3964,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1632247570}
         m_TargetAssemblyTypeName: Test, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 1
@@ -4013,6 +4014,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1632247565}
   m_CullTransparentMesh: 1
+--- !u!114 &1632247570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632247565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curStageNum: 5
+  nextScene: 12
+  nextPos: {x: -179.6, y: -17.7}
+  nextGravityDir: {x: 0, y: -1}
 --- !u!1 &1765178467
 GameObject:
   m_ObjectHideFlags: 0
@@ -4365,7 +4382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curAchievementNum: 20
+  curStageNum: 3
   nextScene: 7
   nextPos: {x: -132.5, y: -30.5}
   nextGravityDir: {x: 0, y: -1}

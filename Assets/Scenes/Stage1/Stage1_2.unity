@@ -28980,6 +28980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092c9243c4e087c4f8b5e3c8fab1df89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageNum: 1
   achievementNum: 5
 --- !u!61 &1243703917
 BoxCollider2D:
@@ -62371,6 +62372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092c9243c4e087c4f8b5e3c8fab1df89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageNum: 1
   achievementNum: 3
 --- !u!61 &1363132739
 BoxCollider2D:
@@ -69187,6 +69189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092c9243c4e087c4f8b5e3c8fab1df89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageNum: 1
   achievementNum: 2
 --- !u!61 &2142582426
 BoxCollider2D:
@@ -69287,6 +69290,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1137844667}
+    - target: {fileID: 7807120437593733883, guid: 6f5c0ec1f61cd784c84f26ee9a74fac9, type: 3}
+      propertyPath: stageNum
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7807120437593733887, guid: 6f5c0ec1f61cd784c84f26ee9a74fac9, type: 3}
       propertyPath: m_IsActive
       value: 0

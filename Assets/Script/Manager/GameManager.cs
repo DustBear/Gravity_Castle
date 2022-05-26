@@ -40,8 +40,8 @@ public class GameManager : Singleton<GameManager>
     const string GameDataFileName = "GameData.json";
     public GameData gameData {get; private set;}
 
-    [SerializeField] Vector2 firstStartPos = new Vector2(-162.5f, -26.5f); // 게임 시작 위치
-    [SerializeField] Vector2 firstRespawnPos = new Vector2(-162.5f, -6.5f); // 게임 시작하자마자 나가면 여기서 부활
+    [SerializeField] Vector2 firstStartPos; // 게임 시작 위치
+    [SerializeField] Vector2 firstRespawnPos; // 게임 시작하자마자 나가면 여기서 부활
     
     void Awake() {
         DontDestroyOnLoad(gameObject);
@@ -130,6 +130,7 @@ public class GameManager : Singleton<GameManager>
             // 리스폰 시 필요한 데이터 초기화
             // 게임 시작하자마자 나갔다가 다시 접속했을 시 load가 가능하도록
             gameData.curAchievementNum = 0;
+            gameData.curStageNum = 1;
             gameData.respawnScene = 1;
             gameData.respawnPos = firstRespawnPos;
             gameData.respawnGravityDir = Vector2.down;
@@ -165,10 +166,11 @@ public class GameManager : Singleton<GameManager>
     }
 
     // Save Point에 도달했을 시 호출됨
-    public void SaveData(int achievementNum, Vector2 playerPos)
+    public void SaveData(int achievementNum, int stageNum, Vector2 playerPos)
     {
         // 저장해야할 데이터들을 gameData class에 저장
         gameData.curAchievementNum = achievementNum;
+        gameData.curStageNum = stageNum;
         gameData.respawnScene = SceneManager.GetActiveScene().buildIndex;
         gameData.respawnPos = playerPos;
         gameData.respawnGravityDir = Physics2D.gravity.normalized;

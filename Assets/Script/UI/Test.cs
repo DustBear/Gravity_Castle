@@ -9,14 +9,15 @@ using UnityEngine.EventSystems;
 // 게임 출시할 때는 없애야함 
 public class Test : MonoBehaviour
 {
-    [SerializeField] int curAchievementNum;
+    [SerializeField] int curStageNum;
     [SerializeField] int nextScene;
     [SerializeField] Vector2 nextPos;
     [SerializeField] Vector2 nextGravityDir;
 
     public void OnClickButton()
     {
-        GameManager.instance.gameData.curAchievementNum = curAchievementNum;
+        GameManager.instance.gameData.curAchievementNum = 0;
+        GameManager.instance.gameData.curStageNum = curStageNum;
         GameManager.instance.nextScene = nextScene;
         GameManager.instance.nextPos = nextPos;
         GameManager.instance.nextGravityDir = nextGravityDir;

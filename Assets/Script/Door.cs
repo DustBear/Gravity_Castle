@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Door : MonoBehaviour
 {
+    [SerializeField] int stageNum;
     public int achievementNum;
     public bool shouldOpen;
     public GameObject sensor;
@@ -47,7 +48,7 @@ public class Door : MonoBehaviour
             if (GameManager.instance.gameData.curAchievementNum == achievementNum - 1)
             {
                 StartCoroutine(FadeOut());
-                GameManager.instance.SaveData(achievementNum, player.transform.position);
+                GameManager.instance.SaveData(achievementNum, stageNum, player.transform.position);
             }
         }
     }

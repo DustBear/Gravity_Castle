@@ -1079,7 +1079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   achievementNum: 7
-  player: {fileID: 1822933438}
+  stageNum: 0
 --- !u!95 &76727703
 Animator:
   serializedVersion: 3
@@ -3723,7 +3723,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092c9243c4e087c4f8b5e3c8fab1df89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementNum: 16
+  stageNum: 2
+  achievementNum: 5
 --- !u!61 &488218303
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -34158,8 +34159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7bb7888aa08a77498a0f972c07f2bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementNum: 17
-  player: {fileID: 1822933438}
+  achievementNum: 6
+  stageNum: 0
 --- !u!95 &1740473066
 Animator:
   serializedVersion: 3
@@ -35147,11 +35148,6 @@ PrefabInstance:
     - {fileID: 2632340014701241173, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
     - {fileID: 3127998716914802067, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
---- !u!4 &1822933438 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5135453547917011350, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-  m_PrefabInstance: {fileID: 1822933437}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1846213114
 PrefabInstance:
   m_ObjectHideFlags: 0

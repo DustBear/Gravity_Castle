@@ -21,7 +21,7 @@ public class Stone : MonoBehaviour
         }
 
         // Fix position
-        if (GameManager.instance.gameData.curAchievementNum >= 17)
+        if (GameManager.instance.gameData.curAchievementNum >= 6)
         {
             transform.position = new Vector2(-176f, 14f);
         }

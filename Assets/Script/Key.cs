@@ -5,13 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class Key : MonoBehaviour
 {
+    [SerializeField] int stageNum;
     public int achievementNum;
-    [SerializeField] Transform player;
+    Transform player;
     Rigidbody2D rigid;
     SpriteRenderer sprite;
 
     void Awake()
     {
+        player = GameObject.FindWithTag("Player").transform;
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
     }
@@ -25,7 +27,7 @@ public class Key : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            GameManager.instance.SaveData(achievementNum, player.position);
+            GameManager.instance.SaveData(achievementNum, stageNum, player.position);
             Physics2D.IgnoreLayerCollision(13, 10, true);
             Destroy(gameObject);
         }

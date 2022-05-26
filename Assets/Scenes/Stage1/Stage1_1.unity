@@ -488,6 +488,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1430379720}
     m_Modifications:
     - target: {fileID: 9208527397593069264, guid: 6adcdb5fd45d4b646a17bb105095e2b4, type: 3}
+      propertyPath: stageNum
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208527397593069264, guid: 6adcdb5fd45d4b646a17bb105095e2b4, type: 3}
       propertyPath: achievementNum
       value: 11
       objectReference: {fileID: 0}
@@ -14312,6 +14316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092c9243c4e087c4f8b5e3c8fab1df89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageNum: 1
   achievementNum: 6
 --- !u!61 &924647821
 BoxCollider2D:
@@ -40936,6 +40941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 092c9243c4e087c4f8b5e3c8fab1df89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageNum: 1
   achievementNum: 1
 --- !u!4 &1435871619 stripped
 Transform:
@@ -82254,6 +82260,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1430379720}
     m_Modifications:
+    - target: {fileID: 9208527397593069264, guid: 6adcdb5fd45d4b646a17bb105095e2b4, type: 3}
+      propertyPath: stageNum
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9208527397593069270, guid: 6adcdb5fd45d4b646a17bb105095e2b4, type: 3}
       propertyPath: m_RootOrder
       value: 0
