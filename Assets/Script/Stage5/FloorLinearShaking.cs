@@ -31,7 +31,7 @@ public class FloorLinearShaking : FloorShaking
 
     protected override void Idle()
     {
-        if (!GameManager.instance.isChangeGravityDir)
+        if (Player.curState != Player.States.ChangeGravityDir)
         {
             nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
             // if floor arrive target position, convert targetPosIdx to next targetPosIdx

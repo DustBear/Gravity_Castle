@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GhostFollow : MonoBehaviour
 {
-    [SerializeField] PlayerStage4 player;
     [SerializeField] float speed;
+    Player player;
     SpriteRenderer render;
     Vector2 targetPos;
 
@@ -14,7 +14,7 @@ public class GhostFollow : MonoBehaviour
 
     void Awake()
     {
-        
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         render = GetComponent<SpriteRenderer>();
     }
 
@@ -33,7 +33,7 @@ public class GhostFollow : MonoBehaviour
         if (GameManager.instance.gameData.curAchievementNum >= activeNum)
         {
             // Timing when player start to fall after using lever
-            if (GameManager.instance.isChangeGravityDir)
+            if (Player.curState == Player.States.ChangeGravityDir)
             {
                 targetPos = player.transform.position;
             }
@@ -44,9 +44,9 @@ public class GhostFollow : MonoBehaviour
             }
 
             // Finish follow
-            if (GameManager.instance.gameData.curAchievementNum >= activeNum && (Vector2)transform.position == targetPos && Physics2D.gravity.normalized != Vector2.down)
+            if (Player.curState != Player.States.GhostUsingLever && Player.curState != Player.States.FallAfterGhostLevering && GameManager.instance.gameData.curAchievementNum >= activeNum && (Vector2)transform.position == targetPos && Physics2D.gravity.normalized != Vector2.down)
             {
-                player.isGhostRotating = true;
+                player.ChangeState(Player.States.GhostUsingLever);
             }
             
             transform.rotation = player.transform.rotation;

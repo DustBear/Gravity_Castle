@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class GhostLinear : MonoBehaviour
 {
-    [SerializeField] Player player;
+    Player player;
     [SerializeField] float[] speed;
     [SerializeField] Vector2[] pos;
     [SerializeField] int targetPosIdx;
 
     void Awake()
     {
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         transform.position = pos[(targetPosIdx + pos.Length - 1) % pos.Length];
     }
 
     void Update()
     {
-        if (!GameManager.instance.isChangeGravityDir)
+        if (Player.curState != Player.States.ChangeGravityDir)
         {
             transform.position = Vector2.MoveTowards(transform.position, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
             if ((Vector2)transform.position == pos[targetPosIdx])

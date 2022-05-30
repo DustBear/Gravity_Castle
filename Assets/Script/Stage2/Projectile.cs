@@ -34,7 +34,7 @@ public class Projectile : MonoBehaviour
         // Move arrow
         if (type == ObjManager.ObjType.arrow)
         {
-            if (!GameManager.instance.isChangeGravityDir)
+            if (Player.curState != Player.States.ChangeGravityDir)
             {
                 // When gravity change is finished
                 if (curIsGravityChanged)
@@ -56,7 +56,7 @@ public class Projectile : MonoBehaviour
             }
         }
         // Move cannon
-        else if (type == ObjManager.ObjType.cannon && !GameManager.instance.isChangeGravityDir)
+        else if (type == ObjManager.ObjType.cannon && Player.curState != Player.States.ChangeGravityDir)
         {
             transform.position += transform.up * 10f * Time.deltaTime;
         }

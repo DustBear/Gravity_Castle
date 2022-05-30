@@ -215,13 +215,6 @@ GameObject:
   - component: {fileID: 5135453547917011348}
   - component: {fileID: -1060706906106094782}
   - component: {fileID: -5759503169634568024}
-  - component: {fileID: 9210529107771294332}
-  - component: {fileID: 3127998716914802067}
-  - component: {fileID: 2632340014701241173}
-  - component: {fileID: 3723249230890046265}
-  - component: {fileID: 7537917191080837629}
-  - component: {fileID: 834770351460883921}
-  - component: {fileID: 3236158155534579839}
   - component: {fileID: 7733424920935491460}
   m_Layer: 10
   m_Name: Player
@@ -358,183 +351,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e27aee8397fc3134b8fa9384de1b586c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftArrow: {fileID: 5135453549317223075}
-  rightArrow: {fileID: 5135453548562255226}
   defaultGravityScale: 3
   maxVelocity: 20
-  ani: {fileID: 0}
   walkSpeed: 6
   jumpPower: 12
-  isJumping: 0
-  ropingState: 0
-  ropeSpeed: 4
-  leveringState: 0
---- !u!114 &9210529107771294332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135453547917011346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d5575c704d41f44aa7bc10791b753b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  ropeAccessSpeed: 8
+  ropeMoveSpeed: 4
+  leverMoveSpeed: 3
+  leverRotateSpeed: 8
+  windForce: 60
+  slidingDegree: 8
   leftArrow: {fileID: 5135453549317223075}
   rightArrow: {fileID: 5135453548562255226}
-  defaultGravityScale: 3
-  maxVelocity: 20
-  ani: {fileID: 0}
-  walkSpeed: 6
-  jumpPower: 12
-  isJumping: 0
-  ropingState: 0
-  ropeSpeed: 4
-  leveringState: 0
---- !u!114 &3127998716914802067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135453547917011346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cc362ccfce7e504080416f68dbd5bd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftArrow: {fileID: 5135453549317223075}
-  rightArrow: {fileID: 5135453548562255226}
-  defaultGravityScale: 3
-  maxVelocity: 20
-  ani: {fileID: 0}
-  walkSpeed: 6
-  jumpPower: 12
-  isJumping: 0
-  ropingState: 0
-  ropeSpeed: 4
-  leveringState: 0
-  windForce: 50
---- !u!114 &2632340014701241173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135453547917011346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e95a800fc28513d4894afc6fdd762377, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftArrow: {fileID: 5135453549317223075}
-  rightArrow: {fileID: 5135453548562255226}
-  defaultGravityScale: 3
-  maxVelocity: 20
-  ani: {fileID: 0}
-  walkSpeed: 6
-  jumpPower: 0
-  isJumping: 0
-  ropingState: 0
-  ropeSpeed: 4
-  leveringState: 0
-  isGhostRotating: 0
---- !u!114 &3723249230890046265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135453547917011346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0a6b02f7899753489ef1546279c51e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftArrow: {fileID: 5135453549317223075}
-  rightArrow: {fileID: 5135453548562255226}
-  defaultGravityScale: 3
-  maxVelocity: 20
-  ani: {fileID: 0}
-  walkSpeed: 6
-  jumpPower: 12
-  isJumping: 0
-  ropingState: 0
-  ropeSpeed: 4
-  leveringState: 0
---- !u!114 &7537917191080837629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135453547917011346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 588bb040771921b47ba398036c79cde6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftArrow: {fileID: 5135453549317223075}
-  rightArrow: {fileID: 5135453548562255226}
-  defaultGravityScale: 3
-  maxVelocity: 20
-  ani: {fileID: 0}
-  walkSpeed: 6
-  jumpPower: 12
-  isJumping: 0
-  ropingState: 0
-  ropeSpeed: 4
-  leveringState: 0
---- !u!114 &834770351460883921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135453547917011346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e0de745c8381d54db2daef1f3c7cb51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftArrow: {fileID: 5135453549317223075}
-  rightArrow: {fileID: 5135453548562255226}
-  defaultGravityScale: 3
-  maxVelocity: 20
-  ani: {fileID: 0}
-  walkSpeed: 6
-  jumpPower: 12
-  isJumping: 0
-  ropingState: 0
-  ropeSpeed: 4
-  leveringState: 0
---- !u!114 &3236158155534579839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135453547917011346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f488c1c3f883c4c4498d81ef4b2345dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftArrow: {fileID: 5135453549317223075}
-  rightArrow: {fileID: 5135453548562255226}
-  defaultGravityScale: 3
-  maxVelocity: 20
-  ani: {fileID: 0}
-  walkSpeed: 6
-  jumpPower: 12
-  isJumping: 0
-  ropingState: 0
-  ropeSpeed: 4
-  leveringState: 0
   isDevilRotating: 0
   isBlackHole: 0
-  mainCamera: {fileID: 0}
 --- !u!95 &7733424920935491460
 Animator:
   serializedVersion: 3

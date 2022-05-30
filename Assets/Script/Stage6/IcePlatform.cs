@@ -146,7 +146,7 @@ public class IcePlatform : MonoBehaviour
         while (!isFinishLeft || !isFinishRight)
         {
             yield return new WaitForSeconds(0.1f);
-            if (GameManager.instance.isChangeGravityDir)
+            if (Player.curState == Player.States.ChangeGravityDir)
             {
                 continue;
             }
@@ -215,7 +215,7 @@ public class IcePlatform : MonoBehaviour
         while (tilemap.color.a > 0f)
         {
             yield return new WaitForSeconds(0.1f);
-            if (GameManager.instance.isChangeGravityDir)
+            if (Player.curState == Player.States.ChangeGravityDir)
             {
                 continue;
             }

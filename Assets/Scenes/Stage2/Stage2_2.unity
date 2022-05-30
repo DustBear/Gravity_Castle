@@ -31055,13 +31055,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents:
-    - {fileID: -5759503169634568024, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-    - {fileID: 3236158155534579839, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-    - {fileID: 834770351460883921, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-    - {fileID: 7537917191080837629, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-    - {fileID: 3723249230890046265, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
-    - {fileID: 2632340014701241173, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 9210529107771294332, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
     - {fileID: 3127998716914802067, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 2632340014701241173, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 3723249230890046265, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 7537917191080837629, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 834770351460883921, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
+    - {fileID: 3236158155534579839, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8d1fb01e61af240409b9b79517b9f0df, type: 3}
 --- !u!4 &596714481 stripped
 Transform:
@@ -41508,8 +41515,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7bb7888aa08a77498a0f972c07f2bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementNum: 3
   stageNum: 2
+  achievementNum: 3
 --- !u!95 &1944649681
 Animator:
   serializedVersion: 3

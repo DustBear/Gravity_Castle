@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GhostEllipse : MonoBehaviour
 {
-    [SerializeField] Player player;
+    Player player;
     [SerializeField] bool counterClockWise;
     [SerializeField] float speed;
     [SerializeField] float startTime;
@@ -14,13 +14,14 @@ public class GhostEllipse : MonoBehaviour
 
     void Awake()
     {
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         time = startTime;
         centerPos = transform.position;
     }
 
     void Update()
     {
-        if (!GameManager.instance.isChangeGravityDir)
+        if (Player.curState != Player.States.ChangeGravityDir)
         {
             time += Time.deltaTime;
             if (!counterClockWise)

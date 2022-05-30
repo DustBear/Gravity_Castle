@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Devil : MonoBehaviour
 {
-    [SerializeField] PlayerStage8 player;
     [SerializeField] GameObject laser;
     [SerializeField] CameraShakeStage8 cameraShake;
     Rigidbody2D rigid;
+    Player player;
     IEnumerator coroutine;
     bool isBehaviourStarted;
     bool isLaserStarted;
@@ -15,6 +15,7 @@ public class Devil : MonoBehaviour
 
     void Awake()
     {
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         rigid = GetComponent<Rigidbody2D>();
     }
 
@@ -50,14 +51,14 @@ public class Devil : MonoBehaviour
             }
             else
             {
-                if (isBehaviourStarted && GameManager.instance.isChangeGravityDir)
+                if (isBehaviourStarted && Player.curState == Player.States.ChangeGravityDir)
                 {
                     isBehaviourStarted = false;
                     rigid.gravityScale = 0f;
                     rigid.velocity = Vector2.zero;
                     StopCoroutine(coroutine);
                 }
-                else if (!isBehaviourStarted && !GameManager.instance.isChangeGravityDir)
+                else if (!isBehaviourStarted && Player.curState != Player.States.ChangeGravityDir)
                 {
                     isBehaviourStarted = true;
                     rigid.gravityScale = 2f;

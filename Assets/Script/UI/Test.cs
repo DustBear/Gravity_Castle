@@ -28,27 +28,12 @@ public class Test : MonoBehaviour
             GameManager.instance.gameData.storedIsShaked[i] = false;
         }
         GameManager.instance.shouldStartAtSavePoint = false;
-        GameManager.instance.isChangeGravityDir = false;
-        GameManager.instance.nextRopingState = Player.RopingState.idle;
-        GameManager.instance.nextLeveringState = Player.LeveringState.idle;
-        GameManager.instance.nextIsJumping = false;
+        GameManager.instance.nextState = Player.States.Walk;
         GameManager.instance.gameData.respawnScene = GameManager.instance.nextScene;
         GameManager.instance.gameData.respawnPos = GameManager.instance.nextPos;
         GameManager.instance.gameData.respawnGravityDir = GameManager.instance.nextGravityDir;
 
         Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene(GameManager.instance.nextScene);
-    }
-
-    private void Start()
-    {
-      
-    }
-
-    private void Update()
-    {
-       
-    }
-
-   
+    }   
 }

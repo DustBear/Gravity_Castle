@@ -19,7 +19,7 @@ public class FloorEllipse : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.instance.isChangeGravityDir)
+        if (Player.curState != Player.States.ChangeGravityDir)
         {
             time += Time.deltaTime;
             if (!counterClockWise)

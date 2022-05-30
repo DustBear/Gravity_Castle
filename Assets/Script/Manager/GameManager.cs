@@ -9,13 +9,10 @@ public class GameManager : Singleton<GameManager>
 {
     // 1) 모든 Stage 공통
     [HideInInspector] public bool shouldStartAtSavePoint {get; set;}
-    [HideInInspector] public bool isChangeGravityDir {get; set;}
     public int nextScene {get; set;}
     public Vector2 nextPos {get; set;}
     public Vector2 nextGravityDir {get; set;}
-    public Player.RopingState nextRopingState {get; set;}
-    public Player.LeveringState nextLeveringState {get; set;}
-    public bool nextIsJumping {get; set;}
+    public Player.States nextState {get; set;}
 
     // 2) Stage5의 밟으면 떨어지는 floor 
     [SerializeField] int shakedFloorNum = 36;
@@ -116,11 +113,10 @@ public class GameManager : Singleton<GameManager>
             nextScene = 1;
             nextPos = firstStartPos;
             nextGravityDir = Vector2.down;
-            nextRopingState = Player.RopingState.idle;
-            nextLeveringState = Player.LeveringState.idle;
-            nextIsJumping = false;
+            nextState = Player.States.Walk;
 
             // 기본적으로 false로 초기화 되어 있기 때문에 주석 처리
+            // nextIsJumpBlocked = false;
             // for (int i = 0; i < shakedFloorNum; i++) curIsShaked[i] = false;
             // for (int i = 0; i < iceNum; i++) curIsMelted[i] = false;
             // for (int i = 0; i < detectorNum; i++) curIsDetected[i] = false;
