@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class Princess : MonoBehaviour
 {
-    [SerializeField] PlayerStage8 player;
+    Transform player;
+
+    void Awake()
+    {
+        player = GameObject.FindWithTag("Player").transform;
+    }
 
     void Update()
     {
-        transform.rotation = player.transform.rotation;
+        transform.rotation = player.rotation;
     }
 }

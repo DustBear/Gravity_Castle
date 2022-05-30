@@ -38,12 +38,12 @@ public class Launcher : MonoBehaviour
     }
 
     void Update() {
-        if (!isGravityChanged && GameManager.instance.isChangeGravityDir)
+        if (!isGravityChanged && Player.curState == Player.States.ChangeGravityDir)
         {
             isGravityChanged = true;
             gravityChangedCount++;
         }
-        else if (isGravityChanged && !GameManager.instance.isChangeGravityDir)
+        else if (isGravityChanged && Player.curState != Player.States.ChangeGravityDir)
         {
             isGravityChanged = false;
         }

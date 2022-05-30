@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraShakeStage8 : MonoBehaviour
 {
-    [SerializeField] PlayerStage8 player;
+    Player player;
     [SerializeField] float shakeDuration;
     [SerializeField] float shakeRange;
     MainCamera mainCamera;
@@ -12,6 +12,7 @@ public class CameraShakeStage8 : MonoBehaviour
 
     void Awake()
     {
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         mainCamera = GetComponent<MainCamera>();
     }
 

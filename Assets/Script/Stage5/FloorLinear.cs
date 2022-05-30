@@ -15,7 +15,7 @@ public class FloorLinear : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.instance.isChangeGravityDir)
+        if (Player.curState != Player.States.ChangeGravityDir)
         {
             transform.position = Vector2.MoveTowards(transform.position, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
             if ((Vector2)transform.position == pos[targetPosIdx])

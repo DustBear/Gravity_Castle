@@ -145,14 +145,14 @@ public class FloorShaking : MonoBehaviour
 
     virtual protected void Falling()
     {
-        if (!isGravityDirChanged && GameManager.instance.isChangeGravityDir)
+        if (!isGravityDirChanged && Player.curState == Player.States.ChangeGravityDir)
         {
             rigid.gravityScale = 0f;
             storedVel = rigid.velocity;
             rigid.velocity = Vector2.zero;
             isGravityDirChanged = true;
         }
-        else if (isGravityDirChanged && !GameManager.instance.isChangeGravityDir)
+        else if (isGravityDirChanged && Player.curState != Player.States.ChangeGravityDir)
         {
             rigid.gravityScale = 2f;
             rigid.velocity = storedVel;

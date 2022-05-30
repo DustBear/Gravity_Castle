@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GhostFading : MonoBehaviour
 {
-    [SerializeField] Player player;
+    Player player;
     [SerializeField] float startTime;
     [SerializeField] float maxTransparency;
     [SerializeField] float keepFadeInTime;
@@ -14,6 +14,7 @@ public class GhostFading : MonoBehaviour
 
     void Awake()
     {
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         sprite = GetComponent<SpriteRenderer>();
         collid = GetComponent<BoxCollider2D>();
         Color color = sprite.color;

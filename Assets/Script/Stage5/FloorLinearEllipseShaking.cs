@@ -40,7 +40,7 @@ public class FloorLinearEllipseShaking : FloorShaking
 
     protected override void Idle()
     {
-        if (!GameManager.instance.isChangeGravityDir)
+        if (Player.curState != Player.States.ChangeGravityDir)
         {
             // linear moved position
             nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);

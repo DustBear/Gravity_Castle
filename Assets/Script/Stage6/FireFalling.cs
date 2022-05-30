@@ -46,7 +46,7 @@ public class FireFalling : MonoBehaviour
             transform.rotation = player.transform.rotation;
         }
 
-        if (GameManager.instance.isChangeGravityDir)
+        if (Player.curState == Player.States.ChangeGravityDir)
         {
             rigid.gravityScale = 0f;
             rigid.velocity = Vector2.zero;

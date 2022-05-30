@@ -5,9 +5,14 @@ using UnityEngine;
 public class PlayerSensor : MonoBehaviour
 {
     [SerializeField] CameraShakeStage8 cameraShake;
-    [SerializeField] PlayerStage8 player;
     [SerializeField] float shakeDir;
     [SerializeField] float targetDir;
+    Player player;
+
+    void Awake()
+    {
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {

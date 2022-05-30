@@ -105,9 +105,7 @@ public class endingSceneElevator : MonoBehaviour
         {
             GameManager.instance.nextPos = nextScenePos;
             GameManager.instance.nextGravityDir = Physics2D.gravity.normalized;
-            GameManager.instance.nextRopingState = player.ropingState;
-            GameManager.instance.nextLeveringState = player.leveringState;
-            GameManager.instance.nextIsJumping = player.isJumping;
+            GameManager.instance.nextState = Player.curState;
             SceneManager.LoadScene(nextScene);
         }
     }

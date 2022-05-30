@@ -17,9 +17,7 @@ public class ChangeScene : MonoBehaviour
         if (other.gameObject.CompareTag("Player") && !GameManager.instance.shouldStartAtSavePoint) {
             GameManager.instance.nextPos = (Vector2)player.transform.position + deltaPos;
             GameManager.instance.nextGravityDir = Physics2D.gravity.normalized;
-            GameManager.instance.nextRopingState = player.ropingState;
-            GameManager.instance.nextLeveringState = player.leveringState;
-            GameManager.instance.nextIsJumping = player.isJumping;
+            GameManager.instance.nextState = Player.curState;
             SceneManager.LoadScene(nextScene);
         }
     }

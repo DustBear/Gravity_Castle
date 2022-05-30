@@ -5,11 +5,12 @@ using UnityEngine;
 public class BlackHole : MonoBehaviour
 {
     [SerializeField] GameObject targetBlackHole;
-    [SerializeField] PlayerStage8 player;
+    Player player;
     Vector2 targetPos;
 
     void Awake()
     {
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         targetPos = targetBlackHole.transform.position;
     }
 
