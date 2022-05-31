@@ -9,8 +9,10 @@ public class Player : MonoBehaviour
     [SerializeField] float defaultGravityScale;
     [SerializeField] float maxVelocity;
     [SerializeField] float walkSpeed;
-    [SerializeField] float jumpPower;
-    [SerializeField] float ropeAccessSpeed;
+    [SerializeField] float minJumpPower;
+    [SerializeField] float maxJumpPower;
+    [SerializeField] float jumpChargeSpeed; // 점프 게이지 차는 속도
+    [SerializeField] float ropeAccessSpeed; // rope에 접근하는 속도
     [SerializeField] float ropeMoveSpeed; // rope에 매달려 움직이는 속도
     [SerializeField] float leverMoveSpeed; // lever 작동 후 플레이어가 이동하는 속도
     [SerializeField] float leverRotateSpeed; // lever 작동 후 플레이어가 회전하는 속도
@@ -29,19 +31,22 @@ public class Player : MonoBehaviour
     [HideInInspector] public static States curState {get; private set;}
     Func<bool> readyToFall, readyToLand, readyToJump, readyToRope, readyToLever; // 각 상태로 이동하기 위한 기본 조건
 
-    // Rope와 상호작용하기 위한 변수
+    // Jump
+    float jumpGauge;
+
+    // Rope
     bool isCollideRope;
     GameObject rope; // 매달릴 rope
     Vector3 destPos_rope; // 매달릴 위치
 
-    // Lever와 상호작용하기 위한 변수
+    // Lever
     bool isCollideLever;
     GameObject lever; // 작동시킬 lever
     Vector3 destPos_beforeLevering; // Lever 작동 전 플레이어 position
     Vector3 destPos_afterLevering; // Lever 작동 후 플레이어 position
     float destRot; // Lever 작동 후 플레이어 z-rotation
 
-    // Wind와 상호작용하기 위한 변수
+    // Wind
     bool isHorizontalWind;
     bool isVerticalWind;
 
@@ -51,11 +56,11 @@ public class Player : MonoBehaviour
 
     [SerializeField] GameObject leftArrow;
     [SerializeField] GameObject rightArrow;
+    MainCamera mainCamera;
     Rigidbody2D rigid;
     BoxCollider2D collide;
     SpriteRenderer sprite;
     Animator ani;
-    MainCamera mainCamera;
 
     // Stage8 한정
     /********Stage8 기믹 수정할 때 코드 수정 필요 **********/
@@ -81,7 +86,7 @@ public class Player : MonoBehaviour
         // 각 State로 넘어가기 위한 기본 조건
         readyToFall = () => !isGrounded;
         readyToLand = () => isGrounded && (int)transform.InverseTransformDirection(rigid.velocity).y <= 0;
-        readyToJump = () => InputManager.instance.jump;
+        readyToJump = () => InputManager.instance.jumpUp;
         readyToRope = () => isCollideRope && InputManager.instance.vertical == 1;
         readyToLever = () => isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown
                             && lever.transform.eulerAngles.z == transform.eulerAngles.z;
@@ -127,10 +132,16 @@ public class Player : MonoBehaviour
         curState = nextState;
     }
 
+    void Walk_Enter()
+    {
+        jumpGauge = minJumpPower;
+    }
+
     void Walk_Update()
     {
         CheckGround();
         HorizontalMove();
+        ChargeJumpGauge();
 
         if (readyToLever())
         {
@@ -150,9 +161,18 @@ public class Player : MonoBehaviour
         }
     }
 
+    void ChargeJumpGauge()
+    {
+        if (jumpGauge < maxJumpPower) 
+        {
+            jumpGauge += jumpChargeSpeed * Time.deltaTime;
+        }
+    }
+
     void Jump_Enter()
     {
-        rigid.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
+        rigid.AddForce(transform.up * jumpGauge, ForceMode2D.Impulse);
+        Debug.Log(jumpGauge);
         ani.SetBool("isJumping", true);
     }
 
@@ -181,6 +201,7 @@ public class Player : MonoBehaviour
 
     void Fall_Enter()
     {
+        transform.parent = null;
         ani.SetBool("isFalling", true);
     }
 
@@ -209,12 +230,14 @@ public class Player : MonoBehaviour
 
     void Land_Enter()
     {
+        jumpGauge = minJumpPower;
         ani.SetBool("isLanding", true);
     }
 
     void Land_Update()
     {
         HorizontalMove();
+        ChargeJumpGauge();
 
         if (readyToLever())
         {
@@ -240,7 +263,7 @@ public class Player : MonoBehaviour
     }
 
     IEnumerator AccessRope_Enter()
-    {
+    {        
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
         
@@ -276,6 +299,8 @@ public class Player : MonoBehaviour
 
     void MoveOnRope_Enter()
     {
+        jumpGauge = minJumpPower;
+
         // 플레이어를 rope로 완전히 이동시킴
         transform.position = destPos_rope;
         transform.parent = rope.transform;
@@ -307,6 +332,8 @@ public class Player : MonoBehaviour
 
     void MoveOnRope_Update()
     {
+        ChargeJumpGauge();
+
         // Rope에 매달린 상태로 이동
         if (Physics2D.gravity.normalized == Vector2.left)
         {
@@ -369,7 +396,7 @@ public class Player : MonoBehaviour
     }
 
     void MoveOnRope_Exit()
-    {
+    { 
         transform.parent = null;
         rigid.gravityScale = defaultGravityScale;
         ani.SetBool("isRopingVerticalIdle", false);

@@ -9,7 +9,8 @@ public class InputManager : Singleton<InputManager>
     [HideInInspector] public bool horizontalDown {get; private set;}
     [HideInInspector] public float vertical {get; private set;}
     [HideInInspector] public bool verticalDown {get; private set;}
-    [HideInInspector] public bool jump {get; private set;}
+    [HideInInspector] public bool jumpDown {get; private set;}
+    [HideInInspector] public bool jumpUp {get; private set;}
     [HideInInspector] public bool esc {get; private set;}
 
     [HideInInspector] public bool isInputBlocked {get; set;}
@@ -27,7 +28,8 @@ public class InputManager : Singleton<InputManager>
             horizontalDown = Input.GetButtonDown("Horizontal");
             vertical = Input.GetAxisRaw("Vertical");
             verticalDown = Input.GetButtonDown("Vertical");
-            jump = Input.GetKeyDown(KeyCode.Space);
+            jumpDown = Input.GetKeyDown(KeyCode.Space);
+            jumpUp = Input.GetKeyUp(KeyCode.Space);
         }
         else
         {
@@ -35,7 +37,8 @@ public class InputManager : Singleton<InputManager>
             horizontalDown = false;
             vertical = 0f;
             verticalDown = false;
-            jump = false;
+            jumpDown = false;
+            jumpUp = false;
         }
         
         // 게임 진행중에 esc 누르면 메뉴 온오프 가능
