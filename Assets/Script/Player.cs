@@ -163,7 +163,8 @@ public class Player : MonoBehaviour
 
     void ChargeJumpGauge()
     {
-        if (jumpGauge < maxJumpPower) 
+        // 스페이스바를 누르고 있으면 jump 게이지가 모아짐
+        if (jumpGauge < maxJumpPower && InputManager.instance.jump) 
         {
             jumpGauge += jumpChargeSpeed * Time.deltaTime;
         }
@@ -172,7 +173,6 @@ public class Player : MonoBehaviour
     void Jump_Enter()
     {
         rigid.AddForce(transform.up * jumpGauge, ForceMode2D.Impulse);
-        Debug.Log(jumpGauge);
         ani.SetBool("isJumping", true);
     }
 

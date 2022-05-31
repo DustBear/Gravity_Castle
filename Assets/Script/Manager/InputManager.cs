@@ -9,7 +9,7 @@ public class InputManager : Singleton<InputManager>
     [HideInInspector] public bool horizontalDown {get; private set;}
     [HideInInspector] public float vertical {get; private set;}
     [HideInInspector] public bool verticalDown {get; private set;}
-    [HideInInspector] public bool jumpDown {get; private set;}
+    [HideInInspector] public bool jump {get; private set;}
     [HideInInspector] public bool jumpUp {get; private set;}
     [HideInInspector] public bool esc {get; private set;}
 
@@ -28,7 +28,7 @@ public class InputManager : Singleton<InputManager>
             horizontalDown = Input.GetButtonDown("Horizontal");
             vertical = Input.GetAxisRaw("Vertical");
             verticalDown = Input.GetButtonDown("Vertical");
-            jumpDown = Input.GetKeyDown(KeyCode.Space);
+            jump = Input.GetKey(KeyCode.Space);
             jumpUp = Input.GetKeyUp(KeyCode.Space);
         }
         else
@@ -37,7 +37,7 @@ public class InputManager : Singleton<InputManager>
             horizontalDown = false;
             vertical = 0f;
             verticalDown = false;
-            jumpDown = false;
+            jump = false;
             jumpUp = false;
         }
         
