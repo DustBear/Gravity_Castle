@@ -7,10 +7,11 @@ using MonsterLove.StateMachine;
 public class Player : MonoBehaviour
 {
     [SerializeField] float defaultGravityScale;
-    [SerializeField] float maxVelocity;
+    [SerializeField] float maxFallingSpeed;
     [SerializeField] float walkSpeed;
     [SerializeField] float minJumpPower;
     [SerializeField] float maxJumpPower;
+    [SerializeField] float maxJumpBoostPower;
     [SerializeField] float jumpChargeSpeed; // 점프 게이지 차는 속도
     [SerializeField] float ropeAccessSpeed; // rope에 접근하는 속도
     [SerializeField] float ropeMoveSpeed; // rope에 매달려 움직이는 속도
@@ -53,6 +54,7 @@ public class Player : MonoBehaviour
     // 플레이어 아래에 있는 플랫폼 감지
     bool isGrounded;
     RaycastHit2D rayHitIcePlatform;
+    RaycastHit2D rayHitJumpBoost;
 
     [SerializeField] GameObject leftArrow;
     [SerializeField] GameObject rightArrow;
@@ -163,10 +165,18 @@ public class Player : MonoBehaviour
 
     void ChargeJumpGauge()
     {
-        // 스페이스바를 누르고 있으면 jump 게이지가 모아짐
-        if (jumpGauge < maxJumpPower && InputManager.instance.jump) 
+        if (InputManager.instance.jump)
         {
-            jumpGauge += jumpChargeSpeed * Time.deltaTime;
+            // Jump boost 위에 있으면 최대 점프 높이 증가
+            if (rayHitJumpBoost.collider != null)
+            {
+                jumpGauge = Mathf.Clamp(jumpGauge + jumpChargeSpeed * Time.deltaTime, minJumpPower, maxJumpBoostPower);
+                Debug.Log("점프 게이지 모으는 중 : " + (jumpGauge - minJumpPower) / (maxJumpBoostPower - minJumpPower) * 100f + "%");
+            }
+            else
+            {
+                jumpGauge = Mathf.Clamp(jumpGauge + jumpChargeSpeed * Time.deltaTime, minJumpPower, maxJumpPower);
+            }
         }
     }
 
@@ -178,9 +188,7 @@ public class Player : MonoBehaviour
 
     void Jump_Update()
     {
-        // 최대 속도 제한
-        rigid.velocity = Vector2.ClampMagnitude(rigid.velocity, maxVelocity);
-        
+        LimitFallingSpeed();
         CheckGround();
         HorizontalMove();
 
@@ -207,9 +215,7 @@ public class Player : MonoBehaviour
 
     void Fall_Update()
     {
-        // 최대 속도 제한
-        rigid.velocity = Vector2.ClampMagnitude(rigid.velocity, maxVelocity);
-
+        LimitFallingSpeed();
         CheckGround();
         HorizontalMove();
 
@@ -409,7 +415,7 @@ public class Player : MonoBehaviour
     {
         rigid.velocity = Vector2.zero;
         
-        // 레버 돌리기 전과 후의 위치 설정
+        // 레버를 돌리기 위해 플레이어가 이동해야할 position 설정
         switch (lever.transform.eulerAngles.z)
         {
             case 0f:
@@ -422,7 +428,6 @@ public class Player : MonoBehaviour
                     sprite.flipX = false;
                 }
                 destPos_beforeLevering = new Vector2(lever.transform.localPosition.x, transform.localPosition.y);
-                destPos_afterLevering = new Vector2(transform.localPosition.x, lever.transform.localPosition.y);
                 break;
 
             case 180f:
@@ -435,7 +440,6 @@ public class Player : MonoBehaviour
                     sprite.flipX = true;
                 }
                 destPos_beforeLevering = new Vector2(lever.transform.localPosition.x, transform.localPosition.y);
-                destPos_afterLevering = new Vector2(transform.localPosition.x, lever.transform.localPosition.y);
                 break;
 
             case 90f:
@@ -448,7 +452,6 @@ public class Player : MonoBehaviour
                     sprite.flipX = false;
                 }
                 destPos_beforeLevering = new Vector2(transform.localPosition.x, lever.transform.localPosition.y);
-                destPos_afterLevering = new Vector2(lever.transform.localPosition.x, transform.localPosition.y);
                 break;
 
             case 270f:
@@ -461,7 +464,6 @@ public class Player : MonoBehaviour
                     sprite.flipX = true;
                 }
                 destPos_beforeLevering = new Vector2(transform.localPosition.x, lever.transform.localPosition.y);
-                destPos_afterLevering = new Vector2(lever.transform.localPosition.x, transform.localPosition.y);
                 break;
         }
     }
@@ -514,6 +516,17 @@ public class Player : MonoBehaviour
         // 회전해야할 플레이어 rotation 설정
         destRot = transform.eulerAngles.z + InputManager.instance.horizontal * 90f;
         if (destRot == -90f) destRot = 270f;
+
+        // 회전하면서 바뀌어야할 플레이어 position 설정
+        switch (lever.transform.eulerAngles.z)
+        {
+            case 0f: case 180f:
+                destPos_afterLevering = new Vector2(transform.position.x, lever.transform.position.y);
+                break;
+            case 90f: case 270f:
+                destPos_afterLevering = new Vector2(lever.transform.position.x, transform.position.y);
+                break;
+        }
         
         ani.SetBool("isFalling", true);
     }
@@ -550,6 +563,7 @@ public class Player : MonoBehaviour
     void FallAfterLevering_Update()
     {
         CheckGround();
+        LimitFallingSpeed();   
 
         if (readyToLand())
         {
@@ -591,9 +605,7 @@ public class Player : MonoBehaviour
 
     void FallAfterGhostLevering_Update()
     {
-        // 최대 속도 제한
-        rigid.velocity = Vector2.ClampMagnitude(rigid.velocity, maxVelocity);
-
+        LimitFallingSpeed();
         CheckGround();
 
         if (isGrounded)
@@ -713,6 +725,14 @@ public class Player : MonoBehaviour
         }
         rigid.velocity = transform.TransformDirection(locVel);
     }
+
+    void LimitFallingSpeed()
+    {
+        // 떨어질 때 최대 속도 제한
+        Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+        if (locVel.y < -maxFallingSpeed) locVel.y = -maxFallingSpeed;
+        rigid.velocity = transform.TransformDirection(locVel);
+    }
  
     void CheckGround()
     {
@@ -730,6 +750,12 @@ public class Player : MonoBehaviour
                 // Platform, Launcher, Stone 감지
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 6 | 1 << 15);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null;
+                break;
+            case 5:
+                // Platform, JumpBoost 감지
+                rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
+                rayHitJumpBoost = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 22);
+                isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null || rayHitJumpBoost.collider != null;
                 break;
             case 6:
                 // Platform, IcePlatform 감지
