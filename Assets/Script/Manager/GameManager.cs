@@ -41,6 +41,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] Vector2 firstRespawnPos; // 게임 시작하자마자 나가면 여기서 부활
     
     void Awake() {
+        Debug.Log("GM start");
         DontDestroyOnLoad(gameObject);
 
         curIsShaked = new bool[shakedFloorNum];
