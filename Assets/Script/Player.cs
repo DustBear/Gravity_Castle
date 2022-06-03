@@ -124,6 +124,7 @@ public class Player : MonoBehaviour
             }
         }
 
+        //씬 시작할 때 플레이어의 위치를 scene Elevator에 넘겨줌 
         Debug.Log(transform.position);
         Debug.Log("player made");
         if(openingSceneElevator!= null)
