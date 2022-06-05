@@ -19,7 +19,7 @@ public class doorSensor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isPlayerOn)
+        if (Input.GetKeyDown(KeyCode.E) && isPlayerOn) //플레이어가 센서 내에 들어와있는 상태에서 E를 누르면
         {
             if (GameManager.instance.gameData.curAchievementNum == door.GetComponent<Door>().achievementNum - 1)
             {
@@ -33,8 +33,7 @@ public class doorSensor : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
-        {
-            //interText = collision.transform.GetChild(0).GetChild(0).gameObject; //플레이어 ~> 캔버스 ~> 텍스트 로 추적함 
+        {           
             interText.SetActive(true);
             isPlayerOn = true;
         }

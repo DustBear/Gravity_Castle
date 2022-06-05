@@ -62,6 +62,9 @@ public class Player : MonoBehaviour
     SpriteRenderer sprite;
     Animator ani;
 
+    //씬 시작할 때 엘리베이터와 상호작용
+    GameObject openingSceneElevator;
+
     // Stage8 한정
     /********Stage8 기믹 수정할 때 코드 수정 필요 **********/
     [HideInInspector] public bool isDevilRotating;
@@ -70,13 +73,14 @@ public class Player : MonoBehaviour
     bool isBlackHoleFalling;
 
     void Awake()
-    {
+    {      
         fsm = StateMachine<States>.Initialize(this);
         rigid = GetComponent<Rigidbody2D>();
         collide = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
         ani = GetComponent<Animator>();
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<MainCamera>();
+        openingSceneElevator = GameObject.Find("openingSceneElevator");
     }
 
     void Start()
@@ -124,6 +128,14 @@ public class Player : MonoBehaviour
                 InputManager.instance.isInputBlocked = true;
             }
         }
+
+        //씬 시작할 때 플레이어의 위치를 scene Elevator에 넘겨줌 
+        Debug.Log(transform.position);
+        Debug.Log("player made");
+        if(openingSceneElevator!= null)
+        {
+            openingSceneElevator.GetComponent<openingSceneEle>().playerPos = transform.position;
+        }       
     }
     
     public void ChangeState(in States nextState)
@@ -690,7 +702,7 @@ public class Player : MonoBehaviour
 
     void Die()
     {
-        GameManager.instance.shouldStartAtSavePoint = true;
+        GameManager.instance.shouldStartAtSavePoint = true; //죽으면 일단 세이브포인트에 시작해야 함 
         UIManager.instance.FadeOut();
     }
 

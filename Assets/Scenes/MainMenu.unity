@@ -349,7 +349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStageNum: 1
-  nextScene: 1
+  nextScene: 4
   nextPos: {x: -162.5, y: -26.5}
   nextGravityDir: {x: 0, y: -1}
 --- !u!1 &157519910
@@ -657,7 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStageNum: 2
-  nextScene: 4
+  nextScene: 7
   nextPos: {x: -105.5, y: -36.5}
   nextGravityDir: {x: 0, y: -1}
 --- !u!1 &342907728
@@ -708,6 +708,7 @@ GameObject:
   - component: {fileID: 391614507}
   - component: {fileID: 391614506}
   - component: {fileID: 391614505}
+  - component: {fileID: 391614508}
   m_Layer: 5
   m_Name: NewGameButton
   m_TagString: Untagged
@@ -780,9 +781,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 721628582}
-        m_TargetAssemblyTypeName: StartMenu, Assembly-CSharp
-        m_MethodName: newStart
+      - m_Target: {fileID: 391614508}
+        m_TargetAssemblyTypeName: Test, Assembly-CSharp
+        m_MethodName: OnClickButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -830,6 +831,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 391614503}
   m_CullTransparentMesh: 1
+--- !u!114 &391614508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 391614503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curStageNum: 0
+  nextScene: 1
+  nextPos: {x: 0, y: 0}
+  nextGravityDir: {x: 0, y: -1}
 --- !u!1 &417973693
 GameObject:
   m_ObjectHideFlags: 0
@@ -977,7 +994,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStageNum: 4
-  nextScene: 10
+  nextScene: 12
   nextPos: {x: -174.5, y: -32.5}
   nextGravityDir: {x: 0, y: -1}
 --- !u!1 &477904698
@@ -1892,9 +1909,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStageNum: 6
-  nextScene: 14
-  nextPos: {x: -247, y: -19}
-  nextGravityDir: {x: 1, y: 0}
+  nextScene: 20
+  nextPos: {x: -91, y: 26}
+  nextGravityDir: {x: 0, y: 1}
 --- !u!1 &1083667599
 GameObject:
   m_ObjectHideFlags: 0
@@ -4434,7 +4451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStageNum: 3
-  nextScene: 7
+  nextScene: 10
   nextPos: {x: -132.5, y: -30.5}
   nextGravityDir: {x: 0, y: -1}
 --- !u!1 &1864613955

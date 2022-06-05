@@ -22,7 +22,7 @@ public class InputManager : Singleton<InputManager>
 
     void Update()
     {
-        if (!isInputBlocked)
+        if (!isInputBlocked) //InputBlocked 되면 조작 불가능
         {
             horizontal = Input.GetAxisRaw("Horizontal");
             horizontalDown = Input.GetButtonDown("Horizontal");
@@ -43,7 +43,7 @@ public class InputManager : Singleton<InputManager>
         
         // 게임 진행중에 esc 누르면 메뉴 온오프 가능
         esc = Input.GetButtonDown("Cancel");
-        if (esc && SceneManager.GetActiveScene().name != "MainMenu")
+        if (esc && SceneManager.GetActiveScene().name != "MainMenu") //메인메뉴에선 ESC 누를 수 없음 
         {
             UIManager.instance.OnOffInGameMenu();
         }

@@ -8,8 +8,10 @@ public class Door : MonoBehaviour
     [SerializeField] int stageNum;
     public int achievementNum;
     public bool shouldOpen;
+
     public GameObject sensor;
-    //센서 내부에 플레이어가 들어오면 ~> 플레이어의 interactiveText를 활성화시킨다
+
+    //센서 내부에 플레이어가 들어오면 ~> interactiveText를 활성화시킨다
     //센서 내부에 플레이어가 들어와 있는 상태에서 플레이어가 E를 누르면 문을 열고 interactiveText를 비활성화시킨다 
     //센서 내부에 플레이어가 들어와 있다가 나가면 interactiveText를 비활성화시킨다
 
@@ -22,7 +24,7 @@ public class Door : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         sprite = GetComponent<SpriteRenderer>();
         collid = GetComponent<BoxCollider2D>();
-        sensor = transform.GetChild(0).gameObject;
+
         shouldOpen = false;
     }
 
@@ -32,51 +34,41 @@ public class Door : MonoBehaviour
 
         if (GameManager.instance.gameData.curAchievementNum >= achievementNum)
         {
-            Destroy(gameObject);
+            Destroy(gameObject); //이미 플레이어가 문을 열었다면 sensor는 없애도 됨
         }
     }
 
     private void Update()
     {
-        doorOpen();
+        if (shouldOpen)
+        {
+            doorOpen();
+        }      
     }
 
     void doorOpen()
     {
-        if (shouldOpen)
+        if (GameManager.instance.gameData.curAchievementNum == achievementNum - 1)
         {
-            if (GameManager.instance.gameData.curAchievementNum == achievementNum - 1)
-            {
-                StartCoroutine(FadeOut());
-                GameManager.instance.SaveData(achievementNum, stageNum, player.transform.position);
-            }
+            StartCoroutine(FadeOut());
+            GameManager.instance.SaveData(achievementNum, stageNum, player.transform.position);
         }
     }
 
-        /*
-        void OnCollisionEnter2D(Collision2D other) {
-            if (other.gameObject.CompareTag("Player")) {
-                if (GameManager.instance.gameData.curAchievementNum == achievementNum - 1) {
-                    StartCoroutine(FadeOut());
-                    GameManager.instance.SaveData(achievementNum, player.transform.position);
-                }
-            }
-        }
-        */
-
-        IEnumerator FadeOut()
+    IEnumerator FadeOut()
+    {
+        for (int i = 10; i >= 0; i--)
         {
-            for (int i = 10; i >= 0; i--)
-            {
-                Color color = sprite.color;
-                color.a = i / 10.0f;
-                sprite.color = color;
-                yield return new WaitForSeconds(0.1f);
-            }
-            collid.isTrigger = true;
-            if (achievementNum == 33 && !GameManager.instance.isCliffChecked)
-            {
-                InputManager.instance.isInputBlocked = true;
-            }
+            Color color = sprite.color;
+            color.a = i / 10.0f;
+            sprite.color = color;
+            yield return new WaitForSeconds(0.1f);
+        }
+        collid.isTrigger = true;
+        if (achievementNum == 33 && !GameManager.instance.isCliffChecked)
+        {
+            InputManager.instance.isInputBlocked = true;
         }
     }
+
+}

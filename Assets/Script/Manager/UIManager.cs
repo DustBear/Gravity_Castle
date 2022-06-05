@@ -16,6 +16,11 @@ public class UIManager : Singleton<UIManager>
     {
         DontDestroyOnLoad(gameObject);
         fadeCoroutine = _FadeIn();
+
+        //게임 시작하면 UI 메뉴는 전부 끄고 시작하기 
+        inGameMenu.SetActive(false);
+        existSavedGame.SetActive(false);
+        noSavedGame.SetActive(false);
     }
 
     // Fade in과 Fade out이 동시에 실행될 수 없게 하였음
@@ -69,14 +74,16 @@ public class UIManager : Singleton<UIManager>
         // 인게임 메뉴 팝업창 활성화 시 일시정지
         if (inGameMenu.activeSelf)
         {
-            Time.timeScale = 0f;
-            Cursor.lockState = CursorLockMode.None;
+            Time.timeScale = 0f; //시간 정지
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None; 
         }
         // 인게임 메뉴 팝업창 비활성화 시 다시 재생
         else
         {
             Time.timeScale = 1f;
-            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked; //게임 도중에는 마우스 조작 불가능 
         }
     }
 
