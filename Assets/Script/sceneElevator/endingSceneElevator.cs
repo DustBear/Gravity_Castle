@@ -20,7 +20,8 @@ public class endingSceneElevator : MonoBehaviour
     public float playerFadeSize; //플레이어는 어느 정도로 어두워 질 것인지 
     public float playerFadeSpeed; //플레이어 어두워지는 속도 
 
-    bool isDoorArrived; 
+    bool isDoorArrived;
+    bool isSensorOn; //플레이어가 센서 영역 내에 들어와있으면 true
 
     public GameObject[] collGroup = new GameObject[4]; //플레이어 가두는 콜라이더 
     GameObject playerObject;
@@ -34,6 +35,7 @@ public class endingSceneElevator : MonoBehaviour
  
         GetComponent<BoxCollider2D>().enabled = true;
         isDoorArrived = false;
+        isSensorOn = false;
 
         transform.position = new Vector2(transform.position.x, eleStartYPos); //엘리베이터 위치 초기화 
         GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0); //엘리베이터 속도 초기화
@@ -60,30 +62,35 @@ public class endingSceneElevator : MonoBehaviour
                 isDoorArrived = true;
             }          
         }
-    }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        interactText.SetActive(true);
-        //플레이어가 문 앞에 서면 상호작용 텍스트 활성화 
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        interactText.SetActive(false);
-        //플레이어가 문 앞에서 벗어나면 상호작용 텍스트 비활성화  
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (Input.GetKeyDown(KeyCode.E)) //플레이어가 문 앞에 선 상태에서 E 누르면 작동
-        {      
-            for(int index=0; index<4; index++)
+        if (Input.GetKeyDown(KeyCode.E) && isSensorOn) //플레이어가 문 앞에 선 상태에서 E 누르면 작동
+        {
+            for (int index = 0; index < 4; index++)
             {
                 collGroup[index].SetActive(true); //플레이어가 엘리베이터 밖으로 못나가게 묶음              
             }
             doorOpen(); //엘리베이터 문 열림 
             GetComponent<BoxCollider2D>().enabled = false; //엘리베이터 시퀸스에 들어가면 센서는 꺼야 함 
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "Player")
+        {
+            interactText.SetActive(true);
+            isSensorOn = true;
+            //플레이어가 문 앞에 서면 상호작용 텍스트 활성화 
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.tag == "Player")
+        {
+            interactText.SetActive(false);
+            isSensorOn = false;
+            //플레이어가 문 앞에서 벗어나면 상호작용 텍스트 비활성화  
         }
     }
 
@@ -95,12 +102,15 @@ public class endingSceneElevator : MonoBehaviour
     void elevatorDepart() //엘리베이터 출발 
     {
         GetComponent<Rigidbody2D>().velocity = new Vector2(0, elevatorSpeed);
+        elevatorDoor.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -elevatorSpeed); 
+        //엘리베이터 문이 엘리베이터 본체에 child로 연결되어 있으므로 문을 정지한 상태로 두기 위해선 반대 방향으로 속도 줘야 함 
+
         Invoke("moveToNextScene", sceneDelay); //sceneDelay 후 다음 씬으로 이동 
     }
 
     void moveToNextScene()
     {
-        if (!GameManager.instance.shouldStartAtSavePoint)
+        if (!GameManager.instance.shouldStartAtSavePoint) //세이브포인트에서 시작해야 하는 것이 아니면 
         {
             GameManager.instance.nextPos = nextScenePos;
             GameManager.instance.nextGravityDir = Physics2D.gravity.normalized;

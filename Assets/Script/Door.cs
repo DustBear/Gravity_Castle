@@ -24,7 +24,6 @@ public class Door : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         sprite = GetComponent<SpriteRenderer>();
         collid = GetComponent<BoxCollider2D>();
-        sensor = transform.GetChild(0).gameObject;
 
         shouldOpen = false;
     }

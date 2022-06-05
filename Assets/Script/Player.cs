@@ -664,7 +664,7 @@ public class Player : MonoBehaviour
 
     void Die()
     {
-        GameManager.instance.shouldStartAtSavePoint = true;
+        GameManager.instance.shouldStartAtSavePoint = true; //죽으면 일단 세이브포인트에 시작해야 함 
         UIManager.instance.FadeOut();
     }
 

@@ -91,7 +91,6 @@ public class WindButton : MonoBehaviour
             Color color = render.color;
             color.r -= 0.01f;
             color.g += 0.01f;
-            Debug.Log(color.r);
             render.color = color;
             yield return wait;
         }

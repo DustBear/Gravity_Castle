@@ -41,8 +41,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] Vector2 firstRespawnPos; // 게임 시작하자마자 나가면 여기서 부활
     
     void Awake() {
-        Debug.Log("GM start");
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject); //씬 넘어가도 파괴x
 
         curIsShaked = new bool[shakedFloorNum];
         curIsMelted = new bool[iceNum];
@@ -60,15 +59,21 @@ public class GameManager : Singleton<GameManager>
 
     void Start()
     {
+        //게임 시작하면 mainMenu 창 열기
         SceneManager.LoadScene("MainMenu");
+        Debug.Log("GM start");
     }
 
     public void StartGame(bool isLoadGame)
     {
         InitData(isLoadGame);
-        InputManager.instance.isInputBlocked = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        if (!shouldStartAtSavePoint) SceneManager.LoadScene(nextScene);
+
+        InputManager.instance.isInputBlocked = false; //입력제한 풀기 
+        Cursor.lockState = CursorLockMode.Locked; //기본적으로 마우스 잠그기 
+        if (!shouldStartAtSavePoint) 
+        {
+            SceneManager.LoadScene(nextScene); //처음 시작하는 것이므로 이 시점에 nextScene=1
+        }
         else SceneManager.LoadScene(gameData.respawnScene);
     }
 
@@ -80,11 +85,11 @@ public class GameManager : Singleton<GameManager>
         {
             if (File.Exists(filePath))
             {
-                UIManager.instance.ExistSavedGame();
+                UIManager.instance.ExistSavedGame(); //기존 게임파일이 존재합니다 메시지 출력 
             }
             else
             {
-                StartGame(isLoadGame);
+                StartGame(isLoadGame); //파일 없으면 바로 새 게임 시작
             }
         }
         // Load Game일 경우
@@ -92,28 +97,30 @@ public class GameManager : Singleton<GameManager>
         {
             if (File.Exists(filePath))
             {
-                shouldStartAtSavePoint = true;
+                shouldStartAtSavePoint = true; //경로에 파일이 존재할 경우 true
                 StartGame(isLoadGame);
             }
             else
             {
-                UIManager.instance.NoSavedGame();
+                UIManager.instance.NoSavedGame(); //게임 불러오기 했는데 파일 경로에 아무것도 없을 경우에 경고메시지 출력 
             }
         }
     }
 
     // Case 1) 메인메뉴에서 New Game을 눌렀을 시 호출됨
-    // Case 2) 메인메뉴에서 Load Game을 눌렀을 시 호출됨
+    // Case 2) 메인메뉴에서 Load Game을 눌렀을 시 호출됨 
     // Case 3) 게임 내에서 사망했을 시 호출됨
-    public void InitData(bool isLoadGame)
+
+    // Case 1은 savePoint 이외의 장소에서 스폰. Case2,3은 savePoint에서 스폰
+    public void InitData(bool isLoadGame) //플레이에 필요한 데이터 초기화 or 불러오는 함수 
     {
         // Case 1
-        if (!shouldStartAtSavePoint)
+        if (!shouldStartAtSavePoint) //스테이지1부터 시작
         {
             // 게임 시작 시 필요한 데이터 초기화
             nextScene = 1;
             nextPos = firstStartPos;
-            nextGravityDir = Vector2.down;
+            nextGravityDir = Vector2.down; //시작하면 아래쪽 보도록 중력 적용
             nextState = Player.States.Walk;
 
             // 기본적으로 false로 초기화 되어 있기 때문에 주석 처리
@@ -137,6 +144,8 @@ public class GameManager : Singleton<GameManager>
             curIsDetected.CopyTo(gameData.storedIsDetected, 0);
             curIsGreen.CopyTo(gameData.storedIsGreen, 0);
             curPos.CopyTo(gameData.storedPos, 0);     
+
+            //데이터 저장 
             string ToJsonData = JsonUtility.ToJson(gameData);
             string filePath = Application.persistentDataPath + GameDataFileName;
             File.WriteAllText(filePath, ToJsonData);       
@@ -146,7 +155,7 @@ public class GameManager : Singleton<GameManager>
         else
         {
             // Case 2인 경우, Json 파일의 데이터들을 모두 GameData class로 불러옴
-            if (isLoadGame)
+            if (isLoadGame) //불러올 게임 데이터가 있으면 불러옴
             {
                 string filePath = Application.persistentDataPath + GameDataFileName;
                 string FromJsonData = File.ReadAllText(filePath);
@@ -170,6 +179,7 @@ public class GameManager : Singleton<GameManager>
         gameData.curStageNum = stageNum;
         gameData.respawnScene = SceneManager.GetActiveScene().buildIndex;
         gameData.respawnPos = playerPos;
+
         gameData.respawnGravityDir = Physics2D.gravity.normalized;
         gameData.isCliffChecked = isCliffChecked;
         curIsShaked.CopyTo(gameData.storedIsShaked, 0);
