@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FloorLinearEllipseShaking : FloorShaking
-{    
-    [SerializeField] float[] speed;
+{
+    // Linear 이동 관련
+    [SerializeField] float[] linearSpeed;
     [SerializeField] Vector2[] pos;
     [SerializeField] int targetPosIdx;
+    Vector2 linearPos;
 
-    [SerializeField] float startMovingTime;
+    // Ellipse 이동 관련
     [SerializeField] float ellipseSpeed;
+    [SerializeField] [Range(0f, 1f)] float startMovingTime; // ex) 0.5f : 반 바퀴 돈 상태에서 시작
     [SerializeField] float xRad, yRad;
-    [SerializeField] bool counterClockWise;
-
-    float movingTime;
+    float ellipseTime;
 
     protected override void Awake()
     {
         base.Awake();
         transform.position = pos[(targetPosIdx + pos.Length - 1) % pos.Length];
-        movingTime = startMovingTime;
-        nextPos = pos[0];
+        startMovingTime *= 3.141592f * 2f;
+        linearPos = pos[0];
     }
 
     protected override void Start()
@@ -28,80 +29,47 @@ public class FloorLinearEllipseShaking : FloorShaking
         base.Start();
     }
 
-    protected override void Update()
+    Vector2 GetNextPos()
     {
-        base.Update();
-    }
+        // Linear 이동
+        linearPos = Vector2.MoveTowards(linearPos, pos[targetPosIdx], linearSpeed[targetPosIdx] * Time.deltaTime);
 
-    protected override void OnCollisionEnter2D(Collision2D other)
-    {
-        base.OnCollisionEnter2D(other);
-    }
-
-    protected override void Idle()
-    {
-        if (Player.curState != Player.States.ChangeGravityDir)
-        {
-            // linear moved position
-            nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
-            // add ellipse moved position
-            movingTime += Time.deltaTime;
-            if (!counterClockWise)
-            {
-                transform.position = nextPos + new Vector2(xRad * Mathf.Sin(movingTime * ellipseSpeed), yRad * Mathf.Cos(movingTime * ellipseSpeed));
-            }
-            else
-            {
-                transform.position = nextPos + new Vector2(xRad * Mathf.Sin(-movingTime * ellipseSpeed), yRad * Mathf.Cos(-movingTime * ellipseSpeed));
-            }
-            // if floor arrive target position, convert targetPosIdx to next targetPosIdx
-            if (nextPos == pos[targetPosIdx])
-            {
-                targetPosIdx = (targetPosIdx + 1) % pos.Length;
-            }
-        }
-        base.Idle();
-    }
-
-    protected override void Waiting()
-    {
-        nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
-        movingTime += Time.deltaTime;
-        if (!counterClockWise)
-        {
-            transform.position = nextPos + new Vector2(xRad * Mathf.Sin(movingTime * ellipseSpeed), yRad * Mathf.Cos(movingTime * ellipseSpeed));
-        }
-        else
-        {
-            transform.position = nextPos + new Vector2(xRad * Mathf.Sin(-movingTime * ellipseSpeed), yRad * Mathf.Cos(-movingTime * ellipseSpeed));
-        }
-
-        if (nextPos == pos[targetPosIdx])
+        // 목표 지점까지 이동했다면 다음 목표 지점 설정
+        if (linearPos == pos[targetPosIdx])
         {
             targetPosIdx = (targetPosIdx + 1) % pos.Length;
         }
-        base.Waiting();
+
+        // Ellipse 이동
+        ellipseTime += Time.deltaTime;
+        nextPos = linearPos + new Vector2(xRad * Mathf.Sin(startMovingTime + ellipseTime * ellipseSpeed), yRad * Mathf.Cos(startMovingTime + ellipseTime * ellipseSpeed));
+        return nextPos;
     }
 
-    protected override void Shaked()
+    protected override void Idle_Update()
     {
-        nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
-        movingTime += Time.deltaTime;
-        Vector2 tmpPos = nextPos;
-        if (!counterClockWise)
-        {
-            nextPos += new Vector2(xRad * Mathf.Sin(movingTime * ellipseSpeed), yRad * Mathf.Cos(movingTime * ellipseSpeed));
-        }
-        else
-        {
-            nextPos += new Vector2(xRad * Mathf.Sin(-movingTime * ellipseSpeed), yRad * Mathf.Cos(-movingTime * ellipseSpeed));
-        }
+        // 중력 방향 전환 시 시간이 멈추므로 플랫폼도 이동 불가
+        if (Player.curState == Player.States.ChangeGravityDir) return;
 
-        if (tmpPos == pos[targetPosIdx])
-        {
-            targetPosIdx = (targetPosIdx + 1) % pos.Length;
-        }
-        base.Shaked();
-        nextPos = tmpPos;
+        transform.position = GetNextPos();
+        base.Idle_Update();
+    }
+
+    protected override void Wait_Update()
+    {        
+        // 중력 방향 전환 시 시간이 멈추므로 플랫폼도 이동 불가
+        if (Player.curState == Player.States.ChangeGravityDir) return;
+
+        transform.position = GetNextPos();
+        base.Wait_Update();
+    }
+
+    protected override void Shake_Update()
+    {        
+        // 중력 방향 전환 시 시간이 멈추므로 플랫폼도 이동 불가
+        if (Player.curState == Player.States.ChangeGravityDir) return;
+
+        GetNextPos();
+        base.Shake_Update();
     }
 }

@@ -22,7 +22,7 @@ public class Test : MonoBehaviour
         GameManager.instance.nextPos = nextPos;
         GameManager.instance.nextGravityDir = nextGravityDir;
         GameManager.instance.isCliffChecked = false;
-        for (int i = 0; i < 36; i++)
+        for (int i = 0; i < 35; i++)
         {
             GameManager.instance.curIsShaked[i] = false;
             GameManager.instance.gameData.storedIsShaked[i] = false;

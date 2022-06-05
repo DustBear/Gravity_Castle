@@ -352,9 +352,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultGravityScale: 3
-  maxVelocity: 20
+  maxFallingSpeed: 20
   walkSpeed: 6
-  jumpPower: 12
+  minJumpPower: 8
+  maxJumpPower: 12
+  maxJumpBoostPower: 32
+  jumpChargeSpeed: 20
   ropeAccessSpeed: 8
   ropeMoveSpeed: 4
   leverMoveSpeed: 3

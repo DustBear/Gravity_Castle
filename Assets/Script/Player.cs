@@ -7,10 +7,13 @@ using MonsterLove.StateMachine;
 public class Player : MonoBehaviour
 {
     [SerializeField] float defaultGravityScale;
-    [SerializeField] float maxVelocity;
+    [SerializeField] float maxFallingSpeed;
     [SerializeField] float walkSpeed;
-    [SerializeField] float jumpPower;
-    [SerializeField] float ropeAccessSpeed;
+    [SerializeField] float minJumpPower;
+    [SerializeField] float maxJumpPower;
+    [SerializeField] float maxJumpBoostPower;
+    [SerializeField] float jumpChargeSpeed; // 점프 게이지 차는 속도
+    [SerializeField] float ropeAccessSpeed; // rope에 접근하는 속도
     [SerializeField] float ropeMoveSpeed; // rope에 매달려 움직이는 속도
     [SerializeField] float leverMoveSpeed; // lever 작동 후 플레이어가 이동하는 속도
     [SerializeField] float leverRotateSpeed; // lever 작동 후 플레이어가 회전하는 속도
@@ -29,33 +32,35 @@ public class Player : MonoBehaviour
     [HideInInspector] public static States curState {get; private set;}
     Func<bool> readyToFall, readyToLand, readyToJump, readyToRope, readyToLever; // 각 상태로 이동하기 위한 기본 조건
 
-    // Rope와 상호작용하기 위한 변수
+    // Jump
+    float jumpGauge;
+
+    // Rope
     bool isCollideRope;
     GameObject rope; // 매달릴 rope
-    Vector3 destPos_rope; // 매달릴 위치
 
-    // Lever와 상호작용하기 위한 변수
+    // Lever
     bool isCollideLever;
     GameObject lever; // 작동시킬 lever
-    Vector3 destPos_beforeLevering; // Lever 작동 전 플레이어 position
     Vector3 destPos_afterLevering; // Lever 작동 후 플레이어 position
     float destRot; // Lever 작동 후 플레이어 z-rotation
 
-    // Wind와 상호작용하기 위한 변수
+    // Wind
     bool isHorizontalWind;
     bool isVerticalWind;
 
     // 플레이어 아래에 있는 플랫폼 감지
     bool isGrounded;
     RaycastHit2D rayHitIcePlatform;
+    RaycastHit2D rayHitJumpBoost;
 
     [SerializeField] GameObject leftArrow;
     [SerializeField] GameObject rightArrow;
+    MainCamera mainCamera;
     Rigidbody2D rigid;
     BoxCollider2D collide;
     SpriteRenderer sprite;
     Animator ani;
-    MainCamera mainCamera;
 
     // Stage8 한정
     /********Stage8 기믹 수정할 때 코드 수정 필요 **********/
@@ -81,7 +86,7 @@ public class Player : MonoBehaviour
         // 각 State로 넘어가기 위한 기본 조건
         readyToFall = () => !isGrounded;
         readyToLand = () => isGrounded && (int)transform.InverseTransformDirection(rigid.velocity).y <= 0;
-        readyToJump = () => InputManager.instance.jump;
+        readyToJump = () => InputManager.instance.jumpUp;
         readyToRope = () => isCollideRope && InputManager.instance.vertical == 1;
         readyToLever = () => isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown
                             && lever.transform.eulerAngles.z == transform.eulerAngles.z;
@@ -127,10 +132,16 @@ public class Player : MonoBehaviour
         curState = nextState;
     }
 
+    void Walk_Enter()
+    {
+        jumpGauge = minJumpPower;
+    }
+
     void Walk_Update()
     {
         CheckGround();
         HorizontalMove();
+        ChargeJumpGauge();
 
         if (readyToLever())
         {
@@ -150,17 +161,33 @@ public class Player : MonoBehaviour
         }
     }
 
+    void ChargeJumpGauge()
+    {
+        if (InputManager.instance.jump)
+        {
+            // Jump boost 위에 있으면 최대 점프 높이 증가
+            if (rayHitJumpBoost.collider != null)
+            {
+                jumpGauge = Mathf.Clamp(jumpGauge + jumpChargeSpeed * Time.deltaTime, minJumpPower, maxJumpBoostPower);
+                Debug.Log("점프 게이지 모으는 중 : " + (jumpGauge - minJumpPower) / (maxJumpBoostPower - minJumpPower) * 100f + "%");
+            }
+            else
+            {
+                jumpGauge = Mathf.Clamp(jumpGauge + jumpChargeSpeed * Time.deltaTime, minJumpPower, maxJumpPower);
+            }
+        }
+    }
+
     void Jump_Enter()
     {
-        rigid.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
+        rigid.velocity = Vector2.zero; // 바닥 플랫폼의 속도가 점프 속도에 영향을 미치는 것을 방지
+        rigid.AddForce(transform.up * jumpGauge, ForceMode2D.Impulse);
         ani.SetBool("isJumping", true);
     }
 
     void Jump_Update()
     {
-        // 최대 속도 제한
-        rigid.velocity = Vector2.ClampMagnitude(rigid.velocity, maxVelocity);
-        
+        LimitFallingSpeed();
         CheckGround();
         HorizontalMove();
 
@@ -181,14 +208,13 @@ public class Player : MonoBehaviour
 
     void Fall_Enter()
     {
+        transform.parent = null;
         ani.SetBool("isFalling", true);
     }
 
     void Fall_Update()
     {
-        // 최대 속도 제한
-        rigid.velocity = Vector2.ClampMagnitude(rigid.velocity, maxVelocity);
-
+        LimitFallingSpeed();
         CheckGround();
         HorizontalMove();
 
@@ -209,12 +235,14 @@ public class Player : MonoBehaviour
 
     void Land_Enter()
     {
+        jumpGauge = minJumpPower;
         ani.SetBool("isLanding", true);
     }
 
     void Land_Update()
     {
         HorizontalMove();
+        ChargeJumpGauge();
 
         if (readyToLever())
         {
@@ -239,17 +267,19 @@ public class Player : MonoBehaviour
         ani.SetBool("isLanding", false);
     }
 
-    IEnumerator AccessRope_Enter()
-    {
+    void AccessRope_Enter()
+    {        
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
-        
-        // OnTriggerEnter2D()보다 AccessRope_Enter()이 먼저 호출되므로
-        // 이전 scene에서 rope에 매달린 상태로 현재 scene으로 넘어온 직후에는 rope가 null
-        // OnTriggerEnter2D()에서 rope를 초기화 시킬 때까지 대기해야 함
-        while (rope == null) yield return null;
+    }
+
+    void AccessRope_Update()
+    {
+        // 이전 scene에서 rope에 매달린 상태로 현재 scene으로 넘어왔다면 rope를 새로 인식해야함
+        if (rope == null) return;
 
         // 매달릴 위치 설정
+        Vector2 destPos_rope;
         if (rope.CompareTag("VerticalRope"))
         {
             destPos_rope = new Vector2(rope.transform.position.x, transform.position.y);
@@ -258,27 +288,20 @@ public class Player : MonoBehaviour
         {
             destPos_rope = new Vector2(transform.position.x, rope.transform.position.y);
         }
-    }
-
-    void AccessRope_Update()
-    {
-        // AccessRope_Enter()와 같은 이유로
-        // 이전 scene에서 rope에 매달린 상태로 현재 scene으로 넘어온 직후에는 destPos_rope가 (0, 0, 0)
-        // OnTriggerEnter2D()에서 destPos_rope를 설정할 때까지 대기해야 함
-        if (destPos_rope == Vector3.zero) return;
 
         transform.position = Vector2.MoveTowards(transform.position, destPos_rope, Time.deltaTime * ropeAccessSpeed);
-        if (Vector2.Distance(transform.position, destPos_rope) < 0.1f) // 플레이어가 rope에 근접했을 때 state 변환
+        if (Vector2.Distance(transform.position, destPos_rope) < 0.1f) // 플레이어가 rope에 근접했을 때
         {
+            // 플레이어를 rope로 완전히 이동시킴
+            transform.position = destPos_rope;
+            transform.parent = rope.transform;
             ChangeState(States.MoveOnRope);
         }
     }
 
     void MoveOnRope_Enter()
     {
-        // 플레이어를 rope로 완전히 이동시킴
-        transform.position = destPos_rope;
-        transform.parent = rope.transform;
+        jumpGauge = minJumpPower;
 
         // rope에 매달리는 애니메이션 실행
         if (Physics2D.gravity.normalized.y == 0f)
@@ -307,6 +330,8 @@ public class Player : MonoBehaviour
 
     void MoveOnRope_Update()
     {
+        ChargeJumpGauge();
+
         // Rope에 매달린 상태로 이동
         if (Physics2D.gravity.normalized == Vector2.left)
         {
@@ -369,7 +394,7 @@ public class Player : MonoBehaviour
     }
 
     void MoveOnRope_Exit()
-    {
+    { 
         transform.parent = null;
         rigid.gravityScale = defaultGravityScale;
         ani.SetBool("isRopingVerticalIdle", false);
@@ -382,7 +407,7 @@ public class Player : MonoBehaviour
     {
         rigid.velocity = Vector2.zero;
         
-        // 레버 돌리기 전과 후의 위치 설정
+        // 레버 방향으로 플레이어 sprite flip
         switch (lever.transform.eulerAngles.z)
         {
             case 0f:
@@ -394,8 +419,6 @@ public class Player : MonoBehaviour
                 {
                     sprite.flipX = false;
                 }
-                destPos_beforeLevering = new Vector2(lever.transform.localPosition.x, transform.localPosition.y);
-                destPos_afterLevering = new Vector2(transform.localPosition.x, lever.transform.localPosition.y);
                 break;
 
             case 180f:
@@ -407,8 +430,6 @@ public class Player : MonoBehaviour
                 {
                     sprite.flipX = true;
                 }
-                destPos_beforeLevering = new Vector2(lever.transform.localPosition.x, transform.localPosition.y);
-                destPos_afterLevering = new Vector2(transform.localPosition.x, lever.transform.localPosition.y);
                 break;
 
             case 90f:
@@ -420,8 +441,6 @@ public class Player : MonoBehaviour
                 {
                     sprite.flipX = false;
                 }
-                destPos_beforeLevering = new Vector2(transform.localPosition.x, lever.transform.localPosition.y);
-                destPos_afterLevering = new Vector2(lever.transform.localPosition.x, transform.localPosition.y);
                 break;
 
             case 270f:
@@ -433,18 +452,30 @@ public class Player : MonoBehaviour
                 {
                     sprite.flipX = true;
                 }
-                destPos_beforeLevering = new Vector2(transform.localPosition.x, lever.transform.localPosition.y);
-                destPos_afterLevering = new Vector2(lever.transform.localPosition.x, transform.localPosition.y);
                 break;
         }
     }
 
     void AccessLever_Update()
     {
-        // 레버 돌리기 전의 위치로 이동
-        transform.localPosition = Vector2.MoveTowards(transform.localPosition, destPos_beforeLevering, 3f * Time.deltaTime);
+        Vector2 destPos_beforeLevering;
 
-        if (transform.localPosition == destPos_beforeLevering)
+        // 레버를 돌리기 위해 플레이어가 이동해야할 position 설정
+        switch (lever.transform.eulerAngles.z)
+        {
+            case 0f: case 180f:
+                destPos_beforeLevering = new Vector2(lever.transform.position.x, transform.position.y);
+                break;
+
+            default:
+                destPos_beforeLevering = new Vector2(transform.position.x, lever.transform.position.y);
+                break;
+        }
+
+        // 이동
+        transform.position = Vector2.MoveTowards(transform.position, destPos_beforeLevering, 3f * Time.deltaTime);
+
+        if ((Vector2)transform.position == destPos_beforeLevering)
         {
             ChangeState(States.SelectGravityDir);
         }
@@ -487,6 +518,17 @@ public class Player : MonoBehaviour
         // 회전해야할 플레이어 rotation 설정
         destRot = transform.eulerAngles.z + InputManager.instance.horizontal * 90f;
         if (destRot == -90f) destRot = 270f;
+
+        // 회전하면서 바뀌어야할 플레이어 position 설정
+        switch (lever.transform.eulerAngles.z)
+        {
+            case 0f: case 180f:
+                destPos_afterLevering = new Vector2(transform.position.x, lever.transform.position.y);
+                break;
+            case 90f: case 270f:
+                destPos_afterLevering = new Vector2(lever.transform.position.x, transform.position.y);
+                break;
+        }
         
         ani.SetBool("isFalling", true);
     }
@@ -500,29 +542,27 @@ public class Player : MonoBehaviour
         // 플레이어 회전이 거의 완료되었다면 다음 state로 이동
         if (Mathf.RoundToInt(transform.eulerAngles.z) == destRot)
         {
+            // 플레이어 완전히 회전
+            if (destRot == 360f) destRot = 0f;
+            transform.eulerAngles = Vector3.forward * destRot;
+
+            // 중력 방향 변화
+            Vector2 gravity = -transform.up * 9.8f;
+            if (Mathf.Abs(gravity.x) < 1f) gravity.x = 0f;
+            else gravity.y = 0f;
+            Physics2D.gravity = gravity;
+
+            // 플레이어에게 중력 적용
+            rigid.gravityScale = defaultGravityScale;
+
             ChangeState(States.FallAfterLevering);
         }   
-    }
-
-    void FallAfterLevering_Enter()
-    {
-        // 플레이어 완전히 회전
-        if (destRot == 360f) destRot = 0f;
-        transform.eulerAngles = Vector3.forward * destRot;
-
-        // 중력 방향 변화
-        Vector2 gravity = -transform.up * 9.8f;
-        if (Mathf.Abs(gravity.x) < 1f) gravity.x = 0f;
-        else gravity.y = 0f;
-        Physics2D.gravity = gravity;
-
-        // 플레이어에게 중력 적용
-        rigid.gravityScale = defaultGravityScale;
     }
 
     void FallAfterLevering_Update()
     {
         CheckGround();
+        LimitFallingSpeed();   
 
         if (readyToLand())
         {
@@ -564,9 +604,7 @@ public class Player : MonoBehaviour
 
     void FallAfterGhostLevering_Update()
     {
-        // 최대 속도 제한
-        rigid.velocity = Vector2.ClampMagnitude(rigid.velocity, maxVelocity);
-
+        LimitFallingSpeed();
         CheckGround();
 
         if (isGrounded)
@@ -686,15 +724,29 @@ public class Player : MonoBehaviour
         }
         rigid.velocity = transform.TransformDirection(locVel);
     }
+
+    void LimitFallingSpeed()
+    {
+        // 떨어질 때 최대 속도 제한
+        Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+        if (locVel.y < -maxFallingSpeed) locVel.y = -maxFallingSpeed;
+        rigid.velocity = transform.TransformDirection(locVel);
+    }
  
     void CheckGround()
     {
         // 플레이어가 플랫폼과 함께 움직여야 하는 상황
         // 1) 움직이는 플랫폼 위에 있을 경우. 단, 움직이는 플랫폼 위에서 레버를 작동시킬 때는 함께 움직이면 안됨
         // 2) 움직이는 플랫폼과 연결된 rope에 매달려 있는 경우
-        RaycastHit2D rayHitMovingFloor = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 16);
-        if (rayHitMovingFloor.collider != null && curState != States.ChangeGravityDir) transform.parent = rayHitMovingFloor.collider.transform;
-        else if (curState != States.MoveOnRope) transform.parent = null;
+        RaycastHit2D rayHitMovingFloor = Physics2D.BoxCast(transform.position, new Vector2(0.5f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 16);
+        if (rayHitMovingFloor.collider != null && curState != States.ChangeGravityDir)
+        {
+            transform.parent = rayHitMovingFloor.collider.transform;
+        }
+        else if (curState != States.MoveOnRope)
+        {
+            transform.parent = null;
+        }
 
         RaycastHit2D rayHit;
         switch (GameManager.instance.gameData.curStageNum)
@@ -703,6 +755,12 @@ public class Player : MonoBehaviour
                 // Platform, Launcher, Stone 감지
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 6 | 1 << 15);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null;
+                break;
+            case 5:
+                // Platform, JumpBoost 감지
+                rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
+                rayHitJumpBoost = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 22);
+                isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null || rayHitJumpBoost.collider != null;
                 break;
             case 6:
                 // Platform, IcePlatform 감지

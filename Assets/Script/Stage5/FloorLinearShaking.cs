@@ -19,49 +19,44 @@ public class FloorLinearShaking : FloorShaking
         base.Start();
     }
 
-    protected override void Update()
+    Vector2 GetNextPos()
     {
-        base.Update();
-    }
-
-    protected override void OnCollisionEnter2D(Collision2D other)
-    {
-        base.OnCollisionEnter2D(other);
-    }
-
-    protected override void Idle()
-    {
-        if (Player.curState != Player.States.ChangeGravityDir)
-        {
-            nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
-            // if floor arrive target position, convert targetPosIdx to next targetPosIdx
-            if (Vector2.Distance(nextPos, pos[targetPosIdx]) < 0.1f)
-            {
-                targetPosIdx = (targetPosIdx + 1) % pos.Length;
-            }
-            transform.position = nextPos;
-        }
-        base.Idle();
-    }
-
-    protected override void Waiting()
-    {
+        // Linear 이동
         nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
+
+        // 목표 지점까지 이동했다면 다음 목표 지점 설정
         if (nextPos == pos[targetPosIdx])
         {
             targetPosIdx = (targetPosIdx + 1) % pos.Length;
         }
-        transform.position = nextPos;
-        base.Waiting();
+
+        return nextPos;
     }
 
-    protected override void Shaked()
+    protected override void Idle_Update()
     {
-        nextPos = Vector2.MoveTowards(nextPos, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
-        if (nextPos == pos[targetPosIdx])
-        {
-            targetPosIdx = (targetPosIdx + 1) % pos.Length;
-        }
-        base.Shaked();
+        // 중력 방향 전환 시 시간이 멈추므로 플랫폼도 이동 불가
+        if (Player.curState == Player.States.ChangeGravityDir) return;
+
+        transform.position = GetNextPos();
+        base.Idle_Update();
+    }
+
+    protected override void Wait_Update()
+    {
+        // 중력 방향 전환 시 시간이 멈추므로 플랫폼도 이동 불가
+        if (Player.curState == Player.States.ChangeGravityDir) return;
+
+        transform.position = GetNextPos();
+        base.Wait_Update();
+    }
+
+    protected override void Shake_Update()
+    {        
+        // 중력 방향 전환 시 시간이 멈추므로 플랫폼도 이동 불가
+        if (Player.curState == Player.States.ChangeGravityDir) return;
+
+        GetNextPos();
+        base.Shake_Update();
     }
 }
