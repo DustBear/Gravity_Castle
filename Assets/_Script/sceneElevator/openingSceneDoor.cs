@@ -49,7 +49,6 @@ public class openingSceneDoor : MonoBehaviour
 
     public void inactive() //문이 올라간 상태+비활성화된 상태로 유지시키는 함수. scene elevator에서 실행시킴
     {
-        Debug.Log("door inactive");
         transform.position= new Vector2(transform.position.x, finishYpos);
         isDoorMove = false;
 
@@ -61,7 +60,6 @@ public class openingSceneDoor : MonoBehaviour
 
     public void active() //문을 여는 함수 전체 시퀸스. scene elevator에서 실행시킴 
     {
-        Debug.Log("door active");
         transform.position = new Vector2(transform.position.x, startYpos);
         isDoorMove = true;
         StartCoroutine(doorMove());
@@ -72,8 +70,7 @@ public class openingSceneDoor : MonoBehaviour
         if(isDoorMove &&(transform.position.y >= finishYpos))
         {
             isDoorMove = false;
-            rigid.velocity = new Vector2(0, 0); //문 정지 
-            Debug.Log("doorArrived");
+            rigid.velocity = new Vector2(0, 0); //문 정지            
 
             InputManager.instance.isJumpBlocked = false; //엘리베이터 도착하면 점프 제한 해제 
 

@@ -23,6 +23,7 @@ public class SavePoint : MonoBehaviour
             transform.eulerAngles.z == player.eulerAngles.z && 
             GameManager.instance.gameData.curAchievementNum == achievementNum - 1 || GameManager.instance.gameData.curStageNum == stageNum - 1)
         {
+            Debug.Log("savePointBackUp: " + achievementNum);
             //플레이어가 세이브포인트와 같은 angle을 가지고 있고, 플레이어가 이 세이브포인트의 바로 전 세이브포인트까지 활성화시켰을 때만 작동 
             GameManager.instance.SaveData(achievementNum, stageNum, respawnPos);
         }

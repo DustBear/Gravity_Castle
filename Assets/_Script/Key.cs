@@ -59,6 +59,7 @@ public class Key : MonoBehaviour
     public IEnumerator burst()
     {
         GameManager.instance.SaveData(achievementNum, stageNum, player.position);
+        Debug.Log("savePointBackUp: " + achievementNum);
 
         rightBurst.Play();
         leftBurst.Play();
@@ -76,7 +77,6 @@ public class Key : MonoBehaviour
     
     IEnumerator lightFade()
     {
-        Debug.Log("fade started");
         for(int index=20; index>=1; index--)
         {
             float colorValue = 0.05f * index;

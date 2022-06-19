@@ -230,6 +230,8 @@ public class mapOpenSensor : MonoBehaviour
         stageMoveButton tmpScript = stageButtonTmp.GetComponent<stageMoveButton>();
 
         GameManager.instance.gameData.curAchievementNum = selectedSavePointNum+1; //선택된 세이브포인트 숫자가 현재 achievement Num 의 번호(achievement Num 은 1부터 시작)
+        Debug.Log("savePointBackUp: " + GameManager.instance.gameData.curAchievementNum);
+
         GameManager.instance.gameData.curStageNum = selectedStageNum;
         GameManager.instance.nextScene = tmpScript.savePointScene[selectedSavePointNum]; //선택된 씬으로 이동
         GameManager.instance.nextPos = tmpScript.savePointPos[selectedSavePointNum]; //선택된 savePoint 위치로 이동 

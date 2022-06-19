@@ -129,7 +129,6 @@ public class openingSceneEle : MonoBehaviour
             rigid.velocity = new Vector2(0,0); //finishYpos에 도착하면 엘리베이터 정지 
 
             doorScript.active(); //엘리베이터 문 움직이기 시작 
-            Debug.Log("elevator arrived");
         }
 
         /*

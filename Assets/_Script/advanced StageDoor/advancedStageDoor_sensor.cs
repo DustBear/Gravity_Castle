@@ -32,7 +32,7 @@ public class advancedStageDoor_sensor : MonoBehaviour
             return;
         }
 
-        if(collision.tag ==  "Player" && collision.transform.rotation == transform.rotation)
+        if(collision.tag ==  "Player")
         {
             isActived = true;
             stageDoor.GetComponent<advancedStageDoor>().doorMove();

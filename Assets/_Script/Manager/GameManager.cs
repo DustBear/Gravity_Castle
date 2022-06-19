@@ -62,7 +62,7 @@ public class GameManager : Singleton<GameManager>
     void Start()
     {
         //게임 시작하면 mainMenu 창 열기
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("MainMenu"); 
         Debug.Log("GM start");
     }
 

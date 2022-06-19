@@ -130,7 +130,6 @@ public class elevatorCage : MonoBehaviour
   
     void bellRing() 
     {
-        Debug.Log("bell ring");
         isAchieved = false;
 
         //벨을 울리는 동작이 끝나기 전에 다시 울려도 두 로테이션이 중첩되지 않도록 함 

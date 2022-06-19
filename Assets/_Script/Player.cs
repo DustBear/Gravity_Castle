@@ -156,7 +156,6 @@ public class Player : MonoBehaviour
 
     void Walk_Enter() 
     {
-        Debug.Log("walk");
         jumpGauge = minJumpPower;
     }
 
@@ -293,7 +292,6 @@ public class Player : MonoBehaviour
         }
         else if (readyToLand())
         {
-            Debug.Log("readyToLand");
             shouldAddJumpForce = false;
             ChangeState(States.Land);
         }

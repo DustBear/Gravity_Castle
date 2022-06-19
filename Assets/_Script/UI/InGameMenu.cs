@@ -12,6 +12,14 @@ public class InGameMenu : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
+
+        if (InputManager.instance.isJumpBlocked)
+        {
+            InputManager.instance.isJumpBlocked = false;
+            //jumpBlock은 엘리베이터를 타면 true. 엘리베이터 타고 있는 중간에 메뉴로 나가면 
+            // 다음 씬을 시작할 때도 jumpBlock이 해제되지 않아서 점프 불가능한 문제 발생 ~> 직접 꺼서 해결하자 
+        }
+
         gameObject.SetActive(false);
     }
 
@@ -40,5 +48,13 @@ public class InGameMenu : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene(GameManager.instance.nextScene);
+
+        if (InputManager.instance.isJumpBlocked)
+        {
+            InputManager.instance.isJumpBlocked = false;
+            //jumpBlock은 엘리베이터를 타면 true. 엘리베이터 타고 있는 중간에 메뉴로 나가면 
+            // 다음 씬을 시작할 때도 jumpBlock이 해제되지 않아서 점프 불가능한 문제 발생 ~> 직접 꺼서 해결하자 
+        }
+        gameObject.SetActive(false);
     }
 }

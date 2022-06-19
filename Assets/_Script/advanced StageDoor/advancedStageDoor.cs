@@ -91,7 +91,6 @@ public class advancedStageDoor : MonoBehaviour
         {
             transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + doorLength/50, 0);
 
-            Debug.Log(frameIndex +  "," + transform.localPosition.y + "," + doorLength/50);
             frameIndex++;
             yield return new WaitForSeconds(doorPeriod / 50);
         }
@@ -113,7 +112,6 @@ public class advancedStageDoor : MonoBehaviour
             float doorYPos = initialPos.y - (doorLength / 50 * frameIndex);
             transform.localPosition = new Vector3(transform.localPosition.x, doorYPos, 0);
 
-            Debug.Log(frameIndex);
             frameIndex++;
             yield return new WaitForSeconds(doorPeriod / 50);
         }
@@ -134,7 +132,6 @@ public class advancedStageDoor : MonoBehaviour
 
     IEnumerator spikeDeActive() //가시 비활성화시키는 함수 
     {
-        Debug.Log("spike deactive: " + Time.time);
         for (int index = 3; index >=0; index--)
         {
             spr.sprite = spritesGroup[index];
@@ -146,7 +143,6 @@ public class advancedStageDoor : MonoBehaviour
 
     IEnumerator doorShake() //문이 열릴 때, 문이 닫힐 때 흔들림 ~> 0.6초간 흔들림 
     {
-        Debug.Log("door shake: " + Time.time);
         float shakeDegree = 0.03f; //위아래로 흔들림
         for(int index=0; index<3; index++)
         {
