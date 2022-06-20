@@ -74,6 +74,11 @@ public class Player : MonoBehaviour
     bool isDevilFalling;
     bool isBlackHoleFalling;
 
+    //오디오 소스 
+    AudioSource sound;
+    [SerializeField] AudioClip moveSound; //걷기 or 로프를 탈 때 나는 소리
+    [SerializeField] AudioClip jump_landSound; //점프 및 착지할 때 나는 소리 
+
     void Awake()
     {      
         fsm = StateMachine<States>.Initialize(this);
@@ -83,6 +88,7 @@ public class Player : MonoBehaviour
         ani = GetComponent<Animator>();
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<MainCamera>();
         openingSceneElevator = GameObject.Find("openingSceneElevator");
+        sound = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -123,7 +129,7 @@ public class Player : MonoBehaviour
             Physics2D.gravity = GameManager.instance.gameData.respawnGravityDir * 9.8f;
             transform.up = -GameManager.instance.gameData.respawnGravityDir;
             transform.eulerAngles = Vector3.forward * transform.eulerAngles.z; // x-rotation, y-rotation을 0으로 설정
-            ChangeState(States.Fall); // 리스폰 시 플레이어가 미세하게 공중에 떠 있을 수 있으므로 Fall state로 시작
+            ChangeState(States.Walk); // 리스폰 시 플레이어가 미세하게 공중에 떠 있을 수 있으므로 Fall state로 시작
             GameManager.instance.shouldStartAtSavePoint = false;
 
             /*********** curAchievementNum 부분은 스테이지8 세이브 포인트 설정이 완료되면 수정 필요 ***********/
@@ -147,16 +153,40 @@ public class Player : MonoBehaviour
             sprite.flipX = false;
         }
     }
-  
+
+    private void Update()
+    {
+        walkSoundCheck();
+    }
+
     public void ChangeState(in States nextState)
     {
         fsm.ChangeState(nextState);
         curState = nextState;
     }
 
+    void walkSoundCheck()
+    {
+        if(ani.GetBool("isWalking") && (isGrounded || isOnJumpPlatform))
+        {
+            if (!sound.isPlaying)
+            {
+                sound.clip = moveSound;
+                sound.Play();
+            }           
+        }
+        else
+        {
+            if(sound.clip == moveSound)
+            {
+                sound.Stop();
+            }           
+        }
+    }
+
     void Walk_Enter() 
     {
-        jumpGauge = minJumpPower;
+        jumpGauge = minJumpPower;   
     }
 
     void Walk_Update() 
@@ -178,15 +208,15 @@ public class Player : MonoBehaviour
             ChangeState(States.AccessRope);
         }
         else if (readyToJump()) //스페이스바를 누르는 동안 작동
-        {
+        {            
             ChangeState(States.Jump);
         }
         else if (readyToPowerJump())
-        {
+        {          
             ChangeState(States.PowerJump);
         }          
         else if (readyToFall())
-        {
+        {           
             ChangeState(States.Fall);
         }
     }
@@ -221,6 +251,9 @@ public class Player : MonoBehaviour
         defaultJumpTimer = 0; //타이머 0설정 
         shouldAddJumpForce = true;
         ani.SetBool("isJumping", true);
+
+        sound.clip = jump_landSound;
+        sound.Play();
     }
 
     IEnumerator jumpAddForce()
@@ -302,6 +335,9 @@ public class Player : MonoBehaviour
         rigid.velocity = Vector2.zero; // 바닥 플랫폼의 속도가 점프 속도에 영향을 미치는 것을 방지
         rigid.AddForce(transform.up * jumpGauge, ForceMode2D.Impulse);
         ani.SetBool("isJumping", true);
+
+        sound.clip = jump_landSound;
+        sound.Play();
     }
 
     void PowerJump_Update()
@@ -322,12 +358,12 @@ public class Player : MonoBehaviour
 
     void Jump_Exit()
     {
-        ani.SetBool("isJumping", false);
+        ani.SetBool("isJumping", false);        
     }
 
     void PowerJump_Exit()
     {
-        ani.SetBool("isJumping", false);
+        ani.SetBool("isJumping", false);        
     }
 
     void Fall_Enter()
@@ -361,6 +397,8 @@ public class Player : MonoBehaviour
     {
         jumpGauge = minJumpPower;
         ani.SetBool("isLanding", true);
+        sound.clip = jump_landSound;
+        sound.Play();
     }
 
     void Land_Update()
@@ -821,7 +859,10 @@ public class Player : MonoBehaviour
     void HorizontalMove()
     {
         // Walk 애니메이션
-        if (InputManager.instance.horizontal != 0) ani.SetBool("isWalking", true);
+        if (InputManager.instance.horizontal != 0)
+        {           
+            ani.SetBool("isWalking", true);
+        }
         else ani.SetBool("isWalking", false);
 
         // Walk 방향에 따라 Player sprite 좌우 flip
@@ -909,6 +950,9 @@ public class Player : MonoBehaviour
     // 플레이어 기준 Vertical (월드 좌표 기준 X)
     void VerticalRopeAni()
     {
+        sound.clip = moveSound;
+        sound.Play();
+
         if (InputManager.instance.vertical == 0)
         {
             ani.SetBool("isRopingVerticalIdle", true);
@@ -924,6 +968,9 @@ public class Player : MonoBehaviour
     // 플레이어 기준 Horizontal (월드 좌표 기준 X)
     void HorizontalRopeAni()
     {
+        sound.clip = moveSound;
+        sound.Play();
+
         if (InputManager.instance.horizontal == 0)
         {
             ani.SetBool("isRopingHorizontalIdle", true);

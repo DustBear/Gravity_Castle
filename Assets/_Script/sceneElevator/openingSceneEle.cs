@@ -8,6 +8,7 @@ public class openingSceneEle : MonoBehaviour
     public GameObject player;
     public Color playerColor; //플레이어 어두워질 때의 색상 
     public Vector2 playerPos; //씬 시작했을 때 플레이어의 위치 
+    public GameObject bgm;
     openingSceneDoor doorScript;
 
     SpriteRenderer spr; //플레이어 색상 
@@ -23,6 +24,7 @@ public class openingSceneEle : MonoBehaviour
     bool isInAvtiveChecked; //엘리베이터의 비활성화 작업이 시행됐는지?
             
     Rigidbody2D rigid;
+    AudioSource sound;
 
     void Start()
     {
@@ -30,6 +32,8 @@ public class openingSceneEle : MonoBehaviour
         doorScript = elevatorDoor.GetComponent<openingSceneDoor>();
         spr = player.GetComponent<SpriteRenderer>(); //spr은 플레이어의 색상 제어를 위한 변수 
         sensor = GetComponent<BoxCollider2D>();
+        sound = GetComponent<AudioSource>();
+
 
         sensorCheck();       
     }
@@ -57,6 +61,7 @@ public class openingSceneEle : MonoBehaviour
                 spr.color = playerColor; //시작하면 플레이어 색은 어두움
 
                 InputManager.instance.isJumpBlocked = true;
+                sound.Play(); //엘리베이터 출발하면 오디오 실행(최초 1회만 실행)
                 elevatorMove();
             }
         }
@@ -69,6 +74,8 @@ public class openingSceneEle : MonoBehaviour
             spr.sortingLayerID = SortingLayer.NameToID("Player"); //플레이어 레이어 초기화(플레이어로)
             spr.color = new Color(1, 1, 1, 1); //플레이어 색상 기본값으로 
             doorScript.sceneElevatorCover.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 1);
+
+            bgm.GetComponent<bgmMachine>().soundOn();
         }
     }
 
@@ -127,6 +134,7 @@ public class openingSceneEle : MonoBehaviour
             isMove = false; //isMove 는 false로 설정 
 
             rigid.velocity = new Vector2(0,0); //finishYpos에 도착하면 엘리베이터 정지 
+            sound.Stop(); //소리 멈춰야 함
 
             doorScript.active(); //엘리베이터 문 움직이기 시작 
         }

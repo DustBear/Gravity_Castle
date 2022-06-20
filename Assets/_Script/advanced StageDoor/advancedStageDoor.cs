@@ -15,12 +15,14 @@ public class advancedStageDoor : MonoBehaviour
     public int doorActiveThreshold; //플레이어의 achieveNum 이 이 숫자 '초과' 이면 비활성화한다.    
 
     SpriteRenderer spr;
+    AudioSource sound;
 
     Vector2 initialPos; //맨 처음 초기화 할 위치
 
     private void Awake()
     {
-        spr = GetComponent<SpriteRenderer>();        
+        spr = GetComponent<SpriteRenderer>();
+        sound = GetComponent<AudioSource>();
     }
     void Start()
     {
@@ -80,6 +82,7 @@ public class advancedStageDoor : MonoBehaviour
         //(1) 가시 비활성화 
         //(2) 문 진동
         //(3) 문이 올라감 
+        sound.Play();
 
         StartCoroutine("spikeDeActive");
         yield return new WaitForSeconds(1.5f);
@@ -94,6 +97,7 @@ public class advancedStageDoor : MonoBehaviour
             frameIndex++;
             yield return new WaitForSeconds(doorPeriod / 50);
         }
+        sound.Stop();
     }
 
     IEnumerator doorDown()
@@ -102,6 +106,7 @@ public class advancedStageDoor : MonoBehaviour
         //(1) 문 진동 
         //(2) 문이 내려감
         //(3) 가시 활성화 
+        sound.Play();
 
         StartCoroutine("doorShake");
         yield return new WaitForSeconds(0.6f);
@@ -117,6 +122,7 @@ public class advancedStageDoor : MonoBehaviour
         }
 
         StartCoroutine("spikeActive");
+        sound.Stop();
     }
 
     IEnumerator spikeActive() //가시 활성화하는 함수 

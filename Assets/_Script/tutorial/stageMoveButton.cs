@@ -23,7 +23,7 @@ public class stageMoveButton : MonoBehaviour
     public List<Vector2> savePointPos; //해당 스테이지에 존재하는 세이브포인트의 위치값 
     public List<Vector2> savePointGravityDir; //해당 스테이지에 존재하는 각 세이브포인트에서 중력 방향
 
-    
+    public Sprite instruction_image;
     [SerializeField] bool shouldButtonWork; 
     //이 스테이지로 이동할 수 있도록 해야 하는가 ~> 현재 GameData 상에서 이 시점까지 깨지 못했다면 버튼 비활성화해야 함
 
@@ -42,6 +42,7 @@ public class stageMoveButton : MonoBehaviour
         mapOpenSensor mapSensorScript = mapOpenSensor.GetComponent<mapOpenSensor>();
 
         chapter_name.GetComponent<TextMeshProUGUI>().text = stageNameText; //스테이지 이름 바꿔주기 
+        chapter_Instruction.GetComponent<Image>().sprite = instruction_image;
         mapSensorScript.selectedStageNum = stageNum;
         mapSensorScript.selectedSavePointNum = 0; //스테이지가 넘어가면 세이브포인트 번호도 0으로 초기화
         mapSensorScript.savePointCount = savePointCount;

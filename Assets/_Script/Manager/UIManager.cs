@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -10,6 +11,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] GameObject existSavedGame;
     [SerializeField] GameObject noSavedGame;
     [SerializeField] Image fade;
+    [SerializeField] GameObject textObj;
     IEnumerator fadeCoroutine;
 
     [SerializeField] float fadeDelay; //화면 밝아지거나 어두워지는데 걸리는 시간 
@@ -99,5 +101,16 @@ public class UIManager : Singleton<UIManager>
     public void NoSavedGame()
     {
         noSavedGame.SetActive(true);
+    }
+
+    public void showText(string content)
+    {
+        textObj.SetActive(true);
+        textObj.GetComponent<TextMeshProUGUI>().text = content;
+    }
+
+    public void hideText()
+    {
+        textObj.SetActive(false);
     }
 }

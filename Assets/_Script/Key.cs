@@ -21,10 +21,13 @@ public class Key : MonoBehaviour
 
     float initialXPos;
     float initialYPos;
+
+    AudioSource sound;
     void Awake()
     {
         player = GameObject.FindWithTag("Player").transform;
         sprite = GetComponent<SpriteRenderer>();
+        sound = GetComponent<AudioSource>();
         if(GameManager.instance.gameData.curAchievementNum >= achievementNum) //이미 먹은 열쇠라면 제거해야 함 
         {
             Destroy(gameObject);
@@ -63,6 +66,7 @@ public class Key : MonoBehaviour
 
         rightBurst.Play();
         leftBurst.Play();
+        sound.Play();
 
         sprite.color = new Color(1, 1, 1, 0); //잠시 투명하게 만들고 
         StartCoroutine("lightFade");

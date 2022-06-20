@@ -25,7 +25,11 @@ public class elevatorCage : MonoBehaviour
     public GameObject gear;
     public Animator gearAni;
 
+    AudioSource soundPlayer;
+    AudioSource bellSoundPlayer;   
+
     Quaternion initialBellRotation; //시작 시 벨의 회전각: 엘리베이터가 옆으로 누워있는 경우에도 벨은 로컬포지션에 대해 회전해야 함 
+    [SerializeField] Vector3 addForceDir; //엘리베이터의 각도에 따라 플레이어에게 힘을 가하는 방향도 달라져야 함 
 
     private void Awake()
     {
@@ -41,13 +45,17 @@ public class elevatorCage : MonoBehaviour
             purposePoint = 2;
         }
 
-        isAchieved = true; 
-        //맨 처음 시작할 때는 purposPoint와 현재 위치가 동일하도록 맞춰 줘야 함 
+        soundPlayer = GetComponent<AudioSource>();
+        bellSoundPlayer = bell.GetComponent<AudioSource>();
+        isAchieved = true;
+
+        //맨 처음 시작할 때는 purposePoint와 현재 위치가 동일하도록 맞춰 줘야 함 
     }
 
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
+        soundPlayer = GetComponent<AudioSource>();
         gearAni = gear.GetComponent<Animator>();
         initialBellRotation = bell.transform.rotation;
 
@@ -74,7 +82,7 @@ public class elevatorCage : MonoBehaviour
     void Update()
     {
         if(GameManager.instance.gameData.curAchievementNum < achieveNumNeeded)
-        {
+        {           
             return; 
             //만약 엘리베이터를 이용하기에 진척도가 충분하지 않으면 명령 무시 
         }
@@ -87,12 +95,31 @@ public class elevatorCage : MonoBehaviour
         
         elevatorMove();
         weightMove();
+        soundCheck();
+    }
+
+    void soundCheck()
+    {
+        if(rigid.velocity.magnitude >= 0.05f) //엘리베이터가 움직이는 중이면 
+        {
+            if (!soundPlayer.isPlaying)
+            {
+                soundPlayer.Play();
+            }
+        }
+        else
+        {
+            soundPlayer.Stop();
+        }
     }
 
     void elevatorMove()
     {
-        if (isAchieved) return; //목표 지점에 도달했다면 더이상 움직일 필요 없음
-
+        if (isAchieved)
+        {                                        
+            return; //목표 지점에 도달했다면 더이상 움직일 필요 없음
+        }
+            
         Vector2 dirVector;
         Vector2 moveDirection;
 
@@ -132,6 +159,9 @@ public class elevatorCage : MonoBehaviour
     {
         isAchieved = false;
 
+        if (bellSoundPlayer.isPlaying) bellSoundPlayer.Stop();
+        bellSoundPlayer.Play();
+
         //벨을 울리는 동작이 끝나기 전에 다시 울려도 두 로테이션이 중첩되지 않도록 함 
         StopCoroutine("bellShake");
         bell.transform.rotation = initialBellRotation;
@@ -141,10 +171,7 @@ public class elevatorCage : MonoBehaviour
 
         if (purposePoint == 1)
         {
-            purposePoint = 2;
-            Vector3 addForceDir = GameObject.Find("Player").transform.TransformDirection(transform.up) * (-1); //플레이어.up 의 반대 방향을 가르킨다 
-            //플레이어가 튕겨져나가지 않게 힘을 가해줘야 하는 방향/플레이어의 회전각에 따라 달라져야 한다
-
+            purposePoint = 2;           
             GameObject.Find("Player").GetComponent<Rigidbody2D>().AddForce(addForceDir * playerAddforce, ForceMode2D.Impulse);
             //pos1로 이동하던 도중 pos2로 목표 바꿈 ~> 플레이어 공중에 뜨지 않게 잡아줘야 함 
 
