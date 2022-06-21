@@ -221,14 +221,12 @@ public class Player : MonoBehaviour
         }
     }
 
+    /*
     public float defaultJumpSpeed;
     public float defaultJumpDelay; //일반 점프에서 최고높이에 도달하는 데 걸리는 시간
-    public float maxJumpHeight; //일반 점프로 도달할 수 있는 최대 높이
+    public float speedDelta; //체공시간이 길어질수록 속도가 느려지는 정도
     [SerializeField] float defaultJumpTimer;
-    [SerializeField] bool shouldAddJumpForce = false; //true 인 동안 지속적으로 플레이어에 jumpForce를 가한다 
-
-    float jumpUpdateForce(float timer) => -2 * (maxJumpHeight / defaultJumpDelay * defaultJumpDelay) * timer + 2 * (maxJumpHeight / defaultJumpDelay * defaultJumpDelay);
-    //체공시간에 따른 플레이어 상승속도 계산 
+    */
 
     void ChargeJumpGauge() //스테이지5 강화점프 기믹에서만 사용 
     {
@@ -243,89 +241,93 @@ public class Player : MonoBehaviour
         }
     }
 
+    public float jumpPower;
+
     void Jump_Enter()
     {
         rigid.velocity = Vector2.zero; // 바닥 플랫폼의 속도가 점프 속도에 영향을 미치는 것을 방지    
-        StartCoroutine("jumpAddForce");
-        
-        defaultJumpTimer = 0; //타이머 0설정 
-        shouldAddJumpForce = true;
+        //StartCoroutine("jumpAddForce");
+
+        //defaultJumpTimer = 0; //타이머 0설정 
         ani.SetBool("isJumping", true);
+
+        Vector2 addForceDirection;
+        
+        if (transform.up == new Vector3(0, 1, 0)) //플레이어가 위쪽을 향해 서 있을 때 
+        {
+            addForceDirection = new Vector2(0, 1);
+        }
+        else if (transform.up == new Vector3(0, -1, 0)) //플레이어가 아래쪽을 향해 서 있을 때 
+        {
+            addForceDirection = new Vector2(0, -1);
+        }
+        else if (transform.up == new Vector3(1, 0, 0)) //플레이어가 오른쪽을 향해 서 있을 때 
+        {
+            addForceDirection = new Vector2(1, 0);
+        }
+        else //플레이어가 왼쪽을 향해 서 있을 때
+        {
+            addForceDirection = new Vector2(-1, 0);
+        }
+
+        rigid.AddForce(jumpPower * addForceDirection, ForceMode2D.Impulse);
 
         sound.clip = jump_landSound;
         sound.Play();
     }
-
+    /*
     IEnumerator jumpAddForce()
     {
-        int jumpIndex = 0;
+        int index = 0;
 
-        while (jumpIndex < 50) //정밀한 체공을 위해 기존 Update문보다 짧은 동일 간격의 프레임으로 나눔
+        while (true)
         {
             Vector2 addForceDirection;
+            float jumpPower = defaultJumpSpeed - index * speedDelta;
+
             if (transform.up == new Vector3(0, 1, 0)) //플레이어가 위쪽을 향해 서 있을 때 
             {
-                addForceDirection = new Vector2(rigid.velocity.x, defaultJumpSpeed);
+                addForceDirection = new Vector2(rigid.velocity.x, jumpPower);
             }
             else if (transform.up == new Vector3(0, -1, 0)) //플레이어가 아래쪽을 향해 서 있을 때 
             {
-                addForceDirection = new Vector2(rigid.velocity.x, -defaultJumpSpeed);
+                addForceDirection = new Vector2(rigid.velocity.x, -jumpPower);
             }
             else if (transform.up == new Vector3(1, 0, 0)) //플레이어가 오른쪽을 향해 서 있을 때 
             {
-                addForceDirection = new Vector2(defaultJumpSpeed, rigid.velocity.y);
+                addForceDirection = new Vector2(jumpPower, rigid.velocity.y);
             }
             else //플레이어가 왼쪽을 향해 서 있을 때
             {
-                addForceDirection = new Vector2(-defaultJumpSpeed, rigid.velocity.y);
+                addForceDirection = new Vector2(-jumpPower, rigid.velocity.y);
             }
 
             rigid.velocity = addForceDirection;
-            defaultJumpTimer += Time.deltaTime;
+            Debug.Log(jumpPower + "," + index + "," + defaultJumpTimer);
+            yield return new WaitForSeconds(0.005f);
 
-            //rigid.velocity = addForceDirection * defaultJumpSpeed * Time.deltaTime; 
-            yield return new WaitForSeconds(defaultJumpDelay / 50);
-
-            if (defaultJumpTimer >= defaultJumpDelay || InputManager.instance.jumpUp) //스페이스바를 떼거나 타이머가 끝나면 점프 중단
-            {
-                shouldAddJumpForce = false;
-                defaultJumpTimer = 0; //타이머 0설정 
-            }
-
-            if (!shouldAddJumpForce)
+            index++;
+            defaultJumpTimer += 0.005f;
+            if(defaultJumpTimer >= defaultJumpDelay || InputManager.instance.jumpUp)
             {
                 break;
             }
-        }
+        }        
     }
+    */
 
     void Jump_Update()
     {
         LimitFallingSpeed();
         CheckGround();
         HorizontalMove();
-   
-        if (shouldAddJumpForce)
-        {
-            //rigid.velocity = new Vector2(rigid.velocity.x, jumpUpdateForce(defaultJumpTimer)); //스페이스바를 누르고 있는 동안 계속 힘 가함
-        }
-        
-        /*
-        if(defaultJumpTimer>=defaultJumpDelay || InputManager.instance.jumpUp) //스페이스바를 떼거나 타이머가 끝나면 점프 중단
-        {
-            shouldAddJumpForce = false;
-            defaultJumpTimer = 0; //타이머 0설정 
-        }        
-        */
 
         if (readyToRope())
         {
-            shouldAddJumpForce = false;
             ChangeState(States.AccessRope);
         }
         else if (readyToLand())
         {
-            shouldAddJumpForce = false;
             ChangeState(States.Land);
         }
     }

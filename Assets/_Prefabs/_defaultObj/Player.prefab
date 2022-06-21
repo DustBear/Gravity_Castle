@@ -240,11 +240,7 @@ MonoBehaviour:
   isBlackHole: 0
   moveSound: {fileID: 8300000, guid: e7dc2a35cc6f83f4daa03d5114e73f4d, type: 3}
   jump_landSound: {fileID: 8300000, guid: 398e41fc6606baf4e964ebcc5af00616, type: 3}
-  defaultJumpSpeed: 8
-  defaultJumpDelay: 0.18
-  maxJumpHeight: 3
-  defaultJumpTimer: 0
-  shouldAddJumpForce: 0
+  jumpPower: 12
 --- !u!95 &7733424920935491460
 Animator:
   serializedVersion: 3
