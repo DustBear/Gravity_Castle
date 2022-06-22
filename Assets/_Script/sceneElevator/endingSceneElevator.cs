@@ -112,6 +112,7 @@ public class endingSceneElevator : MonoBehaviour
     {
         if (!GameManager.instance.shouldStartAtSavePoint) //세이브포인트에서 시작해야 하는 것이 아니면 
         {
+            GameManager.instance.gameData.curAchievementNum = 1; //다음 스테이지로 이동하니까 curAchievement Num 초기화시켜줘야 함 
             GameManager.instance.nextPos = nextScenePos;
             GameManager.instance.nextGravityDir = Physics2D.gravity.normalized;
             GameManager.instance.nextState = Player.curState;

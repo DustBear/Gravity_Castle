@@ -11,8 +11,8 @@ public class StoneSensor : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (!isShaked && GameManager.instance.gameData.curAchievementNum < 17 && other.CompareTag("Player"))
-        {
+        if (!isShaked && GameManager.instance.gameData.curAchievementNum <= 8 && other.CompareTag("Player"))
+        {           
             StartCoroutine(StartShake());
         }
     }
@@ -28,6 +28,7 @@ public class StoneSensor : MonoBehaviour
             yield return null;
         }
         stoneRigid.transform.position = stonePos;
+        stoneRigid.bodyType = RigidbodyType2D.Dynamic;
         stoneRigid.gravityScale = 3f;
     }
 }

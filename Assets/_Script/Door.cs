@@ -34,7 +34,8 @@ public class Door : MonoBehaviour
 
         if (GameManager.instance.gameData.curAchievementNum >= achievementNum)
         {
-            Destroy(gameObject); //이미 플레이어가 문을 열었다면 sensor는 없애도 됨
+            Debug.Log("door open" + GameManager.instance.gameData.curAchievementNum);
+            gameObject.SetActive(false);
         }
     }
 
@@ -64,7 +65,7 @@ public class Door : MonoBehaviour
             sprite.color = color;
             yield return new WaitForSeconds(0.1f);
         }
-        collid.isTrigger = true;
+        gameObject.SetActive(false);
         if (achievementNum == 33 && !GameManager.instance.isCliffChecked)
         {
             InputManager.instance.isInputBlocked = true;

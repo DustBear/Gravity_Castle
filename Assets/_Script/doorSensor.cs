@@ -24,8 +24,7 @@ public class doorSensor : MonoBehaviour
             if (GameManager.instance.gameData.curAchievementNum == door.GetComponent<Door>().achievementNum - 1)
             {
                 door.GetComponent<Door>().shouldOpen = true;
-                interText.SetActive(false);
-                gameObject.SetActive(false); //문이 열리고 나면 sensor는 더이상 작동할 필요 없음
+                //door 가 비활성화되면 그 자식 오브젝트인 door sensor 와 스크립트도 같이 비활성화 
             }
         }
     }
