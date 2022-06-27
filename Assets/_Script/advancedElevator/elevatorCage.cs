@@ -25,8 +25,8 @@ public class elevatorCage : MonoBehaviour
     public GameObject gear;
     public Animator gearAni;
 
-    AudioSource soundPlayer;
-    AudioSource bellSoundPlayer;   
+    //AudioSource soundPlayer;
+    //AudioSource bellSoundPlayer;   
 
     Quaternion initialBellRotation; //시작 시 벨의 회전각: 엘리베이터가 옆으로 누워있는 경우에도 벨은 로컬포지션에 대해 회전해야 함 
     [SerializeField] Vector3 addForceDir; //엘리베이터의 각도에 따라 플레이어에게 힘을 가하는 방향도 달라져야 함 
@@ -45,8 +45,8 @@ public class elevatorCage : MonoBehaviour
             purposePoint = 2;
         }
 
-        soundPlayer = GetComponent<AudioSource>();
-        bellSoundPlayer = bell.GetComponent<AudioSource>();
+        //soundPlayer = GetComponent<AudioSource>();
+        //bellSoundPlayer = bell.GetComponent<AudioSource>();
         isAchieved = true;
 
         //맨 처음 시작할 때는 purposePoint와 현재 위치가 동일하도록 맞춰 줘야 함 
@@ -55,7 +55,6 @@ public class elevatorCage : MonoBehaviour
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
-        soundPlayer = GetComponent<AudioSource>();
         gearAni = gear.GetComponent<Animator>();
         initialBellRotation = bell.transform.rotation;
 
@@ -95,9 +94,10 @@ public class elevatorCage : MonoBehaviour
         
         elevatorMove();
         weightMove();
-        soundCheck();
+        //soundCheck();
     }
 
+    /*
     void soundCheck()
     {
         if(rigid.velocity.magnitude >= 0.05f) //엘리베이터가 움직이는 중이면 
@@ -112,7 +112,7 @@ public class elevatorCage : MonoBehaviour
             soundPlayer.Stop();
         }
     }
-
+    */
     void elevatorMove()
     {
         if (isAchieved)
@@ -125,6 +125,9 @@ public class elevatorCage : MonoBehaviour
 
         if (purposePoint == 1) //현재 pos2 에서 pos1으로 이동하고 있는 중이면 
         {
+            gearAni.SetBool("gearMove", true);
+            gearAni.SetFloat("gearSpeed", 2f);
+
             dirVector = pos1 - pos2;
             moveDirection = dirVector.normalized; //moveDirection = 움직여야 하는 방향(크기1 벡터로 표현)
             rigid.velocity = moveDirection * elevatorSpeed; //엘리베이터 속도 할당    
@@ -139,6 +142,9 @@ public class elevatorCage : MonoBehaviour
         }
         else //현재 pos1 에서 pos2 으로 이동하고 있는 중이면 
         {
+            gearAni.SetBool("gearMove", true);
+            gearAni.SetFloat("gearSpeed", -2f);
+
             dirVector = pos2 - pos1;
             moveDirection = dirVector.normalized;
             rigid.velocity = moveDirection * elevatorSpeed; //엘리베이터 속도 할당    
@@ -159,14 +165,14 @@ public class elevatorCage : MonoBehaviour
     {
         isAchieved = false;
 
+        /*
         if (bellSoundPlayer.isPlaying) bellSoundPlayer.Stop();
         bellSoundPlayer.Play();
+        */
 
         //벨을 울리는 동작이 끝나기 전에 다시 울려도 두 로테이션이 중첩되지 않도록 함 
         StopCoroutine("bellShake");
-        bell.transform.rotation = initialBellRotation;
-        gearAni.SetBool("gearMove", true); //기어 움직임
-
+        bell.transform.rotation = initialBellRotation;       
         StartCoroutine("bellShake");
 
         if (purposePoint == 1)
@@ -174,13 +180,10 @@ public class elevatorCage : MonoBehaviour
             purposePoint = 2;           
             GameObject.Find("Player").GetComponent<Rigidbody2D>().AddForce(addForceDir * playerAddforce, ForceMode2D.Impulse);
             //pos1로 이동하던 도중 pos2로 목표 바꿈 ~> 플레이어 공중에 뜨지 않게 잡아줘야 함 
-
-            gearAni.SetFloat("gearSpeed", 2);
         }
         else
         {
-            purposePoint = 1;
-            gearAni.SetFloat("gearSpeed", -2); //이동방향이 반대면 기어의 회전방향도 반대여야 함 
+            purposePoint = 1;         
         }
         //엘리베이터에 달려 있는 벨을 누름 ~> 현재 purposePoint가 1이면 2로, 2이면 1로 바꿔줌 
     }

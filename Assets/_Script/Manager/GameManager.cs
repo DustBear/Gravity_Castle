@@ -41,6 +41,14 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] Vector2 firstStartPos; // 게임 시작 위치
     [SerializeField] Vector2 firstRespawnPos; // 게임 시작하자마자 나가면 여기서 부활
+
+    AudioSource bgmMachine; //각 스테이지에 맞는 bgm 송출
+    public AudioClip[] bgmGroup;
+
+    AudioSource moodMachine; //각 스테이지에 맞는 무드 사운드 송출 
+
+    public AudioClip[] moodSoundGroup;
+    [SerializeField] int curBgmIndex; //현재 재생되고 있는 bgm 사운드의 번호(0~9)
     
     void Awake() {
         DontDestroyOnLoad(gameObject); //씬 넘어가도 파괴x
@@ -57,6 +65,43 @@ public class GameManager : Singleton<GameManager>
         gameData.storedIsDetected = new bool[detectorNum];
         gameData.storedIsGreen = new bool[buttonNum];
         gameData.storedPos = new Vector2[buttonNum];
+
+        bgmMachine = GetComponent<AudioSource>();
+    }
+
+    public void bgmGen()
+    {
+        if(SceneManager.GetActiveScene().name == "MainMenu") //현재 메인메뉴라면 index=9
+        {
+            curBgmIndex = 9;
+            StartCoroutine(bgmManager(9));
+            return;
+        }
+
+        else if (gameData.curStageNum != curBgmIndex) //메인메뉴에 있는 것이 아니라면 어떤 씬이든 게임 진행중인 것 ~> 따라서 stageNum을 그대로 이용하면 됨
+        {
+            StartCoroutine(bgmManager(gameData.curStageNum));
+        }
+    }
+
+    IEnumerator bgmManager(int stageNum) //튜토리얼:0 부터 시작 ~> 스테이지1 bgm은 index=1 / 게임메뉴의 bgm index=9(10번째)
+    {
+        curBgmIndex = gameData.curStageNum;
+        if (bgmMachine.isPlaying)
+        {
+            for(int index=10; index>=1; index--)
+            {
+                bgmMachine.volume = 0.1f * index;
+                yield return new WaitForSeconds(0.1f); //1초에 걸쳐 음향 크기 0으로 만듦
+            }
+            bgmMachine.clip = bgmGroup[stageNum]; //bgm 사운드를 입력값에 맞게 교체
+
+            for (int index = 1; index <= 10; index++)
+            {
+                bgmMachine.volume = 0.1f * index;
+                yield return new WaitForSeconds(0.1f); //1초에 걸쳐 음향 크기 1으로 만듦
+            }
+        }
     }
 
     void Start()
@@ -64,6 +109,11 @@ public class GameManager : Singleton<GameManager>
         //게임 시작하면 mainMenu 창 열기
         SceneManager.LoadScene("MainMenu"); 
         Debug.Log("GM start");
+    }
+
+    private void Update()
+    {
+        bgmGen();
     }
 
     public void StartGame(bool isLoadGame)

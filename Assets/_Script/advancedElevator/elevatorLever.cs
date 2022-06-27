@@ -27,16 +27,12 @@ public class elevatorLever : MonoBehaviour
 
             elevatorScript.isAchieved = false;
             if (leverPos == 1)
-            {
-                elevatorScript.gearAni.SetBool("gearMove", true);
-                elevatorScript.gearAni.SetFloat("gearSpeed", -2);
+            {               
                 elevatorScript.purposePoint = 1;
             }
 
             else if(leverPos == 2)
-            {
-                elevatorScript.gearAni.SetBool("gearMove", true);
-                elevatorScript.gearAni.SetFloat("gearSpeed", 2);
+            {               
                 elevatorScript.purposePoint = 2;
             }
         }
