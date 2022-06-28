@@ -637,14 +637,15 @@ public class Player : MonoBehaviour
         }
 
         // ¿Ãµø
-        transform.position = Vector2.MoveTowards(transform.position, destPos_beforeLevering, 3f * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, destPos_beforeLevering, 9f * Time.deltaTime);        
+        //transform.position = destPos_beforeLevering;
 
         if ((Vector2)transform.position == destPos_beforeLevering)
         {
             ChangeState(States.SelectGravityDir);
         }
     }
-
+   
     void SelectGravityDir_Enter()
     {
         leftArrow.SetActive(true);

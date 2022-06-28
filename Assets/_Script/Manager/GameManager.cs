@@ -42,15 +42,17 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] Vector2 firstStartPos; // 게임 시작 위치
     [SerializeField] Vector2 firstRespawnPos; // 게임 시작하자마자 나가면 여기서 부활
 
-    AudioSource bgmMachine; //각 스테이지에 맞는 bgm 송출
+    public AudioSource bgmMachine; //각 스테이지에 맞는 bgm 송출
     public AudioClip[] bgmGroup;
 
-    AudioSource moodMachine; //각 스테이지에 맞는 무드 사운드 송출 
-
+    public AudioSource moodMachine; //각 스테이지에 맞는 무드 사운드 송출 
     public AudioClip[] moodSoundGroup;
+
+    [SerializeField] int purposeBgmIndex; //재생되어야 하는 bgm 사운드 번호
     [SerializeField] int curBgmIndex; //현재 재생되고 있는 bgm 사운드의 번호(0~9)
     
-    void Awake() {
+    void Awake() 
+    {
         DontDestroyOnLoad(gameObject); //씬 넘어가도 파괴x
 
         curIsShaked = new bool[shakedFloorNum];
@@ -66,42 +68,63 @@ public class GameManager : Singleton<GameManager>
         gameData.storedIsGreen = new bool[buttonNum];
         gameData.storedPos = new Vector2[buttonNum];
 
-        bgmMachine = GetComponent<AudioSource>();
+        bgmMachine = gameObject.AddComponent<AudioSource>();
+        moodMachine = gameObject.AddComponent<AudioSource>();
     }
 
-    public void bgmGen()
+    public void soundNumCheck() //현재 씬에서 몇 번 bgm이 출력되어야 할 지 체크
     {
-        if(SceneManager.GetActiveScene().name == "MainMenu") //현재 메인메뉴라면 index=9
-        {
-            curBgmIndex = 9;
-            StartCoroutine(bgmManager(9));
-            return;
-        }
+        int sceneNum = SceneManager.GetActiveScene().buildIndex; //현재 씬 번호
 
-        else if (gameData.curStageNum != curBgmIndex) //메인메뉴에 있는 것이 아니라면 어떤 씬이든 게임 진행중인 것 ~> 따라서 stageNum을 그대로 이용하면 됨
+        //현재 위치한 scene의 번호에 따라 목표 bgm index가 변화함
+        if (sceneNum == 0) purposeBgmIndex = 9; //메인메뉴 bgm은 index 9 
+        else if (1 <= sceneNum && sceneNum < 4) purposeBgmIndex = 0; //stage0
+        else if (4 <= sceneNum && sceneNum < 7) purposeBgmIndex = 1; //stage1
+        else if (7 <= sceneNum && sceneNum < 10) purposeBgmIndex = 2; //stage2
+        else if (10 <= sceneNum && sceneNum < 12) purposeBgmIndex = 3; //stage3
+        else if (12 <= sceneNum && sceneNum < 14) purposeBgmIndex = 4; //stage4
+
+        else Debug.Log("error: there is no bgm");
+
+        if(purposeBgmIndex != curBgmIndex) //현재 재생중인 bgm 인덱스와 목표 인덱스가 다름 ~> 씬이 바뀌었다는 뜻이므로 인덱스 바꿔줘야 함
         {
-            StartCoroutine(bgmManager(gameData.curStageNum));
+            StopCoroutine("soundManager"); //아직 코루틴이 다 끝나지 않은 상태에서 다음 음향 코루틴 시작하면 이전 코루틴은 지워야 함
+            StartCoroutine("soundManager");
         }
     }
-
-    IEnumerator bgmManager(int stageNum) //튜토리얼:0 부터 시작 ~> 스테이지1 bgm은 index=1 / 게임메뉴의 bgm index=9(10번째)
+   
+    IEnumerator soundManager() //튜토리얼:0 부터 시작 ~> 스테이지1 bgm은 index=1 / 게임메뉴의 bgm index=9(10번째)
     {
-        curBgmIndex = gameData.curStageNum;
-        if (bgmMachine.isPlaying)
-        {
-            for(int index=10; index>=1; index--)
-            {
-                bgmMachine.volume = 0.1f * index;
-                yield return new WaitForSeconds(0.1f); //1초에 걸쳐 음향 크기 0으로 만듦
-            }
-            bgmMachine.clip = bgmGroup[stageNum]; //bgm 사운드를 입력값에 맞게 교체
+        curBgmIndex = purposeBgmIndex;
 
-            for (int index = 1; index <= 10; index++)
+        for (int index = 10; index >= 1; index--)
+        {
+            if (bgmMachine.volume == 0)
             {
-                bgmMachine.volume = 0.1f * index;
-                yield return new WaitForSeconds(0.1f); //1초에 걸쳐 음향 크기 1으로 만듦
+                break;
             }
+
+            bgmMachine.volume = bgmMachine.volume-0.1f;
+            moodMachine.volume = bgmMachine.volume;
+            yield return new WaitForSeconds(0.1f);
+
+            //일정 속도로 volume을 줄여서 음향 크기 0으로 만듦. 1에서 시작했으면 1초가 걸리고 0.5에서 시작했으면 0.5초가 걸림            
         }
+              
+        bgmMachine.clip = bgmGroup[purposeBgmIndex]; //bgm 사운드를 목푯값에 맞게 교체     
+        moodMachine.clip = moodSoundGroup[purposeBgmIndex];
+
+        yield return new WaitForSeconds(1f); //잠시 기다렸다가        
+        bgmMachine.Play();
+        moodMachine.Play();
+   
+        for (int index = 1; index <= 20; index++)
+        {
+            bgmMachine.volume = 0.05f * index;
+            moodMachine.volume = bgmMachine.volume;
+            yield return new WaitForSeconds(0.1f); //2초에 걸쳐 음향 크기 1으로 만듦
+        }
+
     }
 
     void Start()
@@ -109,11 +132,23 @@ public class GameManager : Singleton<GameManager>
         //게임 시작하면 mainMenu 창 열기
         SceneManager.LoadScene("MainMenu"); 
         Debug.Log("GM start");
+      
+        purposeBgmIndex = 9; //main theme 이 초깃값이 되어야 함
+        curBgmIndex = 9;
+        bgmMachine.clip = bgmGroup[9];
+        moodMachine.clip = moodSoundGroup[9];
+        bgmMachine.Play();
+        moodMachine.Play();
+
+        bgmMachine.loop = true;
+        moodMachine.loop = true;
+        bgmMachine.playOnAwake = false;
+        moodMachine.playOnAwake = false;
     }
 
     private void Update()
     {
-        bgmGen();
+        soundNumCheck();
     }
 
     public void StartGame(bool isLoadGame)
