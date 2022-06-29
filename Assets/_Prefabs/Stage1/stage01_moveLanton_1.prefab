@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &905972473294346959
+--- !u!1 &1662602193502701572
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,36 +8,36 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4981426157450283590}
-  - component: {fileID: 1471543620924891840}
+  - component: {fileID: 4101377142855010928}
+  - component: {fileID: 840142355119846364}
   m_Layer: 0
-  m_Name: Point Light 2D
+  m_Name: lantonLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4981426157450283590
+--- !u!4 &4101377142855010928
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 905972473294346959}
+  m_GameObject: {fileID: 1662602193502701572}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.27, z: 0}
+  m_LocalPosition: {x: 0, y: 0.81, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9159330509525555035}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1471543620924891840
+--- !u!114 &840142355119846364
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 905972473294346959}
+  m_GameObject: {fileID: 1662602193502701572}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
@@ -46,10 +46,10 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
-  m_Color: {r: 0.764151, g: 0.59622437, b: 0.40730688, a: 1}
-  m_Intensity: 0.6
-  m_LightVolumeOpacity: 0.394
-  m_ApplyToSortingLayers: 00000000
+  m_Color: {r: 1, g: 0.6039734, b: 0, a: 1}
+  m_Intensity: 0.74
+  m_LightVolumeOpacity: 0
+  m_ApplyToSortingLayers: 3d0378b8
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
   m_LightOrder: 0
@@ -58,8 +58,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensity: 0
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.8
-  m_PointLightOuterRadius: 2.84
+  m_PointLightInnerRadius: 0
+  m_PointLightOuterRadius: 2.21
   m_PointLightDistance: 3
   m_PointLightQuality: 1
   m_ShapeLightParametricSides: 5
@@ -72,7 +72,7 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
---- !u!1 &6011192206105296956
+--- !u!1 &1878912171569068734
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -80,36 +80,36 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1827628160160024482}
-  - component: {fileID: 8680902638514523319}
+  - component: {fileID: 6072639336771682669}
+  - component: {fileID: 8548558876142210209}
   m_Layer: 0
-  m_Name: ML_1_light
+  m_Name: ML_3_light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1827628160160024482
+--- !u!4 &6072639336771682669
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6011192206105296956}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.26, z: 0}
+  m_GameObject: {fileID: 1878912171569068734}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9159330509525555035}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8680902638514523319
+--- !u!114 &8548558876142210209
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6011192206105296956}
+  m_GameObject: {fileID: 1878912171569068734}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
@@ -118,10 +118,10 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
-  m_Color: {r: 0.9137255, g: 0.3372549, b: 0.06666667, a: 1}
-  m_Intensity: 4.47
+  m_Color: {r: 0.9056604, g: 0.4841505, b: 0.15806337, a: 1}
+  m_Intensity: 3.97
   m_LightVolumeOpacity: 0
-  m_ApplyToSortingLayers: 00000000d99749ab035aa460975c99463d0378b8ab50480f61d9c12ea5dc03589508b7385b7e6d708977b1d8
+  m_ApplyToSortingLayers: 00000000d99749ab035aa460975c9946ab50480f61d9c12ea5dc03589508b7385b7e6d708977b1d88119c6fc
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 1
   m_LightOrder: 0
@@ -130,9 +130,9 @@ MonoBehaviour:
   m_ShadowVolumeIntensity: 0
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 1.2
-  m_PointLightOuterRadius: 3.36
-  m_PointLightDistance: 1.44
+  m_PointLightInnerRadius: 1.95
+  m_PointLightOuterRadius: 4.76
+  m_PointLightDistance: 2.06
   m_PointLightQuality: 1
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
@@ -175,8 +175,8 @@ Transform:
   m_LocalPosition: {x: -141.67627, y: -18.118982, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1827628160160024482}
-  - {fileID: 4981426157450283590}
+  - {fileID: 6072639336771682669}
+  - {fileID: 4101377142855010928}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -199,7 +199,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 1310bcc1fe3b22f43841794aa0a74307, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -221,7 +221,7 @@ SpriteRenderer:
   m_SortingLayer: -8
   m_SortingOrder: 0
   m_Sprite: {fileID: -4325692531201845061, guid: 0e962d372009a604b9b58417b8c68fdc, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.91764706, g: 0.8117647, b: 0.69803923, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

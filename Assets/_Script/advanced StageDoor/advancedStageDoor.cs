@@ -19,6 +19,13 @@ public class advancedStageDoor : MonoBehaviour
 
     Vector2 initialPos; //맨 처음 초기화 할 위치
 
+    public bool isOnSideStage;
+    [SerializeField] int doorNum; //1부터 시작
+    //이 stageDoor가 side stage내에 있는지의 여부 체크 ~> 해당 번호의 sideStage가 활성화되어 있을 때에만 열린 상태로 존재
+
+    public bool disposable; 
+    //이 조건이 설정된 문은 사이드 스테이지 내의 퍼즐기믹에 포함된 문으로 리스폰할 때 마다 '매번' 원 상태로 초기화된다
+
     private void Awake()
     {
         spr = GetComponent<SpriteRenderer>();
@@ -26,37 +33,70 @@ public class advancedStageDoor : MonoBehaviour
     }
     void Start()
     {
-        if (GameManager.instance.gameData.curAchievementNum > doorActiveThreshold) //만약 이미 열린 문이면 
+        initialPos = transform.localPosition;
+
+        if (disposable)
         {
-            if (doorType == 1) //버튼 누르면 올라가는 문 ~> 올라간 채로 있어야 함
+            if(doorType == 1)
+            {
+                spr.sprite = spritesGroup[3];
+                spikeColl.SetActive(true);
+            }
+
+            else if(doorType == 2)
             {
                 spr.sprite = spritesGroup[0];
+                spikeColl.SetActive(false);
+            }
+        }
+
+        else if (isOnSideStage) //사이드스테이지 unlock 여부 결정하는 문
+        {
+            if (GameManager.instance.gameData.sideStageUnlock[doorNum - 1]) //해당 사이드스테이지가 이미 unlock 된 상태면
+            {
+                spr.sprite = spritesGroup[0]; //문은 이미 올라가 있어야 함
                 transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + doorLength, 0);
                 spikeColl.SetActive(false);
             }
-            else //콜라이더 반응하면 내려오는 문 ~> 내려온 채로 있어야 함
-            {
-                spr.sprite = spritesGroup[3];
-                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - doorLength, 0);
-                spikeColl.SetActive(true);
-            }
-        }
-
-        else
-        {
-            if (doorType == 1)
-            {
-                spr.sprite = spritesGroup[3];
-                spikeColl.SetActive(true);
-            }
             else
             {
-                spr.sprite = spritesGroup[0];
-                spikeColl.SetActive(false);
+                //해당 스테이지가 아직 unlock되지 않은상태면 문은 내려온 상태로 있어야 함
+                spr.sprite = spritesGroup[3];
+                spikeColl.SetActive(true);
             }
         }
+        else //일반적인 메인 스테이지 내에 있는 문
+        {
+            if (GameManager.instance.gameData.curAchievementNum > doorActiveThreshold) //만약 이미 열린 문이면 
+            {
+                if (doorType == 1) //버튼 누르면 올라가는 문 ~> 올라간 채로 있어야 함
+                {
+                    spr.sprite = spritesGroup[0];
+                    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + doorLength, 0);
+                    spikeColl.SetActive(false);
+                }
+                else //콜라이더 반응하면 내려오는 문 ~> 내려온 채로 있어야 함
+                {
+                    spr.sprite = spritesGroup[3];
+                    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - doorLength, 0);
+                    spikeColl.SetActive(true);
+                }
+            }
 
-            initialPos = transform.localPosition;
+            else
+            {
+                if (doorType == 1)
+                {
+                    spr.sprite = spritesGroup[3];
+                    spikeColl.SetActive(true);
+                }
+                else
+                {
+                    spr.sprite = spritesGroup[0];
+                    spikeColl.SetActive(false);
+                }
+            }
+        }       
     }
 
     void Update()

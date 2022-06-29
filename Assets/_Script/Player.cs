@@ -20,6 +20,9 @@ public class Player : MonoBehaviour
     [SerializeField] float windForce; // Stage3의 바람에 의해 받는 힘
     [SerializeField] float slidingDegree; // Stage6의 얼음 위에서 미끄러지는 정도
 
+    public bool isPlayerInSideStage; 
+    //플레이어가 사이드 스테이지 내에 있을 때는 죽고 나면 별도의 respawnPos에서 새로 부활
+
     // 플레이의 상태는 Finite State Machine으로 관리
     public enum States
     {
@@ -855,7 +858,7 @@ public class Player : MonoBehaviour
 
     void Die()
     {
-        GameManager.instance.shouldStartAtSavePoint = true; //죽으면 일단 세이브포인트에 시작해야 함 
+        GameManager.instance.shouldStartAtSavePoint = true; //죽으면 일단 세이브포인트에서 시작해야 함 
         UIManager.instance.FadeOut();
     }
 

@@ -16,4 +16,6 @@ public class GameData
     public Vector2[] storedPos {get; set;}    
     public int curAchievementNum {get; set;}
     public int curStageNum {get; set;}
+
+    public bool[] sideStageUnlock { get; set; } //true이면 sideStage 활성화시킨 것
 }

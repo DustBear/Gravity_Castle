@@ -20,6 +20,7 @@ public class Door : MonoBehaviour
 
     GameObject player;
     SpriteRenderer sprite;
+    [SerializeField] float doorColliderForce;
 
     void Awake()
     {
@@ -84,4 +85,5 @@ public class Door : MonoBehaviour
         gameObject.SetActive(false); //끝나면 문 비활성화            
     }
 
+    
 }
