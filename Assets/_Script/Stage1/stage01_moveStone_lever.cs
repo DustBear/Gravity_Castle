@@ -25,7 +25,7 @@ public class stage01_moveStone_lever : MonoBehaviour
             StartCoroutine("spriteAni"); //작동여부에 상관없이 레버 애니메이션은 작동
             if (moveStone.GetComponent<Rigidbody2D>().velocity.magnitude <= 0.05f) //돌이 바닥에 정지해 있을 때만 작동 가능
             {
-                moveStoneScript.shouldStoneMove = true;
+                moveStoneScript.shouldStoneStart = true;
             }
         }
     }

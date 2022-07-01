@@ -44,7 +44,7 @@ public class EnemyShot : MonoBehaviour
             if (other.collider.tag == "Player" && rayHitPlayerUp.collider == null)
             {
                 GameManager.instance.shouldStartAtSavePoint = true;
-                UIManager.instance.FadeOut();
+                UIManager.instance.FadeOut(1f);
             }
         }
     }

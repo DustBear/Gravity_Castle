@@ -12,25 +12,32 @@ public class stage1_side1_moveStone : MonoBehaviour
     [SerializeField] Vector3 startPos;
     [SerializeField] Vector3 finishPos;
     [SerializeField] GameObject fallingSensor;
-    
 
+    public bool shouldStoneStart;
     public bool shouldStoneMove;
     public bool shouldStoneFall;
     Rigidbody2D rigid;
 
     public GameObject moveStoneGear;
+    [SerializeField] float fallDelay;
 
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
+        shouldStoneStart = false;
         shouldStoneMove = false;
-        shouldStoneFall = false;
 
+        moveTime = moveTime - 0.82f;
         moveSpeed = (finishPos - startPos).magnitude / moveTime; //moveSpeed는 moveTime에 따라 달라진다 
     }
 
     void Update()
     {
+        fallDelay += Time.deltaTime;
+        if (shouldStoneStart)
+        {
+            StartCoroutine(stoneStart());
+        }
         if (shouldStoneMove)
         {
             stoneMove();
@@ -41,6 +48,22 @@ public class stage1_side1_moveStone : MonoBehaviour
         }
     }
 
+    IEnumerator stoneStart()
+    {
+        shouldStoneStart = false;
+     
+        transform.position += new Vector3(0, 0.05f, 0);
+        yield return new WaitForSeconds(0.08f);
+        transform.position += new Vector3(0, -0.05f, 0);
+        yield return new WaitForSeconds(0.08f);
+        transform.position += new Vector3(0, 0.05f, 0);
+        yield return new WaitForSeconds(0.08f);
+        transform.position += new Vector3(0, -0.05f, 0);
+        yield return new WaitForSeconds(0.08f);
+
+        yield return new WaitForSeconds(0.5f); //레버를 당기고 0.82초가 지나야 돌이 움직이기 시작
+        shouldStoneMove = true;
+    }
     void stoneMove()
     {
         rigid.velocity = transform.up * moveSpeed;
@@ -57,11 +80,11 @@ public class stage1_side1_moveStone : MonoBehaviour
             transform.position = finishPos;
             moveStoneGear.transform.rotation = Quaternion.Euler(0, 0, 0);
 
-            StartCoroutine("stoneShake");
+            StartCoroutine("stoneFloat");
         }
     }
     
-    IEnumerator stoneShake() //stone이 공중에 머무른 상태에서 흔들리다가 다시 떨어짐
+    IEnumerator stoneFloat() //stone이 공중에 머무른 상태에서 잠시 머무르다가 떨어짐
     {
         for (int index = 1; index <= 4; index++) //4번 반시계방향으로 90도씩 회전한 뒤 낙하
         {
@@ -75,26 +98,32 @@ public class stage1_side1_moveStone : MonoBehaviour
         }
 
         shouldStoneFall = true;
-        rigid.bodyType = RigidbodyType2D.Dynamic;
+        fallDelay = 0; //타이머 초기화 
     }
  
     void stoneFall()
     {
-        rigid.velocity = new Vector3(0, rigid.velocity.y, 0); //양 옆으로 이동하지 않도록 제어 
-        if(rigid.velocity.y >= limitSpeed)
+        if (rigid.velocity.y <= -limitSpeed) //속도 상한에 도달하면 속도 고정 
         {
-            rigid.velocity = new Vector3(0, -limitSpeed, 0);
+            rigid.velocity = -transform.up * limitSpeed;
         }
-    }
+        else
+        {
+            float fallSpeed = 4.9f * fallDelay; //가속도 9.8인 등가속도운동(1/2*t^2에 비례)
+            rigid.velocity = -transform.up * fallSpeed;
+        }
+        
+        
+        Vector3 toStartPos = startPos - transform.position;
+        Vector3 toFinishPos = finishPos - transform.position;
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.gameObject== fallingSensor && shouldStoneFall) //낙하하다가 fallingSensor에 닿으면
+        if ((Vector3.Dot(toStartPos, toFinishPos) > 0) && rigid.velocity.magnitude > 0)
+        //stone으로부터 finishPos 까지의 벡터의 방향이 stone-startPos 벡터의 방향과 같고 stone의 속도가 0이상이면 목표지점에 도착한것으로 봄
         {
             shouldStoneFall = false;
             rigid.velocity = Vector3.zero;
             transform.position = startPos;
-            rigid.bodyType = RigidbodyType2D.Kinematic;
+            moveStoneGear.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 }

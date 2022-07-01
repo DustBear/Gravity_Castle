@@ -10,7 +10,7 @@ public class RayCastStone : MonoBehaviour
         if (rayHit.collider != null)
         {
             GameManager.instance.shouldStartAtSavePoint = true;
-            UIManager.instance.FadeOut();
+            UIManager.instance.FadeOut(1f);
         }
     }
 }

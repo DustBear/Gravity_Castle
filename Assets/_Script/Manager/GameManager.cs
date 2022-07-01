@@ -36,6 +36,7 @@ public class GameManager : Singleton<GameManager>
     // 6) Stage8의 절벽 확인 여부
     [HideInInspector] public bool isCliffChecked = false;
 
+
     const string GameDataFileName = "GameData.json";
     public GameData gameData {get; private set;}
 
@@ -84,7 +85,7 @@ public class GameManager : Singleton<GameManager>
         //현재 위치한 scene의 번호에 따라 목표 bgm index가 변화함
         if (sceneNum == 0) purposeBgmIndex = 9; //메인메뉴 bgm은 index 9 
         else if (1 <= sceneNum && sceneNum < 4) purposeBgmIndex = 0; //stage0
-        else if ((4 <= sceneNum && sceneNum < 7) || (sceneNum==26)) purposeBgmIndex = 1; //stage1
+        else if ((4 <= sceneNum && sceneNum < 7) || (sceneNum==26) || (sceneNum==27)) purposeBgmIndex = 1; //stage1
         else if (7 <= sceneNum && sceneNum < 10) purposeBgmIndex = 2; //stage2
         else if (10 <= sceneNum && sceneNum < 12) purposeBgmIndex = 3; //stage3
         else if (12 <= sceneNum && sceneNum < 14) purposeBgmIndex = 4; //stage4

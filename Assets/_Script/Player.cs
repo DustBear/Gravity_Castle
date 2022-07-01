@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        UIManager.instance.FadeIn();
+        UIManager.instance.FadeIn(1f);
 
         // 각 State로 넘어가기 위한 기본 조건
         readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //땅이나 점프강화발판 둘 다에 닿아있지 않을 때 
@@ -784,7 +784,7 @@ public class Player : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other)
     {
         // 모든 스테이지에서 Spike와 부딫히면 사망
-        if (other.gameObject.CompareTag("Spike")) Die();
+        if (other.gameObject.CompareTag("Spike")) StartCoroutine(Die());
 
         switch (GameManager.instance.gameData.curStageNum)
         {
@@ -792,11 +792,11 @@ public class Player : MonoBehaviour
                 // 스테이지 2: Cannon, Arrow와 부딫히면 사망
                 // 스테이지 6: 떨어지는 Fire와 부딫히면 사망
                 // 스테이지 7: Bullet과 부딫히면 사망
-                if (other.gameObject.CompareTag("Projectile")) Die();
+                if (other.gameObject.CompareTag("Projectile")) StartCoroutine(Die());
                 break;
             case 8:
                 // 스테이지 8: Devil, Devil이 쏘는 레이저와 부딫히면 사망
-                if (other.collider.CompareTag("Devil") || other.collider.CompareTag("Projectile")) Die();
+                if (other.collider.CompareTag("Devil") || other.collider.CompareTag("Projectile")) StartCoroutine(Die());
                 break;
         }
     }
@@ -823,11 +823,11 @@ public class Player : MonoBehaviour
                 break;
             case 4:
                 // 스테이지 4 : 투명하지 않은 Ghost와 부딫히면 사망
-                if (other.CompareTag("Ghost") && other.GetComponent<SpriteRenderer>().color.a != 0f) Die();
+                if (other.CompareTag("Ghost") && other.GetComponent<SpriteRenderer>().color.a != 0f) StartCoroutine(Die());
                 break;
             case 6:
                 // 스테이지 6 : 얼음 위에 있는 Fire와 부딫히면 사망
-                if (other.CompareTag("Fire")) Die();
+                if (other.CompareTag("Fire")) StartCoroutine(Die());
                 break;
         }
     }
@@ -856,10 +856,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Die()
+    IEnumerator Die()
     {
         GameManager.instance.shouldStartAtSavePoint = true; //죽으면 일단 세이브포인트에서 시작해야 함 
-        UIManager.instance.FadeOut();
+        UIManager.instance.FadeOut(1f); //화면 어두워지고
+        yield return new WaitForSeconds(1f);
+
+        GameManager.instance.StartGame(false); //새로 재시작 
     }
 
     void HorizontalMove()

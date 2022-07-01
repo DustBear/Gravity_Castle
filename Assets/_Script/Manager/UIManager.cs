@@ -14,12 +14,10 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] GameObject textObj;
     IEnumerator fadeCoroutine;
 
-    [SerializeField] float fadeDelay; //화면 밝아지거나 어두워지는데 걸리는 시간 
-
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        fadeCoroutine = _FadeIn();
+        fadeCoroutine = _FadeIn(1f);
 
         //게임 시작하면 UI 메뉴는 전부 끄고 시작하기 
         inGameMenu.SetActive(false);
@@ -28,50 +26,46 @@ public class UIManager : Singleton<UIManager>
     }
 
     // Fade in과 Fade out이 동시에 실행될 수 없게 하였음
-    public void FadeIn()
+    public void FadeIn(float fadeTime)
     {
         StopCoroutine(fadeCoroutine);
-        fadeCoroutine = _FadeIn();
+        fadeCoroutine = _FadeIn(fadeTime);
         StartCoroutine(fadeCoroutine);
     }
 
-    public void FadeOut()
+    public void FadeOut(float fadeTime)
     {
         StopCoroutine(fadeCoroutine);
-        fadeCoroutine = _FadeOut();
+        fadeCoroutine = _FadeOut(fadeTime);
         StartCoroutine(fadeCoroutine);
     }
 
-    IEnumerator _FadeIn()
+    IEnumerator _FadeIn(float delayTime)
     {
-        var wait = new WaitForSeconds(fadeDelay/20);
+        var wait = new WaitForSeconds(delayTime/50);
         Color color = fade.color;
         color.a = 1f;
         fade.color = color; 
         while (color.a > 0f)
         {
-            color.a -= 0.05f;
+            color.a -= 0.02f;
             fade.color = color;
             yield return wait;
         }
     }
 
-    IEnumerator _FadeOut()
+    IEnumerator _FadeOut(float delayTime)
     {
-        InputManager.instance.isInputBlocked = true;
-
-        var wait = new WaitForSeconds(0.1f);
+        var wait = new WaitForSeconds(delayTime/50);
+        Color color = fade.color;
         while (fade.color.a < 1f)
-        {
-            Color color = fade.color;
-            color.a += 0.05f;
+        {           
+            color.a += 0.02f;
             fade.color = color;
             yield return wait;
         }
-
-        GameManager.instance.StartGame(false);
     }
-
+   
     public void OnOffInGameMenu() //메뉴창이 켜져있으면 끄고 꺼져있으면 킨다 
     {
         inGameMenu.SetActive(!inGameMenu.activeSelf);
