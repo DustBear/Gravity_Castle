@@ -10,8 +10,14 @@ public class stage01_side2_moveWall : MonoBehaviour
     public int curPos; //현재 stone의 위치가 어디인지 
     public int initialPos; //시작할 때의 위치 
     public bool isMoving; //움직이고 있는 동안은 레버 조작x 
+
+    public Sprite[] spriteGroup;
+    SpriteRenderer spr;
     void Start()
     {
+        spr = GetComponent<SpriteRenderer>();
+        spr.sprite = spriteGroup[0];
+
         switch (initialPos)
         {
             case 1:
@@ -39,6 +45,25 @@ public class stage01_side2_moveWall : MonoBehaviour
         }
     }
 
+    IEnumerator moveAni_right()
+    {
+        //moveTime 동안 4바퀴 회전(시계방향)
+        for(int index=1; index<=20; index++)
+        {
+            spr.sprite = spriteGroup[index % 5];
+            yield return new WaitForSeconds(moveTime / 19);
+        }
+    }
+    IEnumerator moveAni_left()
+    {
+        //moveTime 동안 4바퀴 회전(반시계방향)
+        for (int index = 20; index >= 1; index--)
+        {
+            spr.sprite = spriteGroup[index % 5];
+            yield return new WaitForSeconds(moveTime / 19);
+        }
+    }
+
     IEnumerator stoneMoveCor(int dirPos) //dirPos=1,2 중 한 군데로 이동 
     {
         isMoving = true;
@@ -61,6 +86,16 @@ public class stage01_side2_moveWall : MonoBehaviour
         }
 
         float frameTime = moveTime / 100;
+        switch (dirPos) //기어 돌아가는 애니메이션 실행 
+        {
+            case 1:
+                StartCoroutine(moveAni_right());
+                break;
+            case 2:
+                StartCoroutine(moveAni_left());
+                break;
+        }
+
         for(int index=1; index<=100; index++)
         {
             transform.position += (direction*distance)/100;

@@ -21,9 +21,11 @@ public class stage1_side1_moveStone : MonoBehaviour
     public GameObject moveStoneGear;
     [SerializeField] float fallDelay;
 
+
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
+
         shouldStoneStart = false;
         shouldStoneMove = false;
 

@@ -97,6 +97,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         UIManager.instance.FadeIn(1f);
+        Debug.Log(GameManager.instance.gameData.respawnGravityDir);
 
         // 각 State로 넘어가기 위한 기본 조건
         readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //땅이나 점프강화발판 둘 다에 닿아있지 않을 때 

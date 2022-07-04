@@ -8,6 +8,8 @@ public class advancedStageDoor_button : MonoBehaviour
     [SerializeField] bool isActived; //버튼이 이미 작동했는지의 여부
     public int activeThreshold; //플레이어의 achieveNum 이 이 숫자 '초과' 이면 비활성화한다.   
 
+    public GameObject CollGuard;
+
     public GameObject stageDoor; //이 버튼이 제어할 스테이지 문
 
     public bool isOnSideStage;
@@ -64,9 +66,17 @@ public class advancedStageDoor_button : MonoBehaviour
             return; //이미 작동한 버튼이면 다시 눌러도 무시해야 함
         }
         
-        if (collision.gameObject.tag == "Player" && collision.transform.rotation == transform.rotation) //플레이어가 버튼을 누르고 동시에 회전각도 같아야 작동 가능
+        if (collision.gameObject.tag == "Player" && collision.transform.up == transform.up) //플레이어가 버튼을 누르고 동시에 회전각도 같아야 작동 가능
         {
             isActived = true;
+            GetComponent<BoxCollider2D>().enabled = false; //작동된 버튼은 걸리적거리지 않게 콜라이더 끄기 
+            CollGuard.SetActive(false);
+
+            if (isOnSideStage)
+            {
+                GameManager.instance.gameData.sideStageUnlock[doorNum - 1] = true; //사이드 스테이지 입구로 들어가는 문을 열면 unlock 됨
+            }         
+            //이후 수정 필요 
             StartCoroutine("buttonMove");
             stageDoor.GetComponent<advancedStageDoor>().doorMove();
         }

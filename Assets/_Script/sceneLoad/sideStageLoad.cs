@@ -19,6 +19,7 @@ public class sideStageLoad : MonoBehaviour
     [SerializeField] float doorShakeSize; //문이 좌우로 흔들릴 때의 진폭 
 
     bool isSensorActive; //플레이어가 센서 내에 있는지의 여부 
+    public bool isCorActive; //코루틴 실행중에는 새로 실행 x 
     private void Awake()
     {
         player = GameObject.Find("Player");
@@ -26,19 +27,22 @@ public class sideStageLoad : MonoBehaviour
     }
     void Start()
     {
-        
+        isCorActive = false;
     }
 
     void Update()
     {
         if(isSensorActive && Input.GetKeyDown(KeyCode.E))
         {
+            if (isCorActive) return;
             StartCoroutine("doorOpen");
         }
     }
 
     IEnumerator doorOpen()
     {
+        isCorActive = true;
+
         //문이 좌우로 흔들림
         for(int index=1; index<=3; index++)
         {
@@ -63,6 +67,8 @@ public class sideStageLoad : MonoBehaviour
 
         UIManager.instance.FadeOut(1f);
         yield return new WaitForSeconds(1f);
+        isCorActive = false;
+
         loadSideStage();
     }
 
@@ -77,6 +83,7 @@ public class sideStageLoad : MonoBehaviour
 
         GameManager.instance.gameData.respawnScene = sceneNum;
         GameManager.instance.gameData.respawnPos = spawnPos;
+        GameManager.instance.gameData.respawnGravityDir = spawnDir;
 
         SceneManager.LoadScene(GameManager.instance.nextScene);
     }
