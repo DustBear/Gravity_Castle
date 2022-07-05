@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: stage01_waterFall 2
+  m_Shader: {fileID: -6465566751694194690, guid: e402cbb2d0e2723468eb0988aeace0d9, type: 3}
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_852823b8fbe34cada47ef24c4c63aecf:
+        m_Texture: {fileID: 2800000, guid: f01195238eb03f7449d496fc45225f63, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_052a28051a9d489da3b82b76fb2e3c5f: 1.54
+    - Vector1_10b3fb8b756d4e8bb42b81e68dc5b679: 2
+    - Vector1_1dbe78e6deaf4aebb25eb5e6cf2817a1: 1.82
+    - Vector1_55d198d0c0fc429f8ca66a5c9f2ea7db: 0.825
+    - Vector1_8967a0aad0c04d0cb7a42db465433ef0: 0
+    - Vector1_94a84aa42a57486eb285262b32949336: 0.05
+    - Vector1_b32d2787a0c24fe69f88c639de94eae1: 0.22
+    m_Colors:
+    - Vector2_8c03cc3fbdb74203ad90a5eb384fcb38: {r: 0.05, g: 0.025, b: 0, a: 0}
+  m_BuildTextureStacks: []
