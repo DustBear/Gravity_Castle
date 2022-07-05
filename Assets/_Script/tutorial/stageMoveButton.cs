@@ -27,14 +27,22 @@ public class stageMoveButton : MonoBehaviour
     [SerializeField] bool shouldButtonWork; 
     //이 스테이지로 이동할 수 있도록 해야 하는가 ~> 현재 GameData 상에서 이 시점까지 깨지 못했다면 버튼 비활성화해야 함
 
-    void Start()
-    {        
-        
+    Button button;
+
+    void Awake()
+    {
+        button = GetComponent<Button>();
     }
-      
-    void Update()
-    {       
-        
+
+    void Start()
+    {
+        if (GameManager.instance.gameData.finalStageNum >= stageNum)
+        {
+            button.interactable = true;
+            var colors = button.colors;
+            colors.normalColor = new Color(1f, 1f, 1f, 1f);
+            button.colors = colors;
+        }
     }
 
     public void Onclick() //이 버튼을 클릭하면

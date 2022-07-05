@@ -1049,7 +1049,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 391614508}
-        m_TargetAssemblyTypeName: Test, Assembly-CSharp
+        m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 1
         m_Arguments:
@@ -1107,13 +1107,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 391614503}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
+  m_Script: {fileID: 11500000, guid: 929c9ab6756131242a33d83b7d78f9f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curStageNum: 0
-  nextScene: 1
-  nextPos: {x: -17.5, y: -5.5}
-  nextGravityDir: {x: 0, y: -1}
 --- !u!1 &417973693
 GameObject:
   m_ObjectHideFlags: 0
@@ -1313,13 +1309,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 421734046}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
+  m_Script: {fileID: 11500000, guid: 89b347956de5dcc48a184d3f04446514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curStageNum: 0
-  nextScene: 1
-  nextPos: {x: 0, y: 0}
-  nextGravityDir: {x: 0, y: -1}
+  saveFileNum: 0
 --- !u!114 &421734049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1365,7 +1358,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 421734048}
-        m_TargetAssemblyTypeName: Test, Assembly-CSharp
+        m_TargetAssemblyTypeName: SaveFileButton, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 1
         m_Arguments:
@@ -1584,13 +1577,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 648640422}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
+  m_Script: {fileID: 11500000, guid: 89b347956de5dcc48a184d3f04446514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curStageNum: 0
-  nextScene: 1
-  nextPos: {x: 0, y: 0}
-  nextGravityDir: {x: 0, y: -1}
+  saveFileNum: 3
 --- !u!114 &648640425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1636,7 +1626,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 648640424}
-        m_TargetAssemblyTypeName: Test, Assembly-CSharp
+        m_TargetAssemblyTypeName: SaveFileButton, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 1
         m_Arguments:
@@ -2037,13 +2027,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 798383852}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
+  m_Script: {fileID: 11500000, guid: 89b347956de5dcc48a184d3f04446514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curStageNum: 0
-  nextScene: 1
-  nextPos: {x: 0, y: 0}
-  nextGravityDir: {x: 0, y: -1}
+  saveFileNum: 1
 --- !u!114 &798383855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2089,7 +2076,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 798383854}
-        m_TargetAssemblyTypeName: Test, Assembly-CSharp
+        m_TargetAssemblyTypeName: SaveFileButton, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 1
         m_Arguments:
@@ -2842,6 +2829,7 @@ GameObject:
   - component: {fileID: 1155342119}
   - component: {fileID: 1155342118}
   - component: {fileID: 1155342117}
+  - component: {fileID: 1155342120}
   m_Layer: 5
   m_Name: LoadGameButton
   m_TagString: Untagged
@@ -2891,10 +2879,10 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0.23529412}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.23529412}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 0.23529412}
-    m_SelectedColor: {r: 1, g: 1, b: 1, a: 0.23529412}
-    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0.5019608}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.7058824}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_SelectedColor: {r: 1, g: 1, b: 1, a: 0.47058824}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0.23529412}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -2908,11 +2896,23 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1155342118}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1155342120}
+        m_TargetAssemblyTypeName: Load, Assembly-CSharp
+        m_MethodName: OnClickButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1155342118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2951,6 +2951,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1155342115}
   m_CullTransparentMesh: 1
+--- !u!114 &1155342120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155342115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe5c3e7456550042b8362f21b936176, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadMenu: {fileID: 1222723488}
 --- !u!1 &1207353710
 GameObject:
   m_ObjectHideFlags: 0
@@ -3692,13 +3705,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1349363601}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28f2461658be9c34db872b29663a6172, type: 3}
+  m_Script: {fileID: 11500000, guid: 89b347956de5dcc48a184d3f04446514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curStageNum: 0
-  nextScene: 1
-  nextPos: {x: 0, y: 0}
-  nextGravityDir: {x: 0, y: -1}
+  saveFileNum: 2
 --- !u!114 &1349363604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3744,7 +3754,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1349363603}
-        m_TargetAssemblyTypeName: Test, Assembly-CSharp
+        m_TargetAssemblyTypeName: SaveFileButton, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 1
         m_Arguments:

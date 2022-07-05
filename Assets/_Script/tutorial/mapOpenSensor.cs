@@ -117,6 +117,13 @@ public class mapOpenSensor : MonoBehaviour
         if(isSensorOn && Input.GetKeyDown(KeyCode.E))
         {
             mapCanvas.SetActive(true);
+
+            if (GameManager.instance.gameData.mapStageNum < GameManager.instance.gameData.finalStageNum)
+            {
+                GameManager.instance.gameData.mapStageNum = GameManager.instance.gameData.finalStageNum;
+                Debug.Log("지도 갱신");
+            }
+            
             InputManager.instance.isInputBlocked = true; //맵 메뉴 열려있는 동안은 플레이어 움직일 수 없음
 
             //스테이지 세이브포인트 아이콘 초기화 및 생성은 맵을 열 때마다 실행 

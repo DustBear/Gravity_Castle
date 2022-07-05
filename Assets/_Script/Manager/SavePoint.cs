@@ -19,13 +19,26 @@ public class SavePoint : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && 
-            transform.eulerAngles.z == player.eulerAngles.z && 
-            GameManager.instance.gameData.curAchievementNum == achievementNum - 1 || GameManager.instance.gameData.curStageNum == stageNum - 1)
+        GameData curGameData = GameManager.instance.gameData;
+        if (other.CompareTag("Player") && transform.eulerAngles.z == player.eulerAngles.z) //플레이어가 세이브포인트와 같은 angle을 가지고 있을 때
         {
-            Debug.Log("savePointBackUp: " + achievementNum);
-            //플레이어가 세이브포인트와 같은 angle을 가지고 있고, 플레이어가 이 세이브포인트의 바로 전 세이브포인트까지 활성화시켰을 때만 작동 
-            GameManager.instance.SaveData(achievementNum, stageNum, respawnPos);
+            if (stageNum == curGameData.curStageNum) // 세이브포인트의 stage와 저장된 stage가 같을 때
+            {
+                if (achievementNum == curGameData.curAchievementNum + 1)
+                {
+                    SaveData();
+                }
+            }
+            else if (achievementNum == 1)
+            {
+                SaveData();
+            }
         }
+    }
+
+    void SaveData()
+    {
+        Debug.Log("savePointBackUp: " + achievementNum);
+        GameManager.instance.SaveData(achievementNum, stageNum, respawnPos);
     }
 }

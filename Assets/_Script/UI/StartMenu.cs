@@ -116,19 +116,9 @@ public class StartMenu : MonoBehaviour
         }
     }
 
-    public void OnClickNewGame()
-    {
-        GameManager.instance.CheckSavedGame(false); //로드할 씬 없음 
-    }
-
     public void newStart() //스테이지1 이전에 튜토리얼이 삽입된 버전 
     {
         SceneManager.LoadScene(24); //튜토리얼은 24번째 씬 
-    }
-
-    public void OnClickLoadGame()
-    {
-        GameManager.instance.CheckSavedGame(true); //로드할 씬이 있음 
     }
 
     public void OnClickTutorial()

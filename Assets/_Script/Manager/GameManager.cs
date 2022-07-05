@@ -17,7 +17,7 @@ public class GameManager : Singleton<GameManager>
     public bool isStartWithFlipX; //플레이어가 씬을 시작할 때 어느 쪽을 바라봐야 하는지 결정
 
     // 2) Stage5의 밟으면 떨어지는 floor 
-    [SerializeField] int shakedFloorNum = 36;
+    [SerializeField] int shakedFloorNum = 35;
     [HideInInspector] public bool[] curIsShaked {get; set;}
 
     // 3) Stage6의 ice 
@@ -36,11 +36,15 @@ public class GameManager : Singleton<GameManager>
     // 6) Stage8의 절벽 확인 여부
     [HideInInspector] public bool isCliffChecked = false;
 
-    const string GameDataFileName = "GameData.json";
+    string[] gameDataFileNames = {"/GameData0.json", "/GameData1.json", "/GameData2.json", "/GameData3.json"};
+    [HideInInspector] public int curSaveFileNum; // 현재 실행중인 게임의 세이브파일 번호
+    public int saveFileCount; // 전체 세이브파일 수
     public GameData gameData {get; private set;}
+    public SaveFileSeq saveFileSeq {get; set;}
+    string saveFileSeqName = "/SaveFileSeq.json";
 
     [SerializeField] Vector2 firstStartPos; // 게임 시작 위치
-    [SerializeField] Vector2 firstRespawnPos; // 게임 시작하자마자 나가면 여기서 부활
+    [SerializeField] int firstScene;
 
     public AudioSource bgmMachine; //각 스테이지에 맞는 bgm 송출
     public AudioClip[] bgmGroup;
@@ -60,6 +64,18 @@ public class GameManager : Singleton<GameManager>
         curIsDetected = new bool[detectorNum];
         curIsGreen = new bool[buttonNum];
         curPos = new Vector2[buttonNum];
+
+        string filePath = Application.persistentDataPath + saveFileSeqName;
+        if (File.Exists(filePath))
+        {
+            string FromJsonData = File.ReadAllText(filePath);
+            saveFileSeq = JsonUtility.FromJson<SaveFileSeq>(FromJsonData);
+        }
+        else
+        {
+            saveFileSeq = new SaveFileSeq();
+            saveFileSeq.saveFileSeqList = new List<int>();
+        }
 
         gameData = new GameData();
         gameData.storedIsShaked = new bool[shakedFloorNum];
@@ -172,9 +188,48 @@ public class GameManager : Singleton<GameManager>
         isStartWithFlipX = false;
     }
 
+    // public bool CheckSavedGame(bool checkAll, int saveFileNum = 0)
+    // {
+    //     if (checkAll)
+    //     {
+    //         // SaveFile이 하나라도 존재하면 true 반환, 그렇지 않으면 false 반환
+    //         foreach (string gameDataFileName in gameDataFileNames)
+    //         {
+    //             string filePath = Application.persistentDataPath + gameDataFileName;
+    //             if (File.Exists(filePath))
+    //             {
+    //                 return true;
+    //             }
+    //         }
+    //         return false;
+    //     }
+    //     else
+    //     {
+    //         string filePath = Application.persistentDataPath + gameDataFileNames[saveFileNum];
+    //         if (File.Exists(filePath))
+    //         {
+    //             return true;
+    //         }
+    //         return false;
+    //     }
+    // }
+
+    public KeyValuePair<int, int> GetSavedData(int saveFileNum)
+    {
+        string filePath = Application.persistentDataPath + gameDataFileNames[saveFileNum];
+        if (File.Exists(filePath))
+        {
+            string FromJsonData = File.ReadAllText(filePath);
+            GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData);
+            return new KeyValuePair<int, int>(curGameData.curStageNum, curGameData.curAchievementNum);
+        }
+        return new KeyValuePair<int, int>(-1, -1);
+    }
+
+    /*
     public void CheckSavedGame(bool isLoadGame) //게임 씬 시작은 이 함수로 수행
     {
-        string filePath = Application.persistentDataPath + GameDataFileName;
+        string filePath = Application.persistentDataPath + gameDataFileNames;
         // New Game일 경우
         if (!isLoadGame)
         {
@@ -200,7 +255,7 @@ public class GameManager : Singleton<GameManager>
                 UIManager.instance.NoSavedGame(); //게임 불러오기 했는데 파일 경로에 아무것도 없을 경우에 경고메시지 출력 
             }
         }
-    }
+    }*/
 
     // Case 1) 메인메뉴에서 New Game을 눌렀을 시 호출됨
     // Case 2) 메인메뉴에서 Load Game을 눌렀을 시 호출됨 
@@ -210,10 +265,10 @@ public class GameManager : Singleton<GameManager>
     public void InitData(bool isLoadGame) //플레이에 필요한 데이터 초기화 or 불러오는 함수 
     {
         // Case 1
-        if (!shouldStartAtSavePoint) //스테이지1부터 시작
+        if (!shouldStartAtSavePoint) //스테이지0부터 시작
         {
             // 게임 시작 시 필요한 데이터 초기화
-            nextScene = 1;
+            nextScene = firstScene;
             nextPos = firstStartPos;
             nextGravityDir = Vector2.down; //시작하면 아래쪽 보도록 중력 적용
             nextState = Player.States.Walk; //맨 처음 시작할 때 플레이어의 상태는 walk
@@ -228,11 +283,11 @@ public class GameManager : Singleton<GameManager>
 
             // 리스폰 시 필요한 데이터 초기화
             // 게임 시작하자마자 나갔다가 다시 접속했을 시 load가 가능하도록
-            gameData.curAchievementNum = 0;
-            gameData.curStageNum = 1;
-            gameData.respawnScene = 1;
-            gameData.respawnPos = firstRespawnPos;
-            gameData.respawnGravityDir = Vector2.down;
+            gameData.curAchievementNum = 1;
+            gameData.curStageNum = 0;
+            gameData.respawnScene = nextScene;
+            gameData.respawnPos = nextPos;
+            gameData.respawnGravityDir = nextGravityDir;
             gameData.isCliffChecked = false;
             curIsShaked.CopyTo(gameData.storedIsShaked, 0);
             curIsMelted.CopyTo(gameData.storedIsMelted, 0);
@@ -242,7 +297,7 @@ public class GameManager : Singleton<GameManager>
 
             //데이터 저장 
             string ToJsonData = JsonUtility.ToJson(gameData);
-            string filePath = Application.persistentDataPath + GameDataFileName;
+            string filePath = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
             File.WriteAllText(filePath, ToJsonData);       
         }
 
@@ -252,7 +307,7 @@ public class GameManager : Singleton<GameManager>
             // Case 2인 경우, Json 파일의 데이터들을 모두 GameData class로 불러옴
             if (isLoadGame) //불러올 게임 데이터가 있으면 불러옴
             {
-                string filePath = Application.persistentDataPath + GameDataFileName;
+                string filePath = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
                 string FromJsonData = File.ReadAllText(filePath);
                 gameData = JsonUtility.FromJson<GameData>(FromJsonData);
             }
@@ -269,12 +324,14 @@ public class GameManager : Singleton<GameManager>
     // Save Point에 도달했을 시 호출됨
     public void SaveData(int achievementNum, int stageNum, Vector2 playerPos) 
         //게임 세이브는 세이브포인트에서 이루어짐. SavePoint에 닿을 때 마다 Json 파일에 데이터가 저장됨
-    {        
+    {
         gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //현재 씬에서 다시 부활해야 함
         gameData.respawnPos = playerPos;
 
         gameData.curAchievementNum = achievementNum;
         gameData.curStageNum = stageNum;
+        gameData.finalAchievementNum = Mathf.Max(gameData.finalAchievementNum, achievementNum);
+        gameData.finalStageNum = Mathf.Max(gameData.finalStageNum, stageNum);
         gameData.respawnGravityDir = Physics2D.gravity.normalized;
         gameData.isCliffChecked = isCliffChecked;
         curIsShaked.CopyTo(gameData.storedIsShaked, 0);
@@ -285,7 +342,14 @@ public class GameManager : Singleton<GameManager>
         
         // gameData class의 데이터들을 모두 Json 파일에 저장
         string ToJsonData = JsonUtility.ToJson(gameData);
-        string filePath = Application.persistentDataPath + GameDataFileName;
+        string filePath = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
+        File.WriteAllText(filePath, ToJsonData);
+    }
+
+    public void SaveSaveFileSeq()
+    {
+        string ToJsonData = JsonUtility.ToJson(saveFileSeq);
+        string filePath = Application.persistentDataPath + saveFileSeqName;
         File.WriteAllText(filePath, ToJsonData);
     }
 }

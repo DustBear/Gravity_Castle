@@ -94,6 +94,6 @@ public class tutorialMenu : MonoBehaviour
 
     public void startGame()
     {
-        GameManager.instance.CheckSavedGame(false); //새 게임 시작 
+        //GameManager.instance.CheckSavedGame(false); //새 게임 시작 
     }
 }
