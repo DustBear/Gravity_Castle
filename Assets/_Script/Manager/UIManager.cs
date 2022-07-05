@@ -28,6 +28,8 @@ public class UIManager : Singleton<UIManager>
     // Fade in과 Fade out이 동시에 실행될 수 없게 하였음
     public void FadeIn(float fadeTime)
     {
+        Debug.Log("fadeIn");
+
         StopCoroutine(fadeCoroutine);
         fadeCoroutine = _FadeIn(fadeTime);
         StartCoroutine(fadeCoroutine);
@@ -35,6 +37,8 @@ public class UIManager : Singleton<UIManager>
 
     public void FadeOut(float fadeTime)
     {
+        Debug.Log("fadeOut");
+
         StopCoroutine(fadeCoroutine);
         fadeCoroutine = _FadeOut(fadeTime);
         StartCoroutine(fadeCoroutine);

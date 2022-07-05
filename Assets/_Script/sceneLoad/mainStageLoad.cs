@@ -62,8 +62,10 @@ public class mainStageLoad : MonoBehaviour
             leftDoor.transform.localPosition += new Vector3(-0.03f, 0, 0);
             yield return new WaitForSeconds(doorOpenDelay / 50);
         }
+        yield return new WaitForSeconds(0.5f);
 
-        yield return new WaitForSeconds(1f);
+        UIManager.instance.FadeOut(1f); //페이드아웃 먼저 되고 나서 sideStage 로드함 
+        yield return new WaitForSeconds(1.5f);
         loadMainStage();
     }
 

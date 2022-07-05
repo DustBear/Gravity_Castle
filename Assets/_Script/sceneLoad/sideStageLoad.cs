@@ -65,8 +65,8 @@ public class sideStageLoad : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        UIManager.instance.FadeOut(1f);
-        yield return new WaitForSeconds(1f);
+        UIManager.instance.FadeOut(1f); //페이드아웃 먼저 되고 나서 sideStage 로드함 
+        yield return new WaitForSeconds(1.5f);
         isCorActive = false;
 
         loadSideStage();
