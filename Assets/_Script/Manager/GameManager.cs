@@ -87,10 +87,8 @@ public class GameManager : Singleton<GameManager>
         else if (1 <= sceneNum && sceneNum < 4) purposeBgmIndex = 0; //stage0
         else if ((4 <= sceneNum && sceneNum < 7) || (sceneNum==26) || (sceneNum==27)) purposeBgmIndex = 1; //stage1
         else if ((7 <= sceneNum && sceneNum < 10) || (sceneNum==28)) purposeBgmIndex = 2; //stage2
-        else if (10 <= sceneNum && sceneNum < 12) purposeBgmIndex = 3; //stage3
+        else if ((10 <= sceneNum && sceneNum < 12) || (sceneNum==29)) purposeBgmIndex = 3; //stage3
         else if (12 <= sceneNum && sceneNum < 14) purposeBgmIndex = 4; //stage4
-
-        else Debug.Log("error: there is no bgm");
 
         if(purposeBgmIndex != curBgmIndex) //현재 재생중인 bgm 인덱스와 목표 인덱스가 다름 ~> 씬이 바뀌었다는 뜻이므로 인덱스 바꿔줘야 함
         {
