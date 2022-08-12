@@ -17,7 +17,7 @@ public class FireLauncherLinear : MonoBehaviour
     void Update()
     {
         transform.position = Vector2.MoveTowards(transform.position, pos[targetPosIdx], speed[targetPosIdx] * Time.deltaTime);
-        GameManager.instance.gameData.storedPos[buttonNum] = transform.position;
+        //GameManager.instance.gameData.storedPos[buttonNum] = transform.position;
         if ((Vector2)transform.position == pos[targetPosIdx]) {
             targetPosIdx = (targetPosIdx + 1) % pos.Length;
         }

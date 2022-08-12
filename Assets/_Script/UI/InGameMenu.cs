@@ -10,6 +10,8 @@ public class InGameMenu : MonoBehaviour
     // 일시정지 해제 후 메인메뉴로
     public void OnClickExit()
     {
+        UIManager.instance.clickSoundGen();
+
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
 
@@ -25,6 +27,8 @@ public class InGameMenu : MonoBehaviour
 
     public void OnClickMainStage() //castleEnterance 맵으로 돌아감 
     {
+        UIManager.instance.clickSoundGen();
+
         Time.timeScale = 1f;
 
         GameManager.instance.gameData.curAchievementNum = 0;
@@ -33,12 +37,7 @@ public class InGameMenu : MonoBehaviour
         GameManager.instance.nextPos = boatPos;
         GameManager.instance.nextGravityDir = Vector2.down;
 
-        GameManager.instance.isCliffChecked = false;
-        for (int i = 0; i < 35; i++)
-        {
-            GameManager.instance.curIsShaked[i] = false;
-            GameManager.instance.gameData.storedIsShaked[i] = false;
-        }
+        
         GameManager.instance.shouldStartAtSavePoint = false;
         GameManager.instance.nextState = Player.States.Walk;
 

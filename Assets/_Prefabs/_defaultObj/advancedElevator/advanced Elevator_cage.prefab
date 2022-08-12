@@ -178,9 +178,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1886223963
+  m_SortingLayerID: -2056838877
   m_SortingLayer: -1
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 2692300202047032237, guid: 2e82752201bee7340bfc74627865e4fe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -218,6 +218,8 @@ MonoBehaviour:
   gear: {fileID: 4038668396303456406}
   gearAni: {fileID: 0}
   addForceDir: {x: 0, y: 0, z: 0}
+  bellEffect: {fileID: 8300000, guid: 04e2796de66a609489a20d7bea7a4415, type: 3}
+  elevatorEffect: {fileID: 8300000, guid: 8bd052f53f508e940b460b1256e8f7bb, type: 3}
 --- !u!61 &4038668396107618010
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -334,7 +336,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 256397483
+  m_SortingLayerID: -1200094403
   m_SortingLayer: -4
   m_SortingOrder: 2
   m_Sprite: {fileID: 4247361738204882261, guid: 567e820c6568d6746ae77fbcbb28b904, type: 3}
@@ -1358,7 +1360,7 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1886223963
+  m_SortingLayerID: -2056838877
   m_SortingLayer: -1
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
@@ -1495,9 +1497,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 256397483
-  m_SortingLayer: -4
-  m_SortingOrder: 1
+  m_SortingLayerID: -2056838877
+  m_SortingLayer: -1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 74778ac4fa1e2e840acf3f6404803325, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

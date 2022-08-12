@@ -8,6 +8,7 @@ public class doorSensor : MonoBehaviour
     public GameObject keyIcon;
     public GameObject door;
     bool isPlayerOn;
+    bool isDoorOpen;
 
     SpriteRenderer keySpr;
     [SerializeField] Sprite[] keySprites = new Sprite[5]; //0이 잠긴 자물쇠, 4이 완전히 열린 자물쇠
@@ -26,6 +27,11 @@ public class doorSensor : MonoBehaviour
 
         keyInitialPos = keyIcon.transform.position;
         isOntheAction = false;
+
+        if (GameManager.instance.gameData.curAchievementNum >= door.GetComponent<Door>().achievementNeeded)
+        {
+            isDoorOpen = true;
+        }
     }
 
     // Update is called once per frame
@@ -33,7 +39,9 @@ public class doorSensor : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && isPlayerOn) //플레이어가 센서 내에 들어와있는 상태에서 E를 누르면
         {
-            if (GameManager.instance.gameData.curAchievementNum == door.GetComponent<Door>().achievementNum - 1) //진행도상 문을 열어야 하는 상황이면
+            if (isDoorOpen) return;
+
+            if (GameManager.instance.gameData.curAchievementNum == door.GetComponent<Door>().achievementNeeded - 1) //진행도상 문을 열어야 하는 상황이면
             {
                 if (!isOntheAction)
                 {
@@ -52,7 +60,9 @@ public class doorSensor : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
-        {           
+        {
+            if (isDoorOpen) return;
+
             keyIcon.SetActive(true);
             isPlayerOn = true;
         }
@@ -62,6 +72,8 @@ public class doorSensor : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
+            if (isDoorOpen) return;
+
             keyIcon.SetActive(false);
             isPlayerOn = false;
         }

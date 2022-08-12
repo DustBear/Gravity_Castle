@@ -5,6 +5,7 @@ using MonsterLove.StateMachine;
 
 public class FloorShaking : MonoBehaviour
 {
+
     [SerializeField] int floorNum;
     [SerializeField] float shakeRange;
     [SerializeField] float shakeDuration;
@@ -44,10 +45,12 @@ public class FloorShaking : MonoBehaviour
     virtual protected void Start()
     {
         // 플랫폼이 사라진 상태로 게임이 저장되었다면 사라진 상태로 그대로 놔둠
+        /*
         if (GameManager.instance.curIsShaked[floorNum])
         {
             Destroy(gameObject);
         }
+        */
         fsm.ChangeState(States.Idle);
     }
 
@@ -74,7 +77,7 @@ public class FloorShaking : MonoBehaviour
 
         if (rayHitPlatform.collider != null)
         {
-            GameManager.instance.curIsShaked[floorNum] = true;
+            //GameManager.instance.curIsShaked[floorNum] = true;
             fsm.ChangeState(States.Wait);
         }
     }

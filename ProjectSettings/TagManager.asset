@@ -28,6 +28,7 @@ TagManager:
   - Fire
   - Door2
   - Door1
+  - windHome
   layers:
   - Default
   - TransparentFX
@@ -52,7 +53,7 @@ TagManager:
   - Arrow
   - lever
   - Bounce
-  - 
+  - prop
   - 
   - 
   - 
@@ -62,29 +63,11 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: sceneChangeBackground
-    uniqueID: 2719792075
-    locked: 0
   - name: stageStartPlayer
     uniqueID: 3003675569
     locked: 0
-  - name: openingSceneObject
-    uniqueID: 1364974663
-    locked: 0
-  - name: 'background door '
-    uniqueID: 168405233
-    locked: 0
   - name: Background
     uniqueID: 2873726937
-    locked: 0
-  - name: stage1_side2_waterFall
-    uniqueID: 3668381871
-    locked: 0
-  - name: stage3_backGear
-    uniqueID: 3735011759
-    locked: 0
-  - name: stage4_moss2
-    uniqueID: 3300406199
     locked: 0
   - name: Backwall
     uniqueID: 1621383683
@@ -92,44 +75,23 @@ TagManager:
   - name: fog02
     uniqueID: 3896935053
     locked: 0
-  - name: stage3_frontGear
-    uniqueID: 835008329
+  - name: object_playerBack_unlit
+    uniqueID: 1422954259
     locked: 0
-  - name: tutorial_boat
-    uniqueID: 494232749
-    locked: 0
-  - name: OutlineDetail
-    uniqueID: 1184455831
-    locked: 0
-  - name: lanton
+  - name: object_playerBack
     uniqueID: 3094872893
-    locked: 0
-  - name: stage4_moss1
-    uniqueID: 1142718821
     locked: 0
   - name: Rope
     uniqueID: 1476648101
     locked: 0
-  - name: ElevatorWall
-    uniqueID: 784456033
-    locked: 0
-  - name: KeyBox
-    uniqueID: 256397483
-    locked: 0
   - name: Player
     uniqueID: 3318942427
     locked: 0
-  - name: Key
-    uniqueID: 951519381
-    locked: 0
-  - name: Elevator
-    uniqueID: 1886223963
+  - name: object_playerFront
+    uniqueID: 2238128419
     locked: 0
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: door
-    uniqueID: 1498507881
     locked: 0
   - name: fog01
     uniqueID: 4240841089

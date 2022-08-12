@@ -12,17 +12,21 @@ public class advancedStageDoor : MonoBehaviour
 
     public float doorLength; //stageDoor의 길이(3,4,5): 문은 이 숫자만큼 위로 올라가야 함
     public float doorPeriod; //문이 완전히 올라가고/닫히는 데 걸리는 시간
-    public int doorActiveThreshold; //플레이어의 achieveNum 이 이 숫자 '초과' 이면 비활성화한다.    
+    public GameObject thresholdPoint; //씬을 활성화한 시점에 이 savePoint/key 를 획득했으면 문이 열린 상태로 유지
+    private int doorActiveThreshold;
+    public int DoorActiveTrheshold
+    {
+        get 
+        {
+            return doorActiveThreshold;
+        }
+    }
 
     SpriteRenderer spr;
     AudioSource sound;
 
     Vector2 initialPos; //맨 처음 초기화 할 위치
-
-    public bool isOnSideStage;
-    [SerializeField] int doorNum; //1부터 시작
-    //이 stageDoor가 side stage내에 있는지의 여부 체크 ~> 해당 번호의 sideStage가 활성화되어 있을 때에만 열린 상태로 존재
-
+    
     public bool disposable; 
     //이 조건이 설정된 문은 사이드 스테이지 내의 퍼즐기믹에 포함된 문으로 리스폰할 때 마다 '매번' 원 상태로 초기화된다
 
@@ -30,8 +34,12 @@ public class advancedStageDoor : MonoBehaviour
     {
         spr = GetComponent<SpriteRenderer>();
         sound = GetComponent<AudioSource>();
+        if(thresholdPoint.gameObject != null)//disposable 로 설정된 문은 따로 thresholdPoint 가 없다 
+        {
+            doorActiveThreshold = thresholdPoint.GetComponent<SavePoint>().achievementNum;
+        }      
     }
-    void Start()
+    void Start() //door 는 localPos 를 기준으로 움직임: 회전은 stageDoor 그룹 자체에 줘야 함 
     {
         initialPos = transform.localPosition;
 
@@ -48,26 +56,10 @@ public class advancedStageDoor : MonoBehaviour
                 spr.sprite = spritesGroup[0];
                 spikeColl.SetActive(false);
             }
-        }
-
-        else if (isOnSideStage) //사이드스테이지 unlock 여부 결정하는 문
-        {
-            if (GameManager.instance.gameData.sideStageUnlock[doorNum - 1]) //해당 사이드스테이지가 이미 unlock 된 상태면
-            {
-                spr.sprite = spritesGroup[0]; //문은 이미 올라가 있어야 함
-                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + doorLength, 0);
-                spikeColl.SetActive(false);
-            }
-            else
-            {
-                //해당 스테이지가 아직 unlock되지 않은상태면 문은 내려온 상태로 있어야 함
-                spr.sprite = spritesGroup[3];
-                spikeColl.SetActive(true);
-            }
-        }
+        }       
         else //일반적인 메인 스테이지 내에 있는 문
         {
-            if (GameManager.instance.gameData.curAchievementNum > doorActiveThreshold) //만약 이미 열린 문이면 
+            if (GameManager.instance.gameData.curAchievementNum >= doorActiveThreshold) //만약 이미 열린 문이면 
             {
                 if (doorType == 1) //버튼 누르면 올라가는 문 ~> 올라간 채로 있어야 함
                 {

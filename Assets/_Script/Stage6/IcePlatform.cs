@@ -36,20 +36,24 @@ public class IcePlatform : MonoBehaviour
 
     void Start()
     {
+        /*
         if (GameManager.instance.curIsMelted[iceNum])
         {
             Destroy(gameObject);
         }
+        */
     }
 
     void OnCollisionEnter2D(Collision2D other)
     {
+        /*
         if (!isFired && other.gameObject.CompareTag("Projectile"))
         {
-            GameManager.instance.curIsMelted[iceNum] = true;
+            //GameManager.instance.curIsMelted[iceNum] = true;
             StartFired(other.transform.position);
             isFired = true;
         }
+        */
     }
 
     void StartFired(Vector2 startingPos)

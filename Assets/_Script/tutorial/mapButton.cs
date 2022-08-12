@@ -18,15 +18,7 @@ public class mapButton : MonoBehaviour
         GameManager.instance.nextScene = nextScene;
         GameManager.instance.nextPos = nextPos;
         GameManager.instance.nextGravityDir = nextGravityDir;
-
-        //stage5
-        GameManager.instance.isCliffChecked = false;
-        for (int i = 0; i < 36; i++)
-        {
-            GameManager.instance.curIsShaked[i] = false;
-            GameManager.instance.gameData.storedIsShaked[i] = false;
-        }
-
+       
         GameManager.instance.shouldStartAtSavePoint = false;
         GameManager.instance.nextState = Player.States.Walk;
         GameManager.instance.gameData.respawnScene = GameManager.instance.nextScene;

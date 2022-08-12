@@ -20,40 +20,82 @@ public class stageMoveButton : MonoBehaviour
 
     public int savePointCount; //해당 스테이지에 존재하는 세이브포인트의 개수
     public List<int> savePointScene; //이동해야 하는 씬 번호
-    public List<Vector2> savePointPos; //해당 스테이지에 존재하는 세이브포인트의 위치값 
-    public List<Vector2> savePointGravityDir; //해당 스테이지에 존재하는 각 세이브포인트에서 중력 방향
-
+    
     public Sprite instruction_image;
     [SerializeField] bool shouldButtonWork; 
     //이 스테이지로 이동할 수 있도록 해야 하는가 ~> 현재 GameData 상에서 이 시점까지 깨지 못했다면 버튼 비활성화해야 함
 
     Button button;
+    public Sprite ActiveIcon;
+    public Sprite deActiveIcon;
 
+    AudioSource sound;
+    public AudioClip correct;
+    public AudioClip incorrect;
     void Awake()
     {
         button = GetComponent<Button>();
+        button.interactable = true;
+        sound = GetComponent<AudioSource>();
     }
 
-    void Start()
+    void Update()
     {
-        if (GameManager.instance.gameData.finalStageNum >= stageNum)
+        if (GameManager.instance.gameData.finalStageNum >= stageNum) //이 버튼의 stageNum보다 많이 진행했거나 같으면 
         {
-            button.interactable = true;
+            shouldButtonWork = true;
             var colors = button.colors;
-            colors.normalColor = new Color(1f, 1f, 1f, 1f);
+
+            button.image.sprite = ActiveIcon;
             button.colors = colors;
+        }
+        else
+        {
+            shouldButtonWork = false;
+            button.image.sprite = deActiveIcon;
         }
     }
 
     public void Onclick() //이 버튼을 클릭하면
     {
+        if (!shouldButtonWork)
+        {
+            sound.Stop();
+            sound.clip = incorrect;
+            sound.Play();
+
+            Debug.Log("not enough achievement");
+
+            StopCoroutine("iconShake");
+            StartCoroutine("iconShake");
+            return;
+        }
+
+        sound.Stop();
+        sound.clip = correct;
+        sound.Play();
+
         mapOpenSensor mapSensorScript = mapOpenSensor.GetComponent<mapOpenSensor>();
 
         chapter_name.GetComponent<TextMeshProUGUI>().text = stageNameText; //스테이지 이름 바꿔주기 
         chapter_Instruction.GetComponent<Image>().sprite = instruction_image;
         mapSensorScript.selectedStageNum = stageNum;
-        mapSensorScript.selectedSavePointNum = 0; //스테이지가 넘어가면 세이브포인트 번호도 0으로 초기화
+        mapSensorScript.selectedSavePointNum = 1; //스테이지가 넘어가면 세이브포인트 번호도 1로 초기화
         mapSensorScript.savePointCount = savePointCount;
         mapSensorScript.iconMake();
+    }
+
+    IEnumerator iconShake()
+    {
+        for(int index=3; index>=1; index--)
+        {
+            GetComponent<RectTransform>().Rotate(0, 0, 10f * index);
+            yield return new WaitForSeconds(0.05f);
+            GetComponent<RectTransform>().Rotate(0, 0, -10f * index);
+            yield return new WaitForSeconds(0.05f);
+            GetComponent<RectTransform>().Rotate(0, 0, -10f * index);
+            yield return new WaitForSeconds(0.05f);
+            GetComponent<RectTransform>().Rotate(0, 0, 10f * index);
+        }
     }
 }

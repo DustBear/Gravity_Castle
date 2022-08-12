@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4854292662044023071}
   - component: {fileID: 4854292662044023070}
   m_Layer: 0
-  m_Name: sceneElevator_stage0to1_door
+  m_Name: stageElevator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,9 +70,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1364974663
-  m_SortingLayer: -12
-  m_SortingOrder: 1
+  m_SortingLayerID: -1421240359
+  m_SortingLayer: -7
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 49372a5fd8d7d2548a6096df63176362, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -96,16 +96,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b51546d902c4774cb7a13083619dca5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneElavator: {fileID: 0}
+  sceneElevatorCover: {fileID: 0}
+  player: {fileID: 0}
+  stageIntro: {fileID: 0}
+  stageIntroDeco: {fileID: 0}
   startYpos: 0
   finishYpos: 2
   doorSpeed: 2
   delayTime: 1.5
-  player: {fileID: 0}
-  colorValue: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
-  isColorBrighten: 0
-  introCanvas: {fileID: 0}
+  playerFadeSpeed: 0
   isDoorMove: 0
-  Active_Threshold: -8
+  fadeSpeed: 0
+  IntroDelay: 0
   coll:
   - {fileID: 0}
   - {fileID: 0}

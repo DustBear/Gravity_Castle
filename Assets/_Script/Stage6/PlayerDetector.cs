@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerDetector : MonoBehaviour
 {
+    /*
     [SerializeField] int detectorNum;
     [SerializeField] bool isLasting;
     bool isFinish;
@@ -48,4 +49,5 @@ public class PlayerDetector : MonoBehaviour
         GameManager.instance.curIsDetected[detectorNum] = true;
         isFinish = true;
     }
+    */
 }

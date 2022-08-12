@@ -10,12 +10,11 @@ public class elevatorCage : MonoBehaviour
 
     [SerializeField] Vector2 pos1;
     [SerializeField] Vector2 pos2;
-    //주의: 항상 로컬 위치 기준으로 위쪽 점을 pos1으로 해야 함 
-    [SerializeField] float elevatorSpeed;
-    [SerializeField] float achieveNumNeeded; //엘리베이터 활성화를 위해 필요한 진척도(이 숫자 '이상'일 때 엘리베이터 이용가능)
+    //주의: 항상 '로컬 위치 기준'으로 위쪽 점을 pos1으로 해야 함 
+    [SerializeField] float elevatorSpeed;   
     [SerializeField] int initialPos; //시작할 때 위치할 지점 ~> 1이면 Pos1, 2이면 Pos2 가 된다
 
-    [SerializeField] bool isPlayerOnBell; //플레이어가 벨 센서 내에 있는지의 여부 
+    [SerializeField] public bool isPlayerOnBell; //플레이어가 벨 센서 내에 있는지의 여부 
     [SerializeField] float playerAddforce; 
     //엘리베이터가 아래로 내려갈 때 급출발하기 때문에 플레이어가 공중에 붕 뜨게 됨 ~> 별도의 힘을 순간적으로 줘서 바닥에 붙어있게 하자 
 
@@ -30,6 +29,12 @@ public class elevatorCage : MonoBehaviour
 
     Quaternion initialBellRotation; //시작 시 벨의 회전각: 엘리베이터가 옆으로 누워있는 경우에도 벨은 로컬포지션에 대해 회전해야 함 
     [SerializeField] Vector3 addForceDir; //엘리베이터의 각도에 따라 플레이어에게 힘을 가하는 방향도 달라져야 함 
+
+    AudioSource bellSound;
+    AudioSource elevatorSound;
+
+    public AudioClip bellEffect;
+    public AudioClip elevatorEffect;
 
     private void Awake()
     {
@@ -50,6 +55,11 @@ public class elevatorCage : MonoBehaviour
         isAchieved = true;
 
         //맨 처음 시작할 때는 purposePoint와 현재 위치가 동일하도록 맞춰 줘야 함 
+
+        bellSound = gameObject.AddComponent<AudioSource>();
+        bellSound.clip = bellEffect;
+        elevatorSound = gameObject.AddComponent<AudioSource>();
+        elevatorSound.clip = elevatorEffect;
     }
 
     void Start()
@@ -63,7 +73,7 @@ public class elevatorCage : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Player" && collision.transform.rotation == transform.rotation)
+        if(collision.tag == "Player" && collision.transform.up == transform.up)
         {
             //플레이어와 엘리베이터의 회전각이 다르면 활성화 안됨
             InputManager.instance.isJumpBlocked = true; //엘리베이터 내에서는 점프 불가능 
@@ -79,19 +89,18 @@ public class elevatorCage : MonoBehaviour
         }
     }
     void Update()
-    {
-        if(GameManager.instance.gameData.curAchievementNum < achieveNumNeeded)
-        {           
-            return; 
-            //만약 엘리베이터를 이용하기에 진척도가 충분하지 않으면 명령 무시 
-        }
-
+    {       
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (isPlayerOnBell) bellRing();
             //센서 내에 플레이어가 있는 상태로 상호작용키 누르면 벨 울리면서 purposePoint 바뀜 
         }
-        
+
+        if (isAchieved)
+        {
+            elevatorSound.Play();
+        }
+
         elevatorMove();
         weightMove();
         //soundCheck();
@@ -163,7 +172,11 @@ public class elevatorCage : MonoBehaviour
   
     void bellRing() 
     {
+        Debug.Log("bell ring");
+
         isAchieved = false;
+        bellSound.Stop();
+        bellSound.Play();
 
         /*
         if (bellSoundPlayer.isPlaying) bellSoundPlayer.Stop();

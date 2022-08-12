@@ -21,16 +21,18 @@ public class NewGameButton : MonoBehaviour
         if (GameManager.instance.saveFileSeq.saveFileSeqList.Count != 0)
         {
             text.text = "이어하기";
-            isSaveFileExist = true;
+            isSaveFileExist = true; 
         }
     }
 
     public void OnClickButton()
     {
+        UIManager.instance.clickSoundGen();
+
         // SaveFile이 없으면 새 게임
         if (!isSaveFileExist)
         {
-            GameManager.instance.curSaveFileNum = 0;
+            GameManager.instance.curSaveFileNum = 0; //첫 세이브 파일 생성 
             GameManager.instance.saveFileSeq.saveFileSeqList.Add(0);
             GameManager.instance.SaveSaveFileSeq();
             GameManager.instance.StartGame(false);

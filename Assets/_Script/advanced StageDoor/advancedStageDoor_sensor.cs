@@ -5,12 +5,14 @@ using UnityEngine;
 public class advancedStageDoor_sensor : MonoBehaviour
 {
     [SerializeField] bool isActived; //센서가 이미 작동했는지의 여부
-    public int activeThreshold; //플레이어의 achieveNum 이 이 숫자 '초과' 이면 비활성화한다.   
-
     public GameObject stageDoor; //이 센서가 제어할 스테이지 문
     void Start()
     {
-        if (GameManager.instance.gameData.curAchievementNum > activeThreshold)
+        if (stageDoor.GetComponent<advancedStageDoor>().disposable) //disposable 설정된 씬을 시작할 때 항상 비활성화된 문 ~> 늘 센서 비활성화해야 함 
+        {
+            isActived = false;
+        }
+        else if (GameManager.instance.gameData.curAchievementNum >= stageDoor.GetComponent<advancedStageDoor>().DoorActiveTrheshold)
         {           
             isActived = true;
         }

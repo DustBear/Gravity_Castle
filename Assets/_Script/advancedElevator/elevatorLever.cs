@@ -12,11 +12,13 @@ public class elevatorLever : MonoBehaviour
     [SerializeField] bool isPlayerOn; //플레이어가 지금 레버를 작동시킬 수 있는 위치에 있는가
 
     public Sprite[] leverSprite;
+    AudioSource leverSound;
     void Start()
     {
         elevatorScript = advancedElevator.GetComponent<elevatorCage>();
         spr = GetComponent<SpriteRenderer>();
         spr.sprite = leverSprite[0];
+        leverSound = GetComponent<AudioSource>();
     }
  
     void Update()
@@ -55,6 +57,7 @@ public class elevatorLever : MonoBehaviour
 
     IEnumerator spriteAni() //스프라이트 움직임으로 애니메이션 구현
     {
+        leverSound.Play();
         spr.sprite = leverSprite[1];
         yield return new WaitForSeconds(0.4f);
 

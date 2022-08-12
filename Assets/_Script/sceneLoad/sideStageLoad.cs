@@ -8,7 +8,6 @@ public class sideStageLoad : MonoBehaviour
     GameObject player;
     Player playerScript;
 
-    public int sideStageNum; //1번부터 24번까지 
     public int sceneNum; //이 사이드 스테이지의 scene 번호 
     public Vector2 spawnPos; //이 사이드 스테이지에 스폰될 때, 사이드 스테이지 안에서 죽었을 때 스폰될 위치 
     public Vector2 spawnDir;
@@ -73,9 +72,7 @@ public class sideStageLoad : MonoBehaviour
     }
 
     void loadSideStage()
-    {
-        playerScript.isPlayerInSideStage = true;
-        GameManager.instance.gameData.sideStageUnlock[sideStageNum - 1] = true; //해당 스테이지 개방
+    {        
         GameManager.instance.nextPos = spawnPos;
         GameManager.instance.nextScene = sceneNum;
         GameManager.instance.nextGravityDir = spawnDir; //시작하면 아래쪽 보도록 중력 적용

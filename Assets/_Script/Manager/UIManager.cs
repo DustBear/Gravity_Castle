@@ -14,10 +14,13 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] GameObject textObj;
     IEnumerator fadeCoroutine;
 
+    AudioSource sound;
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
         fadeCoroutine = _FadeIn(1f);
+        sound = GetComponent<AudioSource>();
 
         //게임 시작하면 UI 메뉴는 전부 끄고 시작하기 
         inGameMenu.SetActive(false);
@@ -27,18 +30,14 @@ public class UIManager : Singleton<UIManager>
 
     // Fade in과 Fade out이 동시에 실행될 수 없게 하였음
     public void FadeIn(float fadeTime)
-    {
-        Debug.Log("fadeIn");
-
+    {       
         StopCoroutine(fadeCoroutine);
         fadeCoroutine = _FadeIn(fadeTime);
         StartCoroutine(fadeCoroutine);
     }
 
     public void FadeOut(float fadeTime)
-    {
-        Debug.Log("fadeOut");
-
+    {        
         StopCoroutine(fadeCoroutine);
         fadeCoroutine = _FadeOut(fadeTime);
         StartCoroutine(fadeCoroutine);
@@ -99,6 +98,11 @@ public class UIManager : Singleton<UIManager>
     public void NoSavedGame()
     {
         noSavedGame.SetActive(true);
+    }
+
+    public void clickSoundGen() //UI 클릭할 때 딸깍 소리 냄 
+    {
+        sound.Play();
     }
 
     public void showText(string content)

@@ -128,6 +128,8 @@ public class StartMenu : MonoBehaviour
 
     public void OnClickSetting()
     {
+        UIManager.instance.clickSoundGen();
+
         settingExp.gameObject.SetActive(true);
         Invoke("settingMessageOff", 3f); //3초 후 세팅메시지 꺼짐
 
@@ -141,6 +143,8 @@ public class StartMenu : MonoBehaviour
     // 게임 종료 시 Editor 상에서의 종료인지, 빌드 파일 상에서의 종료인지 구분
     public void OnClickExit()
     {
+        UIManager.instance.clickSoundGen();
+
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

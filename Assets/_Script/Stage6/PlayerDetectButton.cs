@@ -34,6 +34,7 @@ public class PlayerDetectButton : MonoBehaviour
 
     void Start()
     {
+        /*
         if (GameManager.instance.curIsGreen[buttonNum])
         {
             render.color = new Color(0f, 1f, 0f, 1f);
@@ -57,5 +58,6 @@ public class PlayerDetectButton : MonoBehaviour
         if (rayHit.collider == null) {
             isPressed = false;
         }
+        */
     }
 }

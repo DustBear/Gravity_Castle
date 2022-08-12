@@ -155,6 +155,7 @@ GameObject:
   - component: {fileID: 5260450419321129311}
   - component: {fileID: 5260450419321129310}
   - component: {fileID: 5260450419321129309}
+  - component: {fileID: 4792140236446139004}
   m_Layer: 21
   m_Name: stage01_lever
   m_TagString: Lever
@@ -215,8 +216,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2056838877
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 57b61d77a0b1f53478414a25ce392b9a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -255,3 +256,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.4, y: 0.058238983}
   m_EdgeRadius: 0
+--- !u!114 &4792140236446139004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5260450419321129308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29dd8bfd60868d04987daba8e39fee27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPowerLever: 0

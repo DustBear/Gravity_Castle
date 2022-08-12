@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Devil : MonoBehaviour
 {
+    /*
     [SerializeField] GameObject laser;
     [SerializeField] CameraShakeStage8 cameraShake;
     Rigidbody2D rigid;
@@ -238,4 +239,5 @@ public class Devil : MonoBehaviour
         RaycastHit2D rayHit = Physics2D.BoxCast(player.transform.position, new Vector2(0.6f, 0.1f), transform.eulerAngles.z, -transform.up, 0.8f, 1 << 3);
         return rayHit.collider != null;
     }
+    */
 }

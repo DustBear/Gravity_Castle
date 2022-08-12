@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
 {
     [SerializeField] float defaultGravityScale;
     [SerializeField] float maxFallingSpeed;
-    [SerializeField] float walkSpeed;
+    [SerializeField] public float walkSpeed;
+    [SerializeField] public float maxWindSpeed; //stage3에서 바람에 날아갈 때 최대 속도 
     [SerializeField] float minJumpPower;
     [SerializeField] float maxJumpPower;
     [SerializeField] float maxJumpBoostPower;
@@ -17,7 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] float ropeMoveSpeed; // rope에 매달려 움직이는 속도
     [SerializeField] float leverMoveSpeed; // lever 작동 후 플레이어가 이동하는 속도
     [SerializeField] float leverRotateSpeed; // lever 작동 후 플레이어가 회전하는 속도
-    [SerializeField] float windForce; // Stage3의 바람에 의해 받는 힘
+    public float windForce; // Stage3의 바람에 의해 받는 힘~> 환풍기마다 다르게 설정할 수 있도록 외부접근 허용 
     [SerializeField] float slidingDegree; // Stage6의 얼음 위에서 미끄러지는 정도
 
     public bool isPlayerInSideStage; 
@@ -34,10 +35,19 @@ public class Player : MonoBehaviour
     }
     StateMachine<States> fsm;
     [HideInInspector] public static States curState {get; private set;}
-    Func<bool> readyToFall, readyToLand, readyToJump, readyToPowerJump, readyToRope, readyToLever; // 각 상태로 이동하기 위한 기본 조건
+    Func<bool> readyToFall, readyToLand, readyToJump, readyToPowerJump, readyToRope, readyToLever , readyToPowerLever; // 각 상태로 이동하기 위한 기본 조건
+
+    // Walk
+    public bool isPlayerExitFromWInd; //플레이어가 stage3 windZone에서 빠져나온 직후 아직 관성의 영향을 받고 있을 때 true 
 
     // Jump
     [SerializeField]float jumpGauge;
+    [SerializeField] float jumpTimer; //땅에 닿기 직전 스페이스바를 눌러도 일정 오차범위 내에 있다면 점프명령 인식해야 함 
+    public float jumpTimerOffset; //기준점 
+    public float jumpHeightCut; //점프하다가 스페이스바에서 손을 떼면 점프방향 속도를 줄임
+
+    [SerializeField] float groundedRemember; //플랫폼에서 떨어진 직후에도 오차범위 이내 시간에서는 점프할 수 있어야 함
+    [SerializeField] float groundedRememberOffset;
 
     // Rope
     bool isCollideRope;
@@ -45,6 +55,7 @@ public class Player : MonoBehaviour
 
     // Lever
     bool isCollideLever;
+    public bool shouldRotateHalf; //powerLever 가 아니면 90도만 회전, powerLever 이면 180도 회전 
     GameObject lever; // 작동시킬 lever
     Vector3 destPos_afterLevering; // Lever 작동 후 플레이어 position
     float destRot; // Lever 작동 후 플레이어 z-rotation
@@ -54,7 +65,7 @@ public class Player : MonoBehaviour
     bool isVerticalWind;
 
     // 플레이어 아래에 있는 플랫폼 감지
-    [SerializeField]bool isGrounded;
+    [SerializeField]public bool isGrounded;
     [SerializeField] bool isOnJumpPlatform; //강화점프 발판 위에 있는지 감지
     RaycastHit2D rayHitIcePlatform;
     RaycastHit2D rayHitJumpBoost;
@@ -96,18 +107,18 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        UIManager.instance.FadeIn(1f);
-        Debug.Log(GameManager.instance.gameData.respawnGravityDir);
-
+        UIManager.instance.FadeIn(1f);       
         // 각 State로 넘어가기 위한 기본 조건
         readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //땅이나 점프강화발판 둘 다에 닿아있지 않을 때 
         readyToLand = () => (isGrounded || isOnJumpPlatform) && (int)transform.InverseTransformDirection(rigid.velocity).y <= 0; //땅or점프강화발판에 닿아 있고 y방향 속도벡터의 방향이 -1일 때 
-        readyToJump = () => InputManager.instance.jumpDown && (!isOnJumpPlatform); //스페이스바를 눌렀고 강화점프 발판 위에 있지 않을 때 
-        readyToPowerJump = () =>  InputManager.instance.jumpUp && (isOnJumpPlatform); //강화점프 발판 위에서 스페이스바를 눌렀다 뗄 때
+
+        readyToJump = () => (jumpTimer > 0) && (!isOnJumpPlatform) && (groundedRemember > 0); //스페이스바를 눌렀고 강화점프 발판 위에 있지 않을 때 
+
+        readyToPowerJump = () =>  InputManager.instance.jumpUp && (isOnJumpPlatform) && (groundedRemember > 0); //강화점프 발판 위에서 스페이스바를 눌렀다 뗄 때
         readyToRope = () => isCollideRope && InputManager.instance.vertical == 1; //위쪽 화살표 누르고 있고 + 로프에 닿아있을 때
         readyToLever = () => isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown 
-                            && lever.transform.eulerAngles.z == transform.eulerAngles.z;
-                            //레버에 닿아 있고, 레버와 동일한 rotation을 가지고 있고, 위쪽 화살표를 누르고 있을 때 
+                             && lever.transform.up == transform.up;
+                             //레버에 닿아 있고, 레버와 동일한 rotation을 가지고 있고, 위쪽 화살표를 누르고 있을 때 
 
         // Scene이 세이브 포인트에서 시작하지 않을 때 플레이어 데이터 설정
         // 현재 Scene으로 넘어오기 직전의 데이터를 불러와서 적용
@@ -137,10 +148,12 @@ public class Player : MonoBehaviour
             GameManager.instance.shouldStartAtSavePoint = false;
 
             /*********** curAchievementNum 부분은 스테이지8 세이브 포인트 설정이 완료되면 수정 필요 ***********/
+            /*
             if (GameManager.instance.gameData.curStageNum == 8 && GameManager.instance.gameData.curAchievementNum == 33 && !GameManager.instance.isCliffChecked)
             {
                 InputManager.instance.isInputBlocked = true;
             }
+            */
         }
 
         //씬 시작할 때 플레이어의 위치를 scene Elevator에 넘겨줌(openingSceneElevator 를 작동할지 말지 결정)
@@ -156,11 +169,24 @@ public class Player : MonoBehaviour
         {
             sprite.flipX = false;
         }
+
+        jumpTimer = 0; //jumpTimer 초기화 
     }
 
     private void Update()
     {
         walkSoundCheck();
+        jumpTimer -= Time.deltaTime; //jumpTimer 매 프레임마다 작동 
+        groundedRemember -= Time.deltaTime;
+        if (InputManager.instance.jumpDown)
+        {
+            jumpTimer = jumpTimerOffset;
+            //groundedRemember = 0;
+        }
+        if (isGrounded)
+        {
+            groundedRemember = groundedRememberOffset;
+        }
     }
 
     public void ChangeState(in States nextState)
@@ -249,6 +275,7 @@ public class Player : MonoBehaviour
 
     void Jump_Enter()
     {
+        jumpTimer = 0;
         rigid.velocity = Vector2.zero; // 바닥 플랫폼의 속도가 점프 속도에 영향을 미치는 것을 방지    
         //StartCoroutine("jumpAddForce");
 
@@ -326,6 +353,27 @@ public class Player : MonoBehaviour
         CheckGround();
         HorizontalMove();
 
+        if (InputManager.instance.jumpUp) //스페이스바에서 손을 떼면 점프 방향 속도 줄여야 함 
+        {
+            if (transform.up.normalized == new Vector3(0, 1, 0) && rigid.velocity.y > 0) //플레이어가 위쪽을 바라보고 있을 때 + 속도가 높아지는 중일 때
+            {
+                rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0); //점프방향 속도 줄임 
+            }
+            else if (transform.up.normalized == new Vector3(0, -1, 0) && rigid.velocity.y < 0) //플레이어가 아래쪽을 바라보고 있을 때 
+            {
+                rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0);
+            }
+            else if (transform.up.normalized == new Vector3(1, 0, 0) && rigid.velocity.x > 0) //플레이어가 오른쪽을 바라보고 있을 때
+            {
+                rigid.velocity = new Vector3(rigid.velocity.x * jumpHeightCut, rigid.velocity.y, 0);
+            }
+            else if (transform.up.normalized == new Vector3(-1, 0, 0) && rigid.velocity.x < 0)//플레이어가 왼쪽을 바라보고 있을 때 
+            {
+                rigid.velocity = new Vector3(rigid.velocity.x * jumpHeightCut, rigid.velocity.y, 0);
+            }
+
+        }
+
         if (readyToRope())
         {
             ChangeState(States.AccessRope);
@@ -374,6 +422,7 @@ public class Player : MonoBehaviour
 
     void Fall_Enter()
     {
+        groundedRemember = groundedRememberOffset;
         transform.parent = null;
         ani.SetBool("isFalling", true);
     }
@@ -391,6 +440,9 @@ public class Player : MonoBehaviour
         else if (readyToLand())
         {
             ChangeState(States.Land);
+        }else if (readyToJump())
+        {
+            ChangeState(States.Jump); //오차범위 내에서라면 플랫폼에서 떨어지기 시작한 직후에도 점프 가능
         }
     }
 
@@ -498,7 +550,8 @@ public class Player : MonoBehaviour
 
     void MoveOnRope_Update()
     {
-        ChargeJumpGauge();
+        //ChargeJumpGauge();
+        groundedRemember = groundedRememberOffset;
 
         // Rope에 매달린 상태로 이동
         if (Physics2D.gravity.normalized == Vector2.left)
@@ -641,8 +694,8 @@ public class Player : MonoBehaviour
         }
 
         // 이동
-        transform.position = Vector2.MoveTowards(transform.position, destPos_beforeLevering, 9f * Time.deltaTime);        
-        //transform.position = destPos_beforeLevering;
+        float moveToLeverSpeed = 9f;
+        transform.position = Vector2.MoveTowards(transform.position, destPos_beforeLevering, moveToLeverSpeed * Time.deltaTime);        
 
         if ((Vector2)transform.position == destPos_beforeLevering)
         {
@@ -652,8 +705,11 @@ public class Player : MonoBehaviour
    
     void SelectGravityDir_Enter()
     {
-        leftArrow.SetActive(true);
-        rightArrow.SetActive(true);
+        if (!shouldRotateHalf) //180도 회전하는 강화레버의 경우 화살표를 띄우지 않음 
+        {
+            leftArrow.SetActive(true);
+            rightArrow.SetActive(true);
+        }       
     }
 
     void SelectGravityDir_Update()
@@ -672,8 +728,11 @@ public class Player : MonoBehaviour
 
     void SelectGravityDir_Exit()
     {
-        leftArrow.SetActive(false);
-        rightArrow.SetActive(false);
+        if (!shouldRotateHalf)
+        {
+            leftArrow.SetActive(false);
+            rightArrow.SetActive(false);
+        }     
     }
 
     void ChangeGravityDir_Enter()
@@ -683,20 +742,45 @@ public class Player : MonoBehaviour
 
         // 플레이어의 부모 오브젝트가 있다면 해제. 그렇지 않으면 플레이어와 함께 회전함
         transform.parent = null;
-        
+
         // 회전해야할 플레이어 rotation 설정
-        destRot = transform.eulerAngles.z + InputManager.instance.horizontal * 90f;
-        if (destRot == -90f) destRot = 270f;
+        if (!shouldRotateHalf) //90도 회전하는 일반적인 경우 
+        {
+            destRot = transform.eulerAngles.z + InputManager.instance.horizontal * 90f;
+            if (destRot == -90f) destRot = 270f;
+        }
+        else //180도 회전하는 경우 
+        {
+            destRot = transform.eulerAngles.z + 180f;
+            if (destRot == 450f) destRot = 90f;
+        }
+
+
 
         // 회전하면서 바뀌어야할 플레이어 position 설정
-        switch (lever.transform.eulerAngles.z)
+        if (!shouldRotateHalf) //90도회전시
         {
-            case 0f: case 180f:
-                destPos_afterLevering = new Vector2(transform.position.x, lever.transform.position.y);
-                break;
-            case 90f: case 270f:
-                destPos_afterLevering = new Vector2(lever.transform.position.x, transform.position.y);
-                break;
+            switch (lever.transform.eulerAngles.z)
+            {
+                case 0f:  case 180f:
+                    destPos_afterLevering = new Vector2(transform.position.x, lever.transform.position.y);
+                    break;
+                case 90f: case 270f:               
+                    destPos_afterLevering = new Vector2(lever.transform.position.x, transform.position.y);
+                    break;
+            }
+        }
+        else //180도 회전시 
+        {
+            switch (lever.transform.eulerAngles.z)
+            {
+                case 0f:  case 180f:               
+                    destPos_afterLevering = new Vector2(transform.position.x, transform.position.y);
+                    break;
+                case 90f: case 270f:               
+                    destPos_afterLevering = new Vector2(transform.position.x, transform.position.y);
+                    break;
+            }
         }
         
         ani.SetBool("isFalling", true);
@@ -706,26 +790,37 @@ public class Player : MonoBehaviour
     {
         // 레버 조작 후 플레이어 이동 및 회전
         transform.localPosition = Vector2.MoveTowards(transform.localPosition, destPos_afterLevering, leverMoveSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(Vector3.forward * destRot), leverRotateSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, destRot), leverRotateSpeed * Time.deltaTime);
         
         // 플레이어 회전이 거의 완료되었다면 다음 state로 이동
-        if (Mathf.RoundToInt(transform.eulerAngles.z) == destRot)
+        if (Mathf.RoundToInt(transform.eulerAngles.z)%360f == destRot%360f)
         {
-            // 플레이어 완전히 회전
-            if (destRot == 360f) destRot = 0f;
+            //플레이어는 항상 0, 90, 180, 270도의 회전각만 가질 수 있다 
+
+            if (destRot % 360f == 0) destRot = 0f;
+            else if (destRot % 360f == 90f) destRot = 90f;
+            else if (destRot % 360f == 180f) destRot = 180f;
+            else if (destRot % 360f == 270f) destRot = 270f;
+
             transform.eulerAngles = Vector3.forward * destRot;
 
             // 중력 방향 변화
             Vector2 gravity = -transform.up * 9.8f;
-            if (Mathf.Abs(gravity.x) < 1f) gravity.x = 0f;
+            if (Mathf.Abs(gravity.x) < 1f) gravity.x = 0f; //물리엔진 연산오차 보정(0.00xxx 같이 나올 경우 0으로 고정해줘야 함) 
             else gravity.y = 0f;
-            Physics2D.gravity = gravity;
+
+            Physics2D.gravity = gravity; //맵 전체 중력방향 바꿈 
 
             // 플레이어에게 중력 적용
             rigid.gravityScale = defaultGravityScale;
 
             ChangeState(States.FallAfterLevering);
         }   
+    }
+
+    void FallAfterLevering_Enter()
+    {
+        if (shouldRotateHalf) shouldRotateHalf = false;
     }
 
     void FallAfterLevering_Update()
@@ -814,8 +909,12 @@ public class Player : MonoBehaviour
         {
             isCollideLever = true;
             lever = other.gameObject;
+            if (lever.GetComponent<lever>().isPowerLever)
+            {
+                shouldRotateHalf = true;
+            }
         }
-
+        
         switch (GameManager.instance.gameData.curStageNum)
         {
             case 3:
@@ -838,18 +937,54 @@ public class Player : MonoBehaviour
         // 스테이지 3에서 Rope에 매달려 있지 않은 상태로 바람에 맞으면 날아감
         if (GameManager.instance.gameData.curStageNum == 3 && curState != States.AccessRope && curState != States.MoveOnRope)
         {
-            if (other.CompareTag("UpWind")) rigid.AddForce(Vector2.up * windForce, ForceMode2D.Force);
-            else if (other.CompareTag("DownWind")) rigid.AddForce(Vector2.down * windForce, ForceMode2D.Force);
-            else if (other.CompareTag("RightWind")) rigid.AddForce(Vector2.right * windForce, ForceMode2D.Force);
-            else if (other.CompareTag("LeftWind")) rigid.AddForce(Vector2.left * windForce, ForceMode2D.Force);
+            if (other.CompareTag("UpWind"))
+            {
+                if (rigid.velocity.y >= maxWindSpeed)
+                {
+                    rigid.velocity = new Vector2(rigid.velocity.x, maxWindSpeed);
+                    return;
+                }
+                rigid.AddForce(Vector2.up * windForce, ForceMode2D.Force);
+            }
+            else if (other.CompareTag("DownWind"))
+            {
+                if (rigid.velocity.y <= -maxWindSpeed)
+                {
+                    rigid.velocity = new Vector2(rigid.velocity.x, -maxWindSpeed);
+                    return;
+                }
+                rigid.AddForce(Vector2.down * windForce, ForceMode2D.Force);
+            }
+            else if (other.CompareTag("RightWind"))
+            {
+                if (rigid.velocity.x >= maxWindSpeed)
+                {
+                    rigid.velocity = new Vector2(maxWindSpeed, rigid.velocity.y);
+                    return;
+                }
+                rigid.AddForce(Vector2.right * windForce, ForceMode2D.Force);
+            }
+            else if (other.CompareTag("LeftWind"))
+            {
+                if (rigid.velocity.x <= -maxWindSpeed)
+                {
+                    rigid.velocity = new Vector2(-maxWindSpeed, rigid.velocity.y);
+                    return;
+                }
+                rigid.AddForce(Vector2.left * windForce, ForceMode2D.Force);
+            }            
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("VerticalRope") || other.CompareTag("HorizontalRope")) isCollideRope = false;
-        if (other.CompareTag("Lever")) isCollideLever = false;
-
+        if (other.CompareTag("Lever"))
+        {
+            isCollideLever = false;
+            if (shouldRotateHalf) shouldRotateHalf = false;
+        }
+        
         if (GameManager.instance.gameData.curStageNum == 3)
         {
             if (other.CompareTag("RightWind") || other.CompareTag("LeftWind")) isHorizontalWind = false;
@@ -863,7 +998,7 @@ public class Player : MonoBehaviour
         UIManager.instance.FadeOut(1f); //화면 어두워지고
         yield return new WaitForSeconds(1f);
 
-        GameManager.instance.StartGame(false); //새로 재시작 
+        GameManager.instance.StartGame(false); //새로 재시작 ~> 초기화 시 initData(false) 가 실행 
     }
 
     void HorizontalMove()
@@ -886,13 +1021,21 @@ public class Player : MonoBehaviour
             // Stage3에서 불어오는 바람과 같은 축으로는 플레이어가 키를 눌러도 이동 불가.
             return;
         }
+
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+
         if (stageNum == 6 && rayHitIcePlatform.collider != null && InputManager.instance.horizontal == 0f)
         {
             // Stage6에서 얼음 위라면 키보드 input이 끝난 후에 미끄러짐
             locVel = new Vector2(Vector2.Lerp(locVel, Vector2.zero, Time.deltaTime * slidingDegree).x , locVel.y);
         }
-        else
+        else if (stageNum == 3 && isPlayerExitFromWInd)
+        {
+            //stage03 에서 환풍기 바람 영향을 받고 있을 때의 움직임은 windPower 스크립트에서 수행 
+            return;
+        }
+
+        else //일반적인 케이스 
         {
             // 얼음 위가 아니라면 키보드 input이 있을 때에만 이동
             locVel = new Vector2(InputManager.instance.horizontal * walkSpeed, locVel.y);

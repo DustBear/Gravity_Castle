@@ -16,7 +16,7 @@ public class endingSceneElevator : MonoBehaviour
     public float doorFinishYPos; //엘리베이터 문 도착위치
 
     public Vector2 nextScenePos; //다음 씬에서 스폰될 위치 설정 
-    public int nextScene; //다음 씬 번호 
+    public int nextSceneNum; //다음 씬 번호 
     public float playerFadeSize; //플레이어는 어느 정도로 어두워 질 것인지 
     public float playerFadeSpeed; //플레이어 어두워지는 속도 
 
@@ -111,12 +111,15 @@ public class endingSceneElevator : MonoBehaviour
     void moveToNextScene()
     {
         if (!GameManager.instance.shouldStartAtSavePoint) //세이브포인트에서 시작해야 하는 것이 아니면 
-        {
-            GameManager.instance.gameData.curAchievementNum = 1; //다음 스테이지로 이동하니까 curAchievement Num 초기화시켜줘야 함 
-            GameManager.instance.nextPos = nextScenePos;
+        {            
+            GameManager.instance.nextScene = nextSceneNum;
+            GameManager.instance.nextPos = new Vector2(0,0);
             GameManager.instance.nextGravityDir = Physics2D.gravity.normalized;
-            GameManager.instance.nextState = Player.curState;
-            SceneManager.LoadScene(nextScene);
+            GameManager.instance.nextState = Player.States.Walk;
+
+            GameManager.instance.gameData.curAchievementNum = 0; //다음 스테이지로 이동하니까 curAchievement Num 초기화시켜줘야 함 
+            
+            SceneManager.LoadScene(nextSceneNum);
         }
     }
 

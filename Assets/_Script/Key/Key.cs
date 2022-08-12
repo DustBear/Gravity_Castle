@@ -8,6 +8,9 @@ public class Key : MonoBehaviour
     [SerializeField] int stageNum;
     public int achievementNum;
 
+    public Vector2 respawnPos; //플레이어가 키를 먹고 나서 리스폰되는 위치    
+    public Vector2 respawnDir; //플레이어가 키를 먹고 나서 리스폰되는 중력방향
+
     Transform player;
     SpriteRenderer sprite;
 
@@ -28,11 +31,15 @@ public class Key : MonoBehaviour
         player = GameObject.FindWithTag("Player").transform;
         sprite = GetComponent<SpriteRenderer>();
         sound = GetComponent<AudioSource>();
-        if(GameManager.instance.gameData.curAchievementNum >= achievementNum) //이미 먹은 열쇠라면 제거해야 함 
+
+        if (GameManager.instance.gameData.curAchievementNum >= achievementNum) //이미 먹은 열쇠라면 제거해야 함 
         {
             Destroy(gameObject);
         }
+
+        respawnPos = transform.position - transform.up; //key는 keystone보다 조금 위에 있으므로 좌표에서 1 뺀 위치에 플레이어 소환 
     }
+
     void Start()
     {
         initialXPos = transform.position.x;

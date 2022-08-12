@@ -19,6 +19,8 @@ public class savePointIconButton : MonoBehaviour
 
     public void Onclick()
     {
+        UIManager.instance.clickSoundGen();
+
         mapSensorScript.selectedSavePointNum = savePointNum;
         mapSensorScript.iconCheck();
     }

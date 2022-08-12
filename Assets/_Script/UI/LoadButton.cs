@@ -34,6 +34,8 @@ public class LoadButton : MonoBehaviour
 
     public void OnClickButton()
     {
+        UIManager.instance.clickSoundGen();
+
         if (isSaveFileExist)
         {
             loadMenu.SetActive(!loadMenu.activeSelf);
