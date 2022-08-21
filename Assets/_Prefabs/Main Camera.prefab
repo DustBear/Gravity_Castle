@@ -96,6 +96,52 @@ MonoBehaviour:
   mapMaxX: -18
   mapMinY: -15
   mapMaxY: 10
+  shakedX: 0
+  shakedY: 0
+  shakedZ: 0
+  isCameraLock: 0
+  shakeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 3.9928682
+      outSlope: 3.9928682
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25099787
+      value: 1.0022014
+      inSlope: 0.009547031
+      outSlope: 0.009547031
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.35924467
+    - serializedVersion: 3
+      time: 0.4355542
+      value: 0.48606455
+      inSlope: -2.4146206
+      outSlope: -2.4146206
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.4214285
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.035445217
+      outSlope: -0.035445217
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.14989011
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &-2905537700765154543
 MonoBehaviour:
   m_ObjectHideFlags: 0

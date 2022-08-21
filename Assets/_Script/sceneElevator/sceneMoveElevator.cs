@@ -1,0 +1,97 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.IO;
+
+public class sceneMoveElevator : MonoBehaviour
+{
+    public int sceneNum; //현재 엘리베이터가 이동하고자 하는 씬 넘버
+    public int stageNum; //현재 엘리베이터가 이동하고자 하는 스테이지 번호 
+    public bool moveToNextStage; //현재 엘리베이터가 스테이지 자체를 바꾸는지의 여부 ex) stage3 ~> stage4
+
+    public Vector2 startPos; //엘리베이터가 처음 세팅되어 있는 높이 
+    public float moveTime; //엘리베이터가 내려가는 시간 
+    public float moveSpeed; //엘리베이터의 하강 속도 
+
+    bool isPlayerOn;
+    public AnimationCurve velCurve; //초반 엘리베이터 하강할 때의 가속도 곡선 
+    public float accelPeriod; //가속도 곡선을 이용하는 시간 
+
+    Rigidbody2D rigid;
+    GameObject cameraObj;
+
+    private void Awake()
+    {
+        rigid = GetComponent<Rigidbody2D>();
+        cameraObj = GameObject.FindWithTag("MainCamera");
+    }
+    void Start()
+    {
+        
+    }
+
+    void Update()
+    {
+        if(isPlayerOn && Input.GetKeyDown(KeyCode.E))
+        {
+            StartCoroutine(elevatorMove());
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Player")
+        {
+            isPlayerOn = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            isPlayerOn = false;
+        }
+    }
+
+    IEnumerator elevatorMove()
+    {       
+        for(int index=1; index<=200; index++) //엘리베이터 출발 
+        {
+            float moveVel = moveSpeed * velCurve.Evaluate(index * accelPeriod / 200);
+            rigid.velocity = new Vector2(0, -moveVel);
+
+            yield return new WaitForSeconds(accelPeriod / 200);
+        }
+
+        rigid.velocity = new Vector2(0, -moveSpeed); //엘리베이터 등속운동 시작 
+        yield return new WaitForSeconds(moveTime - accelPeriod);
+
+        moveToNextScene();
+    }
+
+    void moveToNextScene()
+    {
+        if (!GameManager.instance.shouldStartAtSavePoint) //세이브포인트에서 시작해야 하는 것이 아니면 
+        {
+            GameManager.instance.shouldUseOpeningElevator = true;
+
+            GameManager.instance.nextScene = sceneNum;           
+            GameManager.instance.nextGravityDir = Physics2D.gravity.normalized;
+            GameManager.instance.nextState = Player.States.Walk;
+
+            if (moveToNextStage)
+            {
+                GameManager.instance.gameData.curAchievementNum = 0; //다음 스테이지로 가는 엘리베이터일 경우엔 achNum=0으로 초기화해줌 
+                GameManager.instance.gameData.curStageNum = stageNum; //스테이지 넘버 역시 초기화                                                                                      
+            }
+            // gameData class의 데이터들을 모두 Json 파일에 저장
+            string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
+            string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
+            File.WriteAllText(filePath, ToJsonData);
+
+            SceneManager.LoadScene(sceneNum);
+        }
+    }
+}

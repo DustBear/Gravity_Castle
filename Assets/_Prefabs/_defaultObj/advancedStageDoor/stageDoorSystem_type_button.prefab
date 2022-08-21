@@ -128,9 +128,9 @@ GameObject:
   - component: {fileID: 6715983682375319597}
   - component: {fileID: 6715983682375319598}
   - component: {fileID: 5645501833033756275}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: stageDoor
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -223,7 +223,7 @@ MonoBehaviour:
   doorType: 1
   doorLength: 4
   doorPeriod: 1.5
-  doorActiveThreshold: 5
+  thresholdPoint: {fileID: 0}
   disposable: 0
 --- !u!61 &6715983682375319598
 BoxCollider2D:
@@ -522,10 +522,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveLength: 0.5
   isActived: 0
-  activeThreshold: 5
   CollGuard: {fileID: 2380466055922182421}
   stageDoor: {fileID: 6715983682375319586}
-  disposable: 0
 --- !u!61 &6715983682641580754
 BoxCollider2D:
   m_ObjectHideFlags: 0

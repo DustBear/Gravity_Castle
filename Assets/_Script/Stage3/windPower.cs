@@ -15,6 +15,8 @@ public class windPower : MonoBehaviour
     bool shouldTimerWork;
     float exitPlayerVel; //플레이어가 windZone을 빠져나오는 순간 가지는 속도 
 
+    bool shouldInertialWork; //관성력이 작용해야 하는지의 여부 
+
     private void Awake()
     {
         playerObj = GameObject.Find("Player");
@@ -39,17 +41,31 @@ public class windPower : MonoBehaviour
     //플레이어가 땅에 닿거나 벽에 부딪히는 순간 속도 추가는 정지 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("player.transform.up: " + playerObj.transform.up + "/ windZone.transform.up: " + transform.up);
-        Debug.Log("내적의 값: " + Vector2.Dot(transform.up, playerObj.transform.up));
-
-
-        if (Vector2.Dot(transform.up, playerObj.transform.up) != 1) //플레이어와 wind의 transform.up 내적이 1이 아님 ~> 내적은 0 ~> 바람은 플레이어의 x 축으로 부는 중 
+        if(gameObject.tag == "UpWind" || gameObject.tag == "DownWind") 
         {
-            Debug.Log(playerObj.transform.up);
-            Debug.Log(transform.up);
-            Debug.Log(Vector2.Dot(transform.up, playerObj.transform.up));
+            if(playerObj.transform.up == new Vector3(1,0,0) || playerObj.transform.up == new Vector3(-1, 0, 0)) //플레이어가 오른쪽/왼쪽으로 서있을 때 
+            {
+                shouldInertialWork = true;
+            }
+            else
+            {
+                shouldInertialWork = false;
+            }
+        }
+        else
+        {
+            if (playerObj.transform.up == new Vector3(0, 1, 0) || playerObj.transform.up == new Vector3(0, -1, 0)) //플레이어가 위쪽/아래쪽으로 서있을 때
+            {
+                shouldInertialWork = true;
+            }
+            else
+            {
+                shouldInertialWork = false;
+            }
+        }
 
-            Debug.Log("timer kill");
+        if (!shouldInertialWork) //플레이어와 wind의 transform.up 내적이 1이 아님 ~> 내적은 0 ~> 바람은 플레이어의 x 축으로 부는 중 
+        {           
             return;
         }
         else //플레이어와 wind 의 방향이 수직일 때 ~> 플레이어는 x 축 방향으로 추가속도를 받아야 함 
@@ -59,7 +75,6 @@ public class windPower : MonoBehaviour
             shouldTimerWork = true;
             timer = InertialTime; //타이머 초기화 
             exitPlayerVel = transform.InverseTransformDirection(rigid.velocity).x; //플레이어가 windZone 을 빠져나오는 순간 x축 방향의 속도
-            Debug.Log("exit Velocity: " + exitPlayerVel);
         }
     }
 

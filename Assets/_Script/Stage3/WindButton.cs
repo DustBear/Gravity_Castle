@@ -15,7 +15,7 @@ public class WindButton : MonoBehaviour
     // 3이면 특정 주기에 따라 켜졌다 꺼졌다를 반복하는 환풍기 
 
     //type1
-    bool isAcitve; //현재 windHome 이 작동하고 있는지의 여부 
+    bool isActive; //현재 windHome 이 작동하고 있는지의 여부 
     bool isButtonClicked; //현재 버튼이 눌려져 있는지의 여부 
     public float buttonClickDelay; //버튼이 눌려져 있는 시간 
 
@@ -34,7 +34,15 @@ public class WindButton : MonoBehaviour
     {
         windZoneColl = windZone.GetComponent<BoxCollider2D>();
 
-        if (windType == 2 && isActDefault) //type 2 인데 켜진 상태가 default 인 환풍기일 경우
+        if(windType == 1 && isActDefault)
+        {
+            windHome.enabled = true;
+            windZoneColl.enabled = true;
+            wind.SetActive(true);
+
+            isActive = true;
+        }
+        else if (windType == 2 && isActDefault) //type 2 인데 켜진 상태가 default 인 환풍기일 경우
         {
             windHome.enabled = true;
             windZoneColl.enabled = true;
@@ -48,7 +56,7 @@ public class WindButton : MonoBehaviour
             windZoneColl.enabled = false;
             wind.SetActive(false);
 
-            isAcitve = false;
+            isActive = false;
             isTimerAct = false;
         }
     }
@@ -83,13 +91,13 @@ public class WindButton : MonoBehaviour
 
     void type1_windAct() //작동하고 있던 환풍기는 끄고 꺼져 있던 환풍기는 키기 
     {
-        if (!isAcitve) //꺼져 있을땐 다시 켜야 함 
+        if (!isActive) //꺼져 있을땐 다시 켜야 함 
         {
             windHome.enabled = true;
             windZoneColl.enabled = true;
             wind.SetActive(true);
 
-            isAcitve = true;
+            isActive = true;
             buttonClick(); //버튼이 눌림 
             Invoke("buttonReturn", buttonClickDelay);
         }
@@ -99,7 +107,7 @@ public class WindButton : MonoBehaviour
             windZoneColl.enabled = false;
             wind.SetActive(false);
 
-            isAcitve = false;
+            isActive = false;
             buttonClick(); //버튼이 눌림 
             Invoke("buttonReturn", buttonClickDelay);
         }        

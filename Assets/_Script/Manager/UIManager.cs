@@ -19,8 +19,9 @@ public class UIManager : Singleton<UIManager>
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        fadeCoroutine = _FadeIn(1f);
         sound = GetComponent<AudioSource>();
+
+        fadeCoroutine = _FadeIn(1.5f);
 
         //게임 시작하면 UI 메뉴는 전부 끄고 시작하기 
         inGameMenu.SetActive(false);
@@ -30,40 +31,42 @@ public class UIManager : Singleton<UIManager>
 
     // Fade in과 Fade out이 동시에 실행될 수 없게 하였음
     public void FadeIn(float fadeTime)
-    {       
+    {
+
         StopCoroutine(fadeCoroutine);
         fadeCoroutine = _FadeIn(fadeTime);
         StartCoroutine(fadeCoroutine);
     }
 
     public void FadeOut(float fadeTime)
-    {        
+    {
+
         StopCoroutine(fadeCoroutine);
         fadeCoroutine = _FadeOut(fadeTime);
         StartCoroutine(fadeCoroutine);
     }
 
-    IEnumerator _FadeIn(float delayTime)
-    {
-        var wait = new WaitForSeconds(delayTime/50);
+    IEnumerator _FadeIn(float delayTime) //화면 밝아짐 
+    {        
+        var wait = new WaitForSeconds(delayTime/100);
         Color color = fade.color;
         color.a = 1f;
         fade.color = color; 
         while (color.a > 0f)
         {
-            color.a -= 0.02f;
+            color.a -= 0.01f;
             fade.color = color;
             yield return wait;
         }
     }
 
-    IEnumerator _FadeOut(float delayTime)
-    {
-        var wait = new WaitForSeconds(delayTime/50);
+    IEnumerator _FadeOut(float delayTime) //화면 어두워짐 
+    {        
+        var wait = new WaitForSeconds(delayTime/100);
         Color color = fade.color;
         while (fade.color.a < 1f)
         {           
-            color.a += 0.02f;
+            color.a += 0.01f;
             fade.color = color;
             yield return wait;
         }

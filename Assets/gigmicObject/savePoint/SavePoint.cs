@@ -76,6 +76,7 @@ public class SavePoint : MonoBehaviour
     IEnumerator SaveData()
     {
         isSavePointActivated = true;
+
         Debug.Log("savePointBackUp: " + achievementNum);
         GameManager.instance.SaveData(achievementNum, stageNum, respawnPos);
 

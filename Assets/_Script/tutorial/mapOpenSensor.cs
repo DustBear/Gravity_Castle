@@ -234,6 +234,7 @@ public class mapOpenSensor : MonoBehaviour
         string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
         File.WriteAllText(filePath, ToJsonData);
 
+        GameManager.instance.shouldSpawnSavePoint = true; //빠른이동은 무조건 세이브포인트로만 이동
         SceneManager.LoadScene(GameManager.instance.nextScene);
     }
 

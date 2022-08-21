@@ -28,6 +28,8 @@ public class InGameMenu : MonoBehaviour
     public void OnClickMainStage() //castleEnterance 맵으로 돌아감 
     {
         UIManager.instance.clickSoundGen();
+        InputManager.instance.isInputBlocked = false;
+        InputManager.instance.isJumpBlocked = false;
 
         Time.timeScale = 1f;
 

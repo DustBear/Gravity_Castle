@@ -9,14 +9,17 @@ public class GameManager : Singleton<GameManager>
 {
     // 1) 모든 Stage 공통
     [HideInInspector] public bool shouldStartAtSavePoint {get; set;}
+
+    public bool shouldSpawnSavePoint = true;
+    public bool shouldUseOpeningElevator = false;
+
     public int nextScene {get; set;}
     public Vector2 nextPos {get; set;}
     public Vector2 nextGravityDir {get; set;}
     public Player.States nextState {get; set;}
 
     public bool isStartWithFlipX; //플레이어가 씬을 시작할 때 어느 쪽을 바라봐야 하는지 결정
-
- 
+  
     public string[] gameDataFileNames = {"/GameData0.json", "/GameData1.json", "/GameData2.json", "/GameData3.json"};
     [HideInInspector] public int curSaveFileNum; // 현재 실행중인 게임의 세이브파일 번호
     public int saveFileCount; // 전체 세이브파일 수
@@ -138,18 +141,20 @@ public class GameManager : Singleton<GameManager>
         //제대로 작동하는지 체크하기 위한 코드 ~> 출시 빌드에선 삭제
         if (Input.GetKeyDown(KeyCode.U))
         {
-            Debug.Log("curAchieve: " + GameManager.instance.gameData.curAchievementNum
-                + "  curStageNum: " + GameManager.instance.gameData.curStageNum
-                + "\nfinalAchieve: " + GameManager.instance.gameData.finalAchievementNum
-                + "  finalStage: " + GameManager.instance.gameData.finalStageNum
-                + "  mapStageNum: " + GameManager.instance.gameData.mapStageNum);
-            Debug.Log(GameManager.instance.gameData.savePointUnlock);
+            Debug.Log("nextPos: " + nextPos);
+
+            Debug.Log("curAchieve: " + gameData.curAchievementNum
+                + "  curStageNum: " + gameData.curStageNum
+                + "\nfinalAchieve: " + gameData.finalAchievementNum
+                + "  finalStage: " + gameData.finalStageNum
+                + "  mapStageNum: " + gameData.mapStageNum);
         }
     }
 
     public void StartGame(bool isLoadGame) //true 값 주면 새로 시작하는 게임 false값 주면 기존 세이브에서 시작하는 게임 
     {
         InitData(isLoadGame); //초기화 
+        shouldSpawnSavePoint = true;
 
         InputManager.instance.isInputBlocked = false; //입력제한 풀기 
         InputManager.instance.isJumpBlocked = false; //점프제한 풀기 

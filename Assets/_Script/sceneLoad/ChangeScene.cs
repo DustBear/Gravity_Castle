@@ -13,6 +13,7 @@ public class ChangeScene : MonoBehaviour
 
     [SerializeField] int enterDirection;
     [SerializeField] Vector3 deltaPos;
+    //플레이어가 위/아래 방향에서 떨어지면서 진입하면 0 ~> flipX 여부 바꾸지 않고 그대로 두면 됨 
     //플레이어가 오른쪽 방향에서 왼쪽 포탈로 진입하면 -1 ~> 그 다음 씬에서 flipX 선택해줘야 함 
     //플레이어가 왼쪽 방향에서 오른쪽 포탈로 진입하면 +1 ~> 그 다음 씬에서 flipX 해제해줘야 함
 
@@ -34,6 +35,7 @@ public class ChangeScene : MonoBehaviour
                 GameManager.instance.nextPos = player.transform.position + deltaPos;
             }
           
+            //현재의 중력과 state를 그대로 유지 
             GameManager.instance.nextGravityDir = Physics2D.gravity.normalized;
             GameManager.instance.nextState = Player.curState;
 
@@ -42,7 +44,7 @@ public class ChangeScene : MonoBehaviour
             {
                 GameManager.instance.isStartWithFlipX = true;
             }
-            else
+            else if(enterDirection > 0)
             {
                 GameManager.instance.isStartWithFlipX = false;
             }

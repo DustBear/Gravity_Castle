@@ -54,6 +54,8 @@ public class elecShock : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.tag != "Player") return;
+
         if ((isButtonClicked || isCoroutineWork) && elecType == 1) return;
         //type1: 버튼이 다시 올라오기 전이거나 전기 생성/소멸 애니메이션이 동작 중이면 작동x 
         if (elecType == 2) return; //elecType 이 2이면 버튼 없이 작동하는 elec 임 

@@ -7,7 +7,7 @@ public class openingElevator_v2 : MonoBehaviour
     public Vector2 pos1; //내려오기 전 위치
     public Vector2 pos2; //내려온 후 위치 
     public float moveSpeed;
-
+    
     public GameObject playerObj;
     Rigidbody2D rigid;
     
@@ -16,36 +16,31 @@ public class openingElevator_v2 : MonoBehaviour
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
-
-        if(GameManager.instance.gameData.curAchievementNum == 0) //achNum = 0 이면 새로운 스테이지가 시작한 것 ~> 엘리베이터 내려오는 것 부터 시작 
+        if (GameManager.instance.shouldUseOpeningElevator)
         {
             transform.position = pos1;
             isElevatorArrived = false;
+            GameManager.instance.nextPos = pos1 + new Vector2(0, 1.5f); //엘리베이터 위에 플레이어 생성 
 
-            elevatorMove();
+            rigid.velocity = new Vector2(0, -moveSpeed);
         }
         else
         {
-            isElevatorArrived = true;
             transform.position = pos2;
+            isElevatorArrived = true;
         }
+
+
     }
     void Start()
     {
-        
+        InputManager.instance.isInputBlocked = false; //씬이 시작하면 inputBlock 해제 
     }
-
-    
+  
     void Update()
     {
         if (isElevatorArrived) return;
-
         stopCheck();
-    }
-
-    void elevatorMove()
-    {
-        rigid.velocity = new Vector2(0, -moveSpeed);
     }
 
     void stopCheck()
@@ -54,6 +49,8 @@ public class openingElevator_v2 : MonoBehaviour
         {
             rigid.velocity = Vector2.zero;
             isElevatorArrived = true;
+
+            GameManager.instance.shouldUseOpeningElevator = false;
         }
     }
 }

@@ -11,14 +11,29 @@ public class moveBox_lever : MonoBehaviour
 
     public float moveSpeed;
 
-    bool isPlayerOn;
-    bool isLeverAct;
+    [SerializeField] bool isPlayerOn;
+    [SerializeField] bool isLeverAct;
 
-    public Vector3 leftArrowDir; //왼쪽 화살표를 누를 때 이동할 방향 
-    public Vector3 rightArrowDir; //오른쪽 화살표를 누를 때 이동할 방향
+    public bool isMoveHorizontal; //true 이면 box 가 가로로 움직임 
 
-    public float minXPos;
-    public float maxXPos;
+    //pos1의 수치가 pos2 보다 커야 함(x든 y든 둘 다 해당)
+    public Vector2 pos1;
+    public Vector2 pos2;
+
+    private void Awake()
+    {
+        isPlayerOn = false;
+        isLeverAct = false;
+
+        if(pos1.x == pos2.x) //x좌표가 같으면 세로로 움직이는 것 
+        {
+            isMoveHorizontal = false;
+        }
+        else
+        {
+            isMoveHorizontal = true;
+        }
+    }
     void Start()
     {
         rigid = moveStone.GetComponent<Rigidbody2D>();
@@ -30,7 +45,9 @@ public class moveBox_lever : MonoBehaviour
     
     void Update()
     {
-        if(isPlayerOn && Input.GetKeyDown(KeyCode.E))
+        if (!isPlayerOn) return;
+
+        if (isPlayerOn && Input.GetKeyDown(KeyCode.E))
         {
             if (!isLeverAct)
             {
@@ -44,29 +61,36 @@ public class moveBox_lever : MonoBehaviour
             }
         }
 
-        if(isLeverAct && Input.GetKey(KeyCode.LeftArrow))
+        if(isLeverAct && Input.GetKey(KeyCode.LeftArrow)) // [<--] 누르면
         {
-            if (moveStone.transform.position.x < minXPos)
+            
+            if ((isMoveHorizontal && moveStone.transform.position.x < pos2.x) || (!isMoveHorizontal && moveStone.transform.position.y < pos2.y)) 
             {
                 rigid.velocity = Vector3.zero;
+                moveStone.transform.position = pos2;
                 return;
             }
+            
+            if(isMoveHorizontal) rigid.velocity = new Vector2(-1, 0) * moveSpeed;
+            else rigid.velocity = new Vector2(0, -1) * moveSpeed;
 
-            rigid.velocity = leftArrowDir * moveSpeed;
             spr.sprite = spriteGroup[1];
         }
-        else if(isLeverAct && Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow))
+        else if(isLeverAct && Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow)) // <-- 를 누르지 않은 상태에서 --> 를 누르면 
         {
-            if (moveStone.transform.position.x > maxXPos)
+            if ((moveStone.transform.position.x > pos1.x) || (!isMoveHorizontal && moveStone.transform.position.y > pos1.y))
             {
                 rigid.velocity = Vector3.zero;
+                moveStone.transform.position = pos1;
                 return;
             }
 
-            rigid.velocity = rightArrowDir * moveSpeed;
+            if (isMoveHorizontal) rigid.velocity = new Vector2(1, 0) * moveSpeed;
+            else rigid.velocity = new Vector2(0, 1) * moveSpeed;
+
             spr.sprite = spriteGroup[2];
         }
-        else if(isLeverAct && Input.GetKeyUp(KeyCode.LeftArrow) && !Input.GetKeyDown(KeyCode.RightArrow))
+        else if(isLeverAct && Input.GetKeyUp(KeyCode.LeftArrow) && !Input.GetKeyDown(KeyCode.RightArrow)) 
         {
             rigid.velocity = Vector3.zero;//왼쪽 화살표에서 손을 뗐고 오른쪽 화살표 또한 누르지 않고 있을 때 
             spr.sprite = spriteGroup[0];

@@ -4,8 +4,13 @@ using UnityEngine;
 using System;
 using MonsterLove.StateMachine;
 
+using Random = UnityEngine.Random;
+
 public class Player : MonoBehaviour
 {
+    //플레이어 죽을 때 파편 튀는 것 구현 
+    public GameObject[] parts = new GameObject[3];
+
     [SerializeField] float defaultGravityScale;
     [SerializeField] float maxFallingSpeed;
     [SerializeField] public float walkSpeed;
@@ -17,7 +22,7 @@ public class Player : MonoBehaviour
     [SerializeField] float ropeAccessSpeed; // rope에 접근하는 속도
     [SerializeField] float ropeMoveSpeed; // rope에 매달려 움직이는 속도
     [SerializeField] float leverMoveSpeed; // lever 작동 후 플레이어가 이동하는 속도
-    [SerializeField] float leverRotateSpeed; // lever 작동 후 플레이어가 회전하는 속도
+    [SerializeField] float leverRotateDelay; // lever 작동 후 플레이어가 회전하는 데 걸리는 시간 
     public float windForce; // Stage3의 바람에 의해 받는 힘~> 환풍기마다 다르게 설정할 수 있도록 외부접근 허용 
     [SerializeField] float slidingDegree; // Stage6의 얼음 위에서 미끄러지는 정도
 
@@ -58,7 +63,8 @@ public class Player : MonoBehaviour
     public bool shouldRotateHalf; //powerLever 가 아니면 90도만 회전, powerLever 이면 180도 회전 
     GameObject lever; // 작동시킬 lever
     Vector3 destPos_afterLevering; // Lever 작동 후 플레이어 position
-    float destRot; // Lever 작동 후 플레이어 z-rotation
+    [SerializeField] float destRot; // Lever 작동 후 플레이어가 도달하고자 하는 각도   
+    float destGhostRot; //스테이지4의 유령이 레버를 돌릴 때 필요한 변수 
 
     // Wind
     bool isHorizontalWind;
@@ -93,8 +99,13 @@ public class Player : MonoBehaviour
     [SerializeField] AudioClip moveSound; //걷기 or 로프를 탈 때 나는 소리
     [SerializeField] AudioClip jump_landSound; //점프 및 착지할 때 나는 소리 
 
+    GameObject cameraObj;
+    public bool isCameraShake;
+
     void Awake()
-    {      
+    {
+        Time.timeScale = 1;
+
         fsm = StateMachine<States>.Initialize(this);
         rigid = GetComponent<Rigidbody2D>();
         collide = GetComponent<BoxCollider2D>();
@@ -103,11 +114,19 @@ public class Player : MonoBehaviour
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<MainCamera>();
         openingSceneElevator = GameObject.Find("openingSceneElevator");
         sound = GetComponent<AudioSource>();
+        cameraObj = GameObject.FindWithTag("MainCamera");
+
+        for(int index=0; index<parts.Length; index++)
+        {
+            parts[index].SetActive(false);
+        }
     }
 
     void Start()
     {
-        UIManager.instance.FadeIn(1f);       
+        UIManager.instance.FadeIn(1.5f);
+        sprite.color = new Color(1, 1, 1, 1); //플레이어 색상 초기화 
+
         // 각 State로 넘어가기 위한 기본 조건
         readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //땅이나 점프강화발판 둘 다에 닿아있지 않을 때 
         readyToLand = () => (isGrounded || isOnJumpPlatform) && (int)transform.InverseTransformDirection(rigid.velocity).y <= 0; //땅or점프강화발판에 닿아 있고 y방향 속도벡터의 방향이 -1일 때 
@@ -124,6 +143,7 @@ public class Player : MonoBehaviour
         // 현재 Scene으로 넘어오기 직전의 데이터를 불러와서 적용
         if (!GameManager.instance.shouldStartAtSavePoint)
         {
+            //GameManager ~> 씬이 시작할 때 플레이어의 위치 조정 
             transform.position = GameManager.instance.nextPos;
             Physics2D.gravity = GameManager.instance.nextGravityDir * 9.8f;
             transform.up = -GameManager.instance.nextGravityDir;
@@ -131,6 +151,7 @@ public class Player : MonoBehaviour
             
             States nextState = GameManager.instance.nextState;
             // 이전 scene의 rope와 현재 scene의 rope는 다른 오브젝트로 취급되니 새로 접근 필요
+
             if (nextState == States.MoveOnRope) ChangeState(States.AccessRope);
             // Jump state로 시작하면 점프 input이 안들어와도 scene이 시작되자마자 플레이어가 점프하는 문제 발생
             else if (nextState == States.Jump) ChangeState(States.Fall);
@@ -156,12 +177,6 @@ public class Player : MonoBehaviour
             */
         }
 
-        //씬 시작할 때 플레이어의 위치를 scene Elevator에 넘겨줌(openingSceneElevator 를 작동할지 말지 결정)
-        if(openingSceneElevator!= null)
-        {
-            openingSceneElevator.GetComponent<openingSceneEle>().playerPos = transform.position;
-        }
-
         if (GameManager.instance.isStartWithFlipX)
         {
             sprite.flipX = true;
@@ -171,6 +186,14 @@ public class Player : MonoBehaviour
         }
 
         jumpTimer = 0; //jumpTimer 초기화 
+
+        //플레이어가 0에서 360 사이의 rotation 만을 가지도록 초기화해줌 
+        /*
+        if (transform.up == new Vector3(0, 1, 0)) transform.rotation = Quaternion.Euler(0, 0, 0);
+        else if(transform.up == new Vector3(1, 0, 0)) transform.rotation = Quaternion.Euler(0, 0, 90f);
+        else if (transform.up == new Vector3(0, -1, 0)) transform.rotation = Quaternion.Euler(0, 0, 180f);
+        else transform.rotation = Quaternion.Euler(0, 0, 270f);
+        */
     }
 
     private void Update()
@@ -627,7 +650,7 @@ public class Player : MonoBehaviour
     void AccessLever_Enter()
     {
         rigid.velocity = Vector2.zero;
-        
+       
         // 레버 방향으로 플레이어 sprite flip
         switch (lever.transform.eulerAngles.z)
         {
@@ -745,17 +768,28 @@ public class Player : MonoBehaviour
 
         // 회전해야할 플레이어 rotation 설정
         if (!shouldRotateHalf) //90도 회전하는 일반적인 경우 
-        {
-            destRot = transform.eulerAngles.z + InputManager.instance.horizontal * 90f;
-            if (destRot == -90f) destRot = 270f;
+        {           
+            if(InputManager.instance.horizontal == 1) //z rotation + 90 degree (반시계방향 회전)
+            {
+                destRot = transform.eulerAngles.z + 90f;
+            }
+            else if (InputManager.instance.horizontal == -1)
+            {
+                destRot = transform.eulerAngles.z - 90f;
+            }
         }
         else //180도 회전하는 경우 
         {
-            destRot = transform.eulerAngles.z + 180f;
-            if (destRot == 450f) destRot = 90f;
+            if (!sprite.flipX)
+            {
+                destRot = transform.eulerAngles.z + 180f;
+            }
+            else
+            {
+                destRot = transform.eulerAngles.z - 180f;
+            }
+            //180도 회전 레버의 경우 플레이어가 바라보는 방향에 따라 회전방향이 달라진다 
         }
-
-
 
         // 회전하면서 바뀌어야할 플레이어 position 설정
         if (!shouldRotateHalf) //90도회전시
@@ -784,26 +818,24 @@ public class Player : MonoBehaviour
         }
         
         ani.SetBool("isFalling", true);
+        Time.timeScale = 0; //플레이어가 회전하는동안 시간 멈춤 
+
+        cameraObj.GetComponent<MainCamera>().cameraShake(1f, 1f);
     }
 
     void ChangeGravityDir_Update()
     {
+        if (isCameraShake) return; //카메라 흔들림이 끝나고 나서 플레이어 회전 
+
         // 레버 조작 후 플레이어 이동 및 회전
-        transform.localPosition = Vector2.MoveTowards(transform.localPosition, destPos_afterLevering, leverMoveSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, destRot), leverRotateSpeed * Time.deltaTime);
-        
-        // 플레이어 회전이 거의 완료되었다면 다음 state로 이동
-        if (Mathf.RoundToInt(transform.eulerAngles.z)%360f == destRot%360f)
-        {
-            //플레이어는 항상 0, 90, 180, 270도의 회전각만 가질 수 있다 
+        transform.localPosition = Vector2.MoveTowards(transform.localPosition, destPos_afterLevering, leverMoveSpeed * Time.unscaledDeltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, destRot), leverRotateDelay * Time.unscaledDeltaTime);
+        Debug.Log(transform.eulerAngles.z + ", " + transform.rotation.z);
 
-            if (destRot % 360f == 0) destRot = 0f;
-            else if (destRot % 360f == 90f) destRot = 90f;
-            else if (destRot % 360f == 180f) destRot = 180f;
-            else if (destRot % 360f == 270f) destRot = 270f;
-
-            transform.eulerAngles = Vector3.forward * destRot;
-
+        if (Mathf.Abs(transform.eulerAngles.z - destRot) % 360f < 1) //오차범위 이내로 가까워지면( (초기 z각 + destRot) - 현재의 z각 )
+        {                    
+            transform.rotation = Quaternion.Euler(0, 0, destRot);
+            
             // 중력 방향 변화
             Vector2 gravity = -transform.up * 9.8f;
             if (Mathf.Abs(gravity.x) < 1f) gravity.x = 0f; //물리엔진 연산오차 보정(0.00xxx 같이 나올 경우 0으로 고정해줘야 함) 
@@ -815,11 +847,12 @@ public class Player : MonoBehaviour
             rigid.gravityScale = defaultGravityScale;
 
             ChangeState(States.FallAfterLevering);
-        }   
+        }        
     }
 
     void FallAfterLevering_Enter()
     {
+        Time.timeScale = 1;
         if (shouldRotateHalf) shouldRotateHalf = false;
     }
 
@@ -843,12 +876,29 @@ public class Player : MonoBehaviour
     {
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
+
+        if(transform.up == new Vector3(0, 1, 0))
+        {
+            destGhostRot = 0;
+        }
+        else  if(transform.up == new Vector3(-1, 0, 0))
+        {
+            destGhostRot = -90f;
+        }
+        else if(transform.up == new Vector3(1, 0, 0))
+        {
+            destGhostRot = 90f;
+        }
+        else
+        {
+            destGhostRot = 180f;
+        }
     }
 
     void GhostUsingLever_Update()
     {
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 0f, 0f), leverRotateSpeed * Time.deltaTime);
-        
+        transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z + (1 / leverRotateDelay * destGhostRot * Time.unscaledDeltaTime));
+
         // 플레이어 rotation이 거의 (0, 0, 0)이면 다음 state로 이동
         int angle = Mathf.RoundToInt(transform.eulerAngles.z);
         if (angle == 0 || angle == 360 )
@@ -995,6 +1045,21 @@ public class Player : MonoBehaviour
     IEnumerator Die()
     {
         GameManager.instance.shouldStartAtSavePoint = true; //죽으면 일단 세이브포인트에서 시작해야 함 
+        cameraObj.GetComponent<MainCamera>().isCameraLock = true; //카메라 움직이지 않게 고정 
+        sprite.color = new Color(1, 1, 1, 0); //잠시 플레이어 투명화 
+
+        for(int index=0; index<parts.Length; index++)
+        {
+            parts[index].SetActive(true);
+            Rigidbody2D rigid = parts[index].GetComponent<Rigidbody2D>();
+
+            Vector2 randomDir = new Vector2(Random.insideUnitSphere.x, Random.insideUnitSphere.y);
+            float randomPower = Random.Range(15f, 30f);
+
+            rigid.AddForce(randomDir * randomPower, ForceMode2D.Impulse); //세 파츠에 랜덤 방향,크기의 힘을 가해서 튕겨냄 
+        }
+        yield return new WaitForSeconds(1.5f);
+
         UIManager.instance.FadeOut(1f); //화면 어두워지고
         yield return new WaitForSeconds(1f);
 
