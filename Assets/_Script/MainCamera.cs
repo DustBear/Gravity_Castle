@@ -21,16 +21,17 @@ public class MainCamera : MonoBehaviour
     [SerializeField] float mapMinY;
     [SerializeField] float mapMaxY;
 
-    // 카메라 흔들림
-    public float shakedX;
-    public float shakedY;
-    public float shakedZ;
-
     float angle; // viewRect 각도
     float diagonal; // viewRect 대각선 길이의 절반
 
-    public bool isCameraLock; //특정 연출 시 카메라가 움직이지 않도록 고정 
+    public bool isCameraLock; //특정 연출 시 카메라가 플레이어를 따라가지 않도록 고정 
     public AnimationCurve shakeCurve;
+
+    bool isLookDownWork;
+    public float lookDownSide_distance; //lookDownSide()가 작동했을 때 아래쪽으로 시야가 얼마나 이동하는지
+    public float lookDownSIde_smoothTime; //카메라 워크 smooth 정도 
+    public float lookDownSide_inputTime; //플레이어가 몇초 이상 down Arrow 를 누르고 있어야 작동하는지
+    [SerializeField] float lookDownSide_timer= 0f;
 
     void Awake() {
         playerObj = GameObject.FindWithTag("Player");
@@ -38,6 +39,9 @@ public class MainCamera : MonoBehaviour
         cam = GetComponent<Camera>();
         angle = Mathf.Atan2(resolutionX, resolutionY);
         diagonal = Mathf.Sqrt(Mathf.Pow(cam.orthographicSize, 2) + Mathf.Pow(cam.orthographicSize / resolutionY * resolutionX, 2));
+
+        isCameraLock = false;
+        isLookDownWork = false;
     }
 
     void Start()
@@ -58,10 +62,11 @@ public class MainCamera : MonoBehaviour
 
     void Update()
     {
+        lookDownSide();
         if (isCameraLock) return;
 
         // 카메라 rotation = 플레이어 rotation
-        transform.rotation = Quaternion.Euler(0f, 0f, player.transform.eulerAngles.z + shakedZ);
+        transform.rotation = Quaternion.Euler(0f, 0f, player.transform.eulerAngles.z);
     }
 
     public void ImmediateMove()  //목표 위치로 곧바로 이동함(씬 바뀔때, 플레이어가 한 씬 내에서 순간이동할 때 사용)
@@ -80,7 +85,7 @@ public class MainCamera : MonoBehaviour
     }
     IEnumerator cameraShakeCor(float shakeSize, float shakeDelay)
     {
-        Vector2 initialPos = new Vector2(transform.position.x, transform.position.y);
+        Vector3 initialPos = transform.position;
         player.GetComponent<Player>().isCameraShake = true;
 
         float strength;
@@ -88,18 +93,81 @@ public class MainCamera : MonoBehaviour
 
         while(elapsedTime <= shakeDelay)
         {
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.unscaledDeltaTime;
             strength = shakeSize * shakeCurve.Evaluate(elapsedTime / shakeDelay);
 
-            transform.position = initialPos + strength * Random.insideUnitCircle;
+            transform.position = new Vector3(initialPos.x + strength * Random.insideUnitCircle.x, initialPos.y + strength * Random.insideUnitCircle.y, initialPos.z);
             yield return null;
         }
 
         transform.position = initialPos;       
         player.GetComponent<Player>().isCameraShake = false;
     }
+    
+    void lookDownSide()
+    {
+        if (isLookDownWork) return;
 
-    Vector3 cameraPosCal()
+        if(player.isGrounded && Input.GetKey(KeyCode.DownArrow)) //플레이어가 지면에 닿아있으면서 아래쪽 화살표를 계속 누르면 
+        {
+            lookDownSide_timer += Time.deltaTime;
+            if(lookDownSide_timer >= lookDownSide_inputTime) //필요 기준치를 넘으면 
+            {
+                StartCoroutine(lookDownSideCor());
+            }
+        }
+    }
+
+    IEnumerator lookDownSideCor()
+    {
+        isLookDownWork = true;
+        isCameraLock = true; //잠시 카메라가 플레이어를 따라가지 않도록 조정 
+        InputManager.instance.isInputBlocked = true;
+
+        Vector3 lookDownAimPos = transform.position - player.transform.up * lookDownSide_distance;
+
+        while (true)
+        {
+            Debug.Log("camera move down");
+            transform.position = Vector3.SmoothDamp(transform.position, lookDownAimPos, ref dampSpeed, lookDownSIde_smoothTime);          
+            if(Mathf.Abs((transform.position - lookDownAimPos).magnitude) <= 0.02f)
+            {
+                transform.position = lookDownAimPos; //카메라 위치 고정 
+                break;
+            }
+
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        
+        while (Input.GetKey(KeyCode.DownArrow))
+        {            
+            yield return null;
+        }
+
+        Vector3 newAimPos = transform.position + player.transform.up * lookDownSide_distance;
+
+        while (true)
+        {
+            Debug.Log("camera move up");
+            transform.position = Vector3.SmoothDamp(transform.position, newAimPos, ref dampSpeed, lookDownSIde_smoothTime);
+            if (Mathf.Abs((transform.position - newAimPos).magnitude) <= 0.02f)
+            {
+                transform.position = newAimPos; //카메라 위치 고정 
+                break;
+            }
+
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+
+        isLookDownWork = false;
+        isCameraLock = false;
+        InputManager.instance.isInputBlocked = false;
+
+        lookDownSide_timer = 0;
+    }
+
+
+    public Vector3 cameraPosCal()
     {
         // 플레이어 z-rotation이 0일때 카메라 위치 = 플레이어 위치 + (0, offset)
         // 플레이어 z-rotation이 바뀔 수 있기에 삼각함수 사용
@@ -150,7 +218,7 @@ public class MainCamera : MonoBehaviour
         }
 
         // 카메라 최종 위치
-        Vector3 aimPos = new Vector3((upLeftX + downLeftX + downRightX + upRightX) / 4 + deltaX - shakedX, (upLeftY + downLeftY + downRightY + upRightY) / 4 + deltaY - shakedY, -10f);
+        Vector3 aimPos = new Vector3((upLeftX + downLeftX + downRightX + upRightX) / 4 + deltaX, (upLeftY + downLeftY + downRightY + upRightY) / 4 + deltaY, -10f);
        
         return aimPos;
     }

@@ -34,10 +34,5 @@ public class savePointManager : MonoBehaviour
 
             GameManager.instance.shouldSpawnSavePoint = false;
         }
-
-        
-       
-
-
-    }   
+    }
 }
