@@ -82,7 +82,7 @@ public class SaveFileButton : MonoBehaviour
             File.WriteAllText(filePath, ToJsonData);
 
             //실제 플레이어가 제 위치에 소환될 수 있도록 GameManager 도 초기화시켜 줌 
-            GameManager.instance.nextScene = 30;
+            GameManager.instance.nextScene = 2;
             GameManager.instance.shouldSpawnSavePoint = false;
             GameManager.instance.shouldUseOpeningElevator = true;
 

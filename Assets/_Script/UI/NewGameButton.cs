@@ -64,7 +64,7 @@ public class NewGameButton : MonoBehaviour
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[0];
             File.WriteAllText(filePath, ToJsonData);
 
-            GameManager.instance.nextScene = 30; //스테이지1 
+            GameManager.instance.nextScene = 2; //스테이지1 
             //nextPos, nextDir 은 씬으로 이동한 다음 savePointManager에서 알아서 조정해 줌 
 
             GameManager.instance.shouldSpawnSavePoint = false;

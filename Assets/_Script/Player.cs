@@ -1065,9 +1065,16 @@ public class Player : MonoBehaviour
         {
             //GameManager.instance.gameData.curStageNum 는 그대로 유지 
             GameManager.instance.gameData.curAchievementNum = 1;
-            GameManager.instance.gameData.finalAchievementNum = 1;
-            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //첫번째 세이브포인트 활성화시킴 
 
+            if(GameManager.instance.gameData.finalStageNum == GameManager.instance.gameData.curStageNum)
+            {
+                if (GameManager.instance.gameData.finalAchievementNum == GameManager.instance.gameData.curAchievementNum)
+                {
+                    GameManager.instance.gameData.finalAchievementNum = 1; //만약 현재 진행도가 최대 진행도일 경우 final Ach 에도 반영함 
+                }
+            }     
+
+            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //첫번째 세이브포인트 활성화시킴 
             GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //씬은 그대로 유지 
             //새로운 스테이지를 처음 시작한 뒤 세이브포인트를 하나도 못 활성화시키고 죽은 경우엔 그냥 1번 세이브를 활성화한것으로 한다
 
