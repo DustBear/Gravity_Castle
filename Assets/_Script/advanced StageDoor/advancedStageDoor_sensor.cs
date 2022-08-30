@@ -12,7 +12,7 @@ public class advancedStageDoor_sensor : MonoBehaviour
         {
             isActived = false;
         }
-        else if (GameManager.instance.gameData.curAchievementNum >= stageDoor.GetComponent<advancedStageDoor>().DoorActiveTrheshold)
+        else if (GameManager.instance.gameData.curAchievementNum >= stageDoor.GetComponent<advancedStageDoor>().doorActiveThreshold)
         {           
             isActived = true;
         }

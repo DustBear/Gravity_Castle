@@ -27,7 +27,7 @@ public class InputManager : Singleton<InputManager>
     }
 
     void Update()
-    {
+    {        
         if (!isInputBlocked) //InputBlocked 되면 조작 불가능
         {
             horizontal = Input.GetAxisRaw("Horizontal");

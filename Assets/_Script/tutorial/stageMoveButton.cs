@@ -75,14 +75,14 @@ public class stageMoveButton : MonoBehaviour
         sound.clip = correct;
         sound.Play();
 
-        mapOpenSensor mapSensorScript = mapOpenSensor.GetComponent<mapOpenSensor>();
+        stageManager stageManagerScr = mapOpenSensor.GetComponent<stageManager>();
 
         chapter_name.GetComponent<TextMeshProUGUI>().text = stageNameText; //스테이지 이름 바꿔주기 
         chapter_Instruction.GetComponent<Image>().sprite = instruction_image;
-        mapSensorScript.selectedStageNum = stageNum;
-        mapSensorScript.selectedSavePointNum = 1; //스테이지가 넘어가면 세이브포인트 번호도 1로 초기화
-        mapSensorScript.savePointCount = savePointCount;
-        mapSensorScript.iconMake();
+        stageManagerScr.selectedStageNum = stageNum;
+        stageManagerScr.selectedSavePointNum = 1; //스테이지가 넘어가면 세이브포인트 번호도 1로 초기화
+        stageManagerScr.savePointCount = savePointCount;
+        stageManagerScr.iconMake();
     }
 
     IEnumerator iconShake()

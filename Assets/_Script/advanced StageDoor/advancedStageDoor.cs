@@ -13,15 +13,8 @@ public class advancedStageDoor : MonoBehaviour
     public float doorLength; //stageDoor의 길이(3,4,5): 문은 이 숫자만큼 위로 올라가야 함
     public float doorPeriod; //문이 완전히 올라가고/닫히는 데 걸리는 시간
     public GameObject thresholdPoint; //씬을 활성화한 시점에 이 savePoint/key 를 획득했으면 문이 열린 상태로 유지
-    private int doorActiveThreshold;
-    public int DoorActiveTrheshold
-    {
-        get 
-        {
-            return doorActiveThreshold;
-        }
-    }
-
+    public int doorActiveThreshold; //thresholdPoint 가 다른 씬에 있어서 오브젝트를 가져올 수 없는 경우 수동으로 입력 
+    
     SpriteRenderer spr;
     AudioSource sound;
 

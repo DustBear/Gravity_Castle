@@ -37,7 +37,7 @@ public class FireFalling : MonoBehaviour
     void Update()
     {
         // If scene changes, then erase all activated fires
-        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.shouldStartAtSavePoint)
+        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.shouldSpawnSavePoint)
         {
             ObjManager.instance.ReturnObj(ObjManager.ObjType.fireFalling, gameObject);
         }

@@ -9,8 +9,8 @@ public class StartMenu : MonoBehaviour
 {
     public GameObject titleMenu;
 
-    public GameObject gameMenu;
-    //public Button[] gameMenuButton = new Button[4];
+    public GameObject gameMenu; //시작하기, 이어하기, 불러오기 버튼 있는 창 
+    public GameObject loadMenu; //세이브파일 버튼 1~4 뜨는 것 
     public TextMeshProUGUI[] gameMenuButtonText = new TextMeshProUGUI[4];
     public Button[] gameMenuButton = new Button[4];
     public TextMeshProUGUI settingExp;
@@ -34,6 +34,9 @@ public class StartMenu : MonoBehaviour
         gameMenu.SetActive(false);
         isQuickMenuOpen = false;
         quickMenu.SetActive(false);
+        loadMenu.SetActive(false);
+
+
         InputManager.instance.isInputBlocked = false; //메인 메뉴로 돌아오면 무조건 inputBlock 풀어줌
 
         fadeCoverColor = fadeCover.GetComponent<Image>().color;

@@ -134,10 +134,13 @@ MonoBehaviour:
   - {fileID: -3247546508449898186, guid: da5a857990160d04ea5d2090a74a0eab, type: 3}
   - {fileID: -3874759380448987934, guid: da5a857990160d04ea5d2090a74a0eab, type: 3}
   moveSpeed: 3
-  leftArrowDir: {x: -1, y: 0, z: 0}
-  rightArrowDir: {x: 1, y: 0, z: 0}
-  minXPos: -7
-  maxXPos: -2
+  accelSpeed: 0
+  maxSpeed: 0
+  animWheelDir: 0
+  isPlayerOn: 0
+  isLeverAct: 0
+  pos1: {x: 0, y: 0}
+  pos2: {x: 0, y: 0}
 --- !u!61 &2811746285003243355
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -176,6 +179,7 @@ GameObject:
   - component: {fileID: 2811746285703900672}
   - component: {fileID: 2811746285703900687}
   - component: {fileID: 2811746285703900686}
+  - component: {fileID: 2552000641871578858}
   m_Layer: 3
   m_Name: moveBox
   m_TagString: Platform
@@ -237,7 +241,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 42c5d2262d959f14c8188cb2213d9985, type: 3}
+  m_Sprite: {fileID: 8587413170359726878, guid: bbdbbd6581fdfcf4fb74ffb78f4920ba, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -289,9 +293,28 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
+--- !u!95 &2552000641871578858
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2811746285703900685}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 83cfff276a940824cb2e0e44854ca8cb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

@@ -16,11 +16,12 @@ public class openingElevator_v2 : MonoBehaviour
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
-        if (GameManager.instance.shouldUseOpeningElevator)
+        if (GameManager.instance.shouldUseOpeningElevator) //엘리베이터를 사용할지 말지는 GM 이 결정 
         {
             transform.position = pos1;
             isElevatorArrived = false;
             GameManager.instance.nextPos = pos1 + new Vector2(0, 1.5f); //엘리베이터 위에 플레이어 생성 
+            GameManager.instance.nextGravityDir = new Vector2(0, -1); //중력 방향 설정해 줌 
 
             rigid.velocity = new Vector2(0, -moveSpeed);
         }

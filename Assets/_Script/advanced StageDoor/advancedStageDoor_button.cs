@@ -13,13 +13,14 @@ public class advancedStageDoor_button : MonoBehaviour
       
     void Start()
     {
+        //이 스크립트는 항상 advancedStageDoor 스크립트보다 나중에 실행되어야 함 ~> Start() 로 설정 
         if (stageDoor.GetComponent<advancedStageDoor>().disposable) //disposable 설정된 씬을 시작할 때 항상 비활성화된 문 ~> 늘 button 비활성화해야 함 
         {
             isActived = false;
         }       
         else
         {
-            if (GameManager.instance.gameData.curAchievementNum >= stageDoor.GetComponent<advancedStageDoor>().DoorActiveTrheshold)
+            if (GameManager.instance.gameData.curAchievementNum >= stageDoor.GetComponent<advancedStageDoor>().doorActiveThreshold)
             {
                 transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - moveLength, 0);
                 isActived = true;

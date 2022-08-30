@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class savePointIconButton : MonoBehaviour
 {
-    mapOpenSensor mapSensorScript;
+    stageManager stageManagerScr;
     public int savePointNum;
     void Start()
     {
-        mapSensorScript = GameObject.Find("mapOpenSensor").GetComponent<mapOpenSensor>();
+        stageManagerScr = GameObject.Find("stageManager").GetComponent<stageManager>();
     }
 
     
@@ -21,7 +21,7 @@ public class savePointIconButton : MonoBehaviour
     {
         UIManager.instance.clickSoundGen();
 
-        mapSensorScript.selectedSavePointNum = savePointNum;
-        mapSensorScript.iconCheck();
+        stageManagerScr.selectedSavePointNum = savePointNum;
+        stageManagerScr.iconCheck();
     }
 }

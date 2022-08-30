@@ -172,8 +172,6 @@ public class elevatorCage : MonoBehaviour
   
     void bellRing() 
     {
-        Debug.Log("bell ring");
-
         isAchieved = false;
         bellSound.Stop();
         bellSound.Play();

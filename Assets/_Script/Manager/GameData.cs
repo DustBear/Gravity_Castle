@@ -24,6 +24,5 @@ public class GameData
     public int finalAchievementNum;
     public int finalStageNum;
 
-    public int mapStageNum; // 지도 상에서 오픈된 최대 스테이지    
-    public bool[ , ] savePointUnlock = new bool[8,50]; //[스테이지번호, 성취도번호] 해당 세이브포인트가 활성화되었는지 체크 
+    public bool[ , ] savePointUnlock = new bool[7,50]; //[스테이지번호, 성취도번호] 해당 세이브포인트가 활성화되었는지 체크 
 }

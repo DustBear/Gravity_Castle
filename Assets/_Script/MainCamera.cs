@@ -128,7 +128,6 @@ public class MainCamera : MonoBehaviour
 
         while (true)
         {
-            Debug.Log("camera move down");
             transform.position = Vector3.SmoothDamp(transform.position, lookDownAimPos, ref dampSpeed, lookDownSIde_smoothTime);          
             if(Mathf.Abs((transform.position - lookDownAimPos).magnitude) <= 0.02f)
             {
@@ -148,7 +147,6 @@ public class MainCamera : MonoBehaviour
 
         while (true)
         {
-            Debug.Log("camera move up");
             transform.position = Vector3.SmoothDamp(transform.position, newAimPos, ref dampSpeed, lookDownSIde_smoothTime);
             if (Mathf.Abs((transform.position - newAimPos).magnitude) <= 0.02f)
             {

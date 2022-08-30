@@ -26,7 +26,7 @@ public class Projectile : MonoBehaviour
 
     void Update() {
         // Erase projectile when scene is changed
-        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.shouldStartAtSavePoint)
+        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.shouldSpawnSavePoint)
         {
             ObjManager.instance.ReturnObj(type, gameObject);
         }

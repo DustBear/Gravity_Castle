@@ -472,6 +472,7 @@ Transform:
   - {fileID: 4291992425370245686}
   - {fileID: 4820761880884697941}
   - {fileID: 2035994837769210628}
+  - {fileID: 6745283453421938363}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -494,7 +495,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bd8e392e604e05e4eab0d0d3afe8b9c0, type: 2}
+  - {fileID: 2100000, guid: b3e435233c60489489f1ab9c3b8921e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -515,7 +516,7 @@ SpriteRenderer:
   m_SortingLayerID: -976024869
   m_SortingLayer: -2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 8793639957104055765, guid: 9934691fa92ae5e40aaf975f92b7e170, type: 3}
+  m_Sprite: {fileID: 4034364271785777135, guid: 896890a14e080ae43bd558b54283148f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -590,6 +591,7 @@ MonoBehaviour:
   - {fileID: 977462551743922844}
   - {fileID: 3386804356356760829}
   - {fileID: 7488369049646998059}
+  boxGrabColl: {fileID: 6223863724256448046}
   defaultGravityScale: 3
   maxFallingSpeed: 20
   walkSpeed: 6
@@ -613,6 +615,7 @@ MonoBehaviour:
   groundedRememberOffset: 0.12
   shouldRotateHalf: 0
   destRot: 0
+  isPlayerGrab: 0
   isGrounded: 1
   isOnJumpPlatform: 0
   leftArrow: {fileID: 5135453549317223075}
@@ -622,9 +625,9 @@ MonoBehaviour:
   moveSound: {fileID: 8300000, guid: e7dc2a35cc6f83f4daa03d5114e73f4d, type: 3}
   jump_landSound: {fileID: 8300000, guid: 398e41fc6606baf4e964ebcc5af00616, type: 3}
   isCameraShake: 0
-  isLeftRayHit: 0
-  isRightRayHit: 0
+  isLand: 0
   jumpPower: 12
+  fallingGravity: 4
 --- !u!95 &7733424920935491460
 Animator:
   serializedVersion: 3
@@ -912,6 +915,63 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &6223863724256448046
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6745283453421938363}
+  - component: {fileID: 4103984745875140897}
+  m_Layer: 23
+  m_Name: boxGrabCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6745283453421938363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6223863724256448046}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5135453547917011350}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &4103984745875140897
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6223863724256448046}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2}
+  m_EdgeRadius: 0
 --- !u!1 &7488369049646998059
 GameObject:
   m_ObjectHideFlags: 0

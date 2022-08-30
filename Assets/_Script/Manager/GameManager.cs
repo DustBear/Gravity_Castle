@@ -6,11 +6,10 @@ using System.IO;
 
 // GameManager는 다음 scene으로 이동 시 유지해야할 data를 보관
 public class GameManager : Singleton<GameManager>
-{
-    // 1) 모든 Stage 공통
-    [HideInInspector] public bool shouldStartAtSavePoint {get; set;}
-
+{    
     public bool shouldSpawnSavePoint = true;
+    //빠른메뉴나 시작키, 죽고 나서 부활할 때는 세이브포인트에서 씬 시작. 단순히 changeScene으로 씬과 씬을 이동할 때는 세이브포인트 이용x 
+    
     public bool shouldUseOpeningElevator = false;
 
     public int nextScene {get; set;}
@@ -21,7 +20,7 @@ public class GameManager : Singleton<GameManager>
     public bool isStartWithFlipX; //플레이어가 씬을 시작할 때 어느 쪽을 바라봐야 하는지 결정
   
     public string[] gameDataFileNames = {"/GameData0.json", "/GameData1.json", "/GameData2.json", "/GameData3.json"};
-    [HideInInspector] public int curSaveFileNum; // 현재 실행중인 게임의 세이브파일 번호
+    public int curSaveFileNum; // 현재 실행중인 게임의 세이브파일 번호
     public int saveFileCount; // 전체 세이브파일 수
     public GameData gameData {get; private set;}
     public SaveFileSeq saveFileSeq {get; set;}
@@ -51,7 +50,7 @@ public class GameManager : Singleton<GameManager>
         }
         else //파일 존재하지 않을 때 
         {
-            saveFileSeq = new SaveFileSeq();
+            saveFileSeq = new SaveFileSeq(); //새로 하나 만들어야 함 
             saveFileSeq.saveFileSeqList = new List<int>();
         }
 
@@ -79,8 +78,7 @@ public class GameManager : Singleton<GameManager>
             StopCoroutine("soundManager"); //아직 코루틴이 다 끝나지 않은 상태에서 다음 음향 코루틴 시작하면 이전 코루틴은 지워야 함
             StartCoroutine("soundManager");
         }
-    }
-   
+    } 
     IEnumerator soundManager() //튜토리얼:0 부터 시작 ~> 스테이지1 bgm은 index=1 / 게임메뉴의 bgm index=9(10번째)
     {
         curBgmIndex = purposeBgmIndex;
@@ -141,18 +139,23 @@ public class GameManager : Singleton<GameManager>
         //제대로 작동하는지 체크하기 위한 코드 ~> 출시 빌드에선 삭제
         if (Input.GetKeyDown(KeyCode.U))
         {
-            Debug.Log("nextPos: " + nextPos);
-
             Debug.Log("curAchieve: " + gameData.curAchievementNum
                 + "  curStageNum: " + gameData.curStageNum
                 + "\nfinalAchieve: " + gameData.finalAchievementNum
                 + "  finalStage: " + gameData.finalStageNum
-                + "  mapStageNum: " + gameData.mapStageNum);
+                );
         }
     }
 
-    public void StartGame(bool isLoadGame) //true 값 주면 새로 시작하는 게임 false값 주면 기존 세이브에서 시작하는 게임 
+    /*
+    public void StartGame(bool isStartNew) //true 값 주면 새로 시작하는 게임 false값 주면 기존 세이브에서 시작하는 게임 
     {
+        if (!isStartNew)
+        {
+
+        }
+
+
         InitData(isLoadGame); //초기화 
         shouldSpawnSavePoint = true;
 
@@ -168,8 +171,9 @@ public class GameManager : Singleton<GameManager>
 
         isStartWithFlipX = false;
     }
+    */
 
-    //세이브파일 버튼에 현재 진행단계 표시하기 위한 코드 ~> 진행 진척도로 바꾸자! 
+    //세이브파일 앞에 어디까지 진행했는지 문자 띄워줌 
     public KeyValuePair<int, int> GetSavedData(int saveFileNum)
     {
         string filePath = Application.persistentDataPath + gameDataFileNames[saveFileNum];
@@ -180,8 +184,9 @@ public class GameManager : Singleton<GameManager>
             return new KeyValuePair<int, int>(curGameData.finalStageNum, curGameData.finalAchievementNum);
         }
         return new KeyValuePair<int, int>(-1, -1); //경로에 세이브파일이 없으면 ~> '새 게임' 텍스트 표시해야 함 
-    }   
+    }  
 
+    /*
     // Case 1) 메인메뉴에서 New Game을 눌렀을 시 호출됨
     // Case 2) 메인메뉴에서 Load Game을 눌렀을 시 호출됨 
     // Case 3) 게임 내에서 사망했을 시 호출됨
@@ -236,6 +241,7 @@ public class GameManager : Singleton<GameManager>
             
         }
     }
+    */
 
     // Save Point에 도달했을 때, 문을 열 때, key 획득할 때 사용 
     public void SaveData(int savePointNum, int stageNum, Vector2 playerPos) 

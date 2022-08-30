@@ -73,25 +73,23 @@ public class sceneMoveElevator : MonoBehaviour
 
     void moveToNextScene()
     {
-        if (!GameManager.instance.shouldStartAtSavePoint) //세이브포인트에서 시작해야 하는 것이 아니면 
+        GameManager.instance.shouldUseOpeningElevator = true;
+        GameManager.instance.shouldSpawnSavePoint = false;
+
+        GameManager.instance.nextScene = sceneNum;
+        GameManager.instance.nextGravityDir = Physics2D.gravity.normalized; //현재의 중력상태 유지 
+        GameManager.instance.nextState = Player.States.Walk;
+
+        if (moveToNextStage)
         {
-            GameManager.instance.shouldUseOpeningElevator = true;
-
-            GameManager.instance.nextScene = sceneNum;           
-            GameManager.instance.nextGravityDir = Physics2D.gravity.normalized;
-            GameManager.instance.nextState = Player.States.Walk;
-
-            if (moveToNextStage)
-            {
-                GameManager.instance.gameData.curAchievementNum = 0; //다음 스테이지로 가는 엘리베이터일 경우엔 achNum=0으로 초기화해줌 
-                GameManager.instance.gameData.curStageNum = stageNum; //스테이지 넘버 역시 초기화                                                                                      
-            }
-            // gameData class의 데이터들을 모두 Json 파일에 저장
-            string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
-            string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
-            File.WriteAllText(filePath, ToJsonData);
-
-            SceneManager.LoadScene(sceneNum);
+            GameManager.instance.gameData.curAchievementNum = 0; //다음 스테이지로 가는 엘리베이터일 경우엔 achNum=0으로 초기화해줌 
+            GameManager.instance.gameData.curStageNum = stageNum; //스테이지 넘버 역시 초기화                                                                                      
         }
+        // gameData class의 데이터들을 모두 Json 파일에 저장
+        string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
+        string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
+        File.WriteAllText(filePath, ToJsonData);
+
+        SceneManager.LoadScene(sceneNum);
     }
 }

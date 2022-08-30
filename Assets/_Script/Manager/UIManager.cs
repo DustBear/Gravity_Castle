@@ -8,8 +8,6 @@ using TMPro;
 public class UIManager : Singleton<UIManager>
 {
     [SerializeField] GameObject inGameMenu;
-    [SerializeField] GameObject existSavedGame;
-    [SerializeField] GameObject noSavedGame;
     [SerializeField] Image fade;
     [SerializeField] GameObject textObj;
     IEnumerator fadeCoroutine;
@@ -29,10 +27,7 @@ public class UIManager : Singleton<UIManager>
         fadeCoroutine = _FadeIn(1.5f);
 
         //게임 시작하면 UI 메뉴는 전부 끄고 시작하기 
-        inGameMenu.SetActive(false);
-        existSavedGame.SetActive(false);
-        noSavedGame.SetActive(false);
-
+        inGameMenu.SetActive(false);       
         //fadeCircle.SetActive(false);
     }
 
@@ -145,18 +140,6 @@ public class UIManager : Singleton<UIManager>
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked; //게임 도중에는 마우스 조작 불가능 
         }
-    }
-
-    // New Game 버튼을 눌렀는데 이미 저장된 게임이 있을 경우 팝업창 활성화
-    public void ExistSavedGame()
-    {
-        existSavedGame.SetActive(true);
-    }
-
-    // Load Game 버튼을 눌렀는데 저장된 게임이 없을 경우 팝업창 활성화
-    public void NoSavedGame()
-    {
-        noSavedGame.SetActive(true);
     }
 
     public void clickSoundGen() //UI 클릭할 때 딸깍 소리 냄 
