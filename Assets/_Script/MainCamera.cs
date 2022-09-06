@@ -108,8 +108,16 @@ public class MainCamera : MonoBehaviour
     {
         if (isLookDownWork) return;
 
-        if((Player.curState == Player.States.Walk) && Input.GetKey(KeyCode.DownArrow)) 
-            //플레이어가 지면에 닿아있거나 or 플레이어가 밧줄에 매달린 상태에서 아래쪽 화살표를 계속 누르면
+        bool isLookDownReady = false;
+
+        //아래에 해당하는 조건 중 하나라도 플레이어 상태를 만족시키면 true 가 되고 하나도 없으면 그대로 false 이다 
+        if (Player.curState == Player.States.Walk) isLookDownReady = true;
+        else if (Player.curState == Player.States.Grab) isLookDownReady = true;
+        else if (Player.curState == Player.States.MoveOnRope) isLookDownReady = true;
+        else if (Player.curState == Player.States.SelectGravityDir) isLookDownReady = true;
+
+        if(isLookDownReady && Input.GetKey(KeyCode.LeftShift)) 
+            //플레이어가 상태 조건을 만족시키면서 SHIFT 를 계속 누르면
         {
             lookDownSide_timer += Time.deltaTime;
             if(lookDownSide_timer >= lookDownSide_inputTime) //필요 기준치를 넘으면 
@@ -123,7 +131,7 @@ public class MainCamera : MonoBehaviour
     {
         isLookDownWork = true;
         isCameraLock = true; //잠시 카메라가 플레이어를 따라가지 않도록 조정 
-        InputManager.instance.isInputBlocked = true;
+        InputManager.instance.isInputBlocked = true; //카메라 움직이는동안은 플레이어 움직임 정지 
 
         Vector3 lookDownAimPos = transform.position - player.transform.up * lookDownSide_distance;
 
@@ -139,7 +147,7 @@ public class MainCamera : MonoBehaviour
             yield return new WaitForSeconds(Time.deltaTime);
         }
         
-        while (Input.GetKey(KeyCode.DownArrow))
+        while (Input.GetKey(KeyCode.LeftShift))
         {            
             yield return null;
         }
@@ -151,6 +159,7 @@ public class MainCamera : MonoBehaviour
             transform.position = Vector3.SmoothDamp(transform.position, newAimPos, ref dampSpeed, lookDownSIde_smoothTime);
             if (Mathf.Abs((transform.position - newAimPos).magnitude) <= 0.02f)
             {
+                InputManager.instance.isInputBlocked = false;
                 transform.position = newAimPos; //카메라 위치 고정 
                 break;
             }
@@ -160,7 +169,6 @@ public class MainCamera : MonoBehaviour
 
         isLookDownWork = false;
         isCameraLock = false;
-        InputManager.instance.isInputBlocked = false;
 
         lookDownSide_timer = 0;
     }
