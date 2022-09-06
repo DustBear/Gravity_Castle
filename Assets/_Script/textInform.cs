@@ -2,20 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using System.Text;
 
 public class textInform : MonoBehaviour
 {
-    public GameObject textCanvas;
+    public GameObject Canvas;
 
     private void Start()
     {
-        textCanvas.SetActive(false);
+        Canvas.SetActive(false);        
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
-            textCanvas.SetActive(true);
+            Canvas.SetActive(true);
         }
     }
 
@@ -23,7 +25,7 @@ public class textInform : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            textCanvas.SetActive(false);   
+            Canvas.SetActive(false);
         }
     }
    

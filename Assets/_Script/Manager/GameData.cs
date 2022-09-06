@@ -24,5 +24,5 @@ public class GameData
     public int finalAchievementNum;
     public int finalStageNum;
 
-    public bool[ , ] savePointUnlock = new bool[7,50]; //[½ºÅ×ÀÌÁö¹øÈ£, ¼ºÃëµµ¹øÈ£] ÇØ´ç ¼¼ÀÌºêÆ÷ÀÎÆ®°¡ È°¼ºÈ­µÇ¾ú´ÂÁö Ã¼Å© 
+    public bool[ , ] savePointUnlock = new bool[7,50]; //[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£, ï¿½ï¿½ï¿½ëµµï¿½ï¿½È£] ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å© 
 }

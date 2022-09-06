@@ -9,7 +9,6 @@ public class LoadButton : MonoBehaviour
     [SerializeField] GameObject loadMenu;
     Button button;
     TextMeshProUGUI text;
-    bool isSaveFileExist;
 
     void Awake()
     {
@@ -19,7 +18,8 @@ public class LoadButton : MonoBehaviour
 
     void Start()
     {
-        // SaveFileÀÌ ÇÏ³ª¶óµµ Á¸ÀçÇÏ¸é Load¹öÆ° È°¼ºÈ­
+        /*
+        // SaveFileï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ Loadï¿½ï¿½Æ° È°ï¿½ï¿½È­
         for (int saveFileNum = 0; saveFileNum < GameManager.instance.saveFileCount; saveFileNum++)
         {
             if (GameManager.instance.GetSavedData(saveFileNum).Key != -1)
@@ -30,15 +30,13 @@ public class LoadButton : MonoBehaviour
                 return;
             }
         }
+        */
     }
 
     public void OnClickButton()
     {
         UIManager.instance.clickSoundGen();
 
-        if (isSaveFileExist)
-        {
-            loadMenu.SetActive(!loadMenu.activeSelf);
-        }
+        loadMenu.SetActive(!loadMenu.activeSelf);     
     }
 }

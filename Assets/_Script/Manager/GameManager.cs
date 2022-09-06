@@ -4,12 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 
-// GameManager´Â ´ÙÀ½ sceneÀ¸·Î ÀÌµ¿ ½Ã À¯ÁöÇØ¾ßÇÒ data¸¦ º¸°ü
 public class GameManager : Singleton<GameManager>
 {    
-    public bool shouldSpawnSavePoint = true;
-    //ºü¸¥¸Ş´º³ª ½ÃÀÛÅ°, Á×°í ³ª¼­ ºÎÈ°ÇÒ ¶§´Â ¼¼ÀÌºêÆ÷ÀÎÆ®¿¡¼­ ¾À ½ÃÀÛ. ´Ü¼øÈ÷ changeSceneÀ¸·Î ¾À°ú ¾ÀÀ» ÀÌµ¿ÇÒ ¶§´Â ¼¼ÀÌºêÆ÷ÀÎÆ® ÀÌ¿ëx 
-    
+    public bool shouldSpawnSavePoint = true;    
     public bool shouldUseOpeningElevator = false;
 
     public int nextScene {get; set;}
@@ -17,40 +14,39 @@ public class GameManager : Singleton<GameManager>
     public Vector2 nextGravityDir {get; set;}
     public Player.States nextState {get; set;}
 
-    public bool isStartWithFlipX; //ÇÃ·¹ÀÌ¾î°¡ ¾ÀÀ» ½ÃÀÛÇÒ ¶§ ¾î´À ÂÊÀ» ¹Ù¶óºÁ¾ß ÇÏ´ÂÁö °áÁ¤
+    public bool isStartWithFlipX; //
   
     public string[] gameDataFileNames = {"/GameData0.json", "/GameData1.json", "/GameData2.json", "/GameData3.json"};
-    public int curSaveFileNum; // ÇöÀç ½ÇÇàÁßÀÎ °ÔÀÓÀÇ ¼¼ÀÌºêÆÄÀÏ ¹øÈ£
-    public int saveFileCount; // ÀüÃ¼ ¼¼ÀÌºêÆÄÀÏ ¼ö
+    public int curSaveFileNum; //í˜„ì¬ í”Œë ˆì´ì¤‘ì¸ ì„¸ì´ë¸ŒíŒŒì¼ ë²ˆí˜¸ 
+    public int saveFileCount; //ì „ì²´ ì„¸ì´ë¸ŒíŒŒì¼ ê°œìˆ˜ 
     public GameData gameData {get; private set;}
     public SaveFileSeq saveFileSeq {get; set;}
     string saveFileSeqName = "/SaveFileSeq.json";
 
-    [SerializeField] Vector2 firstStartPos; // °ÔÀÓ ½ÃÀÛ À§Ä¡
+    [SerializeField] Vector2 firstStartPos; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
     [SerializeField] int firstScene;
 
-    public AudioSource bgmMachine; //°¢ ½ºÅ×ÀÌÁö¿¡ ¸Â´Â bgm ¼ÛÃâ
+    public AudioSource bgmMachine; //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Â´ï¿½ bgm ï¿½ï¿½ï¿½ï¿½
     public AudioClip[] bgmGroup;
 
-    public AudioSource moodMachine; //°¢ ½ºÅ×ÀÌÁö¿¡ ¸Â´Â ¹«µå »ç¿îµå ¼ÛÃâ 
+    public AudioSource moodMachine; //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Â´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
     public AudioClip[] moodSoundGroup;
 
-    [SerializeField] int purposeBgmIndex; //Àç»ıµÇ¾î¾ß ÇÏ´Â bgm »ç¿îµå ¹øÈ£
-    [SerializeField] int curBgmIndex; //ÇöÀç Àç»ıµÇ°í ÀÖ´Â bgm »ç¿îµåÀÇ ¹øÈ£(0~10)
-    
+    [SerializeField] int purposeBgmIndex; //ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ ï¿½Ï´ï¿½ bgm ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£
+    [SerializeField] int curBgmIndex; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ ï¿½Ö´ï¿½ bgm ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£(0~10)
+
     void Awake() 
     {
-        DontDestroyOnLoad(gameObject); //¾À ³Ñ¾î°¡µµ ÆÄ±«x
-
+        DontDestroyOnLoad(gameObject);
         string filePath = Application.persistentDataPath + saveFileSeqName; 
-        if (File.Exists(filePath)) //ÆÄÀÏ Á¸ÀçÇÒ ¶§ 
+        if (File.Exists(filePath)) //ì„¸ì´ë¸ŒíŒŒì¼ì´ ì¡´ì¬í•˜ë©´ 
         {
             string FromJsonData = File.ReadAllText(filePath);
-            saveFileSeq = JsonUtility.FromJson<SaveFileSeq>(FromJsonData); //svaeFileSeq ¸¦ ±×´ë·Î ¹Ş¾Æ¿È 
+            saveFileSeq = JsonUtility.FromJson<SaveFileSeq>(FromJsonData); //svaeFileSeq ï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½Ş¾Æ¿ï¿½ 
         }
-        else //ÆÄÀÏ Á¸ÀçÇÏÁö ¾ÊÀ» ¶§ 
+        else //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
         {
-            saveFileSeq = new SaveFileSeq(); //»õ·Î ÇÏ³ª ¸¸µé¾î¾ß ÇÔ 
+            saveFileSeq = new SaveFileSeq(); //ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
             saveFileSeq.saveFileSeqList = new List<int>();
         }
 
@@ -60,26 +56,26 @@ public class GameManager : Singleton<GameManager>
         moodMachine = gameObject.AddComponent<AudioSource>();
     }
 
-    public void soundNumCheck() //ÇöÀç ¾À¿¡¼­ ¸î ¹ø bgmÀÌ Ãâ·ÂµÇ¾î¾ß ÇÒ Áö Ã¼Å©
+    public void soundNumCheck() //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ bgmï¿½ï¿½ ï¿½ï¿½ÂµÇ¾ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ Ã¼Å©
     {
-        int sceneNum = SceneManager.GetActiveScene().buildIndex; //ÇöÀç ¾À ¹øÈ£
+        int sceneNum = SceneManager.GetActiveScene().buildIndex; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È£
 
-        //ÇöÀç À§Ä¡ÇÑ sceneÀÇ ¹øÈ£¿¡ µû¶ó ¸ñÇ¥ bgm index°¡ º¯È­ÇÔ
-        if (sceneNum == 0) purposeBgmIndex = 9; //¸ŞÀÎ¸Ş´º bgmÀº index 9 
-        else if (sceneNum == 1) purposeBgmIndex = 10; //¿ÀÇÁ´× ¾À bgmÀº index 10 
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ sceneï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ bgm indexï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½
+        if (sceneNum == 0) purposeBgmIndex = 9; //ï¿½ï¿½ï¿½Î¸Ş´ï¿½ bgmï¿½ï¿½ index 9 
+        else if (sceneNum == 1) purposeBgmIndex = 10; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ bgmï¿½ï¿½ index 10 
         else if (2 <= sceneNum && sceneNum < 4) purposeBgmIndex = 0; //stage0
         else if ((4 <= sceneNum && sceneNum < 7) || (sceneNum == 26) || (sceneNum == 27) || (sceneNum == 30)) purposeBgmIndex = 1; //stage1
         else if ((7 <= sceneNum && sceneNum < 10) || (sceneNum == 28)) purposeBgmIndex = 2; //stage2
         else if ((10 <= sceneNum && sceneNum < 12) || (sceneNum == 29)) purposeBgmIndex = 3; //stage3
         else if (12 <= sceneNum && sceneNum < 14) purposeBgmIndex = 4; //stage4
 
-        if(purposeBgmIndex != curBgmIndex) //ÇöÀç Àç»ıÁßÀÎ bgm ÀÎµ¦½º¿Í ¸ñÇ¥ ÀÎµ¦½º°¡ ´Ù¸§ ~> ¾ÀÀÌ ¹Ù²î¾ú´Ù´Â ¶æÀÌ¹Ç·Î ÀÎµ¦½º ¹Ù²ãÁà¾ß ÇÔ
+        if(purposeBgmIndex != curBgmIndex) //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ bgm ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ~> ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½Ù´ï¿½ ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         {
-            StopCoroutine("soundManager"); //¾ÆÁ÷ ÄÚ·çÆ¾ÀÌ ´Ù ³¡³ªÁö ¾ÊÀº »óÅÂ¿¡¼­ ´ÙÀ½ À½Çâ ÄÚ·çÆ¾ ½ÃÀÛÇÏ¸é ÀÌÀü ÄÚ·çÆ¾Àº Áö¿ö¾ß ÇÔ
+            StopCoroutine("soundManager"); //ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
             StartCoroutine("soundManager");
         }
     } 
-    IEnumerator soundManager() //Æ©Åä¸®¾ó:0 ºÎÅÍ ½ÃÀÛ ~> ½ºÅ×ÀÌÁö1 bgmÀº index=1 / °ÔÀÓ¸Ş´ºÀÇ bgm index=9(10¹øÂ°)
+    IEnumerator soundManager() //Æ©ï¿½ä¸®ï¿½ï¿½:0 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ~> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1 bgmï¿½ï¿½ index=1 / ï¿½ï¿½ï¿½Ó¸Ş´ï¿½ï¿½ï¿½ bgm index=9(10ï¿½ï¿½Â°)
     {
         curBgmIndex = purposeBgmIndex;
 
@@ -94,13 +90,13 @@ public class GameManager : Singleton<GameManager>
             moodMachine.volume = bgmMachine.volume;
             yield return new WaitForSeconds(0.1f);
 
-            //ÀÏÁ¤ ¼Óµµ·Î volumeÀ» ÁÙ¿©¼­ À½Çâ Å©±â 0À¸·Î ¸¸µê. 1¿¡¼­ ½ÃÀÛÇßÀ¸¸é 1ÃÊ°¡ °É¸®°í 0.5¿¡¼­ ½ÃÀÛÇßÀ¸¸é 0.5ÃÊ°¡ °É¸²            
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ volumeï¿½ï¿½ ï¿½Ù¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½Ê°ï¿½ ï¿½É¸ï¿½ï¿½ï¿½ 0.5ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0.5ï¿½Ê°ï¿½ ï¿½É¸ï¿½            
         }
               
-        bgmMachine.clip = bgmGroup[purposeBgmIndex]; //bgm »ç¿îµå¸¦ ¸ñÇ©°ª¿¡ ¸Â°Ô ±³Ã¼     
+        bgmMachine.clip = bgmGroup[purposeBgmIndex]; //bgm ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½Ç©ï¿½ï¿½ï¿½ï¿½ ï¿½Â°ï¿½ ï¿½ï¿½Ã¼     
         moodMachine.clip = moodSoundGroup[purposeBgmIndex];
 
-        yield return new WaitForSeconds(1f); //Àá½Ã ±â´Ù·È´Ù°¡        
+        yield return new WaitForSeconds(1f); //ï¿½ï¿½ï¿½ ï¿½ï¿½Ù·È´Ù°ï¿½        
         bgmMachine.Play();
         moodMachine.Play();
    
@@ -108,18 +104,18 @@ public class GameManager : Singleton<GameManager>
         {
             bgmMachine.volume = 0.05f * index;
             moodMachine.volume = bgmMachine.volume;
-            yield return new WaitForSeconds(0.1f); //2ÃÊ¿¡ °ÉÃÄ À½Çâ Å©±â 1À¸·Î ¸¸µê
+            yield return new WaitForSeconds(0.1f); //2ï¿½Ê¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
 
     }
 
     void Start()
     {
-        //°ÔÀÓ ½ÃÀÛÇÏ¸é mainMenu Ã¢ ¿­±â
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ mainMenu Ã¢ ï¿½ï¿½ï¿½ï¿½
         SceneManager.LoadScene("MainMenu"); 
         
-        //bgm °ü·Ã ÄÚµå 
-        purposeBgmIndex = 9; //main theme ÀÌ ÃÊ±ê°ªÀÌ µÇ¾î¾ß ÇÔ
+        //bgm ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ 
+        purposeBgmIndex = 9; //main theme ï¿½ï¿½ ï¿½Ê±ê°ªï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ ï¿½ï¿½
         curBgmIndex = 9;
         bgmMachine.clip = bgmGroup[9];
         moodMachine.clip = moodSoundGroup[9];
@@ -136,7 +132,8 @@ public class GameManager : Singleton<GameManager>
     {
         soundNumCheck();
 
-        //Á¦´ë·Î ÀÛµ¿ÇÏ´ÂÁö Ã¼Å©ÇÏ±â À§ÇÑ ÄÚµå ~> Ãâ½Ã ºôµå¿¡¼± »èÁ¦
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ûµï¿½ï¿½Ï´ï¿½ï¿½ï¿½ Ã¼Å©ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ~> ï¿½ï¿½ï¿½ ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        
         if (Input.GetKeyDown(KeyCode.U))
         {
             Debug.Log("curAchieve: " + gameData.curAchievementNum
@@ -145,10 +142,11 @@ public class GameManager : Singleton<GameManager>
                 + "  finalStage: " + gameData.finalStageNum
                 );
         }
+        
     }
 
     /*
-    public void StartGame(bool isStartNew) //true °ª ÁÖ¸é »õ·Î ½ÃÀÛÇÏ´Â °ÔÀÓ false°ª ÁÖ¸é ±âÁ¸ ¼¼ÀÌºê¿¡¼­ ½ÃÀÛÇÏ´Â °ÔÀÓ 
+    public void StartGame(bool isStartNew) //true ï¿½ï¿½ ï¿½Ö¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ falseï¿½ï¿½ ï¿½Ö¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºê¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ 
     {
         if (!isStartNew)
         {
@@ -156,24 +154,24 @@ public class GameManager : Singleton<GameManager>
         }
 
 
-        InitData(isLoadGame); //ÃÊ±âÈ­ 
+        InitData(isLoadGame); //ï¿½Ê±ï¿½È­ 
         shouldSpawnSavePoint = true;
 
-        InputManager.instance.isInputBlocked = false; //ÀÔ·ÂÁ¦ÇÑ Ç®±â 
-        InputManager.instance.isJumpBlocked = false; //Á¡ÇÁÁ¦ÇÑ Ç®±â 
-        Cursor.lockState = CursorLockMode.Locked; //±âº»ÀûÀ¸·Î ¸¶¿ì½º Àá±×±â 
+        InputManager.instance.isInputBlocked = false; //ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½ Ç®ï¿½ï¿½ 
+        InputManager.instance.isJumpBlocked = false; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç®ï¿½ï¿½ 
+        Cursor.lockState = CursorLockMode.Locked; //ï¿½âº»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì½º ï¿½ï¿½×±ï¿½ 
 
         if (!shouldStartAtSavePoint) 
         {
-            SceneManager.LoadScene(nextScene); //Ã³À½ ½ÃÀÛÇÏ´Â °ÍÀÌ¹Ç·Î ÀÌ ½ÃÁ¡¿¡ nextScene=1
+            SceneManager.LoadScene(nextScene); //Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ nextScene=1
         }
-        else SceneManager.LoadScene(gameData.respawnScene); //Ã³À½ ½ÃÀÛÇÏ´Â °ÍÀÌ ¾Æ´Ï¶ó¸é ¸®½ºÆù Àå¼Ò¿¡¼­ ½ÃÀÛ 
+        else SceneManager.LoadScene(gameData.respawnScene); //Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ò¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
         isStartWithFlipX = false;
     }
     */
 
-    //¼¼ÀÌºêÆÄÀÏ ¾Õ¿¡ ¾îµğ±îÁö ÁøÇàÇß´ÂÁö ¹®ÀÚ ¶ç¿öÁÜ 
+    //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Õ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ 
     public KeyValuePair<int, int> GetSavedData(int saveFileNum)
     {
         string filePath = Application.persistentDataPath + gameDataFileNames[saveFileNum];
@@ -183,30 +181,30 @@ public class GameManager : Singleton<GameManager>
             GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData);
             return new KeyValuePair<int, int>(curGameData.finalStageNum, curGameData.finalAchievementNum);
         }
-        return new KeyValuePair<int, int>(-1, -1); //°æ·Î¿¡ ¼¼ÀÌºêÆÄÀÏÀÌ ¾øÀ¸¸é ~> '»õ °ÔÀÓ' ÅØ½ºÆ® Ç¥½ÃÇØ¾ß ÇÔ 
+        return new KeyValuePair<int, int>(-1, -1); //ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ~> 'ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½' ï¿½Ø½ï¿½Æ® Ç¥ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ 
     }  
 
     /*
-    // Case 1) ¸ŞÀÎ¸Ş´º¿¡¼­ New GameÀ» ´­·¶À» ½Ã È£ÃâµÊ
-    // Case 2) ¸ŞÀÎ¸Ş´º¿¡¼­ Load GameÀ» ´­·¶À» ½Ã È£ÃâµÊ 
-    // Case 3) °ÔÀÓ ³»¿¡¼­ »ç¸ÁÇßÀ» ½Ã È£ÃâµÊ
+    // Case 1) ï¿½ï¿½ï¿½Î¸Ş´ï¿½ï¿½ï¿½ï¿½ï¿½ New Gameï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ï¿½
+    // Case 2) ï¿½ï¿½ï¿½Î¸Ş´ï¿½ï¿½ï¿½ï¿½ï¿½ Load Gameï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ï¿½ 
+    // Case 3) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ï¿½
 
-    // Case 1Àº savePoint°¡ ¾Æ´Ï¶ó ÃÊ±â ½ºÆùÀå¼Ò¿¡¼­ ½ºÆù. Case2,3Àº savePoint¿¡¼­ ½ºÆù
-    public void InitData(bool isLoadGame) //ÇÃ·¹ÀÌ¿¡ ÇÊ¿äÇÑ µ¥ÀÌÅÍ ÃÊ±âÈ­ or ºÒ·¯¿À´Â ÇÔ¼ö 
+    // Case 1ï¿½ï¿½ savePointï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. Case2,3ï¿½ï¿½ savePointï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public void InitData(bool isLoadGame) //ï¿½Ã·ï¿½ï¿½Ì¿ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ or ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ 
     {
         // Case 1
-        if (!shouldStartAtSavePoint) //½ºÅ×ÀÌÁö0ºÎÅÍ ½ÃÀÛ
+        if (!shouldStartAtSavePoint) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
-            // °ÔÀÓ ½ÃÀÛ ½Ã ÇÊ¿äÇÑ µ¥ÀÌÅÍ ÃÊ±âÈ­
-            nextScene = firstScene; //castleEnterance ¾À 
-            nextPos = firstStartPos; //¹è¿¡¼­ ³»¸®´Â À§Ä¡ 
-            nextGravityDir = Vector2.down; //½ÃÀÛÇÏ¸é ¾Æ·¡ÂÊ º¸µµ·Ï Áß·Â Àû¿ë
-            nextState = Player.States.Walk; //¸Ç Ã³À½ ½ÃÀÛÇÒ ¶§ ÇÃ·¹ÀÌ¾îÀÇ »óÅÂ´Â walk
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
+            nextScene = firstScene; //castleEnterance ï¿½ï¿½ 
+            nextPos = firstStartPos; //ï¿½è¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ 
+            nextGravityDir = Vector2.down; //ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß·ï¿½ ï¿½ï¿½ï¿½ï¿½
+            nextState = Player.States.Walk; //ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â´ï¿½ walk
 
-            // ¸®½ºÆù ½Ã ÇÊ¿äÇÑ µ¥ÀÌÅÍ ÃÊ±âÈ­
-            // °ÔÀÓ ½ÃÀÛÇÏÀÚ¸¶ÀÚ ³ª°¬´Ù°¡ ´Ù½Ã Á¢¼ÓÇßÀ» ½Ã load°¡ °¡´ÉÇÏµµ·Ï
-            gameData.curAchievementNum = 0; //¾ÆÁ÷ ¾Æ¹«·± ¼¼ÀÌºêÆ÷ÀÎÆ®µµ È°¼ºÈ­ÇÏÁö ¾Ê¾Ò´Ù¸é 0 
-            gameData.curStageNum = 0; //castleEnteranceÀÇ ½ºÅ×ÀÌÁö¹øÈ£´Â 0 
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ù°ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ loadï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½
+            gameData.curAchievementNum = 0; //ï¿½ï¿½ï¿½ï¿½ ï¿½Æ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò´Ù¸ï¿½ 0 
+            gameData.curStageNum = 0; //castleEnteranceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½ï¿½ 0 
             gameData.respawnScene = nextScene;
             gameData.respawnPos = nextPos;
             gameData.respawnGravityDir = nextGravityDir;
@@ -215,11 +213,11 @@ public class GameManager : Singleton<GameManager>
             {
                 for(int j=0; j<50; j++)
                 {
-                    gameData.savePointUnlock[i, j] = false; //¸ğµç ¼¼ÀÌºêÆ÷ÀÎÆ® ºñÈ°¼ºÈ­ 
+                    gameData.savePointUnlock[i, j] = false; //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È°ï¿½ï¿½È­ 
                 }
             }
            
-            //µ¥ÀÌÅÍ ÀúÀå 
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             string ToJsonData = JsonUtility.ToJson(gameData);
             string filePath = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
             File.WriteAllText(filePath, ToJsonData);       
@@ -228,26 +226,26 @@ public class GameManager : Singleton<GameManager>
         // Case 2
         else
         {
-            // Case 2ÀÎ °æ¿ì, Json ÆÄÀÏÀÇ µ¥ÀÌÅÍµéÀ» ¸ğµÎ GameData class·Î ºÒ·¯¿È
-            if (isLoadGame) //ºÒ·¯¿Ã °ÔÀÓ µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é ºÒ·¯¿È
+            // Case 2ï¿½ï¿½ ï¿½ï¿½ï¿½, Json ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ GameData classï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½
+            if (isLoadGame) //ï¿½Ò·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½
             {
                 string filePath = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
                 string FromJsonData = File.ReadAllText(filePath);
                 gameData = JsonUtility.FromJson<GameData>(FromJsonData);
             }
-            // GameData classÀÇ µ¥ÀÌÅÍµéÀ» GameManager µ¥ÀÌÅÍ¿¡ ÀúÀå   
+            // GameData classï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ GameManager ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½   
 
-            // Case 3ÀÇ °æ¿ì ¾îÂ÷ÇÇ ¸ğµç µ¥ÀÌÅÍ´Â Á×±â Àü°ú µ¿ÀÏÇÏ¹Ç·Î »õ·Î ÃÊ±âÈ­ÇÒ ÇÊ¿ä ¾øÀ½ 
+            // Case 3ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í´ï¿½ ï¿½×±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¹Ç·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½Ê¿ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             
         }
     }
     */
 
-    // Save Point¿¡ µµ´ŞÇßÀ» ¶§, ¹®À» ¿­ ¶§, key È¹µæÇÒ ¶§ »ç¿ë 
+    // Save Pointï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½, key È¹ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ 
     public void SaveData(int savePointNum, int stageNum, Vector2 playerPos) 
-        // ¼¼ÀÌºêÆ÷ÀÎÆ®¿¡¼­ ÀÌ·ç¾îÁö´Â µ¥ÀÌÅÍ ÀúÀå. SavePoint°¡ ÀÛµ¿ÇÒ ¶§ ¸¶´Ù Json ÆÄÀÏ¿¡ µ¥ÀÌÅÍ°¡ ÀúÀåµÊ
+        // ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. SavePointï¿½ï¿½ ï¿½Ûµï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Json ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
     {
-        gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //ÇöÀç ¾À¿¡¼­ ´Ù½Ã ºÎÈ°ÇØ¾ß ÇÔ
+        gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½È°ï¿½Ø¾ï¿½ ï¿½ï¿½
         gameData.respawnPos = playerPos;
 
         gameData.curAchievementNum = savePointNum;
@@ -255,22 +253,22 @@ public class GameManager : Singleton<GameManager>
 
         if(gameData.finalStageNum < stageNum)
         {
-            gameData.finalStageNum = stageNum; //¹æ±İ ¼¼ÀÌºê ÇÑ ½ºÅ×ÀÌÁö°¡ finalStageº¸´Ù ¾Õ¼­ ÀÖÀ¸¸é finalStage °»½Å
-            gameData.finalAchievementNum = savePointNum; //½ºÅ×ÀÌÁö°¡ °»½ÅµÇ¾úÀ¸¸é achievement NumÀº ¹«Á¶°Ç °»½ÅÇØ¾ß ÇÔ 
+            gameData.finalStageNum = stageNum; //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ finalStageï¿½ï¿½ï¿½ï¿½ ï¿½Õ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ finalStage ï¿½ï¿½ï¿½ï¿½
+            gameData.finalAchievementNum = savePointNum; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÅµÇ¾ï¿½ï¿½ï¿½ï¿½ï¿½ achievement Numï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ 
         }else if(gameData.finalStageNum == stageNum)
         {
             if(gameData.finalAchievementNum < savePointNum)
             {
                 gameData.finalAchievementNum = savePointNum;
-                //µ¿ÀÏ ½ºÅ×ÀÌÁö¿¡¼­ ´õ Å« achNumÀ¸·Î ÀÌµ¿ÇÒ ¶§ °»½ÅÇØ ÁÜ ex) (1,10) ~> (1,11)
-                //¸¸¾à ½ºÅ×ÀÌÁö°¡ ´õ ÀÛ´Ù¸é finalAchº¸´Ù Å« achNumÀÌ ³ª¿Íµµ ¹«½Ã ex) (2,10) ~> (1,13)À¸·Î ÀÌµ¿ÇÒ ¶§´Â finalAchNum °»½Åx 
+                //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Å« achNumï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ex) (1,10) ~> (1,11)
+                //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Û´Ù¸ï¿½ finalAchï¿½ï¿½ï¿½ï¿½ Å« achNumï¿½ï¿½ ï¿½ï¿½ï¿½Íµï¿½ ï¿½ï¿½ï¿½ï¿½ ex) (2,10) ~> (1,13)ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ finalAchNum ï¿½ï¿½ï¿½ï¿½x 
             }
         }
 
-        gameData.savePointUnlock[stageNum - 1, savePointNum - 1] = true; //ÇØ´ç ¼¼ÀÌºêÆ÷ÀÎÆ® ¾ğ¶ôÇß´Ù´Â Á¤º¸ ÀúÀå
+        gameData.savePointUnlock[stageNum - 1, savePointNum - 1] = true; //ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ß´Ù´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         gameData.respawnGravityDir = Physics2D.gravity.normalized;
         
-        // gameData classÀÇ µ¥ÀÌÅÍµéÀ» ¸ğµÎ Json ÆÄÀÏ¿¡ ÀúÀå
+        // gameData classï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Json ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½
         string ToJsonData = JsonUtility.ToJson(gameData);
         string filePath = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
         File.WriteAllText(filePath, ToJsonData);
@@ -278,8 +276,8 @@ public class GameManager : Singleton<GameManager>
 
     public void SaveSaveFileSeq()
     {
-        string ToJsonData = JsonUtility.ToJson(saveFileSeq); //saveFileSeq ¸¦ json ÆÄÀÏ·Î ÀúÀå 
-        string filePath = Application.persistentDataPath + saveFileSeqName; //ÆÄÀÏ°æ·Î ÀúÀå
+        string ToJsonData = JsonUtility.ToJson(saveFileSeq); //saveFileSeq ï¿½ï¿½ json ï¿½ï¿½ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+        string filePath = Application.persistentDataPath + saveFileSeqName; //ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         File.WriteAllText(filePath, ToJsonData);
     }
     

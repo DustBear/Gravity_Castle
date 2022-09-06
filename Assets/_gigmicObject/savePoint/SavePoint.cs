@@ -6,59 +6,61 @@ using System.IO;
 
 public class SavePoint : MonoBehaviour
 {
-    [SerializeField] int stageNum; //1ºÎÅÍ ½ÃÀÛ 
-    public int achievementNum; //1ºÎÅÍ ½ÃÀÛ
+    GameObject cameraObj;
+    [SerializeField] int stageNum; //1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+    public int achievementNum; //1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     Transform player;
-    public Vector2 respawnPos; //ÇÃ·¹ÀÌ¾î°¡ ¼¼ÀÌºêÆ÷ÀÎÆ®¿¡ ´ê°í ³ª¼­ ¸®½ºÆùµÇ´Â À§Ä¡    
-    public Vector2 respawnDir; //ÇÃ·¹ÀÌ¾î°¡ ¼¼ÀÌºêÆ÷ÀÎÆ®¿¡ ´ê°í ³ª¼­ ¸®½ºÆùµÇ´Â Áß·Â¹æÇâ
+    public Vector2 respawnPos; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½Ä¡    
+    public Vector2 respawnDir; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ß·Â¹ï¿½ï¿½ï¿½
 
     bool isPlayerOnSensor;
     bool isSavePointActivated;
 
     SpriteRenderer spr;
     public Sprite[] spriteGroup;
-    /* [0] : È°¼ºÈ­µÇÁö ¾Ê¾Ò°í ÇÃ·¹ÀÌ¾î°¡ ¼¾¼­À§¿¡ ¾øÀ½  
-     * [1] : ÇÃ·¹ÀÌ¾î°¡ ¼¾¼­ À§¿¡ À§Ä¡ 
-     * [2]~[7] : ¼¼ÀÌºêÆ÷ÀÎÆ® ½ºÅæÀÌ ¾Æ·¡·Î ³»·Á°¡´Â µ¿ÀÛ
-     * [7] : ¼¼ÀÌºêÆ÷ÀÎÆ®°¡ ÀÌ¹Ì È°¼ºÈ­ 
+    /* [0] : È°ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò°ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½  
+     * [1] : ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ 
+     * [2]~[7] : ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+     * [7] : ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ì¹ï¿½ È°ï¿½ï¿½È­ 
      */
 
     void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         spr = GetComponent<SpriteRenderer>();
+        cameraObj = GameObject.FindWithTag("MainCamera");
 
-        respawnPos = transform.position; //ÇÃ·¹ÀÌ¾î´Â ÇØ´ç ¼¼ÀÌºêÆ÷ÀÎÆ®ÀÇ À§Ä¡¿¡¼­ ºÎÈ° 
+        respawnPos = transform.position; //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È° 
         
         float savePointRot = transform.rotation.z;
 
-        if(GameManager.instance.gameData.savePointUnlock[stageNum-1 , achievementNum-1] == true) //¼¼ÀÌºêÆ÷ÀÎÆ® ¹è¿­ÀÇ stage/achNum Àº µÑ ´Ù 0,0¿¡¼­ ½ÃÀÛ 
-        {
-            spr.sprite = spriteGroup[7]; //¼¼ÀÌºêÆ÷ÀÎÆ®°¡ ÀÌ¹Ì ÀÛµ¿ÇÑ ¸ğ½À 
+        if (GameManager.instance.gameData.savePointUnlock[stageNum - 1, achievementNum - 1] == true) //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½è¿­ï¿½ï¿½ stage/achNum ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ 0,0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+        {           
+            spr.sprite = spriteGroup[7]; //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½Ûµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 
             isSavePointActivated = true;
         }
         else
         {
-            spr.sprite = spriteGroup[0]; //¼¼ÀÌºêÆ÷ÀÎÆ®°¡ ÀÛµ¿ÇÏÁö ¾ÊÀº ¸ğ½À 
+            spr.sprite = spriteGroup[0]; //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ûµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 
             isSavePointActivated = false;
         }
     }
 
     private void Update()
     {
-        if (isSavePointActivated) return; //ÀÌ¹Ì È°¼ºÈ­µÈ ¼¼ÀÌºêÆ÷ÀÎÆ®¸é ±»ÀÌ input °¨Áö x 
+        if (isSavePointActivated) return; //ï¿½Ì¹ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ input ï¿½ï¿½ï¿½ï¿½ x 
         if(isPlayerOnSensor && Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(SaveData());
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision) //¼¼ÀÌºêÆ÷ÀÎÆ®¸¦ Á÷Á¢ °Çµå·Á¼­ ¼¼ÀÌºêÇÔ
+    void OnTriggerEnter2D(Collider2D collision) //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Çµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½
     {       
         if (collision.CompareTag("Player") && transform.up == player.transform.up && !isSavePointActivated) 
         {
-            //ÇÃ·¹ÀÌ¾î°¡ ¼¼ÀÌºêÆ÷ÀÎÆ®¿Í °°Àº angleÀ» °¡Áö°í ÀÖ°í ¾ÆÁ÷ È°¼ºÈ­½ÃÅ°Áö ¾ÊÀº ¼¼ÀÌºêÆ÷ÀÎÆ®ÀÏ ¶§ 
+            //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ angleï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ 
             isPlayerOnSensor = true;
             spr.sprite = spriteGroup[1];
         }
@@ -77,13 +79,14 @@ public class SavePoint : MonoBehaviour
     {
         isSavePointActivated = true;
 
-        Debug.Log("savePointBackUp: " + achievementNum);
+        //Debug.Log("savePointBackUp: " + achievementNum);
         GameManager.instance.SaveData(achievementNum, stageNum, respawnPos);
 
         for(int index=1; index<=7; index++)
         {
             spr.sprite = spriteGroup[index];
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.03f);
         }
+        cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.5f); //ì„¸ì´ë¸ŒìŠ¤í†¤ì´ ë°•í ë•Œ ì¹´ë©”ë¼ ì§„ë™ 
     }
 }

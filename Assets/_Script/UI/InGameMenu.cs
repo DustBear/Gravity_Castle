@@ -6,9 +6,9 @@ using System.IO;
 
 public class InGameMenu : MonoBehaviour
 {
-    [SerializeField] Vector2 boatPos; //ÇÃ·¹ÀÌ¾î°¡ ½ºÆùµÅ¾ß ÇÏ´Â ¹è ¾ÈÀÇ ÁÂÇ¥ 
+    [SerializeField] Vector2 boatPos; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Å¾ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ 
 
-    // ÀÏ½ÃÁ¤Áö ÇØÁ¦ ÈÄ ¸ÞÀÎ¸Þ´º·Î
+    // ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸Þ´ï¿½ï¿½ï¿½
     public void OnClickExit()
     {
         UIManager.instance.clickSoundGen();
@@ -17,20 +17,20 @@ public class InGameMenu : MonoBehaviour
 
         if (GameManager.instance.gameData.curAchievementNum == 0)
         {
-            //opening Elevator Å¸°í ³»·Á°¡´Â µµÁß °ÔÀÓÀ» ³ª¿À¸é Ã¹ ¼¼ÀÌºêÆ÷ÀÎÆ®±îÁö´Â È°¼ºÈ­ÇÑ °ÍÀ¸·Î Ä§ 
+            //opening Elevator Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¹ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä§ 
 
             GameManager.instance.gameData.curAchievementNum = 1;
             if (GameManager.instance.gameData.finalStageNum == GameManager.instance.gameData.curStageNum)
             {
                 if (GameManager.instance.gameData.finalAchievementNum == 0)
                 {
-                    GameManager.instance.gameData.finalAchievementNum = 1; //¸¸¾à ÇöÀç ÁøÇàµµ°¡ ÃÖ´ë ÁøÇàµµÀÏ °æ¿ì final Ach ¿¡µµ ¹Ý¿µÇÔ 
+                    GameManager.instance.gameData.finalAchievementNum = 1; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½àµµï¿½ï¿½ ï¿½ï¿½ï¿½ final Ach ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¿ï¿½ï¿½ï¿½ 
                 }
             }
-            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //Ã¹¹øÂ° ¼¼ÀÌºêÆ÷ÀÎÆ® È°¼ºÈ­½ÃÅ´ 
-            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //¾ÀÀº ±×´ë·Î À¯Áö 
+            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //Ã¹ï¿½ï¿½Â° ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® È°ï¿½ï¿½È­ï¿½ï¿½Å´ 
+            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //ï¿½ï¿½ï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
-            //µ¥ÀÌÅÍ ÀúÀå
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             File.WriteAllText(filePath, ToJsonData);
@@ -44,34 +44,34 @@ public class InGameMenu : MonoBehaviour
         if (InputManager.instance.isJumpBlocked)
         {
             InputManager.instance.isJumpBlocked = false;
-            //jumpBlockÀº ¿¤¸®º£ÀÌÅÍ¸¦ Å¸¸é true. ¿¤¸®º£ÀÌÅÍ Å¸°í ÀÖ´Â Áß°£¿¡ ¸Þ´º·Î ³ª°¡¸é 
-            // ´ÙÀ½ ¾ÀÀ» ½ÃÀÛÇÒ ¶§µµ jumpBlockÀÌ ÇØÁ¦µÇÁö ¾Ê¾Æ¼­ Á¡ÇÁ ºÒ°¡´ÉÇÑ ¹®Á¦ ¹ß»ý ~> Á÷Á¢ ²¨¼­ ÇØ°áÇÏÀÚ 
+            //jumpBlockï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Å¸ï¿½ï¿½ true. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ jumpBlockï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ ~> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ï¿½ï¿½ï¿½ï¿½ 
         }
 
         gameObject.SetActive(false);
     }
 
-    public void OnClickMainStage() //inGameMenu ¸ÊÀ¸·Î µ¹¾Æ°¨ 
+    public void OnClickMainStage() //inGameMenu ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ 
     {
         UIManager.instance.clickSoundGen();        
         Time.timeScale = 1f;
 
         if(GameManager.instance.gameData.curAchievementNum == 0)
         {
-            //opening Elevator Å¸°í ³»·Á°¡´Â µµÁß °ÔÀÓÀ» ³ª¿À¸é Ã¹ ¼¼ÀÌºêÆ÷ÀÎÆ®±îÁö´Â È°¼ºÈ­ÇÑ °ÍÀ¸·Î Ä§ 
+            //opening Elevator Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¹ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä§ 
 
             GameManager.instance.gameData.curAchievementNum = 1;
             if (GameManager.instance.gameData.finalStageNum == GameManager.instance.gameData.curStageNum)
             {
                 if (GameManager.instance.gameData.finalAchievementNum == 0)
                 {
-                    GameManager.instance.gameData.finalAchievementNum = 1; //¸¸¾à ÇöÀç ÁøÇàµµ°¡ ÃÖ´ë ÁøÇàµµÀÏ °æ¿ì final Ach ¿¡µµ ¹Ý¿µÇÔ 
+                    GameManager.instance.gameData.finalAchievementNum = 1; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½àµµï¿½ï¿½ ï¿½ï¿½ï¿½ final Ach ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¿ï¿½ï¿½ï¿½ 
                 }
             }
-            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //Ã¹¹øÂ° ¼¼ÀÌºêÆ÷ÀÎÆ® È°¼ºÈ­½ÃÅ´ 
-            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //¾ÀÀº ±×´ë·Î À¯Áö 
+            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //Ã¹ï¿½ï¿½Â° ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® È°ï¿½ï¿½È­ï¿½ï¿½Å´ 
+            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //ï¿½ï¿½ï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
-            //µ¥ÀÌÅÍ ÀúÀå
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             File.WriteAllText(filePath, ToJsonData);

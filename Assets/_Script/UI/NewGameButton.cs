@@ -19,15 +19,15 @@ public class NewGameButton : MonoBehaviour
 
     void Start()
     {
-        // SaveFileÀÌ ÇÏ³ª¶óµµ Á¸ÀçÇÏ¸é "ÀÌ¾îÇÏ±â"·Î ÅØ½ºÆ® º¯°æ
+        // SaveFileï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ "ï¿½Ì¾ï¿½ï¿½Ï±ï¿½"ï¿½ï¿½ ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         if (GameManager.instance.saveFileSeq.saveFileSeqList.Count != 0)
         {
-            text.text = "ÀÌ¾îÇÏ±â";
+            text.text = "ì´ì–´í•˜ê¸°";
             isSaveFileExist = true;
         }
         else
         {
-            text.text = "»õ·ÎÇÏ±â";
+            text.text = "ìƒˆë¡œí•˜ê¸°";
             isSaveFileExist = false;
         }
     }
@@ -36,66 +36,66 @@ public class NewGameButton : MonoBehaviour
     {
         UIManager.instance.clickSoundGen();
         
-        // SaveFileÀÌ ¾øÀ¸¸é »õ·ÎÇÏ±â ~> GameData »õ·Î ¸¸µé°í stageNum, achNum ³Ö¾îÁØ µÚ Æ©Åä¸®¾ó¾ÀÀ¸·Î ÀÌµ¿½ÃÅ´ 
+        // SaveFileï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ~> GameData ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ stageNum, achNum ï¿½Ö¾ï¿½ï¿½ï¿½ ï¿½ï¿½ Æ©ï¿½ä¸®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½Å´ 
         if (!isSaveFileExist)
         {
-            Debug.Log("new game");
+            //Debug.Log("new game");
 
-            GameManager.instance.curSaveFileNum = 0; //Ã¹ ¼¼ÀÌºê ÆÄÀÏ »ý¼º (1¹ø ¼¼ÀÌºê) 
-            GameManager.instance.saveFileSeq.saveFileSeqList.Add(0); //¸¶Áö¸·À¸·Î ½ÇÇàÇÑ ¼¼ÀÌºê¹øÈ£ °»½Å 
+            GameManager.instance.curSaveFileNum = 0; //Ã¹ ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (1ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½) 
+            GameManager.instance.saveFileSeq.saveFileSeqList.Add(0); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½È£ ï¿½ï¿½ï¿½ï¿½ 
             GameManager.instance.SaveSaveFileSeq();
 
-            //GM Àº °ÔÀÓ ½ÇÇà ½Ã °¡Àå ¸ÕÀú È°¼ºÈ­µÇ¹Ç·Î ÀÌ¹Ì GameData ´Â ¸¸µé¾îÁ®ÀÖ´Â »óÅÂ ~> ¿©±â¼­ ÃÊ±âÈ­½ÃÅ°°í ÁøÇàÇÔ 
+            //GM ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½Ç¹Ç·ï¿½ ï¿½Ì¹ï¿½ GameData ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ~> ï¿½ï¿½ï¿½â¼­ ï¿½Ê±ï¿½È­ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
             GameManager.instance.gameData.curStageNum = 1;
-            GameManager.instance.gameData.curAchievementNum = 0; //Ã³À½ ½ÃÀÛÇÏ´Â °ÔÀÓ ~> ÃÖÃÊ ½ºÅ×ÀÌÁö¿¡¼­ ´Ù½Ã ½ÃÀÛ 
+            GameManager.instance.gameData.curAchievementNum = 0; //Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ~> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             GameManager.instance.gameData.finalStageNum = 1;
-            GameManager.instance.gameData.finalAchievementNum = 0; //ÃÖÁ¾ÁøÇà»óÈ²Àº µ¿ÀÏ 
+            GameManager.instance.gameData.finalAchievementNum = 0; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È²ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
             for (int i = 0; i < 7; i++)
             {
                 for (int j = 0; j < 50; j++)
                 {
-                    GameManager.instance.gameData.savePointUnlock[i, j] = false; //¸ðµç ¼¼ÀÌºêÆ÷ÀÎÆ® ºñÈ°¼ºÈ­ (°ÔÀÓÀ» Ã³À½ ½ÃÀÛÇÏ¹Ç·Î) 
+                    GameManager.instance.gameData.savePointUnlock[i, j] = false; //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È°ï¿½ï¿½È­ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¹Ç·ï¿½) 
                 }
             }
 
-            //ÃÊ±âÈ­½ÃÅ² GameData [0]¿¡ ÀúÀå 
+            //ï¿½Ê±ï¿½È­ï¿½ï¿½Å² GameData [0]ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[0];
             File.WriteAllText(filePath, ToJsonData);
 
-            GameManager.instance.nextScene = 2; //½ºÅ×ÀÌÁö1 
-            //nextPos, nextDir Àº ¾ÀÀ¸·Î ÀÌµ¿ÇÑ ´ÙÀ½ savePointManager¿¡¼­ ¾Ë¾Æ¼­ Á¶Á¤ÇØ ÁÜ 
+            GameManager.instance.nextScene = 2; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1 
+            //nextPos, nextDir ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ savePointManagerï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
 
             GameManager.instance.shouldSpawnSavePoint = false;
-            GameManager.instance.shouldUseOpeningElevator = true; //¾ÀÀ» »õ·Î ½ÃÀÛÇÏ¹Ç·Î openingElevator ¿¡¼­ ³»·Á¿Í¾ß ÇÔ 
+            GameManager.instance.shouldUseOpeningElevator = true; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¹Ç·ï¿½ openingElevator ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¾ï¿½ ï¿½ï¿½ 
 
-            SceneManager.LoadScene(GameManager.instance.nextScene);
+            SceneManager.LoadScene(37);
         }
-        // SaveFileÀÌ ÀÖÀ¸¸é °¡Àå ÃÖ±Ù SaveFileÀ» Load
+        // SaveFileï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö±ï¿½ SaveFileï¿½ï¿½ Load
         else
         {
-            Debug.Log("load game");
+            //Debug.Log("load game");
 
-            GameManager.instance.curSaveFileNum = GameManager.instance.saveFileSeq.saveFileSeqList.Last(); //°¡Àå ¸¶Áö¸·¿¡ ÇÃ·¹ÀÌÇß´ø ¼¼ÀÌºêÆÄÀÏ ¹øÈ£ °¡Á®¿È 
+            GameManager.instance.curSaveFileNum = GameManager.instance.saveFileSeq.saveFileSeqList.Last(); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ß´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
             
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             string FromJsonData = File.ReadAllText(filePath);
 
-            GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData); //ÇöÀç ¼±ÅÃÇÑ ¼¼ÀÌºêÆÄÀÏÀÇ GameData °¡Á®¿È
+            GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GameData ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-            //°¡Á®¿Â GameData ¿¡¼­ µ¥ÀÌÅÍ °¡Á®¿Í¼­ GM¿¡ Áý¾î³ÖÀ½ 
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GameData ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ GMï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
             
             GameManager.instance.nextScene = curGameData.respawnScene;
             GameManager.instance.nextPos = curGameData.respawnPos;
             GameManager.instance.nextGravityDir = curGameData.respawnGravityDir;
-            GameManager.instance.nextState = Player.States.Walk; //States.Walk ·Î ¾À ½ÃÀÛ 
+            GameManager.instance.nextState = Player.States.Walk; //States.Walk ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
             GameManager.instance.shouldSpawnSavePoint = true;
             if(curGameData.curAchievementNum == 0)
             {
                 GameManager.instance.shouldSpawnSavePoint = false;
-                GameManager.instance.shouldUseOpeningElevator = true; //ÇØ´ç ½ºÅ×ÀÌÁö¸¦ Ã³À½ ½ÃÀÛÇÒ ¶© opening Elevator ÀÛµ¿ÇØ¾ß ÇÔ 
+                GameManager.instance.shouldUseOpeningElevator = true; //ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ opening Elevator ï¿½Ûµï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ 
             }
 
             SceneManager.LoadScene(GameManager.instance.nextScene);

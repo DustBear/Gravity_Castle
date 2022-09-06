@@ -8,8 +8,8 @@ public class Key : MonoBehaviour
     [SerializeField] int stageNum;
     public int achievementNum;
 
-    public Vector2 respawnPos; //ÇÃ·¹ÀÌ¾î°¡ Å°¸¦ ¸Ô°í ³ª¼­ ¸®½ºÆùµÇ´Â À§Ä¡    
-    public Vector2 respawnDir; //ÇÃ·¹ÀÌ¾î°¡ Å°¸¦ ¸Ô°í ³ª¼­ ¸®½ºÆùµÇ´Â Áß·Â¹æÇâ
+    public Vector2 respawnPos; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ Å°ï¿½ï¿½ ï¿½Ô°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½Ä¡    
+    public Vector2 respawnDir; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ Å°ï¿½ï¿½ ï¿½Ô°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ß·Â¹ï¿½ï¿½ï¿½
 
     Transform player;
     SpriteRenderer sprite;
@@ -19,7 +19,7 @@ public class Key : MonoBehaviour
 
     public ParticleSystem rightBurst;
     public ParticleSystem leftBurst;
-    public GameObject keyLight; //¿­¼è°¡ »ç¶óÁö±â Àü¿¡ ºûÀÌ ¼­¼­È÷ ²¨Áö°Ô ¸¸µê
+    public GameObject keyLight; //ï¿½ï¿½ï¿½è°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public GameObject keyParticles;
 
     float initialXPos;
@@ -32,12 +32,12 @@ public class Key : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         sound = GetComponent<AudioSource>();
 
-        if (GameManager.instance.gameData.curAchievementNum >= achievementNum) //ÀÌ¹Ì ¸ÔÀº ¿­¼è¶ó¸é Á¦°ÅÇØ¾ß ÇÔ 
+        if (GameManager.instance.gameData.curAchievementNum >= achievementNum) //ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ 
         {
             Destroy(gameObject);
         }
 
-        respawnPos = transform.position - transform.up; //key´Â keystoneº¸´Ù Á¶±Ý À§¿¡ ÀÖÀ¸¹Ç·Î ÁÂÇ¥¿¡¼­ 1 »« À§Ä¡¿¡ ÇÃ·¹ÀÌ¾î ¼ÒÈ¯ 
+        respawnPos = transform.position - transform.up; //keyï¿½ï¿½ keystoneï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½ 1 ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½È¯ 
     }
 
     void Start()
@@ -48,7 +48,7 @@ public class Key : MonoBehaviour
 
     private void FixedUpdate()
     {
-        sinMove(); //¿­¼è´Â °¡¸¸È÷ ÀÖÀ» ¶§ À§ ¾Æ·¡·Î Èçµé·Á¾ß ÇÔ
+        sinMove(); //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
     }
 
     void sinMove()
@@ -75,15 +75,15 @@ public class Key : MonoBehaviour
         leftBurst.Play();
         sound.Play();
 
-        sprite.color = new Color(1, 1, 1, 0); //Àá½Ã Åõ¸íÇÏ°Ô ¸¸µé°í 
+        sprite.color = new Color(1, 1, 1, 0); //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ 
         StartCoroutine("lightFade");
 
         var emit = keyParticles.GetComponent<ParticleSystem>().emission;
         emit.rateOverTime = 0; 
-        //ÆÄÆ¼Å¬ÀÇ »ýÁ¸½Ã°£Àº 2ÃÊ: ¿­¼è°¡ »ç¶óÁö´Â Áï½Ã emitÀ» 0À¸·Î ¸¸µé¸é 2ÃÊ µÚ ¸ðµç ÆÄÆ¼Å¬ÀÌ »ç¶óÁö´Â µ¿½Ã¿¡ ÆÄÆ¼Å¬½Ã½ºÅÛÀº ºñÈ°¼ºÈ­µÊ
+        //ï¿½ï¿½Æ¼Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ 2ï¿½ï¿½: ï¿½ï¿½ï¿½è°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ emitï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¿ï¿½ ï¿½ï¿½Æ¼Å¬ï¿½Ã½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ï¿½ï¿½
 
         yield return new WaitForSeconds(2f);
-        Destroy(gameObject); //2ÃÊ µÚ ÆÄÆ¼Å¬½Ã½ºÅÛ ÀüºÎ ³¡³ª¸é ºñÈ°¼ºÈ­ 
+        Destroy(gameObject); //2ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Æ¼Å¬ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ 
     }  
     
     IEnumerator lightFade()
@@ -93,7 +93,7 @@ public class Key : MonoBehaviour
             float colorValue = 0.05f * index;
 
             keyLight.GetComponent<UnityEngine.Experimental.Rendering.Universal.Light2D>().color = new Color(colorValue, colorValue, colorValue);
-            yield return new WaitForSeconds(0.05f); //1ÃÊ µÚ ÆÄÆ¼Å¬ ¿ÏÀüÈ÷ Åõ¸íÈ­ µÊ
+            yield return new WaitForSeconds(0.05f); //1ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Æ¼Å¬ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ ï¿½ï¿½
         }
     }
 }

@@ -4,5 +4,44 @@ using UnityEngine;
 
 public class lever : MonoBehaviour
 {
-    public bool isPowerLever; //true ÀÌ¸é 180µµ È¸Àü°¡´ÉÇÑ ·¹¹ö, false¸é 90µµ¸¸ È¸Àü°¡´ÉÇÑ ·¹¹ö 
+    Sprite lightOff; //ë¶ˆ êº¼ì§„ ëª¨ìŠµ 
+    Animator ani;
+    GameObject playerObj;
+
+    public bool isPowerLever; //true ï¿½Ì¸ï¿½ 180ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, falseï¿½ï¿½ 90ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+
+    private void Awake()
+    {
+        ani = GetComponent<Animator>();
+        playerObj = GameObject.Find("Player");
+
+        lightTurnOn();
+    }
+    private void Start()
+    {
+        
+    }
+    
+    public void lightTurnOff()
+    {
+        if (!isPowerLever)
+        {
+            ani.Play("lever_90_default");
+        }
+        else
+        {
+            ani.Play("lever_180_default");
+        }       
+    }
+    public void lightTurnOn()
+    {
+        if (!isPowerLever)
+        {
+            ani.Play("lever_90");
+        }
+        else
+        {
+            ani.Play("lever_180");
+        }
+    }
 }

@@ -108,7 +108,8 @@ public class MainCamera : MonoBehaviour
     {
         if (isLookDownWork) return;
 
-        if(player.isGrounded && Input.GetKey(KeyCode.DownArrow)) //플레이어가 지면에 닿아있으면서 아래쪽 화살표를 계속 누르면 
+        if((Player.curState == Player.States.Walk) && Input.GetKey(KeyCode.DownArrow)) 
+            //플레이어가 지면에 닿아있거나 or 플레이어가 밧줄에 매달린 상태에서 아래쪽 화살표를 계속 누르면
         {
             lookDownSide_timer += Time.deltaTime;
             if(lookDownSide_timer >= lookDownSide_inputTime) //필요 기준치를 넘으면 

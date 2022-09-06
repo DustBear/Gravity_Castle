@@ -16,10 +16,10 @@ public class InputManager : Singleton<InputManager>
 
     [HideInInspector] public bool isInputBlocked {get; set;}
     [HideInInspector] public bool isJumpBlocked { get; set; } 
-    //¿¤¸®º£ÀÌÅÍ Å» ¶§´Â Á¡ÇÁ ºÒ°¡´ÉÇÏ°Ô ¸¸µê. 
-    //ÇöÀç player ¾Ë°í¸®Áò »óÀ¸·Î´Â ÇÃ·¹ÀÌ¾î°¡ ÂøÁöÇÒ ¶§ yÃà ¼Óµµ°¡ À½¼ö¿©¾ß ÂøÁöÇÑ °ÍÀ¸·Î ÀÎÁö 
-    //¿¤¸®º£ÀÌÅÍ¸¦ Å¸°í ¿Ã¶ó°¡´Â µµÁß Á¡ÇÁÇÏ°í ÂøÁöÇÏ¸é yÃà ±Û·Î¹ú ÁÂÇ¥ ¼Óµµ°¡ ¾ç¼öÀÌ¹Ç·Î ÂøÁö ÀÎÁö ¸øÇÔ 
-    //´Ü±â°£¿¡ ÇØ°áÇÏ±â Èûµç ¹®Á¦·Î º¸ÀÌ¹Ç·Î ±×³É ¿¤¸®º£ÀÌÅÍ¸¦ Å¸´Â µ¿¾ÈÀº Á¡ÇÁ°¡ ºÒ°¡´ÉÇÏµµ·Ï ¸¸µéÀÚ. 
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å» ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½. 
+    //ï¿½ï¿½ï¿½ï¿½ player ï¿½Ë°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ yï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Å¸ï¿½ï¿½ ï¿½Ã¶ó°¡´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ yï¿½ï¿½ ï¿½Û·Î¹ï¿½ ï¿½ï¿½Ç¥ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+    //ï¿½Ü±â°£ï¿½ï¿½ ï¿½Ø°ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. 
 
     void Awake()
     {
@@ -28,14 +28,14 @@ public class InputManager : Singleton<InputManager>
 
     void Update()
     {        
-        if (!isInputBlocked) //InputBlocked µÇ¸é Á¶ÀÛ ºÒ°¡´É
+        if (!isInputBlocked) //InputBlocked ï¿½Ç¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½
         {
             horizontal = Input.GetAxisRaw("Horizontal");
             horizontalDown = Input.GetButtonDown("Horizontal");
             vertical = Input.GetAxisRaw("Vertical");
             verticalDown = Input.GetButtonDown("Vertical");
 
-            //verticalÀº ·ÎÇÁ ¾Ë°í¸®Áò¿¡¼­ »ç¿ë. jump´Â Á¡ÇÁ ¾Ë°í¸®Áò¿¡¼­ »ç¿ë 
+            //verticalï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë°ï¿½ï¿½ï¿½ò¿¡¼ï¿½ ï¿½ï¿½ï¿½. jumpï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë°ï¿½ï¿½ï¿½ò¿¡¼ï¿½ ï¿½ï¿½ï¿½ 
             if (!isJumpBlocked)
             {
                 jumpDown = Input.GetKeyDown(KeyCode.Space);
@@ -60,9 +60,9 @@ public class InputManager : Singleton<InputManager>
             jumpUp = false;
         }
         
-        // °ÔÀÓ ÁøÇàÁß¿¡ esc ´©¸£¸é ¸Þ´º ¿Â¿ÀÇÁ °¡´É
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß¿ï¿½ esc ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½ ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         esc = Input.GetButtonDown("Cancel");
-        if (esc && SceneManager.GetActiveScene().name != "MainMenu") //¸ÞÀÎ¸Þ´º¿¡¼± ESC ´©¸¦ ¼ö ¾øÀ½ 
+        if (esc && SceneManager.GetActiveScene().name != "MainMenu" && SceneManager.GetActiveScene().name != "openingScene") //ï¿½ï¿½ï¿½Î¸Þ´ï¿½ï¿½ï¿½ï¿½ï¿½ ESC ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         {
             UIManager.instance.OnOffInGameMenu();
         }

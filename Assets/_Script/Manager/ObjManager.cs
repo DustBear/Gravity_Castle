@@ -23,7 +23,6 @@ public class ObjManager : Singleton<ObjManager>
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-
         InitPool(arrowNum, ref arrow, ref arrowQueue);
         InitPool(cannonNum, ref cannon, ref cannonQueue);
         InitPool(fireNum, ref fire, ref fireQueue);

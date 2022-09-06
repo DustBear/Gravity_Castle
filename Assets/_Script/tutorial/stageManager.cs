@@ -8,76 +8,78 @@ using System.IO;
 public class stageManager : MonoBehaviour
 {    
     public Button[] stageButton;
-    public GameObject iconGroup; //»ý¼ºµÈ ¾ÆÀÌÄÜÀº ÀÌ ¹Ø¿¡ ³Ö¾î¼­ Á¤¸® 
+    public GameObject iconGroup; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ø¿ï¿½ ï¿½Ö¾î¼­ ï¿½ï¿½ï¿½ï¿½ 
     public GameObject betaModeWindow;
 
-    public int selectedStageNum; //ÇöÀç ¼±ÅÃµÈ ½ºÅ×ÀÌÁö: 1ºÎÅÍ ½ÃÀÛ 
-    public int selectedSavePointNum; //ÇöÀç ¼±ÅÃµÈ ¼¼ÀÌºêÆ÷ÀÎÆ®: 1ºÎÅÍ ½ÃÀÛ 
-    public int savePointCount; //Ç¥½ÃÇØ¾ß ÇÏ´Â ¼¼ÀÌºêÆ÷ÀÎÆ®ÀÇ °³¼ö
+    public int selectedStageNum; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+    public int selectedSavePointNum; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®: 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+    public int savePointCount; //Ç¥ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     Vector2 firstIconPos;
     public float iconGap;
     public GameObject stageIcon;
     public GameObject firstIconPosAnchor;
-    public Sprite okIcon; //ÇöÀç ÁøÇàµµ·Î ºü¸¥ÀÌµ¿ °¡´ÉÇÑ ¼¼ÀÌºêÆ÷ÀÎÆ® ¾ÆÀÌÄÜ
-    public Sprite noIcon; //ÇöÀç ÁøÇàµµ»ó ºü¸¥ÀÌµ¿ ºÒ°¡´ÉÇÑ ¼¼ÀÌºêÆ÷ÀÎÆ® ¾ÆÀÌÄÜ
-    public float maxIconCount; //¸ðµç ½ºÅ×ÀÌÁöÀÇ ¼¼ÀÌºêÆ÷ÀÎÆ® °³¼ö Áß °¡Àå ³ôÀº °ª ÀÌ¿ë
+    public Sprite okIcon; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public Sprite noIcon; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ ï¿½Ò°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public float maxIconCount; //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì¿ï¿½
     [SerializeField] List<GameObject> savePointIcon;
 
     //public GameObject betaModeWindow;
 
     void Start()
     {       
-        selectedStageNum = GameManager.instance.gameData.curStageNum; //¸¶Áö¸·¿¡ ÇÃ·¹ÀÌÇÏ´ø ½ºÅ×ÀÌÁö°¡ ±âº»À¸·Î ¼±ÅÃµÊ 
-        selectedSavePointNum = GameManager.instance.gameData.curAchievementNum; //¸¶Áö¸·¿¡ ÇÃ·¹ÀÌÇÏ´ø ¼¼ÀÌºêÆ÷ÀÎÆ®°¡ ±âº»À¸·Î ¼±ÅÃµÊ 
+        selectedStageNum = GameManager.instance.gameData.curStageNum; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½âº»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ãµï¿½ 
+        selectedSavePointNum = GameManager.instance.gameData.curAchievementNum; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½âº»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ãµï¿½ 
 
         firstIconPos = firstIconPosAnchor.transform.position;
 
         iconInitiate();
         iconMake();
        
-        //½ºÅ×ÀÌÁö ¼¼ÀÌºêÆ÷ÀÎÆ® ¾ÆÀÌÄÜ ÃÊ±âÈ­ ¹× »ý¼ºÀº ¸ÊÀ» ¿­ ¶§¸¶´Ù ½ÇÇà 
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
     }
 
     void iconInitiate()
     {
-        savePointIcon = new List<GameObject>(); //¼¼ÀÌºêÆ÷ÀÎÆ® ¹è¿­ ÃÊ±âÈ­ 
+        savePointIcon = new List<GameObject>(); //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½è¿­ ï¿½Ê±ï¿½È­ 
 
         for (int index=0; index<maxIconCount; index++)
         {
             savePointIcon.Add(Instantiate(stageIcon, new Vector3(firstIconPos.x + iconGap * index, firstIconPos.y, 0), Quaternion.identity, iconGroup.transform));
-            savePointIcon[index].GetComponent<savePointIconButton>().savePointNum = index+1; //¼¼ÀÌºêÆ÷ÀÎÆ® ¹øÈ£´Â 1ºÎÅÍ ½ÃÀÛ 
+            savePointIcon[index].GetComponent<savePointIconButton>().savePointNum = index+1; //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È£ï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
-            //ÃÖ´ë ¾ÆÀÌÄÜ °³¼ö¸¸Å­ ¾ÆÀÌÄÜ »ý¼ºÇÑ µÚ iconGroup ±×·ì¿¡ Áý¾î³ÖÀ½          
+            //ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ iconGroup ï¿½×·ì¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½          
         }
     }
 
-    public void iconMake() //½ºÅ×ÀÌÁö ¹øÈ£°¡ ¹Ù²ð ¶§ ÇØ´ç ½ºÅ×ÀÌÁöÀÇ ¼¼ÀÌºêÆ÷ÀÎÆ® °³¼ö¿¡ ¸Â°Ô ½ºÅ×ÀÌÁö ¾ÆÀÌÄÜ È°¼ºÈ­~>¾À Ã³À½ ½ÃÀÛÇÒ ¶§, stageNum ¹Ù²ð ¶§ ¸¶´Ù È£Ãâ 
+    public void iconMake() //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½Ù²ï¿½ ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­~>ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, stageNum ï¿½Ù²ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ 
     {
-        Debug.Log(selectedStageNum + ", " + selectedSavePointNum);
-
         for (int index = 0; index < maxIconCount; index++)
         {
-            if (index < savePointCount) //maxIconCount °³ÀÇ ¾ÆÀÌÄÜ Áß ¾Õ¿¡¼­ºÎÅÍ savePointCount°³ÀÇ ¾ÆÀÌÄÜ¸¸ È°¼ºÈ­ÇÏ°í ³ª¸ÓÁö´Â ºñÈ°¼ºÈ­
+            if (index < savePointCount) //maxIconCount ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Õ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ savePointCountï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½ È°ï¿½ï¿½È­ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
             {              
-                //ÀÏ´Ü ÀüºÎ È°¼ºÈ­ 
+                //ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ 
                 savePointIcon[index].SetActive(true);
                 savePointIcon[index].GetComponent<Image>().sprite = okIcon;
 
-                if (!GameManager.instance.gameData.savePointUnlock[selectedStageNum - 1, selectedSavePointNum-1]) //ÇØ´ç ¼¼ÀÌºêÆ÷ÀÎÆ®¸¦ ¾ÆÁ÷ È°¼ºÈ­ÇÏÁö ¾Ê¾ÒÀ¸¸é 
+                string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
+                string FromJsonData = File.ReadAllText(filePath);
+                GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData);
+                
+                if (!curGameData.savePointUnlock[selectedStageNum - 1, selectedSavePointNum-1]) //ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ 
                 {
                     savePointIcon[index].GetComponent<Image>().sprite = noIcon;
                 }
             }
             else
             {
-                savePointIcon[index].SetActive(false); //ÀüºÎ »ç¿ëÇÏ°í ³²Àº ¾ÆÀÌÄÜÀº ºñÈ°¼ºÈ­ 
+                savePointIcon[index].SetActive(false); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ 
             }
         }
         iconCheck();
     }
 
-    public void iconInputCheck() //Å°º¸µå ÀÔ·Â¿¡ µû¶ó ÇöÀç ¼±ÅÃÇØ¾ß ÇÏ´Â ¼¼ÀÌºêÆ÷ÀÎÆ® ¹øÈ£ ÁöÁ¤
+    public void iconInputCheck() //Å°ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È£ ï¿½ï¿½ï¿½ï¿½
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
@@ -97,7 +99,7 @@ public class stageManager : MonoBehaviour
         }
     }
 
-    public void iconCheck() //ÇöÀç Ä¿¼­°¡ Ç¥½ÃµÇ¾î ÀÖ´Â ¼¼ÀÌºêÆ÷ÀÎÆ®¿¡ ¸Â°Ô ¾ÆÀÌÄÜ »ö±ò Ç¥½Ã~>½ºÅ×ÀÌÁö ¹øÈ£ ¹Ù²ð ¶§, µ¿ÀÏ ½ºÅ×ÀÌÁö¿¡¼­ ¼¼ÀÌºêÆ÷ÀÎÆ® ¹øÈ£ ¹Ù²ð ¶§ È£Ãâ 
+    public void iconCheck() //ï¿½ï¿½ï¿½ï¿½ Ä¿ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ÃµÇ¾ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½~>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ ï¿½Ù²ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È£ ï¿½Ù²ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ 
     {
         for(int index=1; index<=savePointCount; index++)
         {
@@ -120,13 +122,13 @@ public class stageManager : MonoBehaviour
     
     void Update()
     {       
-        iconInputCheck(); //Å°º¸µå ÁÂ¿ì È­»ìÇ¥ ´­·¯¼­ ÇöÀç ¼±ÅÃµÈ ¼¼ÀÌºêÆ÷ÀÎÆ® ¹øÈ£ ÀÌµ¿ 
+        iconInputCheck(); //Å°ï¿½ï¿½ï¿½ï¿½ ï¿½Â¿ï¿½ È­ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È£ ï¿½Ìµï¿½ 
         if(betaModeWindow.activeSelf && Input.GetKeyDown(KeyCode.Q))
         {
             betaModeWindow.SetActive(false);
         }
     }
-    public void ChapterStart() //Ã©ÅÍ ½ÃÀÛÇÏ±â ¹öÆ°À» ´©¸£¸é ½ÇÇàµÇ´Â ÇÔ¼ö 
+    public void ChapterStart() //Ã©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½Ô¼ï¿½ 
     {
         UIManager.instance.clickSoundGen();
 
@@ -135,30 +137,28 @@ public class stageManager : MonoBehaviour
 
         if (GameManager.instance.gameData.finalStageNum == selectedStageNum)
         {
-            //¸¸¾à ÀÌµ¿ÇÏ°íÀÚ ÇÏ´Â ¼¼ÀÌºêÆ÷ÀÎÆ® ¼ýÀÚ°¡ ¼ºÃëµµº¸´Ù ³ôÀ¸¸é ÀÌµ¿x 
-            //¼ºÃëµµº¸´Ù ³ôÀº ½ºÅ×ÀÌÁö´Â ¾ÖÃÊ¿¡ Å¬¸¯ÀÌ ºÒ°¡´ÉÇÏ¹Ç·Î ±»ÀÌ °í·ÁÇÒ ÇÊ¿äx
+            //ì„ íƒí•œ ìŠ¤í…Œì´ì§€ì˜ ì„¸ì´ë¸Œí¬ì¸íŠ¸ ë„˜ë²„ê°€ í˜„ìž¬ ì„±ì·¨ë„ë³´ë‹¤ ë‚®ìœ¼ë©´ ì´ë™ ë¶ˆê°€ëŠ¥ 
+            //ë§Œì•½ í˜„ìž¬ ìŠ¤í…Œì´ì§€ê°€ finalStageë³´ë‹¤ ë‚®ìœ¼ë©´ ì• ì´ˆì— í´ë¦­ì´ ë¶ˆê°€ëŠ¥í•˜ê¸°ì— ê³ ë ¤ x 
             if (!GameManager.instance.gameData.savePointUnlock[selectedStageNum-1, selectedSavePointNum-1])
             {
-                Debug.Log("savePoint not activated");
+                //Debug.Log("savePoint not activated");
                 return;
             }
         }
 
-        Debug.Log("savePointBackUp: " + (selectedSavePointNum));
+        //Debug.Log("savePointBackUp: " + (selectedSavePointNum));
 
         GameManager.instance.gameData.curAchievementNum = selectedSavePointNum; 
         GameManager.instance.gameData.curStageNum = selectedStageNum;
 
-        GameManager.instance.nextScene = tmpScript.savePointScene[selectedSavePointNum-1]; //¼±ÅÃµÈ ¾ÀÀ¸·Î ÀÌµ¿
+        GameManager.instance.nextScene = tmpScript.savePointScene[selectedSavePointNum-1]; //ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         GameManager.instance.nextPos = new Vector2(0, 0);
         GameManager.instance.nextGravityDir = new Vector2(0, -1);
-        //¾îÂ÷ÇÇ ÇØ´ç ¾ÀÀ¸·Î ÀÌµ¿ÇÑ µÚ ´Ù½Ã ÀçÁ¶Á¤ÇØ ÁÙ Å×´Ï Áö±Ý ½Å°æ¾µ ÇÊ¿äx
+        //nextPosì™€ nextGravityDIrì€ ì–´ì°¨í”¼ ë‹¤ìŒ ì”¬ì— ë„ì°©í•˜ë©´ savePointLoad ê°€ ì•Œì•„ì„œ ì¡°ì •í•´ ì¤Œ 
 
-
-        GameManager.instance.shouldSpawnSavePoint = true;
         GameManager.instance.nextState = Player.States.Walk;
 
-        //gameData ÃÊ±âÈ­
+        //gameData ï¿½Ê±ï¿½È­
         GameManager.instance.gameData.respawnScene = GameManager.instance.nextScene;
         GameManager.instance.gameData.respawnPos = GameManager.instance.nextPos;
         GameManager.instance.gameData.respawnGravityDir = GameManager.instance.nextGravityDir;
@@ -170,14 +170,14 @@ public class stageManager : MonoBehaviour
         string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
         File.WriteAllText(filePath, ToJsonData);
 
-        GameManager.instance.shouldSpawnSavePoint = true; //ºü¸¥ÀÌµ¿Àº ¹«Á¶°Ç ¼¼ÀÌºêÆ÷ÀÎÆ®·Î¸¸ ÀÌµ¿
+        GameManager.instance.shouldSpawnSavePoint = true; //ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Î¸ï¿½ ï¿½Ìµï¿½
         SceneManager.LoadScene(GameManager.instance.nextScene);
     }
 
     
-    public void betaModeActive() //ÁøÇàµµ¸¦ ÃÖ´ëÄ¡·Î ³ô¿©ÁÖ´Â ½Ã½ºÅÛ
+    public void betaModeActive() //ï¿½ï¿½ï¿½àµµï¿½ï¿½ ï¿½Ö´ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Ã½ï¿½ï¿½ï¿½
     {
-        Debug.Log("beta-mode activated");
+        //Debug.Log("beta-mode activated");
 
         GameManager.instance.gameData.finalAchievementNum = stageButton[2].GetComponent<stageMoveButton>().savePointCount;
         GameManager.instance.gameData.finalStageNum = 3;
@@ -186,7 +186,7 @@ public class stageManager : MonoBehaviour
         {
             for (int j = 0; j < 50; j++)
             {
-                GameManager.instance.gameData.savePointUnlock[i, j] = true; //¸ðµç ¼¼ÀÌºêÆ÷ÀÎÆ® È°¼ºÈ­ 
+                GameManager.instance.gameData.savePointUnlock[i, j] = true; //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® È°ï¿½ï¿½È­ 
             }
         }
         string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);

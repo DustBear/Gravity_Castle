@@ -7,23 +7,23 @@ public class movingProp : MonoBehaviour
     public GameObject prop;
 
     public Sprite[] leverSprite = new Sprite[3];
-    //[0] ÀÌ °¡¿îµ¥, [1]ÀÌ ¿ÞÂÊ, [2]ÀÌ ¿À¸¥ÂÊ 
+    //[0] ï¿½ï¿½ ï¿½ï¿½ï¿½îµ¥, [1]ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, [2]ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
     SpriteRenderer spr;
     Animator anim;
 
     bool isPlayerOn;
     bool isLeverActivated;
-
-    public Vector2 pos1, pos2; //propÀÌ ¿òÁ÷ÀÌ´Â °æ·ÎÀÇ ¾ç ³¡Á¡ 
-    public int initPos; // ¸î¹øÂ° posGroup¿¡¼­ ½ÃÀÛÇÒ °ÍÀÎÁö 
-    public int periodNum; //pos1 ~ pos2 ±¸°£À» ¸î Á¶°¢À¸·Î ³ª´­Áö 
+    
+    public Vector2 pos1, pos2; //propï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+    public int initPos; // ï¿½ï¿½ï¿½Â° posGroupï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+    public int periodNum; //pos1 ~ pos2 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
     Vector2[] posGroup;
-    [SerializeField] int curPos; //0 ~ periodNum ±îÁöÀÇ pos ¹øÈ£ 
+    [SerializeField] int curPos; //0 ~ periodNum ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ pos ï¿½ï¿½È£ 
     public float propMoveSpeed;
 
 
-    bool isCorWork; //ÄÚ·çÆ¾ ÀÛµ¿Áß¿¡´Â ´Ù¸¥ ÄÚ·çÆ¾ ½ÇÇà ¸·¾Æ¾ß ÇÔ 
-    bool isPropMove; //prop ¿òÁ÷ÀÌ´Â Áß¿¡´Â ÄÚ·çÆ¾ ½ÇÇà ¸·¾Æ¾ß ÇÔ 
+    bool isCorWork; //ï¿½Ú·ï¿½Æ¾ ï¿½Ûµï¿½ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¾ï¿½ ï¿½ï¿½ 
+    bool isPropMove; //prop ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¾ï¿½ ï¿½ï¿½ 
 
     private void Awake()
     {       
@@ -34,7 +34,7 @@ public class movingProp : MonoBehaviour
     {
         spr.sprite = leverSprite[0];
         posGroup = new Vector2[periodNum+1]; 
-        // ex) ÀüÃ¼ ±¸°£ÀÌ 4µîºÐµÈ´Ù¸é Á¤Á¡Àº 5°³°¡ ÀÖ¾î¾ß ÇÔ
+        // ex) ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 4ï¿½ï¿½ÐµÈ´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 5ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½
         //[0] = pos1,  [periodNum] = pos2
 
         for(int index=0; index<=periodNum; index++)
@@ -42,8 +42,9 @@ public class movingProp : MonoBehaviour
             posGroup[index] = pos1 + index * (pos2 - pos1) / periodNum;
         }
 
-        prop.transform.position = posGroup[initPos]; //prop À§Ä¡ ÃÊ±âÈ­ 
-        anim.SetFloat("animSpeed", 0); //½ÃÀÛÇÏ¸é Åé´Ï¹ÙÄû È¸Àüx 
+        prop.transform.position = posGroup[initPos]; //prop ï¿½ï¿½Ä¡ ï¿½Ê±ï¿½È­ 
+        curPos = initPos;
+        anim.SetFloat("animSpeed", 0); //ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½Ï¹ï¿½ï¿½ï¿½ È¸ï¿½ï¿½x 
     }
 
     
@@ -51,8 +52,8 @@ public class movingProp : MonoBehaviour
     {
         if (isPlayerOn && Input.GetKeyDown(KeyCode.E))
         {
-            isLeverActivated = !isLeverActivated; //ÀÛµ¿ÁßÀÌ¾úÀ¸¸é ÇØÁ¦, ÇØÁ¦µÈ »óÅÂ¸é ÀÛµ¿ 
-            InputManager.instance.isInputBlocked = isLeverActivated; //·¹¹ö ÀÛµ¿Áß¿¡´Â ÇÃ·¹ÀÌ¾î Á¶ÀÛ ±ÝÁö 
+            isLeverActivated = !isLeverActivated; //ï¿½Ûµï¿½ï¿½ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½Ûµï¿½ 
+            InputManager.instance.isInputBlocked = isLeverActivated; //ï¿½ï¿½ï¿½ï¿½ ï¿½Ûµï¿½ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         }
 
         if (isLeverActivated)
@@ -67,9 +68,9 @@ public class movingProp : MonoBehaviour
             }
         }
     }
-    IEnumerator leverAct(int leverDir) //-1 ÀÌ¸é ¿ÞÂÊ, +1ÀÌ¸é ¿À¸¥ÂÊÀ¸·Î ·¹¹ö ¿òÁ÷ÀÓ 
+    IEnumerator leverAct(int leverDir) //-1 ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½, +1ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
     {
-        if (isCorWork) yield break; ; //ÄÚ·çÆ¾ ÀÛµ¿ÁßÀÌ¸é ´Ù¸¥ ¸í·É ¹«½Ã 
+        if (isCorWork) yield break; ; //ï¿½Ú·ï¿½Æ¾ ï¿½Ûµï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
         isCorWork = true;
 
@@ -91,9 +92,9 @@ public class movingProp : MonoBehaviour
     }
 
     
-    IEnumerator propMove(int aimPos) //1ÀÌ¸é pos1 ÂÊÀ¸·Î ¿òÁ÷ÀÓ , 2ÀÌ¸é pos2 ÂÊÀ¸·Î ¿òÁ÷ÀÓ 
+    IEnumerator propMove(int aimPos) //1ï¿½Ì¸ï¿½ pos1 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ , 2ï¿½Ì¸ï¿½ pos2 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
     {
-        if (isPropMove) yield break; ; //ÀÛµ¿ÁßÀÌ¸é ¹«½Ã
+        if (isPropMove) yield break; ; //ï¿½Ûµï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         isPropMove = true;
 
@@ -111,7 +112,7 @@ public class movingProp : MonoBehaviour
                 prop.transform.position = Vector3.MoveTowards(prop.transform.position, posGroup[curPos - 1], Time.deltaTime * propMoveSpeed);
                 if((new Vector2(prop.transform.position.x, prop.transform.position.y) - posGroup[curPos -1]).magnitude <= 0.05f)
                 {
-                    prop.transform.position = posGroup[curPos - 1]; //¿ÀÂ÷¹üÀ§ ¼öÁ¤ 
+                    prop.transform.position = posGroup[curPos - 1]; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                     curPos--;
 
                     anim.SetFloat("animSpeed", 0);
@@ -134,7 +135,7 @@ public class movingProp : MonoBehaviour
                 prop.transform.position = Vector3.MoveTowards(prop.transform.position, posGroup[curPos + 1], Time.deltaTime * propMoveSpeed);
                 if ((new Vector2(prop.transform.position.x, prop.transform.position.y) - posGroup[curPos + 1]).magnitude <= 0.05f)
                 {
-                    prop.transform.position = posGroup[curPos + 1]; //¿ÀÂ÷¹üÀ§ ¼öÁ¤ 
+                    prop.transform.position = posGroup[curPos + 1]; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                     curPos++;
 
                     anim.SetFloat("animSpeed", 0);

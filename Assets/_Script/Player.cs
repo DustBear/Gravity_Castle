@@ -9,7 +9,7 @@ using System.IO;
 
 public class Player : MonoBehaviour
 {   
-    //ÇÃ·¹ÀÌ¾î Á×À» ¶§ ÆÄÆí Æ¢´Â °Í ±¸Çö 
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Æ¢ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
     public GameObject[] parts = new GameObject[4];
     public GameObject boxGrabColl;
     bool isDieCorWork;
@@ -17,67 +17,67 @@ public class Player : MonoBehaviour
     [SerializeField] float defaultGravityScale;
     [SerializeField] float maxFallingSpeed;
     [SerializeField] public float walkSpeed;
-    [SerializeField] public float maxWindSpeed; //stage3¿¡¼­ ¹Ù¶÷¿¡ ³¯¾Æ°¥ ¶§ ÃÖ´ë ¼Óµµ 
+    [SerializeField] public float maxWindSpeed; //stage3ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Óµï¿½ 
     [SerializeField] float minJumpPower;
     [SerializeField] float maxJumpPower;
     [SerializeField] float maxJumpBoostPower;
-    [SerializeField] float jumpChargeSpeed; // Á¡ÇÁ °ÔÀÌÁö Â÷´Â ¼Óµµ
-    [SerializeField] float ropeAccessSpeed; // rope¿¡ Á¢±ÙÇÏ´Â ¼Óµµ
-    [SerializeField] float ropeMoveSpeed; // rope¿¡ ¸Å´Ş·Á ¿òÁ÷ÀÌ´Â ¼Óµµ
-    [SerializeField] float leverRotateDelay; // lever ÀÛµ¿ ÈÄ ÇÃ·¹ÀÌ¾î°¡ È¸ÀüÇÏ´Â µ¥ °É¸®´Â ½Ã°£ 
-    public float windForce; // Stage3ÀÇ ¹Ù¶÷¿¡ ÀÇÇØ ¹Ş´Â Èû~> È¯Ç³±â¸¶´Ù ´Ù¸£°Ô ¼³Á¤ÇÒ ¼ö ÀÖµµ·Ï ¿ÜºÎÁ¢±Ù Çã¿ë 
-    [SerializeField] float slidingDegree; // Stage6ÀÇ ¾óÀ½ À§¿¡¼­ ¹Ì²ô·¯Áö´Â Á¤µµ
+    [SerializeField] float jumpChargeSpeed; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½
+    [SerializeField] float ropeAccessSpeed; // ropeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Óµï¿½
+    [SerializeField] float ropeMoveSpeed; // ropeï¿½ï¿½ ï¿½Å´Ş·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Óµï¿½
+    [SerializeField] float leverRotateDelay; // lever ï¿½Ûµï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ È¸ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ ï¿½É¸ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ 
+    public float windForce; // Stage3ï¿½ï¿½ ï¿½Ù¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ş´ï¿½ ï¿½ï¿½~> È¯Ç³ï¿½â¸¶ï¿½ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½Üºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 
+    [SerializeField] float slidingDegree; // Stage6ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public bool isPlayerInSideStage; 
-    //ÇÃ·¹ÀÌ¾î°¡ »çÀÌµå ½ºÅ×ÀÌÁö ³»¿¡ ÀÖÀ» ¶§´Â Á×°í ³ª¸é º°µµÀÇ respawnPos¿¡¼­ »õ·Î ºÎÈ°
+    //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ respawnPosï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°
 
-    // ÇÃ·¹ÀÌÀÇ »óÅÂ´Â Finite State MachineÀ¸·Î °ü¸®
+    // ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â´ï¿½ Finite State Machineï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public enum States
     {
         Walk, Fall, Land, Jump, Grab,
-        PowerJump, // Stage5 °­È­ Á¡ÇÁ
+        PowerJump, // Stage5 ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½
         AccessRope, MoveOnRope,
         AccessLever, SelectGravityDir, ChangeGravityDir, FallAfterLevering,
-        GhostUsingLever, FallAfterGhostLevering // Stage4 ÇÑÁ¤
+        GhostUsingLever, FallAfterGhostLevering // Stage4 ï¿½ï¿½ï¿½ï¿½
     }
     StateMachine<States> fsm;
-    [HideInInspector] public static States curState {get; private set;}
-    Func<bool> readyToFall, readyToLand, readyToJump, readyToGrab, readyToPowerJump, readyToRope, readyToLever , readyToPowerLever; // °¢ »óÅÂ·Î ÀÌµ¿ÇÏ±â À§ÇÑ ±âº» Á¶°Ç
+    public static States curState {get; private set;}
+    Func<bool> readyToFall, readyToLand, readyToJump, readyToGrab, readyToPowerJump, readyToRope, readyToLever , readyToPowerLever; // ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ìµï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½
 
     // Walk
-    public bool isPlayerExitFromWInd; //ÇÃ·¹ÀÌ¾î°¡ stage3 windZone¿¡¼­ ºüÁ®³ª¿Â Á÷ÈÄ ¾ÆÁ÷ °ü¼ºÀÇ ¿µÇâÀ» ¹Ş°í ÀÖÀ» ¶§ true 
+    public bool isPlayerExitFromWInd; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ stage3 windZoneï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ş°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ true 
 
     // Jump
     [SerializeField]float jumpGauge;
-    [SerializeField] float jumpTimer; //¶¥¿¡ ´ê±â Á÷Àü ½ºÆäÀÌ½º¹Ù¸¦ ´­·¯µµ ÀÏÁ¤ ¿ÀÂ÷¹üÀ§ ³»¿¡ ÀÖ´Ù¸é Á¡ÇÁ¸í·É ÀÎ½ÄÇØ¾ß ÇÔ 
-    public float jumpTimerOffset; //±âÁØÁ¡ 
-    public float jumpHeightCut; //Á¡ÇÁÇÏ´Ù°¡ ½ºÆäÀÌ½º¹Ù¿¡¼­ ¼ÕÀ» ¶¼¸é Á¡ÇÁ¹æÇâ ¼Óµµ¸¦ ÁÙÀÓ
+    [SerializeField] float jumpTimer; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ 
+    public float jumpTimerOffset; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+    public float jumpHeightCut; //ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    [SerializeField] float groundedRemember; //ÇÃ·§Æû¿¡¼­ ¶³¾îÁø Á÷ÈÄ¿¡µµ ¿ÀÂ÷¹üÀ§ ÀÌ³» ½Ã°£¿¡¼­´Â Á¡ÇÁÇÒ ¼ö ÀÖ¾î¾ß ÇÔ
+    [SerializeField] float groundedRemember; //ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì³ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½
     [SerializeField] float groundedRememberOffset;
 
     // Rope
     bool isCollideRope;
-    GameObject rope; // ¸Å´Ş¸± rope
+    GameObject rope; // ï¿½Å´Ş¸ï¿½ rope
 
     // Lever
     bool isCollideLever;
-    public bool shouldRotateHalf; //powerLever °¡ ¾Æ´Ï¸é 90µµ¸¸ È¸Àü, powerLever ÀÌ¸é 180µµ È¸Àü 
-    GameObject lever; // ÀÛµ¿½ÃÅ³ lever
-    Vector3 destPos_afterLevering; // Lever ÀÛµ¿ ÈÄ ÇÃ·¹ÀÌ¾î position
-    [SerializeField] int destRot; // Lever ÀÛµ¿ ÈÄ ÇÃ·¹ÀÌ¾î°¡ È¸ÀüÇÏ°íÀÚ ÇÏ´Â °¢µµ
-    float destGhostRot; //½ºÅ×ÀÌÁö4ÀÇ À¯·ÉÀÌ ·¹¹ö¸¦ µ¹¸± ¶§ ÇÊ¿äÇÑ º¯¼ö 
+    public bool shouldRotateHalf; //powerLever ï¿½ï¿½ ï¿½Æ´Ï¸ï¿½ 90ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½, powerLever ï¿½Ì¸ï¿½ 180ï¿½ï¿½ È¸ï¿½ï¿½ 
+    GameObject lever; // ï¿½Ûµï¿½ï¿½ï¿½Å³ lever
+    Vector3 destPos_afterLevering; // Lever ï¿½Ûµï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ position
+    [SerializeField] int destRot; // Lever ï¿½Ûµï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ È¸ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
+    float destGhostRot; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½4ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
     // Grab
-    public bool isPlayerGrab = false; //ÇÃ·¹ÀÌ¾î°¡ ¹Ú½º or »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ®¸¦ µé°í ÀÖ´ÂÁö 
+    public bool isPlayerGrab = false; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ú½ï¿½ or ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ 
 
     // Wind
     bool isHorizontalWind;
     bool isVerticalWind;
 
-    // ÇÃ·¹ÀÌ¾î ¾Æ·¡¿¡ ÀÖ´Â ÇÃ·§Æû °¨Áö
+    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [SerializeField]public bool isGrounded;
-    [SerializeField] bool isOnJumpPlatform = false; //°­È­Á¡ÇÁ ¹ßÆÇ À§¿¡ ÀÖ´ÂÁö °¨Áö
+    [SerializeField] bool isOnJumpPlatform = false; //ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     RaycastHit2D rayHitIcePlatform;
     RaycastHit2D rayHitJumpBoost;
 
@@ -89,19 +89,19 @@ public class Player : MonoBehaviour
     SpriteRenderer sprite;
     Animator ani;
 
-    //¾À ½ÃÀÛÇÒ ¶§ ¿¤¸®º£ÀÌÅÍ¿Í »óÈ£ÀÛ¿ë
+    //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½
     GameObject openingSceneElevator;
 
-    // Stage8 ÇÑÁ¤
-    /********Stage8 ±â¹Í ¼öÁ¤ÇÒ ¶§ ÄÚµå ¼öÁ¤ ÇÊ¿ä **********/
+    // Stage8 ï¿½ï¿½ï¿½ï¿½
+    /********Stage8 ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ **********/
     [HideInInspector] public bool isDevilRotating;
     [HideInInspector] public bool isBlackHole;
     bool isDevilFalling;
 
-    //¿Àµğ¿À ¼Ò½º 
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò½ï¿½ 
     AudioSource sound;
-    [SerializeField] AudioClip moveSound; //°È±â or ·ÎÇÁ¸¦ Å» ¶§ ³ª´Â ¼Ò¸®
-    [SerializeField] AudioClip jump_landSound; //Á¡ÇÁ ¹× ÂøÁöÇÒ ¶§ ³ª´Â ¼Ò¸® 
+    [SerializeField] AudioClip moveSound; //ï¿½È±ï¿½ or ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å» ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½
+    [SerializeField] AudioClip jump_landSound; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ 
 
     GameObject cameraObj;
     public bool isCameraShake;
@@ -131,50 +131,52 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        sprite.color = new Color(1, 1, 1, 1); //ÇÃ·¹ÀÌ¾î »ö»ó ÃÊ±âÈ­ 
+        sprite.color = new Color(1, 1, 1, 1); //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ 
+        InputManager.instance.isInputBlocked = false;
+        InputManager.instance.isJumpBlocked = false;
 
-        // °¢ State·Î ³Ñ¾î°¡±â À§ÇÑ ±âº» Á¶°Ç
-        readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //¶¥ÀÌ³ª Á¡ÇÁ°­È­¹ßÆÇ µÑ ´Ù¿¡ ´ê¾ÆÀÖÁö ¾ÊÀ» ¶§ 
-        readyToLand = () => (isGrounded || isOnJumpPlatform) && (int)transform.InverseTransformDirection(rigid.velocity).y <= 0; //¶¥orÁ¡ÇÁ°­È­¹ßÆÇ¿¡ ´ê¾Æ ÀÖ°í y¹æÇâ ¼Óµµº¤ÅÍÀÇ ¹æÇâÀÌ -1ÀÏ ¶§ 
-        readyToGrab = () => isPlayerGrab; //ÇÃ·¹ÀÌ¾î°¡ ¹«¾ğ°¡¸¦ µé°íÀÖÀ» ¶§ 
+        // ï¿½ï¿½ Stateï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½
+        readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
+        readyToLand = () => (isGrounded || isOnJumpPlatform) && (int)transform.InverseTransformDirection(rigid.velocity).y <= 0; //ï¿½ï¿½orï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ï¿½Ç¿ï¿½ ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½ yï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -1ï¿½ï¿½ ï¿½ï¿½ 
+        readyToGrab = () => isPlayerGrab; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ğ°¡¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
 
-        readyToJump = () => (jumpTimer > 0) && (!isOnJumpPlatform) && (groundedRemember > 0); //½ºÆäÀÌ½º¹Ù¸¦ ´­·¶°í °­È­Á¡ÇÁ ¹ßÆÇ À§¿¡ ÀÖÁö ¾ÊÀ» ¶§ 
+        readyToJump = () => (jumpTimer > 0) && (!isOnJumpPlatform) && (groundedRemember > 0); //ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
 
-        readyToPowerJump = () =>  InputManager.instance.jumpUp && (isOnJumpPlatform) && (groundedRemember > 0); //°­È­Á¡ÇÁ ¹ßÆÇ À§¿¡¼­ ½ºÆäÀÌ½º¹Ù¸¦ ´­·¶´Ù ¶¿ ¶§
-        readyToRope = () => isCollideRope && InputManager.instance.vertical == 1; //À§ÂÊ È­»ìÇ¥ ´©¸£°í ÀÖ°í + ·ÎÇÁ¿¡ ´ê¾ÆÀÖÀ» ¶§
+        readyToPowerJump = () =>  InputManager.instance.jumpUp && (isOnJumpPlatform) && (groundedRemember > 0); //ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
+        readyToRope = () => isCollideRope && InputManager.instance.vertical == 1; //ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½ + ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         readyToLever = () => isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown 
                              && lever.transform.up == transform.up;
-        //·¹¹ö¿¡ ´ê¾Æ ÀÖ°í, ·¹¹ö¿Í µ¿ÀÏÇÑ rotationÀ» °¡Áö°í ÀÖ°í, À§ÂÊ È­»ìÇ¥¸¦ ´©¸£°í ÀÖÀ» ¶§ 
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ rotationï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½, ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
 
-        // SceneÀÌ ¼¼ÀÌºê Æ÷ÀÎÆ®¿¡¼­ ½ÃÀÛÇÏÁö ¾ÊÀ» ¶§ ÇÃ·¹ÀÌ¾î µ¥ÀÌÅÍ ¼³Á¤
-        // ÇöÀç SceneÀ¸·Î ³Ñ¾î¿À±â Á÷ÀüÀÇ µ¥ÀÌÅÍ¸¦ ºÒ·¯¿Í¼­ Àû¿ë
+        // Sceneï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ Sceneï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ò·ï¿½ï¿½Í¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 
        
         if (!GameManager.instance.shouldSpawnSavePoint)
         {
-            //GameManager ~> ¾ÀÀÌ ½ÃÀÛÇÒ ¶§ ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡ Á¶Á¤ 
+            //GameManager ~> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ 
             transform.position = GameManager.instance.nextPos;
             Physics2D.gravity = GameManager.instance.nextGravityDir * 9.8f;
             transform.up = -GameManager.instance.nextGravityDir;
-            transform.eulerAngles = Vector3.forward * transform.eulerAngles.z; // x-rotation, y-rotationÀ» 0À¸·Î ¼³Á¤
+            transform.eulerAngles = Vector3.forward * transform.eulerAngles.z; // x-rotation, y-rotationï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             States nextState = GameManager.instance.nextState;
-            // ÀÌÀü sceneÀÇ rope¿Í ÇöÀç sceneÀÇ rope´Â ´Ù¸¥ ¿ÀºêÁ§Æ®·Î Ãë±ŞµÇ´Ï »õ·Î Á¢±Ù ÇÊ¿ä
+            // ï¿½ï¿½ï¿½ï¿½ sceneï¿½ï¿½ ropeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ sceneï¿½ï¿½ ropeï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ŞµÇ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
 
             if (nextState == States.MoveOnRope) ChangeState(States.AccessRope);
-            // Jump state·Î ½ÃÀÛÇÏ¸é Á¡ÇÁ inputÀÌ ¾Èµé¾î¿Íµµ sceneÀÌ ½ÃÀÛµÇÀÚ¸¶ÀÚ ÇÃ·¹ÀÌ¾î°¡ Á¡ÇÁÇÏ´Â ¹®Á¦ ¹ß»ı
+            // Jump stateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ inputï¿½ï¿½ ï¿½Èµï¿½ï¿½Íµï¿½ sceneï¿½ï¿½ ï¿½ï¿½ï¿½Ûµï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
             else if (nextState == States.Jump) ChangeState(States.Fall);
             else ChangeState(nextState);
         }
 
-        // SceneÀÌ ¼¼ÀÌºê Æ÷ÀÎÆ®¿¡¼­ ½ÃÀÛÇÒ ¶§ (»ç¸ÁÇÑ ÈÄ ºÎÈ°, ÀúÀåµÈ °ÔÀÓ ºÒ·¯¿À±â) ÇÃ·¹ÀÌ¾î µ¥ÀÌÅÍ ¼³Á¤
+        // Sceneï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È°, ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½) ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         else
         {
             transform.position = GameManager.instance.gameData.respawnPos;
             Physics2D.gravity = GameManager.instance.gameData.respawnGravityDir * 9.8f;
             transform.up = -GameManager.instance.gameData.respawnGravityDir;
-            transform.eulerAngles = Vector3.forward * transform.eulerAngles.z; // x-rotation, y-rotationÀ» 0À¸·Î ¼³Á¤
-            ChangeState(States.Walk); // ¸®½ºÆù ½Ã ÇÃ·¹ÀÌ¾î°¡ ¹Ì¼¼ÇÏ°Ô °øÁß¿¡ ¶° ÀÖÀ» ¼ö ÀÖÀ¸¹Ç·Î Fall state·Î ½ÃÀÛ
+            transform.eulerAngles = Vector3.forward * transform.eulerAngles.z; // x-rotation, y-rotationï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            ChangeState(States.Walk); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ì¼ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ Fall stateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             GameManager.instance.shouldSpawnSavePoint = false;
         }
 
@@ -186,7 +188,7 @@ public class Player : MonoBehaviour
             sprite.flipX = false;
         }
 
-        jumpTimer = 0; //jumpTimer ÃÊ±âÈ­ 
+        jumpTimer = 0; //jumpTimer ï¿½Ê±ï¿½È­ 
         boxGrabColl.SetActive(false);
        
         UIManager.instance.FadeIn(1.5f);
@@ -199,7 +201,7 @@ public class Player : MonoBehaviour
         walkSoundCheck();
         AnimationManager();
 
-        jumpTimer -= Time.deltaTime; //jumpTimer ¸Å ÇÁ·¹ÀÓ¸¶´Ù ÀÛµ¿ 
+        jumpTimer -= Time.deltaTime; //jumpTimer ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½Ûµï¿½ 
         groundedRemember -= Time.deltaTime;
         if (InputManager.instance.jumpDown)
         {
@@ -260,7 +262,7 @@ public class Player : MonoBehaviour
         {
             ChangeState(States.AccessRope);
         }
-        else if (readyToJump()) //½ºÆäÀÌ½º¹Ù¸¦ ´©¸£´Â µ¿¾È ÀÛµ¿
+        else if (readyToJump()) //ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ûµï¿½
         {            
             ChangeState(States.Jump);
         }
@@ -277,15 +279,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    void ChargeJumpGauge() //½ºÅ×ÀÌÁö5 °­È­Á¡ÇÁ ±â¹Í¿¡¼­¸¸ »ç¿ë 
+    void ChargeJumpGauge() //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½5 ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 
     {
-        if (InputManager.instance.jump) //½ºÆäÀÌ½º¹Ù ´©¸¦ ¶§ 
+        if (InputManager.instance.jump) //ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
         {
-            // Jump boost À§¿¡ ÀÖÀ¸¸é Á¡ÇÁ·Â Áõ°¡ 
+            // Jump boost ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             if (rayHitJumpBoost.collider != null)
             {
                 jumpGauge = Mathf.Clamp(jumpGauge + jumpChargeSpeed * Time.deltaTime, minJumpPower, maxJumpBoostPower);
-                Debug.Log("Á¡ÇÁ °ÔÀÌÁö ¸ğÀ¸´Â Áß : " + (jumpGauge - minJumpPower) / (maxJumpBoostPower - minJumpPower) * 100f + "%");
+                //Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ : " + (jumpGauge - minJumpPower) / (maxJumpBoostPower - minJumpPower) * 100f + "%");
             }            
         }
     }
@@ -295,23 +297,23 @@ public class Player : MonoBehaviour
     void Jump_Enter()
     {
         jumpTimer = 0;
-        rigid.velocity = Vector2.zero; // ¹Ù´Ú ÇÃ·§ÆûÀÇ ¼Óµµ°¡ Á¡ÇÁ ¼Óµµ¿¡ ¿µÇâÀ» ¹ÌÄ¡´Â °ÍÀ» ¹æÁö    
+        rigid.velocity = Vector2.zero; // ï¿½Ù´ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½    
         
         Vector2 addForceDirection;
         
-        if (transform.up == new Vector3(0, 1, 0)) //ÇÃ·¹ÀÌ¾î°¡ À§ÂÊÀ» ÇâÇØ ¼­ ÀÖÀ» ¶§ 
+        if (transform.up == new Vector3(0, 1, 0)) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
         {
             addForceDirection = new Vector2(0, 1);
         }
-        else if (transform.up == new Vector3(0, -1, 0)) //ÇÃ·¹ÀÌ¾î°¡ ¾Æ·¡ÂÊÀ» ÇâÇØ ¼­ ÀÖÀ» ¶§ 
+        else if (transform.up == new Vector3(0, -1, 0)) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Æ·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
         {
             addForceDirection = new Vector2(0, -1);
         }
-        else if (transform.up == new Vector3(1, 0, 0)) //ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊÀ» ÇâÇØ ¼­ ÀÖÀ» ¶§ 
+        else if (transform.up == new Vector3(1, 0, 0)) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
         {
             addForceDirection = new Vector2(1, 0);
         }
-        else //ÇÃ·¹ÀÌ¾î°¡ ¿ŞÂÊÀ» ÇâÇØ ¼­ ÀÖÀ» ¶§
+        else //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         {
             addForceDirection = new Vector2(-1, 0);
         }
@@ -331,19 +333,19 @@ public class Player : MonoBehaviour
             Vector2 addForceDirection;
             float jumpPower = defaultJumpSpeed - index * speedDelta;
 
-            if (transform.up == new Vector3(0, 1, 0)) //ÇÃ·¹ÀÌ¾î°¡ À§ÂÊÀ» ÇâÇØ ¼­ ÀÖÀ» ¶§ 
+            if (transform.up == new Vector3(0, 1, 0)) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
             {
                 addForceDirection = new Vector2(rigid.velocity.x, jumpPower);
             }
-            else if (transform.up == new Vector3(0, -1, 0)) //ÇÃ·¹ÀÌ¾î°¡ ¾Æ·¡ÂÊÀ» ÇâÇØ ¼­ ÀÖÀ» ¶§ 
+            else if (transform.up == new Vector3(0, -1, 0)) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Æ·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
             {
                 addForceDirection = new Vector2(rigid.velocity.x, -jumpPower);
             }
-            else if (transform.up == new Vector3(1, 0, 0)) //ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊÀ» ÇâÇØ ¼­ ÀÖÀ» ¶§ 
+            else if (transform.up == new Vector3(1, 0, 0)) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
             {
                 addForceDirection = new Vector2(jumpPower, rigid.velocity.y);
             }
-            else //ÇÃ·¹ÀÌ¾î°¡ ¿ŞÂÊÀ» ÇâÇØ ¼­ ÀÖÀ» ¶§
+            else //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
             {
                 addForceDirection = new Vector2(-jumpPower, rigid.velocity.y);
             }
@@ -369,26 +371,26 @@ public class Player : MonoBehaviour
         CheckGround();
         HorizontalMove();
 
-        if (InputManager.instance.jumpUp) //½ºÆäÀÌ½º¹Ù¿¡¼­ ¼ÕÀ» ¶¼¸é Á¡ÇÁ ¹æÇâ ¼Óµµ ÁÙ¿©¾ß ÇÔ 
+        if (InputManager.instance.jumpUp) //ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ ï¿½Ù¿ï¿½ï¿½ï¿½ ï¿½ï¿½ 
         {
-            if (transform.up.normalized == new Vector3(0, 1, 0) && rigid.velocity.y > 0) //ÇÃ·¹ÀÌ¾î°¡ À§ÂÊÀ» ¹Ù¶óº¸°í ÀÖÀ» ¶§ + ¼Óµµ°¡ ³ô¾ÆÁö´Â ÁßÀÏ ¶§
+            if (transform.up.normalized == new Vector3(0, 1, 0) && rigid.velocity.y > 0) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ + ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
             {
-                rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0); //Á¡ÇÁ¹æÇâ ¼Óµµ ÁÙÀÓ 
+                rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ 
             }
-            else if (transform.up.normalized == new Vector3(0, -1, 0) && rigid.velocity.y < 0) //ÇÃ·¹ÀÌ¾î°¡ ¾Æ·¡ÂÊÀ» ¹Ù¶óº¸°í ÀÖÀ» ¶§ 
+            else if (transform.up.normalized == new Vector3(0, -1, 0) && rigid.velocity.y < 0) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Æ·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
             {
                 rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0);
             }
-            else if (transform.up.normalized == new Vector3(1, 0, 0) && rigid.velocity.x > 0) //ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊÀ» ¹Ù¶óº¸°í ÀÖÀ» ¶§
+            else if (transform.up.normalized == new Vector3(1, 0, 0) && rigid.velocity.x > 0) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
             {
                 rigid.velocity = new Vector3(rigid.velocity.x * jumpHeightCut, rigid.velocity.y, 0);
             }
-            else if (transform.up.normalized == new Vector3(-1, 0, 0) && rigid.velocity.x < 0)//ÇÃ·¹ÀÌ¾î°¡ ¿ŞÂÊÀ» ¹Ù¶óº¸°í ÀÖÀ» ¶§ 
+            else if (transform.up.normalized == new Vector3(-1, 0, 0) && rigid.velocity.x < 0)//ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
             {
                 rigid.velocity = new Vector3(rigid.velocity.x * jumpHeightCut, rigid.velocity.y, 0);
             }
 
-            rigid.gravityScale = fallingGravity; //¶¥¿¡ ´õ »¡¸® ¶³¾îÁöµµ·Ï Á¶Á¤ 
+            rigid.gravityScale = fallingGravity; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         }
 
         if (readyToRope())
@@ -403,7 +405,7 @@ public class Player : MonoBehaviour
 
     void PowerJump_Enter()
     {
-        rigid.velocity = Vector2.zero; // ¹Ù´Ú ÇÃ·§ÆûÀÇ ¼Óµµ°¡ Á¡ÇÁ ¼Óµµ¿¡ ¿µÇâÀ» ¹ÌÄ¡´Â °ÍÀ» ¹æÁö
+        rigid.velocity = Vector2.zero; // ï¿½Ù´ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         rigid.AddForce(transform.up * jumpGauge, ForceMode2D.Impulse);
 
         sound.clip = jump_landSound;
@@ -452,10 +454,10 @@ public class Player : MonoBehaviour
         }
         else if (readyToLand())
         {
-            ChangeState(States.Land); //ÂøÁöÇÒ ¼ö ÀÖ´Â Á¶°ÇÀÌ¸é ¹Ù·Î Walk »óÅÂ·Î ÀüÈ¯ 
+            ChangeState(States.Land); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½Ù·ï¿½ Walk ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½È¯ 
         }else if (readyToJump())
         {
-            ChangeState(States.Jump); //¿ÀÂ÷¹üÀ§ ³»¿¡¼­¶ó¸é ÇÃ·§Æû¿¡¼­ ¶³¾îÁö±â ½ÃÀÛÇÑ Á÷ÈÄ¿¡µµ Á¡ÇÁ °¡´É
+            ChangeState(States.Jump); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
     }
 
@@ -490,7 +492,7 @@ public class Player : MonoBehaviour
         {
             ChangeState(States.Jump);
         }
-        else // Land ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ³¡³ª¸é Walk State·Î ÀüÈ¯
+        else // Land ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Walk Stateï¿½ï¿½ ï¿½ï¿½È¯
         {
             ChangeState(States.Walk);
         }
@@ -506,11 +508,11 @@ public class Player : MonoBehaviour
         CheckGround();
         HorizontalMove();
 
-        if (!isPlayerGrab) //¿ÀºêÁ§Æ®¸¦ ³»·Á³õ°Ô µÇ¸é ´Ù½Ã walkÀ¸·Î ¹Ù²Ş 
+        if (!isPlayerGrab) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¸ï¿½ ï¿½Ù½ï¿½ walkï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ 
         {
             ChangeState(States.Walk);
         }
-        else if (readyToFall()) //¿ÀºêÁ§Æ®¸¦ µç »óÅÂ·Î´Â Á¡ÇÁ´Â ÇÒ ¼ö ¾øÁö¸¸ ÇÃ·§Æû¿¡¼­ ¶³¾îÁú¼ö´Â ÀÖÀ½ 
+        else if (readyToFall()) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Â·Î´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         {
             ChangeState(States.Fall);
         }
@@ -525,10 +527,10 @@ public class Player : MonoBehaviour
 
     void AccessRope_Update()
     {
-        // ÀÌÀü scene¿¡¼­ rope¿¡ ¸Å´Ş¸° »óÅÂ·Î ÇöÀç sceneÀ¸·Î ³Ñ¾î¿Ô´Ù¸é rope¸¦ »õ·Î ÀÎ½ÄÇØ¾ßÇÔ
+        // ï¿½ï¿½ï¿½ï¿½ sceneï¿½ï¿½ï¿½ï¿½ ropeï¿½ï¿½ ï¿½Å´Ş¸ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½ sceneï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½Ô´Ù¸ï¿½ ropeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
         if (rope == null) return;
 
-        // ¸Å´Ş¸± À§Ä¡ ¼³Á¤
+        // ï¿½Å´Ş¸ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
         Vector2 destPos_rope;
         if (rope.CompareTag("VerticalRope"))
         {
@@ -540,9 +542,9 @@ public class Player : MonoBehaviour
         }
 
         transform.position = Vector2.MoveTowards(transform.position, destPos_rope, Time.deltaTime * ropeAccessSpeed);
-        if (Vector2.Distance(transform.position, destPos_rope) < 0.1f) // ÇÃ·¹ÀÌ¾î°¡ rope¿¡ ±ÙÁ¢ÇßÀ» ¶§
+        if (Vector2.Distance(transform.position, destPos_rope) < 0.1f) // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ropeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         {
-            // ÇÃ·¹ÀÌ¾î¸¦ rope·Î ¿ÏÀüÈ÷ ÀÌµ¿½ÃÅ´
+            // ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ropeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½Å´
             transform.position = destPos_rope;
             transform.parent = rope.transform;
             ChangeState(States.MoveOnRope);
@@ -561,7 +563,7 @@ public class Player : MonoBehaviour
         //ChargeJumpGauge();
         groundedRemember = groundedRememberOffset;
 
-        // Rope¿¡ ¸Å´Ş¸° »óÅÂ·Î ÀÌµ¿
+        // Ropeï¿½ï¿½ ï¿½Å´Ş¸ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ìµï¿½
         if (Physics2D.gravity.normalized == Vector2.left)
         {
             if (rope.CompareTag("VerticalRope"))
@@ -607,7 +609,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        // Rope¿¡¼­ Á¡ÇÁ
+        // Ropeï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (readyToJump())
         {
             ChangeState(States.Jump);
@@ -623,8 +625,13 @@ public class Player : MonoBehaviour
     void AccessLever_Enter()
     {
         rigid.velocity = Vector2.zero;
-       
-        // ·¹¹ö ¹æÇâÀ¸·Î ÇÃ·¹ÀÌ¾î sprite flip
+        if(leverColl != null)
+        {
+            leverColl.GetComponent<lever>().lightTurnOff();
+            //í”Œë ˆì´ì–´ê°€ ë ˆë²„ë¥¼ ì‘ë™ì‹œí‚¤ë ¤ê³  í•˜ë©´ ë ˆë²„ ë¶ˆì„ ë” 
+        }
+
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ sprite flip
         switch (lever.transform.eulerAngles.z)
         {
             case 0f:
@@ -677,7 +684,7 @@ public class Player : MonoBehaviour
     {
         Vector2 destPos_beforeLevering;
 
-        // ·¹¹ö¸¦ µ¹¸®±â À§ÇØ ÇÃ·¹ÀÌ¾î°¡ ÀÌµ¿ÇØ¾ßÇÒ position ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ìµï¿½ï¿½Ø¾ï¿½ï¿½ï¿½ position ï¿½ï¿½ï¿½ï¿½
         switch (lever.transform.eulerAngles.z)
         {
             case 0f: case 180f:
@@ -689,7 +696,7 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        // ÀÌµ¿
+        // ï¿½Ìµï¿½
         float moveToLeverSpeed = 9f;
         transform.position = Vector2.MoveTowards(transform.position, destPos_beforeLevering, moveToLeverSpeed * Time.deltaTime);        
 
@@ -701,34 +708,31 @@ public class Player : MonoBehaviour
    
     void SelectGravityDir_Enter()
     {
-        if (!shouldRotateHalf) //180µµ È¸ÀüÇÏ´Â °­È­·¹¹öÀÇ °æ¿ì È­»ìÇ¥¸¦ ¶ç¿ìÁö ¾ÊÀ½ 
-        {
-            leftArrow.SetActive(true);
-            rightArrow.SetActive(true);
-        }       
+        leftArrow.SetActive(true);
+        rightArrow.SetActive(true);
     }
 
     void SelectGravityDir_Update()
     {
-        // ·¹¹ö µ¹¸²
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (InputManager.instance.horizontalDown)
         {
             ChangeState(States.ChangeGravityDir);
         }
-        // ·¹¹ö µ¹¸®±â Ãë¼Ò
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         else if (InputManager.instance.verticalDown)
         {
+            leverColl.GetComponent<lever>().lightTurnOn(); //ë‹¤ì‹œ ë ˆë²„ ë¶ˆ í‚´ 
+
+            leftArrow.SetActive(false);
+            rightArrow.SetActive(false);
             ChangeState(States.Walk);
         }
     }
 
     void SelectGravityDir_Exit()
     {
-        if (!shouldRotateHalf)
-        {
-            leftArrow.SetActive(false);
-            rightArrow.SetActive(false);
-        }     
+          
     }
 
     void ChangeGravityDir_Enter()
@@ -736,36 +740,41 @@ public class Player : MonoBehaviour
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
 
-        // ÇÃ·¹ÀÌ¾îÀÇ ºÎ¸ğ ¿ÀºêÁ§Æ®°¡ ÀÖ´Ù¸é ÇØÁ¦. ±×·¸Áö ¾ÊÀ¸¸é ÇÃ·¹ÀÌ¾î¿Í ÇÔ²² È¸ÀüÇÔ
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½Ô²ï¿½ È¸ï¿½ï¿½ï¿½ï¿½
         transform.parent = null;
 
-        // È¸ÀüÇØ¾ßÇÒ ÇÃ·¹ÀÌ¾î rotation ¼³Á¤
-        if (!shouldRotateHalf) //90µµ È¸ÀüÇÏ´Â ÀÏ¹İÀûÀÎ °æ¿ì 
+        // È¸ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ rotation ï¿½ï¿½ï¿½ï¿½
+        if (!shouldRotateHalf) //90ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ï¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 
         {           
-            if(InputManager.instance.horizontal == 1) //z rotation + 90 degree (¹İ½Ã°è¹æÇâ È¸Àü)
+            if(InputManager.instance.horizontal == 1) 
             {
-                destRot = 90;
+                leftArrow.SetActive(false);
+                destRot = -90;
             }
             else if (InputManager.instance.horizontal == -1)
             {
-                destRot = -90;
+                rightArrow.SetActive(false); //ê°ê° í•´ë‹¹í•˜ëŠ” ë°©í–¥ì˜ í™”ì‚´í‘œë§Œ ë‚¨ê¸°ê³  ì§€ìš°ê¸° 
+                destRot = 90;
             }
         }
-        else //180µµ È¸ÀüÇÏ´Â °æ¿ì 
+        else //180ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ 
         {
+            leftArrow.SetActive(false);
+            rightArrow.SetActive(false);
+
             if (!sprite.flipX)
-            {
-                destRot = 180;
-            }
-            else
             {
                 destRot = -180;
             }
-            //180µµ È¸Àü ·¹¹öÀÇ °æ¿ì ÇÃ·¹ÀÌ¾î°¡ ¹Ù¶óº¸´Â ¹æÇâ¿¡ µû¶ó È¸Àü¹æÇâÀÌ ´Ş¶óÁø´Ù 
+            else
+            {
+                destRot = 180;
+            }
+            //180ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ù¶óº¸´ï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¶ï¿½ï¿½ï¿½ï¿½ï¿½ 
         }
 
-        // È¸ÀüÇÏ¸é¼­ ¹Ù²î¾î¾ßÇÒ ÇÃ·¹ÀÌ¾î position ¼³Á¤
-        if (!shouldRotateHalf) //90µµÈ¸Àü½Ã
+        // È¸ï¿½ï¿½ï¿½Ï¸é¼­ ï¿½Ù²ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ position ï¿½ï¿½ï¿½ï¿½
+        if (!shouldRotateHalf) //90ï¿½ï¿½È¸ï¿½ï¿½ï¿½ï¿½
         {
             switch (lever.transform.eulerAngles.z)
             {
@@ -777,7 +786,7 @@ public class Player : MonoBehaviour
                     break;
             }
         }
-        else //180µµ È¸Àü½Ã 
+        else //180ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ 
         {
             switch (lever.transform.eulerAngles.z)
             {
@@ -791,9 +800,9 @@ public class Player : MonoBehaviour
         }
 
         timer = 0;
-        initZRot = Mathf.RoundToInt(transform.eulerAngles.z); //¹°¸®¿£Áø ¿¬»ê¿ÀÂ÷·Î ÀÎÇÑ ¹ö±×¸¦ ¸·±â À§ÇØ int ÇüÀ¸·Î ¹İ¿Ã¸² 
+        initZRot = Mathf.RoundToInt(transform.eulerAngles.z); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ int ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½İ¿Ã¸ï¿½ 
 
-        Time.timeScale = 0; //ÇÃ·¹ÀÌ¾î°¡ È¸ÀüÇÏ´Âµ¿¾È ½Ã°£ ¸ØÃã 
+        Time.timeScale = 0; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ È¸ï¿½ï¿½ï¿½Ï´Âµï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
         cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.5f);
     }
@@ -802,9 +811,9 @@ public class Player : MonoBehaviour
     float initZRot;
     void ChangeGravityDir_Update()
     {
-        if (isCameraShake) return; //Ä«¸Ş¶ó Èçµé¸²ÀÌ ³¡³ª°í ³ª¼­ ÇÃ·¹ÀÌ¾î È¸Àü 
+        if (isCameraShake) return; //Ä«ï¿½Ş¶ï¿½ ï¿½ï¿½é¸²ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ È¸ï¿½ï¿½ 
 
-        // ·¹¹ö Á¶ÀÛ ÈÄ ÇÃ·¹ÀÌ¾î ÀÌµ¿ ¹× È¸Àü
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ È¸ï¿½ï¿½
         cameraObj.transform.position = cameraObj.GetComponent<MainCamera>().cameraPosCal();
         transform.localPosition = Vector2.MoveTowards(transform.localPosition, destPos_afterLevering, Time.unscaledDeltaTime / leverRotateDelay);
        
@@ -822,14 +831,14 @@ public class Player : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(0, 0, initZRot + destRot);
 
-        // Áß·Â ¹æÇâ º¯È­
+        // ï¿½ß·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­
         Vector2 gravity = -transform.up * 9.8f;
-        if (Mathf.Abs(gravity.x) < 1f) gravity.x = 0f; //¹°¸®¿£Áø ¿¬»ê¿ÀÂ÷ º¸Á¤(0.00xxx °°ÀÌ ³ª¿Ã °æ¿ì 0À¸·Î °íÁ¤ÇØÁà¾ß ÇÔ) 
+        if (Mathf.Abs(gravity.x) < 1f) gravity.x = 0f; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(0.00xxx ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½) 
         else gravity.y = 0f;
 
-        Physics2D.gravity = gravity; //¸Ê ÀüÃ¼ Áß·Â¹æÇâ ¹Ù²Ş 
+        Physics2D.gravity = gravity; //ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ß·Â¹ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ 
 
-        // ÇÃ·¹ÀÌ¾î¿¡°Ô Áß·Â Àû¿ë
+        // ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ï¿½ï¿½ ï¿½ß·ï¿½ ï¿½ï¿½ï¿½ï¿½
         rigid.gravityScale = defaultGravityScale;
 
         ChangeState(States.FallAfterLevering);
@@ -837,9 +846,13 @@ public class Player : MonoBehaviour
 
     void FallAfterLevering_Enter()
     {
+        leftArrow.SetActive(false);
+        rightArrow.SetActive(false);
+
         Time.timeScale = 1;
         if (shouldRotateHalf) shouldRotateHalf = false;
         InputManager.instance.isInputBlocked = true;
+        leverColl.GetComponent<lever>().lightTurnOn(); //ë‹¤ì‹œ ë ˆë²„ ë¶ˆ í‚´ 
     }
 
     void FallAfterLevering_Update()
@@ -886,7 +899,7 @@ public class Player : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z + (1 / leverRotateDelay * destGhostRot * Time.unscaledDeltaTime));
 
-        // ÇÃ·¹ÀÌ¾î rotationÀÌ °ÅÀÇ (0, 0, 0)ÀÌ¸é ´ÙÀ½ state·Î ÀÌµ¿
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ rotationï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (0, 0, 0)ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ stateï¿½ï¿½ ï¿½Ìµï¿½
         int angle = Mathf.RoundToInt(transform.eulerAngles.z);
         if (angle == 0 || angle == 360 )
         {
@@ -896,7 +909,7 @@ public class Player : MonoBehaviour
 
     void FallAfterGhostLevering_Enter()
     {
-        // ÇÃ·¹ÀÌ¾î ¿ÏÀüÈ÷ È¸Àü
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
         transform.eulerAngles = Vector3.zero;
 
         Physics2D.gravity = new Vector2(0, -9.8f);
@@ -916,7 +929,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        // ¸ğµç ½ºÅ×ÀÌÁö¿¡¼­ Spike¿Í ºÎ‹HÈ÷¸é »ç¸Á
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Spikeï¿½ï¿½ ï¿½Î‹Hï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         if (other.gameObject.CompareTag("Spike") && !isDieCorWork)
         {
             StartCoroutine(Die());
@@ -925,21 +938,22 @@ public class Player : MonoBehaviour
         switch (GameManager.instance.gameData.curStageNum)
         {
             case 2: case 6: case 7:
-                // ½ºÅ×ÀÌÁö 2: Cannon, Arrow¿Í ºÎ‹HÈ÷¸é »ç¸Á
-                // ½ºÅ×ÀÌÁö 6: ¶³¾îÁö´Â Fire¿Í ºÎ‹HÈ÷¸é »ç¸Á
-                // ½ºÅ×ÀÌÁö 7: Bullet°ú ºÎ‹HÈ÷¸é »ç¸Á
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2: Cannon, Arrowï¿½ï¿½ ï¿½Î‹Hï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 6: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Fireï¿½ï¿½ ï¿½Î‹Hï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 7: Bulletï¿½ï¿½ ï¿½Î‹Hï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 if (other.gameObject.CompareTag("Projectile") && !isDieCorWork)
                 {
                     StartCoroutine(Die());
                 }
                 break;
             case 8:
-                // ½ºÅ×ÀÌÁö 8: Devil, DevilÀÌ ½î´Â ·¹ÀÌÀú¿Í ºÎ‹HÈ÷¸é »ç¸Á
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 8: Devil, Devilï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î‹Hï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 if (other.collider.CompareTag("Devil") || other.collider.CompareTag("Projectile")) StartCoroutine(Die());
                 break;
         }
     }
 
+    GameObject leverColl = null; //í˜„ì¬ ì‘ë™ì¤‘ì¸ ë ˆë²„ 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("VerticalRope") || other.CompareTag("HorizontalRope"))
@@ -951,11 +965,16 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Lever"))
         {
             isCollideLever = true;
+            leverColl = other.gameObject;
             lever = other.gameObject;
             if (lever.GetComponent<lever>().isPowerLever)
             {
                 shouldRotateHalf = true;
             }
+        }
+        else
+        {
+            leverColl = null;
         }
         
         switch (GameManager.instance.gameData.curStageNum)
@@ -965,11 +984,11 @@ public class Player : MonoBehaviour
                 else if (other.CompareTag("UpWind") || other.CompareTag("DownWind")) isVerticalWind = true;
                 break;
             case 4:
-                // ½ºÅ×ÀÌÁö 4 : Åõ¸íÇÏÁö ¾ÊÀº Ghost¿Í ºÎ‹HÈ÷¸é »ç¸Á
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 4 : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ghostï¿½ï¿½ ï¿½Î‹Hï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 if (other.CompareTag("Ghost") && other.GetComponent<SpriteRenderer>().color.a != 0f) StartCoroutine(Die());
                 break;
             case 6:
-                // ½ºÅ×ÀÌÁö 6 : ¾óÀ½ À§¿¡ ÀÖ´Â Fire¿Í ºÎ‹HÈ÷¸é »ç¸Á
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 6 : ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Fireï¿½ï¿½ ï¿½Î‹Hï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 if (other.CompareTag("Fire")) StartCoroutine(Die());
                 break;
         }
@@ -977,7 +996,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
-        // ½ºÅ×ÀÌÁö 3¿¡¼­ Rope¿¡ ¸Å´Ş·Á ÀÖÁö ¾ÊÀº »óÅÂ·Î ¹Ù¶÷¿¡ ¸ÂÀ¸¸é ³¯¾Æ°¨
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 3ï¿½ï¿½ï¿½ï¿½ Ropeï¿½ï¿½ ï¿½Å´Ş·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ù¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½
         if (GameManager.instance.gameData.curStageNum == 3 && curState != States.AccessRope && curState != States.MoveOnRope)
         {
             if (other.CompareTag("UpWind"))
@@ -1037,12 +1056,12 @@ public class Player : MonoBehaviour
 
     IEnumerator Die()
     {
-        isDieCorWork = true; //Á×À½ ¸ğ¼ÇÀÌ ÁøÇàÁßÀÏ ¶© Æ®¸®°Å°¡ ¹ßµ¿ÇÏ´õ¶óµµ ´Ù½Ã Á×Áö ¾ÊÀ½ 
+        isDieCorWork = true; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½Å°ï¿½ ï¿½ßµï¿½ï¿½Ï´ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
-        GameManager.instance.shouldSpawnSavePoint = true; //Á×À¸¸é ÀÏ´Ü ¼¼ÀÌºêÆ÷ÀÎÆ®¿¡¼­ ½ÃÀÛÇØ¾ß ÇÔ 
-        cameraObj.GetComponent<MainCamera>().isCameraLock = true; //Ä«¸Ş¶ó ¿òÁ÷ÀÌÁö ¾Ê°Ô °íÁ¤
+        GameManager.instance.shouldSpawnSavePoint = true; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ 
+        cameraObj.GetComponent<MainCamera>().isCameraLock = true; //Ä«ï¿½Ş¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
         cameraObj.GetComponent<MainCamera>().cameraShake(0.5f, 0.7f);
-        sprite.color = new Color(1, 1, 1, 0); //Àá½Ã ÇÃ·¹ÀÌ¾î Åõ¸íÈ­ 
+        sprite.color = new Color(1, 1, 1, 0); //ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½È­ 
 
         for(int index=0; index<parts.Length; index++)
         {
@@ -1052,33 +1071,33 @@ public class Player : MonoBehaviour
             Vector2 randomDir = new Vector2(Random.insideUnitSphere.x, Random.insideUnitSphere.y);
             float randomPower = Random.Range(20f, 30f);
 
-            rigid.AddForce(randomDir * randomPower, ForceMode2D.Impulse); //¼¼ ÆÄÃ÷¿¡ ·£´ı ¹æÇâ,Å©±âÀÇ ÈûÀ» °¡ÇØ¼­ Æ¨°Ü³¿ 
+            rigid.AddForce(randomDir * randomPower, ForceMode2D.Impulse); //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½,Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ Æ¨ï¿½Ü³ï¿½ 
         }
         yield return new WaitForSeconds(1.5f);
 
-        UIManager.instance.FadeOut(1f); //È­¸é ¾îµÎ¿öÁö°í
+        UIManager.instance.FadeOut(1f); //È­ï¿½ï¿½ ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(2f);
 
         isDieCorWork = false;
 
         if (GameManager.instance.gameData.curAchievementNum == 0)
         {
-            //GameManager.instance.gameData.curStageNum ´Â ±×´ë·Î À¯Áö 
+            //GameManager.instance.gameData.curStageNum ï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             GameManager.instance.gameData.curAchievementNum = 1;
 
             if(GameManager.instance.gameData.finalStageNum == GameManager.instance.gameData.curStageNum)
             {
                 if (GameManager.instance.gameData.finalAchievementNum == GameManager.instance.gameData.curAchievementNum)
                 {
-                    GameManager.instance.gameData.finalAchievementNum = 1; //¸¸¾à ÇöÀç ÁøÇàµµ°¡ ÃÖ´ë ÁøÇàµµÀÏ °æ¿ì final Ach ¿¡µµ ¹İ¿µÇÔ 
+                    GameManager.instance.gameData.finalAchievementNum = 1; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½àµµï¿½ï¿½ ï¿½ï¿½ï¿½ final Ach ï¿½ï¿½ï¿½ï¿½ ï¿½İ¿ï¿½ï¿½ï¿½ 
                 }
             }     
 
-            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //Ã¹¹øÂ° ¼¼ÀÌºêÆ÷ÀÎÆ® È°¼ºÈ­½ÃÅ´ 
-            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //¾ÀÀº ±×´ë·Î À¯Áö 
-            //»õ·Î¿î ½ºÅ×ÀÌÁö¸¦ Ã³À½ ½ÃÀÛÇÑ µÚ ¼¼ÀÌºêÆ÷ÀÎÆ®¸¦ ÇÏ³ªµµ ¸ø È°¼ºÈ­½ÃÅ°°í Á×Àº °æ¿ì¿£ ±×³É 1¹ø ¼¼ÀÌºê¸¦ È°¼ºÈ­ÇÑ°ÍÀ¸·Î ÇÑ´Ù
+            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //Ã¹ï¿½ï¿½Â° ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® È°ï¿½ï¿½È­ï¿½ï¿½Å´ 
+            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //ï¿½ï¿½ï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+            //ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì¿£ ï¿½×³ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºê¸¦ È°ï¿½ï¿½È­ï¿½Ñ°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½
 
-            //µ¥ÀÌÅÍ ÀúÀå
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             File.WriteAllText(filePath, ToJsonData);
@@ -1087,7 +1106,7 @@ public class Player : MonoBehaviour
             SceneManager.LoadScene(GameManager.instance.nextScene);
         }
 
-        //Á×±â Àü¿¡ ºÎÈ°ÇÒ À§Ä¡ Á¤º¸ GameData ¿¡¼­ °¡Á®¿Í ÀúÀå 
+        //ï¿½×±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ GameData ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
         GameManager.instance.nextPos = GameManager.instance.gameData.respawnPos;
         GameManager.instance.nextGravityDir = GameManager.instance.gameData.respawnGravityDir;
@@ -1096,7 +1115,7 @@ public class Player : MonoBehaviour
         SceneManager.LoadScene(GameManager.instance.nextScene);
     }
 
-    //¾Ö´Ï¸ŞÀÌ¼Ç º¯È¯ 
+    //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½È¯ 
     string curAnim;
     void changeAnimation(string newAnim)
     {
@@ -1109,23 +1128,23 @@ public class Player : MonoBehaviour
     }
 
     float jumpAniThreshold = 3f;
-    void AnimationManager() //ÇÃ·¹ÀÌ¾î »óÅÂ ÀüÃ¼ÀÇ ¾Ö´Ï¸ŞÀÌ¼Ç °ü¸® 
+    void AnimationManager() //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ 
     {
-        if(fsm.State == States.Walk ||  fsm.State == States.Grab) // Walk, idle ¾Ö´Ï¸ŞÀÌ¼Ç ~> ÇÃ·¹ÀÌ¾î°¡ Áö¸é¿¡ ´ê¾ÆÀÖÀ» ¶§ 
+        if(fsm.State == States.Walk ||  fsm.State == States.Grab) // Walk, idle ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ~> ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½é¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
         {
-            // Walk ¹æÇâ¿¡ µû¶ó Player sprite ÁÂ¿ì flip
+            // Walk ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ Player sprite ï¿½Â¿ï¿½ flip
             if (InputManager.instance.horizontal == 1) sprite.flipX = false;
             else if (InputManager.instance.horizontal == -1) sprite.flipX = true;
 
             if (InputManager.instance.horizontal == 0)
             {
-                //ÇÃ·¹ÀÌ¾îÀÇ µÎ ¹ßÀÌ ¸ğµÎ ¶¥¿¡ ´ê¾ÆÀÖÀ» ¶§ 
+                //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
                 if(rayPosHit_left.collider != null && rayPosHit_right.collider != null)
                 {
                     changeAnimation("new_idle");
                 }
                 
-                //ÇÃ·¹ÀÌ¾îÀÇ µÎ ¹ß Áß ÇÏ³ª¸¸ ¶¥¿¡ ´ê¾ÆÀÖÀ» ¶§ 
+                //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
                 if((rayPosHit_left.collider == null && rayPosHit_right.collider != null) || (rayPosHit_left.collider != null && rayPosHit_right.collider == null))
                 {
                     changeAnimation("new_cliff");
@@ -1136,13 +1155,13 @@ public class Player : MonoBehaviour
                 changeAnimation("new_walk");               
             }
         }
-        else if(fsm.State == States.Jump || fsm.State == States.Fall) // jump, fall ~> ÇÃ·¹ÀÌ¾î°¡ °øÁß¿¡ ¶° ÀÖÀ» ¶§ 
+        else if(fsm.State == States.Jump || fsm.State == States.Fall) // jump, fall ~> ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
         {
-            // Jump ¹æÇâ¿¡ µû¶ó Player sprite ÁÂ¿ì flip
+            // Jump ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ Player sprite ï¿½Â¿ï¿½ flip
             if (InputManager.instance.horizontal == 1) sprite.flipX = false;
             else if (InputManager.instance.horizontal == -1) sprite.flipX = true;
 
-            float jumpVel = Vector3.Dot(rigid.velocity, transform.up); //+ ÀÌ¸é ÇÃ·¹ÀÌ¾î°¡ local Y ¹æÇâÀ¸·Î + ¼Óµµ, - ÀÌ¸é ÇÃ·¹ÀÌ¾î°¡ local Y ¹æÇâÀ¸·Î - ¼Óµµ 
+            float jumpVel = Vector3.Dot(rigid.velocity, transform.up); //+ ï¿½Ì¸ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ local Y ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ + ï¿½Óµï¿½, - ï¿½Ì¸ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ local Y ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ - ï¿½Óµï¿½ 
             if(jumpVel >= jumpAniThreshold)
             {
                 changeAnimation("new_floatUp");
@@ -1156,60 +1175,60 @@ public class Player : MonoBehaviour
                 changeAnimation("new_floatDown");
             }
         }
-        else if (fsm.State == States.AccessRope || fsm.State == States.MoveOnRope) //·ÎÇÁ¿¡ ¸Å´Ş¸®·Á°í ÇÏ°Å³ª ·ÎÇÁ À§¿¡¼­ ¿òÁ÷ÀÌ°í ÀÖÀ» ¶§ 
+        else if (fsm.State == States.AccessRope || fsm.State == States.MoveOnRope) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å´Ş¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
         {
-            // Rope ¹æÇâ¿¡ µû¶ó ÁÂ¿ì flip
+            // Rope ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½Â¿ï¿½ flip
             if (InputManager.instance.horizontal == 1) sprite.flipX = false;
             else if (InputManager.instance.horizontal == -1) sprite.flipX = true;
 
-            // Rope¿¡ ¸Å´Ş¸° »óÅÂ·Î ÀÌµ¿
-            if (Physics2D.gravity.normalized == Vector2.left) //¸Ó¸®°¡ ¿À¸¥ÂÊÀ» ÇâÇÔ 
+            // Ropeï¿½ï¿½ ï¿½Å´Ş¸ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ìµï¿½
+            if (Physics2D.gravity.normalized == Vector2.left) //ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             {
-                if (rope.CompareTag("VerticalRope")) //¼¼·Î ·ÎÇÁ 
+                if (rope.CompareTag("VerticalRope")) //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     if (InputManager.instance.horizontal == 0) changeAnimation("new_rope_h_idle");
                     else changeAnimation("new_rope_h_move");
                 }
-                else //°¡·Î ·ÎÇÁ 
+                else //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     if (InputManager.instance.vertical == 0) changeAnimation("new_rope_v_idle");
                     else changeAnimation("new_rope_v_move");
                 }
             }
-            else if (Physics2D.gravity.normalized == Vector2.right) //¸Ó¸®°¡ ¿ŞÂÊÀ» ÇâÇÔ 
+            else if (Physics2D.gravity.normalized == Vector2.right) //ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             {
-                if (rope.CompareTag("VerticalRope")) //¼¼·Î ·ÎÇÁ 
+                if (rope.CompareTag("VerticalRope")) //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     if (InputManager.instance.horizontal == 0) changeAnimation("new_rope_h_idle");
                     else changeAnimation("new_rope_h_move");
                 }
-                else //°¡·Î ·ÎÇÁ 
+                else //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     if (InputManager.instance.vertical == 0) changeAnimation("new_rope_v_idle");
                     else changeAnimation("new_rope_v_move");
                 }
             }
-            else if (Physics2D.gravity.normalized == Vector2.up) //¸Ó¸®°¡ À§ÂÊÀ» ÇâÇÔ 
+            else if (Physics2D.gravity.normalized == Vector2.up) //ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             {
-                if (rope.CompareTag("VerticalRope")) //¼¼·Î ·ÎÇÁ 
+                if (rope.CompareTag("VerticalRope")) //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     if (InputManager.instance.vertical == 0) changeAnimation("new_rope_v_idle");
                     else changeAnimation("new_rope_v_move");
                 }
-                else //°¡·Î ·ÎÇÁ 
+                else //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     if (InputManager.instance.horizontal == 0) changeAnimation("new_rope_h_idle");
                     else changeAnimation("new_rope_h_move");
                 }
             }
-            else //¸Ó¸®°¡ ¾Æ·¡ÂÊÀ» ÇâÇÔ 
+            else //ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             {
-                if (rope.CompareTag("VerticalRope")) //¼¼·Î ·ÎÇÁ 
+                if (rope.CompareTag("VerticalRope")) //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     if (InputManager.instance.vertical == 0) changeAnimation("new_rope_v_idle");
                     else changeAnimation("new_rope_v_move");
                 }
-                else //°¡·Î ·ÎÇÁ 
+                else //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     if (InputManager.instance.horizontal == 0) changeAnimation("new_rope_h_idle");
                     else changeAnimation("new_rope_h_move");
@@ -1220,11 +1239,11 @@ public class Player : MonoBehaviour
 
     void HorizontalMove()
     {        
-        // ÀÌµ¿ ·ÎÁ÷
+        // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
         int stageNum = GameManager.instance.gameData.curStageNum;
         if (stageNum == 3 && (isHorizontalWind && Physics2D.gravity.x == 0f || isVerticalWind && Physics2D.gravity.y == 0f))
         {
-            // Stage3¿¡¼­ ºÒ¾î¿À´Â ¹Ù¶÷°ú °°Àº ÃàÀ¸·Î´Â ÇÃ·¹ÀÌ¾î°¡ Å°¸¦ ´­·¯µµ ÀÌµ¿ ºÒ°¡.
+            // Stage3ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¾ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½Ò°ï¿½.
             return;
         }
 
@@ -1232,18 +1251,18 @@ public class Player : MonoBehaviour
 
         if (stageNum == 6 && rayHitIcePlatform.collider != null && InputManager.instance.horizontal == 0f)
         {
-            // Stage6¿¡¼­ ¾óÀ½ À§¶ó¸é Å°º¸µå inputÀÌ ³¡³­ ÈÄ¿¡ ¹Ì²ô·¯Áü
+            // Stage6ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ inputï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¿ï¿½ ï¿½Ì²ï¿½ï¿½ï¿½ï¿½
             locVel = new Vector2(Vector2.Lerp(locVel, Vector2.zero, Time.deltaTime * slidingDegree).x , locVel.y);
         }
         else if (stageNum == 3 && isPlayerExitFromWInd)
         {
-            //stage03 ¿¡¼­ È¯Ç³±â ¹Ù¶÷ ¿µÇâÀ» ¹Ş°í ÀÖÀ» ¶§ÀÇ ¿òÁ÷ÀÓÀº windPower ½ºÅ©¸³Æ®¿¡¼­ ¼öÇà 
+            //stage03 ï¿½ï¿½ï¿½ï¿½ È¯Ç³ï¿½ï¿½ ï¿½Ù¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ş°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ windPower ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             return;
         }
 
-        else //ÀÏ¹İÀûÀÎ ÄÉÀÌ½º 
+        else //ï¿½Ï¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì½ï¿½ 
         {
-            // ¾óÀ½ À§°¡ ¾Æ´Ï¶ó¸é Å°º¸µå inputÀÌ ÀÖÀ» ¶§¿¡¸¸ ÀÌµ¿
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ inputï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
             locVel = new Vector2(InputManager.instance.horizontal * walkSpeed, locVel.y);
         }
         rigid.velocity = transform.TransformDirection(locVel);
@@ -1251,21 +1270,21 @@ public class Player : MonoBehaviour
 
     void LimitFallingSpeed()
     {
-        // ¶³¾îÁú ¶§ ÃÖ´ë ¼Óµµ Á¦ÇÑ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
         if (locVel.y < -maxFallingSpeed) locVel.y = -maxFallingSpeed;
         rigid.velocity = transform.TransformDirection(locVel);
     }
 
-    //ÇÃ·¹ÀÌ¾î°¡ ÇÃ·§Æû ³¡¿¡ ÇÑ ¹ß·Î ¼­ ÀÖÀ»¶§ÀÇ ¸ğ¼Ç ¼³Á¤À» À§ÇÑ hit 
-    RaycastHit2D rayPosHit_left; //¿ŞÂÊ 
-    RaycastHit2D rayPosHit_right; //¿À¸¥ÂÊ 
+    //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ß·ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ hit 
+    RaycastHit2D rayPosHit_left; //ï¿½ï¿½ï¿½ï¿½ 
+    RaycastHit2D rayPosHit_right; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 
     void CheckGround()
     {
-        // ÇÃ·¹ÀÌ¾î°¡ ÇÃ·§Æû°ú ÇÔ²² ¿òÁ÷¿©¾ß ÇÏ´Â »óÈ²
-        // 1) ¿òÁ÷ÀÌ´Â ÇÃ·§Æû À§¿¡ ÀÖÀ» °æ¿ì. ´Ü, ¿òÁ÷ÀÌ´Â ÇÃ·§Æû À§¿¡¼­ ·¹¹ö¸¦ ÀÛµ¿½ÃÅ³ ¶§´Â ÇÔ²² ¿òÁ÷ÀÌ¸é ¾ÈµÊ
-        // 2) ¿òÁ÷ÀÌ´Â ÇÃ·§Æû°ú ¿¬°áµÈ rope¿¡ ¸Å´Ş·Á ÀÖ´Â °æ¿ì
+        // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô²ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½È²
+        // 1) ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½. ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ûµï¿½ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô²ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½Èµï¿½
+        // 2) ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ropeï¿½ï¿½ ï¿½Å´Ş·ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½
 
         RaycastHit2D rayHitMovingFloor = Physics2D.BoxCast(transform.position, new Vector2(0.5f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 16);
         if (rayHitMovingFloor.collider != null && curState != States.ChangeGravityDir)
@@ -1280,54 +1299,54 @@ public class Player : MonoBehaviour
         RaycastHit2D rayHit;
         
         Vector2 rayStartPos_left, rayStartPos_right;
-        Vector2 middlePos = transform.position - transform.up; //(x,y) µÎ ÁÂÇ¥¸é ÃæºĞÇÔ 
+        Vector2 middlePos = transform.position - transform.up; //(x,y) ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ 
         float centerToLeg = 0.3125f;
 
         switch (GameManager.instance.gameData.curStageNum)
         {
             case 2:
-                // Platform, Launcher, Stone °¨Áö
+                // Platform, Launcher, Stone ï¿½ï¿½ï¿½ï¿½
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 6 | 1 << 15);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null;
                 break;
             case 5:
-                // Platform, JumpBoost °¨Áö
+                // Platform, JumpBoost ï¿½ï¿½ï¿½ï¿½
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
                 rayHitJumpBoost = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 22);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null;
-                isOnJumpPlatform = rayHitJumpBoost.collider != null; //Á¡ÇÁ °­È­ ¹ßÆÇ À§¿¡ ÀÖ´Â °Í°ú ÀÏ¹İ ÇÃ·§Æû À§¿¡ ÀÖ´Â °Í ±¸ºĞ                
+                isOnJumpPlatform = rayHitJumpBoost.collider != null; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Í°ï¿½ ï¿½Ï¹ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½                
                 break;
             case 6:
-                // Platform, IcePlatform °¨Áö
+                // Platform, IcePlatform ï¿½ï¿½ï¿½ï¿½
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
                 rayHitIcePlatform = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 9);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null || rayHitIcePlatform.collider;
                 break;
             case 7:
-                // Platform, Enemy °¨Áö
+                // Platform, Enemy ï¿½ï¿½ï¿½ï¿½
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 18);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null;
                 break;
             default:
-                // Platform °¨Áö
+                // Platform ï¿½ï¿½ï¿½ï¿½
                 //rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.875f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
                 
-                if (transform.up == new Vector3(0, 1, 0)) // ¸Ó¸®°¡ À§ÂÊÀ» ÇâÇÔ 
+                if (transform.up == new Vector3(0, 1, 0)) // ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     rayStartPos_left = middlePos + new Vector2(-centerToLeg, 0);
                     rayStartPos_right = middlePos + new Vector2(centerToLeg, 0);
                 }
-                else if(transform.up == new Vector3(1, 0, 0)) // ¸Ó¸®°¡ ¿À¸¥ÂÊÀ» ÇâÇÔ
+                else if(transform.up == new Vector3(1, 0, 0)) // ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 {
                     rayStartPos_left = middlePos + new Vector2(0, centerToLeg);
                     rayStartPos_right = middlePos + new Vector2(0, -centerToLeg);
                 }
-                else if(transform.up == new Vector3(0, -1, 0)) //¸Ó¸®°¡ ¾Æ·¡ÂÊÀ» ÇâÇÔ 
+                else if(transform.up == new Vector3(0, -1, 0)) //ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     rayStartPos_left = middlePos + new Vector2(centerToLeg, 0);
                     rayStartPos_right = middlePos + new Vector2(-centerToLeg, 0);
                 }
-                else //¸Ó¸®°¡ ¿ŞÂÊÀ» ÇâÇÔ 
+                else //ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 {
                     rayStartPos_left = middlePos + new Vector2(0, -centerToLeg);
                     rayStartPos_right = middlePos + new Vector2(0, centerToLeg);
@@ -1336,8 +1355,8 @@ public class Player : MonoBehaviour
                 rayPosHit_left = Physics2D.Raycast(rayStartPos_left, -transform.up, 0.05f, LayerMask.GetMask("Platform"));
                 rayPosHit_right = Physics2D.Raycast(rayStartPos_right, -transform.up, 0.05f, LayerMask.GetMask("Platform"));
 
-                Debug.DrawRay(rayStartPos_left, -transform.up * 0.2f, new Color(1, 0, 0));
-                Debug.DrawRay(rayStartPos_right, -transform.up * 0.2f, new Color(1, 0, 0));
+                //Debug.DrawRay(rayStartPos_left, -transform.up * 0.2f, new Color(1, 0, 0));
+                //Debug.DrawRay(rayStartPos_right, -transform.up * 0.2f, new Color(1, 0, 0));
 
                 isGrounded = rayPosHit_left.collider != null || rayPosHit_right.collider != null;
 
@@ -1345,7 +1364,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    // ÇÃ·¹ÀÌ¾î ±âÁØ Vertical (¿ùµå ÁÂÇ¥ ±âÁØ X)
+    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ Vertical (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ X)
 
     /*
     void VerticalRopeAni()
@@ -1365,7 +1384,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    // ÇÃ·¹ÀÌ¾î ±âÁØ Horizontal (¿ùµå ÁÂÇ¥ ±âÁØ X)
+    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ Horizontal (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ X)
     void HorizontalRopeAni()
     {
         sound.clip = moveSound;
@@ -1382,14 +1401,14 @@ public class Player : MonoBehaviour
             ani.SetBool("isRopingHorizontalMove", true);
         }
         
-        // ÀÌµ¿ ¹æÇâ¿¡ µû¶ó Player sprite ÁÂ¿ì flip
+        // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ Player sprite ï¿½Â¿ï¿½ flip
         if (InputManager.instance.horizontal == 1) sprite.flipX = false;
         else if (InputManager.instance.horizontal == -1) sprite.flipX = true;
     }    
     */
 
-    /************* ¾Æ·¡´Â Stage8 ÄÚµå ****************/
-    /****** Stage8 ±â¹Í ¼öÁ¤ÇÒ ¶§ ÄÚµå ¼öÁ¤ ÇÊ¿ä ******/
+    /************* ï¿½Æ·ï¿½ï¿½ï¿½ Stage8 ï¿½Úµï¿½ ****************/
+    /****** Stage8 ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ ******/
 
     /*
     public IEnumerator DevilUsingLever(float targetRot)

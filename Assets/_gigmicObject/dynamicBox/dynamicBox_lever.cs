@@ -16,7 +16,7 @@ public class dynamicBox_lever : MonoBehaviour
     [SerializeField] bool isBoxGrab;
     [SerializeField] bool isPlayerOn;
 
-    public float grabThreshold; //ÀÌ °Å¸® ÀÌ»ó box¿Í ÇÃ·¹ÀÌ¾î°¡ ¸Ö¾îÁö¸é grab ÀÌ ÇØÁ¦µÈ´Ù 
+    public float grabThreshold; //ï¿½ï¿½ ï¿½Å¸ï¿½ ï¿½Ì»ï¿½ boxï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½ grab ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½ 
 
     public float grabSpeed;
     float initWalkSpeed;
@@ -43,20 +43,20 @@ public class dynamicBox_lever : MonoBehaviour
     {
         leverRay();
 
-        if(Input.GetKeyDown(KeyCode.E)) //E ¸¦ ´­·¶À» ¶§ 
+        if(Input.GetKeyDown(KeyCode.E)) //E ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
         {
-            if (isPlayerOn && !isBoxGrab) //ÇÃ·¹ÀÌ¾î°¡ ¼¾¼­ ³»¿¡ ÀÖ°í ¾ÆÁ÷ box¸¦ Àâ°í ÀÖÁö ¾ÊÀ¸¸é 
+            if (isPlayerOn && !isBoxGrab) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½ boxï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
             {
                 isBoxGrab = true;
                 playerscr.isPlayerGrab = true;
-                playerscr.walkSpeed = grabSpeed; //box µé°íÀÖÀ¸¸é ¼Óµµ ´À·ÁÁü 
+                playerscr.walkSpeed = grabSpeed; //box ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 
                 StartCoroutine(boxGrab());
             }           
 
             else if (isBoxGrab)
             {
-                isBoxGrab = false; //»óÀÚ ³»·Á³õ±â 
+                isBoxGrab = false; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
                 playerscr.isPlayerGrab = false;
                 playerscr.walkSpeed = initWalkSpeed;
             }
@@ -71,14 +71,14 @@ public class dynamicBox_lever : MonoBehaviour
                 playerscr.walkSpeed = initWalkSpeed;
 
                 rigid.constraints = RigidbodyConstraints2D.None;
-                dynamicBox.GetComponent<BoxCollider2D>().isTrigger = false; //´Ù½Ã ÄÝ¶óÀÌ´õ Å´ 
+                dynamicBox.GetComponent<BoxCollider2D>().isTrigger = false; //ï¿½Ù½ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ Å´ 
             }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("platform detected");
+        //Debug.Log("platform detected");
         if(collision.tag == "Platform")
         {
 
@@ -90,40 +90,40 @@ public class dynamicBox_lever : MonoBehaviour
     IEnumerator boxGrab()
     {
         initDistance = dynamicBox.transform.position - playerObj.transform.position;
-        if(playerObj.transform.up == new Vector3(0,1,0) || playerObj.transform.up == new Vector3(0, -1, 0)) //ÇÃ·¹ÀÌ¾î°¡ 0, 180µµ ÂÊÀ¸·Î ¸Ó¸®¸¦ ÇÒ ¶§ 
+        if(playerObj.transform.up == new Vector3(0,1,0) || playerObj.transform.up == new Vector3(0, -1, 0)) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ 0, 180ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ 
         {
             initDistance = new Vector3(initDistance.x, 0, 0);
         }
-        else //ÇÃ·¹ÀÌ¾î°¡ 90, 270µµ ÂÊÀ¸·Î ¸Ó¸®¸¦ ÇÒ ¶§ 
+        else //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ 90, 270ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ 
         {
             initDistance = new Vector3(0, initDistance.y, 0);
         }
 
         initDistance = initDistance.normalized * 0.5f * flipOffset;
        
-        dynamicBox.transform.rotation = Quaternion.Euler(0, 0, 0); //°¢µµ °íÁ¤ 
-        rigid.constraints = RigidbodyConstraints2D.FreezeRotation; //ÇÃ·¹ÀÌ¾î°¡ µé°íÀÖ´Â µ¿¾È¿¡´Â ¸ð¼­¸®¿¡ ºÎµúÇôµµ È¸ÀüÇÏÁö ¾ÊÀ½ 
+        dynamicBox.transform.rotation = Quaternion.Euler(0, 0, 0); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+        rigid.constraints = RigidbodyConstraints2D.FreezeRotation; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½È¿ï¿½ï¿½ï¿½ ï¿½ð¼­¸ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
-        dynamicBox.GetComponent<BoxCollider2D>().isTrigger = true; //Àá½Ã ÇÃ·¹ÀÌ¾î¿Í ¹ÝÀÀÇÏ´Â ÄÝ¶óÀÌ´õ Ãæµ¹ ²ô°í ÇÃ·§Æû°ú ¹ÝÀÀÇÏ´Â ÄÝ¶óÀÌ´õ¸¸ ³²±è 
+        dynamicBox.GetComponent<BoxCollider2D>().isTrigger = true; //ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ ï¿½æµ¹ ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         playerBoxColl.SetActive(true);
         
-        while (isBoxGrab) //ÇÃ·¹ÀÌ¾î°¡ box¸¦ Àâ°í ÀÖ´Â µ¿¾È 
+        while (isBoxGrab) //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ boxï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         {
             if (!playerObj.GetComponent<SpriteRenderer>().flipX)
             {
-                dynamicBox.transform.position = playerObj.transform.position + initDistance + playerObj.transform.up * 0.5f; //boxÀ§Ä¡¸¦ ÇÃ·¹ÀÌ¾î¿¡ ´ëÇØ ÀÏÁ¤ÇÏµµ·Ï °íÁ¤ 
+                dynamicBox.transform.position = playerObj.transform.position + initDistance + playerObj.transform.up * 0.5f; //boxï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 playerBoxColl.transform.position = dynamicBox.transform.position;
                 yield return null;
             }
-            else //ÇÃ·¹ÀÌ¾î°¡ flipX·Î ¸öÀ» µ¹¸®¸é »óÀÚ´Â ¹Ý´ëÂÊÀ¸·Î ¿òÁ÷¿©¾ß ÇÔ 
+            else //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ flipXï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú´ï¿½ ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
             {
-                dynamicBox.transform.position = playerObj.transform.position - initDistance + playerObj.transform.up * 0.5f; //boxÀ§Ä¡¸¦ ÇÃ·¹ÀÌ¾î¿¡ ´ëÇØ ÀÏÁ¤ÇÏµµ·Ï °íÁ¤ 
+                dynamicBox.transform.position = playerObj.transform.position - initDistance + playerObj.transform.up * 0.5f; //boxï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                 playerBoxColl.transform.position = dynamicBox.transform.position;
                 yield return null;
             }            
         }
 
-        //box ³»·Á³õ±â        
+        //box ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½        
         if (!playerObj.GetComponent<SpriteRenderer>().flipX)
         {
             dynamicBox.transform.position = dynamicBox.transform.position + 2*initDistance;
@@ -136,7 +136,7 @@ public class dynamicBox_lever : MonoBehaviour
         rigid.constraints = RigidbodyConstraints2D.None;
         
         playerBoxColl.SetActive(false);
-        dynamicBox.GetComponent<BoxCollider2D>().isTrigger = false; //´Ù½Ã ÄÝ¶óÀÌ´õ Å´ 
+        dynamicBox.GetComponent<BoxCollider2D>().isTrigger = false; //ï¿½Ù½ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ Å´ 
     }
 
 
@@ -152,8 +152,8 @@ public class dynamicBox_lever : MonoBehaviour
         boxRay_right = Physics2D.BoxCast(transform.position, new Vector2(0.2f, 1), 0, new Vector2(1, 0), 1.4f, LayerMask.GetMask("Player"));
         boxRay_left = Physics2D.BoxCast(transform.position, new Vector2(0.2f, 1), 0, new Vector2(-1, 0), 1.4f, LayerMask.GetMask("Player"));
 
-        // [0]: ÇÃ·¹ÀÌ¾î ¹ÝÀÀ ¾øÀ½ 
-        // [1] ~[4]: top, right, bottom, left ¼ø¼­·Î boxCast ¹ÝÀÀ ÀÖÀ½ 
+        // [0]: ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+        // [1] ~[4]: top, right, bottom, left ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ boxCast ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
         if (boxRay_top.collider != null) rayState = 1;
         else if (boxRay_right.collider != null) rayState = 2;
@@ -162,11 +162,11 @@ public class dynamicBox_lever : MonoBehaviour
         else rayState = 0;
 
         bool isPlayerFlip = playerObj.GetComponent<SpriteRenderer>().flipX;
-        Vector3 playerHead = playerObj.transform.up; //ÇÃ·¹ÀÌ¾îÀÇ ¸Ó¸®¹æÇâ 
+        Vector3 playerHead = playerObj.transform.up; //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½ï¿½ï¿½ï¿½ï¿½ 
 
         switch (rayState)
         {            
-            case 1: //top box ¹ÝÀÀ    
+            case 1: //top box ï¿½ï¿½ï¿½ï¿½    
                 if( (playerHead == new Vector3(1, 0, 0) && !isPlayerFlip) || (playerHead == new Vector3(-1, 0, 0) && isPlayerFlip) )
                 {
                     if (playerHead == Vector3.right) flipOffset = 1;
@@ -180,7 +180,7 @@ public class dynamicBox_lever : MonoBehaviour
                 }
                 break;
 
-            case 2: //right box ¹ÝÀÀ 
+            case 2: //right box ï¿½ï¿½ï¿½ï¿½ 
                 if ((playerHead == new Vector3(0, 1, 0) && isPlayerFlip)|| (playerHead == new Vector3(0, -1, 0) && !isPlayerFlip))
                 {
                     if (playerHead == Vector3.down) flipOffset = 1;
@@ -194,7 +194,7 @@ public class dynamicBox_lever : MonoBehaviour
                 }
                 break;
                     
-            case 3: //bottom box ¹ÝÀÀ 
+            case 3: //bottom box ï¿½ï¿½ï¿½ï¿½ 
                 if ((playerHead == new Vector3(1, 0, 0) && isPlayerFlip) || (playerHead == new Vector3(-1, 0, 0) && !isPlayerFlip) )
                 {
                     if (playerHead == Vector3.left) flipOffset = 1;
@@ -208,7 +208,7 @@ public class dynamicBox_lever : MonoBehaviour
                 }
                 break;  
 
-            case 4: //left box ¹ÝÀÀ 
+            case 4: //left box ï¿½ï¿½ï¿½ï¿½ 
                 if ((playerHead == new Vector3(0, 1, 0) && !isPlayerFlip) || (playerHead == new Vector3(0, -1, 0) && isPlayerFlip))
                 {
                     if (playerHead == Vector3.up) flipOffset = 1;

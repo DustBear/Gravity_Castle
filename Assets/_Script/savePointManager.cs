@@ -8,34 +8,34 @@ public class savePointManager : MonoBehaviour
 {
     GameObject player;
     
-    public int stageNum; //ÇØ´ç ½ºÅ×ÀÌÁöÀÇ ³Ñ¹ö 
-    public int savePointCount; //ÇØ´ç ¾À¿¡ Á¸ÀçÇÏ´Â ¼¼ÀÌºêÆ÷ÀÎÆ®ÀÇ ¼ö
+    public int stageNum; //ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ 
+    public int savePointCount; //ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½
     public GameObject[] savePointGroup;
        
-    int playerSpawnSavePoint; //ÇÃ·¹ÀÌ¾î°¡ ½ºÆùµÇ¾î¾ß ÇÏ´Â ¼¼ÀÌºêÆ÷ÀÎÆ® À§Ä¡: 1,2,3 ~ À¸·Î ¿Ã¶ó°¨ 
+    int playerSpawnSavePoint; //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ä¡: 1,2,3 ~ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¶ï¿½ 
 
     private void Awake()
     {
-        Debug.Log("savePointManager activated");
+        //Debug.Log("savePointManager activated");
 
         player = GameObject.Find("Player");
-        playerSpawnSavePoint = GameManager.instance.gameData.curAchievementNum; //0ºÎÅÍ ½ÃÀÛÇÏ´Â Á¤¼ö 
+        playerSpawnSavePoint = GameManager.instance.gameData.curAchievementNum; //0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ 
       
-        if (GameManager.instance.shouldSpawnSavePoint) //ChangeSceneÀ» ÀÌ¿ëÇØ ¾ÀÀ» ¿À°¥ ¶§´Â ¼¼ÀÌºêÆ÷ÀÎÆ® »ç¿ëx 
+        if (GameManager.instance.shouldSpawnSavePoint) //ChangeSceneï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½x 
         {
             for (int index = 0; index < savePointCount; index++)
             {
                 if (savePointGroup[index].GetComponent<SavePoint>().achievementNum == playerSpawnSavePoint)
                 {
-                    //¼¼ÀÌºêÆ÷ÀÎÆ®¿¡¼­ GM °ª Á¶Á¤ 
+                    //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ GM ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                     GameManager.instance.nextPos = savePointGroup[index].GetComponent<SavePoint>().respawnPos;
                     GameManager.instance.nextGravityDir = savePointGroup[index].GetComponent<SavePoint>().respawnDir;
 
-                    //¼¼ÀÌºêÆ÷ÀÎÆ®¿¡¼­ GameData °ª Á¶Á¤ 
+                    //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ GameData ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                     GameManager.instance.gameData.respawnPos = savePointGroup[index].GetComponent<SavePoint>().respawnPos;
                     GameManager.instance.gameData.respawnGravityDir = savePointGroup[index].GetComponent<SavePoint>().respawnDir;
 
-                    //GameData °ª ÀúÀå 
+                    //GameData ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
                     string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
                     string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[0];
                     File.WriteAllText(filePath, ToJsonData);

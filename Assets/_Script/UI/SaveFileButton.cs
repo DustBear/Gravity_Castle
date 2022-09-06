@@ -7,11 +7,11 @@ using UnityEngine.SceneManagement;
 
 public class SaveFileButton : MonoBehaviour
 {
-    [SerializeField] int saveFileNum; //ÀÌ ¹öÆ°ÀÇ ¼¼ÀÌºêÆÄÀÏ ¹øÈ£
+    [SerializeField] int saveFileNum; //ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£
     TextMeshProUGUI text;
     bool isSaveFileExist;
 
-    public GameObject betaModeWindow; //º£Å¸Å×½ºÆ® ¹öÀüÀ¸·Î ¹Ù²Ù½Ã°Ú½À´Ï±î? Ã¢ ¶ç¿ò 
+    public GameObject betaModeWindow; //ï¿½ï¿½Å¸ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²Ù½Ã°Ú½ï¿½ï¿½Ï±ï¿½? Ã¢ ï¿½ï¿½ï¿½ 
     public GameObject saveDeleteWindow;
     public GameObject gameStartButton;
 
@@ -28,12 +28,12 @@ public class SaveFileButton : MonoBehaviour
         KeyValuePair<int, int> keyVal = GameManager.instance.GetSavedData(saveFileNum);
         if (keyVal.Key != -1) 
         {
-            text.text = "Save" + (saveFileNum + 1) + " : ½ºÅ×ÀÌÁö" + keyVal.Key + "_" + keyVal.Value;
+            text.text = "ì„¸ì´ë¸Œ" + (saveFileNum + 1) + " : ìŠ¤í…Œì´ì§€" + keyVal.Key + "_" + keyVal.Value;
             isSaveFileExist = true;
         }
         else
         {
-            text.text = "»õ ÆÄÀÏ";
+            text.text = "ìƒˆ ê²Œì„";
             isSaveFileExist = false;
         }
 
@@ -53,62 +53,62 @@ public class SaveFileButton : MonoBehaviour
     {
         UIManager.instance.clickSoundGen();
 
-        GameManager.instance.curSaveFileNum = saveFileNum; //ÇöÀç ÇÃ·¹ÀÌÁßÀÎ ¼¼ÀÌºêÆÄÀÏ = ÀÌ ¼¼ÀÌºêÆÄÀÏ ·Îµå ¹öÆ°ÀÇ ¼³Á¤°ª 
+        GameManager.instance.curSaveFileNum = saveFileNum; //GMì˜ í˜„ì¬ ì„¸ì´ë¸ŒíŒŒì¼ ë„˜ë²„ ë°”ê¿”ì¤Œ 
 
-        // SaveFileÀÌ ¾øÀ¸¸é »õ °ÔÀÓ »ı¼º 
+        // SaveFileï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         if (!isSaveFileExist)
         {
-            GameManager.instance.saveFileSeq.saveFileSeqList.Add(saveFileNum); //¼¼ÀÌºêÆÄÀÏ ½ÇÇà³»¿ª¿¡ ÇÃ·¹ÀÌÇÑ ¼¼ÀÌºêÆÄÀÏ ÀúÀå 
+            GameManager.instance.saveFileSeq.saveFileSeqList.Add(saveFileNum); //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½à³»ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             GameManager.instance.SaveSaveFileSeq();
 
-            GameManager.instance.curSaveFileNum = saveFileNum; //¼¼ÀÌºêÆÄÀÏ ³Ñ¹ö ¼³Á¤ 
+            GameManager.instance.curSaveFileNum = saveFileNum; //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             
-            //GM Àº °ÔÀÓ ½ÇÇà ½Ã °¡Àå ¸ÕÀú È°¼ºÈ­µÇ¹Ç·Î ÀÌ¹Ì GameData ´Â ¸¸µé¾îÁ®ÀÖ´Â »óÅÂ ~> ¿©±â¼­ ÃÊ±âÈ­½ÃÅ°°í ÁøÇàÇÔ 
+            //GM ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½Ç¹Ç·ï¿½ ï¿½Ì¹ï¿½ GameData ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ~> ï¿½ï¿½ï¿½â¼­ ï¿½Ê±ï¿½È­ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
             GameManager.instance.gameData.curStageNum = 1;
-            GameManager.instance.gameData.curAchievementNum = 0; //Ã³À½ ½ÃÀÛÇÏ´Â °ÔÀÓ ~> ÃÖÃÊ ½ºÅ×ÀÌÁö¿¡¼­ ´Ù½Ã ½ÃÀÛ 
+            GameManager.instance.gameData.curAchievementNum = 0; //Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ~> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             GameManager.instance.gameData.finalStageNum = 1;
-            GameManager.instance.gameData.finalAchievementNum = 0; //ÃÖÁ¾ÁøÇà»óÈ²Àº µ¿ÀÏ 
+            GameManager.instance.gameData.finalAchievementNum = 0; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È²ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             
             for (int i = 0; i < 7; i++)
             {
                 for (int j = 0; j < 50; j++)
                 {
-                    GameManager.instance.gameData.savePointUnlock[i, j] = false; //¸ğµç ¼¼ÀÌºêÆ÷ÀÎÆ® ºñÈ°¼ºÈ­ 
+                    GameManager.instance.gameData.savePointUnlock[i, j] = false; //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È°ï¿½ï¿½È­ 
                 }
             }
-            //ÃÊ±âÈ­½ÃÅ² GameData [saveFileNum]¿¡ ÀúÀå 
+            //ï¿½Ê±ï¿½È­ï¿½ï¿½Å² GameData [saveFileNum]ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[saveFileNum];
             File.WriteAllText(filePath, ToJsonData);
 
-            //½ÇÁ¦ ÇÃ·¹ÀÌ¾î°¡ Á¦ À§Ä¡¿¡ ¼ÒÈ¯µÉ ¼ö ÀÖµµ·Ï GameManager µµ ÃÊ±âÈ­½ÃÄÑ ÁÜ 
-            GameManager.instance.nextScene = 2;
-            GameManager.instance.shouldSpawnSavePoint = false;
-            GameManager.instance.shouldUseOpeningElevator = true;
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ GameManager ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
+            GameManager.instance.nextScene = 2; //tutorial_1 ì”¬ 
+            GameManager.instance.shouldSpawnSavePoint = false; //ë§¨ ì²˜ìŒ ì‹œì‘í•˜ë¯€ë¡œ ë”°ë¡œ ì„¸ì´ë¸Œí¬ì¸íŠ¸ê°€ ì—†ë‹¤ 
+            GameManager.instance.shouldUseOpeningElevator = true; //ì˜¤í”„ë‹ ì—˜ë¦¬ë² ì´í„° ì´ìš©í•´ì•¼ í•¨ 
 
-            //nextPos, nextDir Àº ¾ÀÀ¸·Î ÀÌµ¿ÇÑ ´ÙÀ½ savePointManager¿¡¼­ ¾Ë¾Æ¼­ Á¶Á¤ÇØ ÁÜ 
+            //nextPos, nextDir ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ savePointManagerï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 
 
-            SceneManager.LoadScene(GameManager.instance.nextScene);
+            SceneManager.LoadScene(37); //ì˜¤í”„ë‹ì”¬ìœ¼ë¡œ ë“¤ë €ë‹¤ê°€ nextSceneìœ¼ë¡œ ì´ë™ 
         }
-        // SaveFileÀÌ ÀÖÀ¸¸é Load
+        // SaveFileï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Load
         else
         {
             GameManager.instance.saveFileSeq.saveFileSeqList.Remove(saveFileNum);
             GameManager.instance.saveFileSeq.saveFileSeqList.Add(saveFileNum);            
             GameManager.instance.SaveSaveFileSeq();
-            //°¡Àå ¸¶Áö¸·¿¡ ÇÃ·¹ÀÌÇÑ ¼¼ÀÌºêÆÄÀÏ °»½Å 
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
-            GameManager.instance.curSaveFileNum = saveFileNum; //¼¼ÀÌºêÆÄÀÏ ³Ñ¹ö ¼³Á¤
+            GameManager.instance.curSaveFileNum = saveFileNum; //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             string FromJsonData = File.ReadAllText(filePath);
-            GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData); //ÇöÀç ¼±ÅÃÇÑ ¼¼ÀÌºêÆÄÀÏÀÇ GameData °¡Á®¿È
+            GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GameData ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-            //GM µ¥ÀÌÅÍ È°¼ºÈ­ 
+            //GM ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ 
             GameManager.instance.nextScene = curGameData.respawnScene;
             GameManager.instance.nextPos = curGameData.respawnPos;
             GameManager.instance.nextGravityDir = curGameData.respawnGravityDir;
-            GameManager.instance.nextState = Player.States.Walk; //States.Walk ·Î ¾À ½ÃÀÛ 
+            GameManager.instance.nextState = Player.States.Walk; //States.Walk ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
             GameManager.instance.shouldSpawnSavePoint = true;
 
@@ -118,21 +118,21 @@ public class SaveFileButton : MonoBehaviour
         
     }
 
-    public void saveDelete() //¼¼ÀÌºêÆÄÀÏ Á¤º¸¸¦ °ÔÀÓÀ» Ã³À½ ½ÃÀÛÇÏ´Â »óÅÂ·Î ÃÊ±âÈ­½ÃÅ´ 
+    public void saveDelete() //ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½Å´ 
     {
         UIManager.instance.clickSoundGen();
-        Debug.Log("delete");
+        //Debug.Log("delete");
 
         string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[saveFileNum];
         File.Delete(filePath);
         
-        text.text = "»õ ÆÄÀÏ";
+        text.text = "ìƒˆ ê²Œì„";
 
-        bool isEveryFileDelete  = true; //¸¸¾à ¸ğµç ¼¼ÀÌºêÆÄÀÏÀÌ »èÁ¦µÇ¾ú´Ù¸é saveFileSeq ÆÄÀÏµµ »èÁ¦ÇØ¾ß ÇÔ 
+        bool isEveryFileDelete  = true; //ë§Œì•½ ëª¨ë“  ì„¸ì´ë¸ŒíŒŒì¼ì´ ì‚­ì œë˜ì—ˆë‹¤ë©´ saveFileSeq ë„ ê°™ì´ ì‚­ì œí•´ì•¼ í•¨ 
         for(int index = 0; index < 4; index++)
         {
             string savefilePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[index];
-            if (File.Exists(savefilePath)) //³× ¼¼ÀÌºêÆÄÀÏ Áß ÇÏ³ª¶óµµ µ¥ÀÌÅÍ°¡ ÀÖ´Ù¸é isEveryFileDelete = false;
+            if (File.Exists(savefilePath)) //í•˜ë‚˜ë¼ë„ ì¡´ì¬í•˜ëŠ” íŒŒì¼ì´ ìˆìœ¼ë©´ isEveryFileDelete = false;
             {
                 isEveryFileDelete = false;
             }
@@ -142,7 +142,7 @@ public class SaveFileButton : MonoBehaviour
         {
             string seqfilePath = Application.persistentDataPath + "/SaveFileSeq.json";
             File.Delete(seqfilePath);
-            gameStartButton.GetComponent<NewGameButton>().text.text = "»õ·ÎÇÏ±â"; //¸ğµç µ¥ÀÌÅÍ°¡ »èÁ¦µÇ¾úÀ¸¹Ç·Î ´Ù½Ã »õ·ÎÇÏ±â ¹öÆ° »ı¼º 
+            gameStartButton.GetComponent<NewGameButton>().text.text = "ìƒˆë¡œí•˜ê¸°"; //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ 
             gameStartButton.GetComponent<NewGameButton>().isSaveFileExist = false;
         }
 
