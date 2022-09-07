@@ -141,29 +141,27 @@ public class Player : MonoBehaviour
         
         if (!GameManager.instance.shouldSpawnSavePoint)
         {
-            //GameManager ~> ���� ������ �� �÷��̾��� ��ġ ���� 
+            //GameManager ~> 세이브포인트에서 시작하는 것이 아닐 때 GM이 플레이어 초기화 담당 ~> 스테이지 처음 시작할 때, 한 씬에서 통로를 통해 다음씬 넘어갈 때 
             transform.position = GameManager.instance.nextPos;
             Physics2D.gravity = GameManager.instance.nextGravityDir * 9.8f;
             transform.up = -GameManager.instance.nextGravityDir;
-            transform.eulerAngles = Vector3.forward * transform.eulerAngles.z; // x-rotation, y-rotation�� 0���� ����
+            transform.eulerAngles = Vector3.forward * transform.eulerAngles.z; // x-rotation, y-rotation은 자동으로 0 지정 
 
+            // 로프에 매달린 상태로 넘어왔을 때, 떨어지면서 넘어왔을 때 ~> 해당 상태 유지해 줘야 함
             States nextState = GameManager.instance.nextState;
-            // ���� scene�� rope�� ���� scene�� rope�� �ٸ� ������Ʈ�� ��޵Ǵ� ���� ���� �ʿ�
-
             if (nextState == States.MoveOnRope) ChangeState(States.AccessRope);
-            // Jump state�� �����ϸ� ���� input�� �ȵ��͵� scene�� ���۵��ڸ��� �÷��̾ �����ϴ� ���� �߻�
             else if (nextState == States.Jump) ChangeState(States.Fall);
             else ChangeState(nextState);
         }
 
-        // Scene�� ���̺� ����Ʈ���� ������ �� (����� �� ��Ȱ, ����� ���� �ҷ�����) �÷��̾� ������ ����
+        //세이브포인트에서 시작해야 할 때 ~> GameData 에서 플레이어 초기화 담당 
         else
         {
             transform.position = GameManager.instance.gameData.respawnPos;
             Physics2D.gravity = GameManager.instance.gameData.respawnGravityDir * 9.8f;
             transform.up = -GameManager.instance.gameData.respawnGravityDir;
-            transform.eulerAngles = Vector3.forward * transform.eulerAngles.z; // x-rotation, y-rotation�� 0���� ����
-            ChangeState(States.Walk); // ������ �� �÷��̾ �̼��ϰ� ���߿� �� ���� �� �����Ƿ� Fall state�� ����
+            transform.eulerAngles = Vector3.forward * transform.eulerAngles.z;
+            ChangeState(States.Walk); //세이브포인트에서 시작할 땐 항상 walk 상태로 시작 
             GameManager.instance.shouldSpawnSavePoint = false;
         }
 
@@ -175,7 +173,7 @@ public class Player : MonoBehaviour
             sprite.flipX = false;
         }
 
-        jumpTimer = 0; //jumpTimer �ʱ�ȭ 
+        jumpTimer = 0; //jumpTimer 초기화
         boxGrabColl.SetActive(false);
        
         UIManager.instance.FadeIn(1.5f);
@@ -188,7 +186,7 @@ public class Player : MonoBehaviour
         walkSoundCheck();
         AnimationManager();
 
-        jumpTimer -= Time.deltaTime; //jumpTimer �� �����Ӹ��� �۵� 
+        jumpTimer -= Time.deltaTime; //jumpTimer 초기화
         groundedRemember -= Time.deltaTime;
         if (InputManager.instance.jumpDown)
         {
@@ -266,15 +264,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    void ChargeJumpGauge() //��������5 ��ȭ���� ��Ϳ����� ��� 
+    void ChargeJumpGauge() //stage5에서 사용하는 기믹 
     {
-        if (InputManager.instance.jump) //�����̽��� ���� �� 
+        if (InputManager.instance.jump)
         {
-            // Jump boost ���� ������ ������ ���� 
             if (rayHitJumpBoost.collider != null)
             {
                 jumpGauge = Mathf.Clamp(jumpGauge + jumpChargeSpeed * Time.deltaTime, minJumpPower, maxJumpBoostPower);
-                //Debug.Log("���� ������ ������ �� : " + (jumpGauge - minJumpPower) / (maxJumpBoostPower - minJumpPower) * 100f + "%");
             }            
         }
     }
@@ -284,23 +280,23 @@ public class Player : MonoBehaviour
     void Jump_Enter()
     {
         jumpTimer = 0;
-        rigid.velocity = Vector2.zero; // �ٴ� �÷����� �ӵ��� ���� �ӵ��� ������ ��ġ�� ���� ����    
+        rigid.velocity = Vector2.zero; //움직이는 발판 위에서 점프하거나 할 때 속도 바뀌지 않도록 속도 초기화  
         
         Vector2 addForceDirection;
         
-        if (transform.up == new Vector3(0, 1, 0)) //�÷��̾ ������ ���� �� ���� �� 
+        if (transform.up == new Vector3(0, 1, 0)) //머리가 위를 바라봄
         {
             addForceDirection = new Vector2(0, 1);
         }
-        else if (transform.up == new Vector3(0, -1, 0)) //�÷��̾ �Ʒ����� ���� �� ���� �� 
+        else if (transform.up == new Vector3(0, -1, 0)) //머리가 아래를 바라봄
         {
             addForceDirection = new Vector2(0, -1);
         }
-        else if (transform.up == new Vector3(1, 0, 0)) //�÷��̾ �������� ���� �� ���� �� 
+        else if (transform.up == new Vector3(1, 0, 0)) //머리가 오른쪽을 바라봄
         {
             addForceDirection = new Vector2(1, 0);
         }
-        else //�÷��̾ ������ ���� �� ���� ��
+        else //머리가 왼쪽을 바라봄
         {
             addForceDirection = new Vector2(-1, 0);
         }
@@ -310,47 +306,7 @@ public class Player : MonoBehaviour
         sound.clip = jump_landSound;
         sound.Play();
     }
-    /*
-    IEnumerator jumpAddForce()
-    {
-        int index = 0;
-
-        while (true)
-        {
-            Vector2 addForceDirection;
-            float jumpPower = defaultJumpSpeed - index * speedDelta;
-
-            if (transform.up == new Vector3(0, 1, 0)) //�÷��̾ ������ ���� �� ���� �� 
-            {
-                addForceDirection = new Vector2(rigid.velocity.x, jumpPower);
-            }
-            else if (transform.up == new Vector3(0, -1, 0)) //�÷��̾ �Ʒ����� ���� �� ���� �� 
-            {
-                addForceDirection = new Vector2(rigid.velocity.x, -jumpPower);
-            }
-            else if (transform.up == new Vector3(1, 0, 0)) //�÷��̾ �������� ���� �� ���� �� 
-            {
-                addForceDirection = new Vector2(jumpPower, rigid.velocity.y);
-            }
-            else //�÷��̾ ������ ���� �� ���� ��
-            {
-                addForceDirection = new Vector2(-jumpPower, rigid.velocity.y);
-            }
-
-            rigid.velocity = addForceDirection;
-            Debug.Log(jumpPower + "," + index + "," + defaultJumpTimer);
-            yield return new WaitForSeconds(0.005f);
-
-            index++;
-            defaultJumpTimer += 0.005f;
-            if(defaultJumpTimer >= defaultJumpDelay || InputManager.instance.jumpUp)
-            {
-                break;
-            }
-        }        
-    }
-    */
-
+    
     public float fallingGravity;
     void Jump_Update()
     {
@@ -358,26 +314,26 @@ public class Player : MonoBehaviour
         CheckGround();
         HorizontalMove();
 
-        if (InputManager.instance.jumpUp) //�����̽��ٿ��� ���� ���� ���� ���� �ӵ� �ٿ��� �� 
+        if (InputManager.instance.jumpUp) //플레이어가 점프 중 스페이스바에서 손을 떼면 속도 줄여서 점프 멈춰줌 
         {
-            if (transform.up.normalized == new Vector3(0, 1, 0) && rigid.velocity.y > 0) //�÷��̾ ������ �ٶ󺸰� ���� �� + �ӵ��� ������� ���� ��
+            if (transform.up.normalized == new Vector3(0, 1, 0) && rigid.velocity.y > 0)
             {
-                rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0); //�������� �ӵ� ���� 
+                rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0); 
             }
-            else if (transform.up.normalized == new Vector3(0, -1, 0) && rigid.velocity.y < 0) //�÷��̾ �Ʒ����� �ٶ󺸰� ���� �� 
+            else if (transform.up.normalized == new Vector3(0, -1, 0) && rigid.velocity.y < 0)
             {
                 rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0);
             }
-            else if (transform.up.normalized == new Vector3(1, 0, 0) && rigid.velocity.x > 0) //�÷��̾ �������� �ٶ󺸰� ���� ��
+            else if (transform.up.normalized == new Vector3(1, 0, 0) && rigid.velocity.x > 0) 
             {
                 rigid.velocity = new Vector3(rigid.velocity.x * jumpHeightCut, rigid.velocity.y, 0);
             }
-            else if (transform.up.normalized == new Vector3(-1, 0, 0) && rigid.velocity.x < 0)//�÷��̾ ������ �ٶ󺸰� ���� �� 
+            else if (transform.up.normalized == new Vector3(-1, 0, 0) && rigid.velocity.x < 0)
             {
                 rigid.velocity = new Vector3(rigid.velocity.x * jumpHeightCut, rigid.velocity.y, 0);
             }
 
-            rigid.gravityScale = fallingGravity; //���� �� ���� ���������� ���� 
+            rigid.gravityScale = fallingGravity; //착지할 때 착! 달라붙는 느낌을 주기 위해 중력 강화함 
         }
 
         if (readyToRope())
@@ -392,7 +348,7 @@ public class Player : MonoBehaviour
 
     void PowerJump_Enter()
     {
-        rigid.velocity = Vector2.zero; // �ٴ� �÷����� �ӵ��� ���� �ӵ��� ������ ��ġ�� ���� ����
+        rigid.velocity = Vector2.zero;
         rigid.AddForce(transform.up * jumpGauge, ForceMode2D.Impulse);
 
         sound.clip = jump_landSound;
@@ -441,10 +397,10 @@ public class Player : MonoBehaviour
         }
         else if (readyToLand())
         {
-            ChangeState(States.Land); //������ �� �ִ� �����̸� �ٷ� Walk ���·� ��ȯ 
+            ChangeState(States.Land); 
         }else if (readyToJump())
         {
-            ChangeState(States.Jump); //�������� ��������� �÷������� �������� ������ ���Ŀ��� ���� ����
+            ChangeState(States.Jump); 
         }
     }
 
@@ -479,7 +435,7 @@ public class Player : MonoBehaviour
         {
             ChangeState(States.Jump);
         }
-        else // Land �ִϸ��̼��� ������ Walk State�� ��ȯ
+        else // Land동작이 완료되면 자동으로 walk 로 넘어감 
         {
             ChangeState(States.Walk);
         }
@@ -495,11 +451,11 @@ public class Player : MonoBehaviour
         CheckGround();
         HorizontalMove();
 
-        if (!isPlayerGrab) //������Ʈ�� �������� �Ǹ� �ٽ� walk���� �ٲ� 
+        if (!isPlayerGrab) //만약 grab = false 가 되면 바로 walk 로 상태 넘어감 
         {
             ChangeState(States.Walk);
         }
-        else if (readyToFall()) //������Ʈ�� �� ���·δ� ������ �� �� ������ �÷������� ���������� ���� 
+        else if (readyToFall()) //물체를 들고있는 상태에서 점프는 불가능 but 떨어지는 것은 가능 
         {
             ChangeState(States.Fall);
         }
@@ -514,24 +470,22 @@ public class Player : MonoBehaviour
 
     void AccessRope_Update()
     {
-        // ���� scene���� rope�� �Ŵ޸� ���·� ���� scene���� �Ѿ�Դٸ� rope�� ���� �ν��ؾ���
         if (rope == null) return;
 
-        // �Ŵ޸� ��ġ ����
+        // 로프에 매달리기 위해 이동해야 하는 위치 
         Vector2 destPos_rope;
-        if (rope.CompareTag("VerticalRope"))
+        if (rope.CompareTag("VerticalRope")) //세로 로프일 때
         {
             destPos_rope = new Vector2(rope.transform.position.x, transform.position.y);
         }
-        else
+        else //가로 로프일 때 
         {
-            destPos_rope = new Vector2(transform.position.x, rope.transform.position.y);
+            destPos_rope = new Vector2(transform.position.x, rope.transform.position.y-0.1f);
         }
 
         transform.position = Vector2.MoveTowards(transform.position, destPos_rope, Time.deltaTime * ropeAccessSpeed);
-        if (Vector2.Distance(transform.position, destPos_rope) < 0.1f) // �÷��̾ rope�� �������� ��
+        if (Vector2.Distance(transform.position, destPos_rope) < 0.1f) // 플레이어가 목표위치에 근접하면 도달한 것으로 함 ~> 물리엔진 연산오차 보정 
         {
-            // �÷��̾ rope�� ������ �̵���Ŵ
             transform.position = destPos_rope;
             transform.parent = rope.transform;
             ChangeState(States.MoveOnRope);
@@ -547,10 +501,8 @@ public class Player : MonoBehaviour
 
     void MoveOnRope_Update()
     {
-        //ChargeJumpGauge();
         groundedRemember = groundedRememberOffset;
 
-        // Rope�� �Ŵ޸� ���·� �̵�
         if (Physics2D.gravity.normalized == Vector2.left)
         {
             if (rope.CompareTag("VerticalRope"))
@@ -596,7 +548,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        // Rope���� ����
+        // Rope에서 점프할 때 
         if (readyToJump())
         {
             ChangeState(States.Jump);
@@ -618,7 +570,7 @@ public class Player : MonoBehaviour
             //플레이어가 레버를 작동시키려고 하면 레버 불을 끔 
         }
 
-        // ���� �������� �÷��̾� sprite flip
+        //플레이어가 레버의 오른쪽에 있는지, 왼쪽에 있는지에 따라 sprite flip 바꿔줘야 함 
         switch (lever.transform.eulerAngles.z)
         {
             case 0f:
@@ -671,7 +623,7 @@ public class Player : MonoBehaviour
     {
         Vector2 destPos_beforeLevering;
 
-        // ������ ������ ���� �÷��̾ �̵��ؾ��� position ����
+        //플레이어의 크기가 1x1 이 아니므로 레버를 돌릴 때 각도만 바뀌는 것이 아니라 pivot의 위치도 바뀌어야 함
         switch (lever.transform.eulerAngles.z)
         {
             case 0f: case 180f:
@@ -683,7 +635,7 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        // �̵�
+        // 레버 돌리는 속도 
         float moveToLeverSpeed = 9f;
         transform.position = Vector2.MoveTowards(transform.position, destPos_beforeLevering, moveToLeverSpeed * Time.deltaTime);        
 
@@ -701,13 +653,13 @@ public class Player : MonoBehaviour
 
     void SelectGravityDir_Update()
     {
-        // ���� ����
+        // 좌우 화살표 누르면 ~> 실제 레버 작동단계로 이행
         if (InputManager.instance.horizontalDown)
         {
             ChangeState(States.ChangeGravityDir);
         }
-        // ���� ������ ���
-        else if (InputManager.instance.verticalDown)
+        // 위 화살표 누르면 ~> 레버 작동 캔슬 
+        else if (Input.GetKeyUp(KeyCode.UpArrow)) 
         {
             leverColl.GetComponent<lever>().lightTurnOn(); //다시 레버 불 킴 
 
@@ -727,11 +679,9 @@ public class Player : MonoBehaviour
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
 
-        // �÷��̾��� �θ� ������Ʈ�� �ִٸ� ����. �׷��� ������ �÷��̾�� �Բ� ȸ����
         transform.parent = null;
 
-        // ȸ���ؾ��� �÷��̾� rotation ����
-        if (!shouldRotateHalf) //90�� ȸ���ϴ� �Ϲ����� ��� 
+        if (!shouldRotateHalf) //90도 회전해야 하는 경우
         {           
             if(InputManager.instance.horizontal == 1) 
             {
@@ -744,12 +694,12 @@ public class Player : MonoBehaviour
                 destRot = 90;
             }
         }
-        else //180�� ȸ���ϴ� ��� 
+        else //180도 회전해야 하는 경우 
         {
             leftArrow.SetActive(false);
             rightArrow.SetActive(false);
 
-            if (!sprite.flipX)
+            if (InputManager.instance.horizontal == 1)
             {
                 destRot = -180;
             }
@@ -757,11 +707,10 @@ public class Player : MonoBehaviour
             {
                 destRot = 180;
             }
-            //180�� ȸ�� ������ ��� �÷��̾ �ٶ󺸴� ���⿡ ���� ȸ�������� �޶����� 
         }
 
-        // ȸ���ϸ鼭 �ٲ����� �÷��̾� position ����
-        if (!shouldRotateHalf) //90��ȸ����
+        // 레버 회전이후 도달해야 하는 위치 조정 
+        if (!shouldRotateHalf) //90도 회전하는 경우 
         {
             switch (lever.transform.eulerAngles.z)
             {
@@ -773,7 +722,7 @@ public class Player : MonoBehaviour
                     break;
             }
         }
-        else //180�� ȸ���� 
+        else //180도 회전하는 경우 
         {
             switch (lever.transform.eulerAngles.z)
             {
@@ -787,9 +736,9 @@ public class Player : MonoBehaviour
         }
 
         timer = 0;
-        initZRot = Mathf.RoundToInt(transform.eulerAngles.z); //�������� ��������� ���� ���׸� ���� ���� int ������ �ݿø� 
+        initZRot = Mathf.RoundToInt(transform.eulerAngles.z); //물리엔진 연산오차 보정을 위해 z 회전값을 정수로 반올림 
 
-        Time.timeScale = 0; //�÷��̾ ȸ���ϴµ��� �ð� ���� 
+        Time.timeScale = 0; //레버 돌아가는 동안은 시간 정지  
 
         cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.5f);
     }
@@ -798,9 +747,8 @@ public class Player : MonoBehaviour
     float initZRot;
     void ChangeGravityDir_Update()
     {
-        if (isCameraShake) return; //ī�޶� ��鸲�� ������ ���� �÷��̾� ȸ�� 
+        if (isCameraShake) return; //카메라 회전이 끝나고 레버회전 시작 
 
-        // ���� ���� �� �÷��̾� �̵� �� ȸ��
         cameraObj.transform.position = cameraObj.GetComponent<MainCamera>().cameraPosCal();
         transform.localPosition = Vector2.MoveTowards(transform.localPosition, destPos_afterLevering, Time.unscaledDeltaTime / leverRotateDelay);
        
@@ -818,14 +766,13 @@ public class Player : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(0, 0, initZRot + destRot);
 
-        // �߷� ���� ��ȭ
         Vector2 gravity = -transform.up * 9.8f;
-        if (Mathf.Abs(gravity.x) < 1f) gravity.x = 0f; //�������� ������� ����(0.00xxx ���� ���� ��� 0���� ��������� ��) 
-        else gravity.y = 0f;
+        if (Mathf.Abs(gravity.x) < 1f) gravity.x = 0f; //물리엔진 연산오차 보정 ~> x 방향 중력값이 1미만 소수면 ~> 0으로 만들어 줌 
+        else gravity.y = 0f; //만약 x 방향 중력값이 1이면 y 값으로는 중력이 없어야 함 ~> 0으로 만들어 줌 
 
-        Physics2D.gravity = gravity; //�� ��ü �߷¹��� �ٲ� 
+        Physics2D.gravity = gravity; //맵 전체의 중력값을 플레이어 중력방향에 맞게 보정 
 
-        // �÷��̾�� �߷� ����
+        // 중력 방향 지정 끝나면 크기를 설정값에 맞게 지정해 줌 
         rigid.gravityScale = defaultGravityScale;
 
         ChangeState(States.FallAfterLevering);
@@ -886,7 +833,6 @@ public class Player : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z + (1 / leverRotateDelay * destGhostRot * Time.unscaledDeltaTime));
 
-        // �÷��̾� rotation�� ���� (0, 0, 0)�̸� ���� state�� �̵�
         int angle = Mathf.RoundToInt(transform.eulerAngles.z);
         if (angle == 0 || angle == 360 )
         {
@@ -896,7 +842,6 @@ public class Player : MonoBehaviour
 
     void FallAfterGhostLevering_Enter()
     {
-        // �÷��̾� ������ ȸ��
         transform.eulerAngles = Vector3.zero;
 
         Physics2D.gravity = new Vector2(0, -9.8f);
@@ -916,7 +861,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        // ��� ������������ Spike�� �΋H���� ���
+        // 어떤 스테이지든 spike에 닿으면 죽음 
         if (other.gameObject.CompareTag("Spike") && !isDieCorWork)
         {
             StartCoroutine(Die());
@@ -924,17 +869,13 @@ public class Player : MonoBehaviour
 
         switch (GameManager.instance.gameData.curStageNum)
         {
-            case 2: case 6: case 7:
-                // �������� 2: Cannon, Arrow�� �΋H���� ���
-                // �������� 6: �������� Fire�� �΋H���� ���
-                // �������� 7: Bullet�� �΋H���� ���
+            case 2: case 6: case 7:               
                 if (other.gameObject.CompareTag("Projectile") && !isDieCorWork)
                 {
                     StartCoroutine(Die());
                 }
                 break;
             case 8:
-                // �������� 8: Devil, Devil�� ��� �������� �΋H���� ���
                 if (other.collider.CompareTag("Devil") || other.collider.CompareTag("Projectile")) StartCoroutine(Die());
                 break;
         }
@@ -971,11 +912,9 @@ public class Player : MonoBehaviour
                 else if (other.CompareTag("UpWind") || other.CompareTag("DownWind")) isVerticalWind = true;
                 break;
             case 4:
-                // �������� 4 : �������� ���� Ghost�� �΋H���� ���
                 if (other.CompareTag("Ghost") && other.GetComponent<SpriteRenderer>().color.a != 0f) StartCoroutine(Die());
                 break;
             case 6:
-                // �������� 6 : ���� ���� �ִ� Fire�� �΋H���� ���
                 if (other.CompareTag("Fire")) StartCoroutine(Die());
                 break;
         }
@@ -983,7 +922,6 @@ public class Player : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
-        // �������� 3���� Rope�� �Ŵ޷� ���� ���� ���·� �ٶ��� ������ ���ư�
         if (GameManager.instance.gameData.curStageNum == 3 && curState != States.AccessRope && curState != States.MoveOnRope)
         {
             if (other.CompareTag("UpWind"))
@@ -1043,12 +981,12 @@ public class Player : MonoBehaviour
 
     IEnumerator Die()
     {
-        isDieCorWork = true; //���� ����� �������� �� Ʈ���Ű� �ߵ��ϴ��� �ٽ� ���� ���� 
+        isDieCorWork = true; //이미 코루틴이 실행하고 있는동안은 다음 코루틴을 실행시키지 않음 
 
-        GameManager.instance.shouldSpawnSavePoint = true; //������ �ϴ� ���̺�����Ʈ���� �����ؾ� �� 
-        cameraObj.GetComponent<MainCamera>().isCameraLock = true; //ī�޶� �������� �ʰ� ����
+        GameManager.instance.shouldSpawnSavePoint = true; //죽은 경우는 일단 세이브포인트에서 시작해야 함 
+        cameraObj.GetComponent<MainCamera>().isCameraLock = true; //죽은 경우 카메라는 고정
         cameraObj.GetComponent<MainCamera>().cameraShake(0.5f, 0.7f);
-        sprite.color = new Color(1, 1, 1, 0); //��� �÷��̾� ����ȭ 
+        sprite.color = new Color(1, 1, 1, 0); 
 
         for(int index=0; index<parts.Length; index++)
         {
@@ -1058,33 +996,32 @@ public class Player : MonoBehaviour
             Vector2 randomDir = new Vector2(Random.insideUnitSphere.x, Random.insideUnitSphere.y);
             float randomPower = Random.Range(20f, 30f);
 
-            rigid.AddForce(randomDir * randomPower, ForceMode2D.Impulse); //�� ������ ���� ����,ũ���� ���� ���ؼ� ƨ�ܳ� 
+            rigid.AddForce(randomDir * randomPower, ForceMode2D.Impulse); //플레이어 죽고 나면 각 파편들 랜덤위치로 튐
         }
         yield return new WaitForSeconds(1.5f);
 
-        UIManager.instance.FadeOut(1f); //ȭ�� ��ο�����
+        UIManager.instance.FadeOut(1f); //화면 어두워짐 
         yield return new WaitForSeconds(2f);
 
         isDieCorWork = false;
 
-        if (GameManager.instance.gameData.curAchievementNum == 0)
+        if (GameManager.instance.gameData.curAchievementNum == 0) 
+            //만약 스테이지 시작하고 첫 세이브 활성화전에 죽었다면 ~> 그냥 첫 세이브에서 부활 
         {
-            //GameManager.instance.gameData.curStageNum �� �״�� ���� 
             GameManager.instance.gameData.curAchievementNum = 1;
 
             if(GameManager.instance.gameData.finalStageNum == GameManager.instance.gameData.curStageNum)
             {
                 if (GameManager.instance.gameData.finalAchievementNum == GameManager.instance.gameData.curAchievementNum)
                 {
-                    GameManager.instance.gameData.finalAchievementNum = 1; //���� ���� ���൵�� �ִ� ���൵�� ��� final Ach ���� �ݿ��� 
+                    GameManager.instance.gameData.finalAchievementNum = 1; //필요하다면 final 진행도 역시 갱신해 줌 
                 }
             }     
 
-            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //ù��° ���̺�����Ʈ Ȱ��ȭ��Ŵ 
-            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //���� �״�� ���� 
-            //���ο� ���������� ó�� ������ �� ���̺�����Ʈ�� �ϳ��� �� Ȱ��ȭ��Ű�� ���� ��쿣 �׳� 1�� ���̺긦 Ȱ��ȭ�Ѱ����� �Ѵ�
+            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true;
+            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex;
 
-            //������ ����
+            //GameData 저장해 줌 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             File.WriteAllText(filePath, ToJsonData);
@@ -1093,7 +1030,7 @@ public class Player : MonoBehaviour
             SceneManager.LoadScene(GameManager.instance.nextScene);
         }
 
-        //�ױ� ���� ��Ȱ�� ��ġ ���� GameData ���� ������ ���� 
+        //GameData 의 정보 GM 에 가져와서 초기화 
         GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
         GameManager.instance.nextPos = GameManager.instance.gameData.respawnPos;
         GameManager.instance.nextGravityDir = GameManager.instance.gameData.respawnGravityDir;
@@ -1102,7 +1039,7 @@ public class Player : MonoBehaviour
         SceneManager.LoadScene(GameManager.instance.nextScene);
     }
 
-    //�ִϸ��̼� ��ȯ 
+    //현재 플레이어의 애니메이션 
     string curAnim;
     void changeAnimation(string newAnim)
     {
@@ -1115,23 +1052,23 @@ public class Player : MonoBehaviour
     }
 
     float jumpAniThreshold = 3f;
-    void AnimationManager() //�÷��̾� ���� ��ü�� �ִϸ��̼� ���� 
+    void AnimationManager() //플레이어 애니메이션 전체 관리
     {
-        if(fsm.State == States.Walk ||  fsm.State == States.Grab) // Walk, idle �ִϸ��̼� ~> �÷��̾ ���鿡 ������� �� 
+        if(fsm.State == States.Walk ||  fsm.State == States.Grab) // Walk, Grab ~> 속도에 따라서 walk / idle 애니메이션 할당 
         {
-            // Walk ���⿡ ���� Player sprite �¿� flip
+            //바라보는 방향에 따라 flipX 바꿔줌 
             if (InputManager.instance.horizontal == 1) sprite.flipX = false;
             else if (InputManager.instance.horizontal == -1) sprite.flipX = true;
 
             if (InputManager.instance.horizontal == 0)
             {
-                //�÷��̾��� �� ���� ��� ���� ������� �� 
+                //만약 idle 상태인데 두 발이 모두 땅에 닿아 있다면 new_idle 실행 
                 if(rayPosHit_left.collider != null && rayPosHit_right.collider != null)
                 {
                     changeAnimation("new_idle");
                 }
                 
-                //�÷��̾��� �� �� �� �ϳ��� ���� ������� �� 
+                //만약 idle 상태인데 한 발만 땅에 닿아 있다면 new_cliff 실행
                 if((rayPosHit_left.collider == null && rayPosHit_right.collider != null) || (rayPosHit_left.collider != null && rayPosHit_right.collider == null))
                 {
                     changeAnimation("new_cliff");
@@ -1141,10 +1078,14 @@ public class Player : MonoBehaviour
             {
                 changeAnimation("new_walk");               
             }
+        }else if(fsm.State == States.AccessLever)
+        {
+            //달리는 도중에 레버를 작동시키면 달리기 애니메이션 멈춰야 함 
+            changeAnimation("new_idle");
         }
+
         else if(fsm.State == States.Jump || fsm.State == States.Fall) // jump, fall ~> �÷��̾ ���߿� �� ���� �� 
         {
-            // Jump ���⿡ ���� Player sprite �¿� flip
             if (InputManager.instance.horizontal == 1) sprite.flipX = false;
             else if (InputManager.instance.horizontal == -1) sprite.flipX = true;
 
@@ -1162,60 +1103,58 @@ public class Player : MonoBehaviour
                 changeAnimation("new_floatDown");
             }
         }
-        else if (fsm.State == States.AccessRope || fsm.State == States.MoveOnRope) //������ �Ŵ޸����� �ϰų� ���� ������ �����̰� ���� �� 
+        else if (fsm.State == States.AccessRope || fsm.State == States.MoveOnRope) //로프에 매달릴 때 
         {
-            // Rope ���⿡ ���� �¿� flip
             if (InputManager.instance.horizontal == 1) sprite.flipX = false;
             else if (InputManager.instance.horizontal == -1) sprite.flipX = true;
-
-            // Rope�� �Ŵ޸� ���·� �̵�
-            if (Physics2D.gravity.normalized == Vector2.left) //�Ӹ��� �������� ���� 
+            
+            if (Physics2D.gravity.normalized == Vector2.left) //머리가 오른쪽을 보고 있을 때
             {
-                if (rope.CompareTag("VerticalRope")) //���� ���� 
+                if (rope.CompareTag("VerticalRope")) //세로 로프
                 {
                     if (InputManager.instance.horizontal == 0) changeAnimation("new_rope_h_idle");
                     else changeAnimation("new_rope_h_move");
                 }
-                else //���� ���� 
+                else //가로 로프 
                 {
                     if (InputManager.instance.vertical == 0) changeAnimation("new_rope_v_idle");
                     else changeAnimation("new_rope_v_move");
                 }
             }
-            else if (Physics2D.gravity.normalized == Vector2.right) //�Ӹ��� ������ ���� 
+            else if (Physics2D.gravity.normalized == Vector2.right) //머리가 왼쪽을 보고 있을 때 
             {
-                if (rope.CompareTag("VerticalRope")) //���� ���� 
+                if (rope.CompareTag("VerticalRope")) //세로 로프
                 {
                     if (InputManager.instance.horizontal == 0) changeAnimation("new_rope_h_idle");
                     else changeAnimation("new_rope_h_move");
                 }
-                else //���� ���� 
+                else //가로 로프 
                 {
                     if (InputManager.instance.vertical == 0) changeAnimation("new_rope_v_idle");
                     else changeAnimation("new_rope_v_move");
                 }
             }
-            else if (Physics2D.gravity.normalized == Vector2.up) //�Ӹ��� ������ ���� 
+            else if (Physics2D.gravity.normalized == Vector2.up) //머리가 아래쪽을 보고 있을 때
             {
-                if (rope.CompareTag("VerticalRope")) //���� ���� 
+                if (rope.CompareTag("VerticalRope")) //세로 로프 
                 {
                     if (InputManager.instance.vertical == 0) changeAnimation("new_rope_v_idle");
                     else changeAnimation("new_rope_v_move");
                 }
-                else //���� ���� 
+                else //가로 로프 
                 {
                     if (InputManager.instance.horizontal == 0) changeAnimation("new_rope_h_idle");
                     else changeAnimation("new_rope_h_move");
                 }
             }
-            else //�Ӹ��� �Ʒ����� ���� 
+            else //머리가 위쪽을 보고 있을 때  
             {
-                if (rope.CompareTag("VerticalRope")) //���� ���� 
+                if (rope.CompareTag("VerticalRope")) //세로 로프 
                 {
                     if (InputManager.instance.vertical == 0) changeAnimation("new_rope_v_idle");
                     else changeAnimation("new_rope_v_move");
                 }
-                else //���� ���� 
+                else //가로 로프 
                 {
                     if (InputManager.instance.horizontal == 0) changeAnimation("new_rope_h_idle");
                     else changeAnimation("new_rope_h_move");
@@ -1226,30 +1165,27 @@ public class Player : MonoBehaviour
 
     void HorizontalMove()
     {        
-        // �̵� ����
+        // 플레이어 좌우움직임 구현 
         int stageNum = GameManager.instance.gameData.curStageNum;
         if (stageNum == 3 && (isHorizontalWind && Physics2D.gravity.x == 0f || isVerticalWind && Physics2D.gravity.y == 0f))
         {
-            // Stage3���� �Ҿ���� �ٶ��� ���� �����δ� �÷��̾ Ű�� ������ �̵� �Ұ�.
+            // Stage3에서 바람이 부는 방향으로는 플레이어가 움직이지 않음 
             return;
         }
 
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
 
         if (stageNum == 6 && rayHitIcePlatform.collider != null && InputManager.instance.horizontal == 0f)
-        {
-            // Stage6���� ���� ����� Ű���� input�� ���� �Ŀ� �̲����
+        { 
             locVel = new Vector2(Vector2.Lerp(locVel, Vector2.zero, Time.deltaTime * slidingDegree).x , locVel.y);
         }
         else if (stageNum == 3 && isPlayerExitFromWInd)
         {
-            //stage03 ���� ȯǳ�� �ٶ� ������ �ް� ���� ���� �������� windPower ��ũ��Ʈ���� ���� 
             return;
         }
 
-        else //�Ϲ����� ���̽� 
+        else 
         {
-            // ���� ���� �ƴ϶�� Ű���� input�� ���� ������ �̵�
             locVel = new Vector2(InputManager.instance.horizontal * walkSpeed, locVel.y);
         }
         rigid.velocity = transform.TransformDirection(locVel);
@@ -1257,22 +1193,18 @@ public class Player : MonoBehaviour
 
     void LimitFallingSpeed()
     {
-        // ������ �� �ִ� �ӵ� ����
+        // 플레이어 떨어질 때 속도제한 
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
         if (locVel.y < -maxFallingSpeed) locVel.y = -maxFallingSpeed;
         rigid.velocity = transform.TransformDirection(locVel);
     }
 
-    //�÷��̾ �÷��� ���� �� �߷� �� �������� ��� ������ ���� hit 
-    RaycastHit2D rayPosHit_left; //���� 
-    RaycastHit2D rayPosHit_right; //������ 
+    //플레이어의 오른발, 왼발 ray 체크를 다르게 함 
+    RaycastHit2D rayPosHit_left; //왼발
+    RaycastHit2D rayPosHit_right; //오른발  
 
     void CheckGround()
-    {
-        // �÷��̾ �÷����� �Բ� �������� �ϴ� ��Ȳ
-        // 1) �����̴� �÷��� ���� ���� ���. ��, �����̴� �÷��� ������ ������ �۵���ų ���� �Բ� �����̸� �ȵ�
-        // 2) �����̴� �÷����� ����� rope�� �Ŵ޷� �ִ� ���
-
+    {        
         RaycastHit2D rayHitMovingFloor = Physics2D.BoxCast(transform.position, new Vector2(0.5f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 16);
         if (rayHitMovingFloor.collider != null && curState != States.ChangeGravityDir)
         {
@@ -1286,54 +1218,54 @@ public class Player : MonoBehaviour
         RaycastHit2D rayHit;
         
         Vector2 rayStartPos_left, rayStartPos_right;
-        Vector2 middlePos = transform.position - transform.up; //(x,y) �� ��ǥ�� ����� 
+        Vector2 middlePos = transform.position - transform.up; //플레이어 왼발, 오른발 사이 중심 좌표 
         float centerToLeg = 0.3125f;
 
         switch (GameManager.instance.gameData.curStageNum)
         {
             case 2:
-                // Platform, Launcher, Stone ����
+                // Platform, Launcher, Stone
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 6 | 1 << 15);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null;
                 break;
             case 5:
-                // Platform, JumpBoost ����
+                // Platform, JumpBoost
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
                 rayHitJumpBoost = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 22);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null;
-                isOnJumpPlatform = rayHitJumpBoost.collider != null; //���� ��ȭ ���� ���� �ִ� �Ͱ� �Ϲ� �÷��� ���� �ִ� �� ����                
+                isOnJumpPlatform = rayHitJumpBoost.collider != null;   
                 break;
             case 6:
-                // Platform, IcePlatform ����
+                // Platform, IcePlatform
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
                 rayHitIcePlatform = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 9);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null || rayHitIcePlatform.collider;
                 break;
             case 7:
-                // Platform, Enemy ����
+                // Platform, Enemy
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 18);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null;
                 break;
             default:
-                // Platform ����
+                // Platform
                 //rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.875f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
                 
-                if (transform.up == new Vector3(0, 1, 0)) // �Ӹ��� ������ ���� 
+                if (transform.up == new Vector3(0, 1, 0)) 
                 {
                     rayStartPos_left = middlePos + new Vector2(-centerToLeg, 0);
                     rayStartPos_right = middlePos + new Vector2(centerToLeg, 0);
                 }
-                else if(transform.up == new Vector3(1, 0, 0)) // �Ӹ��� �������� ����
+                else if(transform.up == new Vector3(1, 0, 0))
                 {
                     rayStartPos_left = middlePos + new Vector2(0, centerToLeg);
                     rayStartPos_right = middlePos + new Vector2(0, -centerToLeg);
                 }
-                else if(transform.up == new Vector3(0, -1, 0)) //�Ӹ��� �Ʒ����� ���� 
+                else if(transform.up == new Vector3(0, -1, 0)) 
                 {
                     rayStartPos_left = middlePos + new Vector2(centerToLeg, 0);
                     rayStartPos_right = middlePos + new Vector2(-centerToLeg, 0);
                 }
-                else //�Ӹ��� ������ ���� 
+                else 
                 {
                     rayStartPos_left = middlePos + new Vector2(0, -centerToLeg);
                     rayStartPos_right = middlePos + new Vector2(0, centerToLeg);
