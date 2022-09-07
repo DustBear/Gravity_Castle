@@ -9,7 +9,7 @@ using System.IO;
 
 public class Player : MonoBehaviour
 {   
-    //�÷��̾� ���� �� ���� Ƣ�� �� ���� 
+    //플레이어 사망 시 튕겨져 나가는 파편 오브젝트 
     public GameObject[] parts = new GameObject[4];
     public GameObject boxGrabColl;
     bool isDieCorWork;
@@ -17,67 +17,64 @@ public class Player : MonoBehaviour
     [SerializeField] float defaultGravityScale;
     [SerializeField] float maxFallingSpeed;
     [SerializeField] public float walkSpeed;
-    [SerializeField] public float maxWindSpeed; //stage3���� �ٶ��� ���ư� �� �ִ� �ӵ� 
+    [SerializeField] public float maxWindSpeed; //stage3에서 windHome 의 최대속도 
     [SerializeField] float minJumpPower;
     [SerializeField] float maxJumpPower;
     [SerializeField] float maxJumpBoostPower;
-    [SerializeField] float jumpChargeSpeed; // ���� ������ ���� �ӵ�
-    [SerializeField] float ropeAccessSpeed; // rope�� �����ϴ� �ӵ�
-    [SerializeField] float ropeMoveSpeed; // rope�� �Ŵ޷� �����̴� �ӵ�
-    [SerializeField] float leverRotateDelay; // lever �۵� �� �÷��̾ ȸ���ϴ� �� �ɸ��� �ð� 
-    public float windForce; // Stage3�� �ٶ��� ���� �޴� ��~> ȯǳ�⸶�� �ٸ��� ������ �� �ֵ��� �ܺ����� ��� 
-    [SerializeField] float slidingDegree; // Stage6�� ���� ������ �̲������ ����
+    [SerializeField] float jumpChargeSpeed; // 점프 게이지 채우는 속도 
+    [SerializeField] float ropeAccessSpeed; // jump or walk 상태에서 로프에 매달릴 때 지정위치까지 이동하는 속도 
+    [SerializeField] float ropeMoveSpeed; // rope 위에서 움직이는 속도 
+    [SerializeField] float leverRotateDelay; // lever를 작동시킨 후 화면이 회전하는 데 걸리는 시간 
+    public float windForce; // Stage3에서 windHome 이 플레이어를 가속시키는 가속력 
+    [SerializeField] float slidingDegree; 
 
-    public bool isPlayerInSideStage; 
-    //�÷��̾ ���̵� �������� ���� ���� ���� �װ� ���� ������ respawnPos���� ���� ��Ȱ
-
-    // �÷����� ���´� Finite State Machine���� ����
     public enum States
     {
         Walk, Fall, Land, Jump, Grab,
-        PowerJump, // Stage5 ��ȭ ����
+        PowerJump, // Stage5의 강화점프 
         AccessRope, MoveOnRope,
         AccessLever, SelectGravityDir, ChangeGravityDir, FallAfterLevering,
-        GhostUsingLever, FallAfterGhostLevering // Stage4 ����
+        GhostUsingLever, FallAfterGhostLevering // Stage4 기믹
     }
     StateMachine<States> fsm;
     public static States curState {get; private set;}
-    Func<bool> readyToFall, readyToLand, readyToJump, readyToGrab, readyToPowerJump, readyToRope, readyToLever , readyToPowerLever; // �� ���·� �̵��ϱ� ���� �⺻ ����
+    Func<bool> readyToFall, readyToLand, readyToJump, readyToGrab, readyToPowerJump, readyToRope, readyToLever , readyToPowerLever;
 
     // Walk
-    public bool isPlayerExitFromWInd; //�÷��̾ stage3 windZone���� �������� ���� ���� ������ ������ �ް� ���� �� true 
+    public bool isPlayerExitFromWInd; 
+    //stage 3 에서 플레이어가 바람을 빠져나온 직후 땅에 닿기 전 까지는 가속력을 받으며 관성에 따른 운동 계속해야 함 
 
     // Jump
     [SerializeField]float jumpGauge;
-    [SerializeField] float jumpTimer; //���� ��� ���� �����̽��ٸ� ������ ���� �������� ���� �ִٸ� ������� �ν��ؾ� �� 
-    public float jumpTimerOffset; //������ 
-    public float jumpHeightCut; //�����ϴٰ� �����̽��ٿ��� ���� ���� �������� �ӵ��� ����
+    [SerializeField] float jumpTimer; 
+    public float jumpTimerOffset; 
+    public float jumpHeightCut; //플레이어가 체공중일 때 스페이스바를 떼면 플레이어의 속도가 줄어들면서 땅으로 떨어짐 
 
-    [SerializeField] float groundedRemember; //�÷������� ������ ���Ŀ��� �������� �̳� �ð������� ������ �� �־�� ��
+    [SerializeField] float groundedRemember; 
     [SerializeField] float groundedRememberOffset;
 
     // Rope
     bool isCollideRope;
-    GameObject rope; // �Ŵ޸� rope
+    GameObject rope; //현재 플레이어가 매달려 있는 로프 ~> 동시 두개는 error 발생 
 
     // Lever
     bool isCollideLever;
-    public bool shouldRotateHalf; //powerLever �� �ƴϸ� 90���� ȸ��, powerLever �̸� 180�� ȸ�� 
-    GameObject lever; // �۵���ų lever
-    Vector3 destPos_afterLevering; // Lever �۵� �� �÷��̾� position
-    [SerializeField] int destRot; // Lever �۵� �� �÷��̾ ȸ���ϰ��� �ϴ� ����
-    float destGhostRot; //��������4�� ������ ������ ���� �� �ʿ��� ���� 
+    public bool shouldRotateHalf; //powerLever 이면 180도 회전 ~> true, powerLever 아니면 90도 회전 ~> false 
+    GameObject lever; //현재 플레이어가 작동시키려는 lever
+    Vector3 destPos_afterLevering; // Lever 작동직후 플레이어가 이동해야 할 position
+    [SerializeField] int destRot; // Lever 작동후
+    float destGhostRot; 
 
     // Grab
-    public bool isPlayerGrab = false; //�÷��̾ �ڽ� or ��ȣ�ۿ� ������ ������Ʈ�� ��� �ִ��� 
+    public bool isPlayerGrab = false; //플레이어가 오브젝트를 잡고 있는지의 여부 
 
     // Wind
     bool isHorizontalWind;
     bool isVerticalWind;
 
-    // �÷��̾� �Ʒ��� �ִ� �÷��� ����
+    // 플레이어가 땅에 닿아있는지의 여부 
     [SerializeField]public bool isGrounded;
-    [SerializeField] bool isOnJumpPlatform = false; //��ȭ���� ���� ���� �ִ��� ����
+    [SerializeField] bool isOnJumpPlatform = false; 
     RaycastHit2D rayHitIcePlatform;
     RaycastHit2D rayHitJumpBoost;
 
@@ -89,19 +86,15 @@ public class Player : MonoBehaviour
     SpriteRenderer sprite;
     Animator ani;
 
-    //�� ������ �� ���������Ϳ� ��ȣ�ۿ�
-    GameObject openingSceneElevator;
-
-    // Stage8 ����
-    /********Stage8 ��� ������ �� �ڵ� ���� �ʿ� **********/
+    // Stage8 
     [HideInInspector] public bool isDevilRotating;
     [HideInInspector] public bool isBlackHole;
     bool isDevilFalling;
 
-    //����� �ҽ� 
+    //사운드 기믹 
     AudioSource sound;
-    [SerializeField] AudioClip moveSound; //�ȱ� or ������ Ż �� ���� �Ҹ�
-    [SerializeField] AudioClip jump_landSound; //���� �� ������ �� ���� �Ҹ� 
+    [SerializeField] AudioClip moveSound; 
+    [SerializeField] AudioClip jump_landSound; 
 
     GameObject cameraObj;
     public bool isCameraShake;
@@ -119,7 +112,6 @@ public class Player : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         ani = GetComponent<Animator>();
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<MainCamera>();
-        openingSceneElevator = GameObject.Find("openingSceneElevator");
         sound = GetComponent<AudioSource>();
         cameraObj = GameObject.FindWithTag("MainCamera");
 
@@ -131,27 +123,22 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        sprite.color = new Color(1, 1, 1, 1); //�÷��̾� ���� �ʱ�ȭ 
         InputManager.instance.isInputBlocked = false;
         InputManager.instance.isJumpBlocked = false;
 
-        // �� State�� �Ѿ�� ���� �⺻ ����
-        readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //���̳� ������ȭ���� �� �ٿ� ������� ���� �� 
-        readyToLand = () => (isGrounded || isOnJumpPlatform) && (int)transform.InverseTransformDirection(rigid.velocity).y <= 0; //��or������ȭ���ǿ� ��� �ְ� y���� �ӵ������� ������ -1�� �� 
-        readyToGrab = () => isPlayerGrab; //�÷��̾ ���𰡸� ������� �� 
+        //플레이어가 각 state 로 전이하기 위한 조건 
+        readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //땅이나 강화발판에 닿아있지 않으면 
+        readyToLand = () => (isGrounded || isOnJumpPlatform) && (int)transform.InverseTransformDirection(rigid.velocity).y <= 0; 
+        //
+        readyToGrab = () => isPlayerGrab; //isPlayerGrab 이 true 이면 오브젝트 잡기로 이동 
 
-        readyToJump = () => (jumpTimer > 0) && (!isOnJumpPlatform) && (groundedRemember > 0); //�����̽��ٸ� ������ ��ȭ���� ���� ���� ���� ���� �� 
+        readyToJump = () => (jumpTimer > 0) && (!isOnJumpPlatform) && (groundedRemember > 0);
 
-        readyToPowerJump = () =>  InputManager.instance.jumpUp && (isOnJumpPlatform) && (groundedRemember > 0); //��ȭ���� ���� ������ �����̽��ٸ� ������ �� ��
-        readyToRope = () => isCollideRope && InputManager.instance.vertical == 1; //���� ȭ��ǥ ������ �ְ� + ������ ������� ��
+        readyToPowerJump = () =>  InputManager.instance.jumpUp && (isOnJumpPlatform) && (groundedRemember > 0);
+        readyToRope = () => isCollideRope && InputManager.instance.vertical == 1; //위쪽 화살표를 누르면서 로프 콜라이더에 닿아 있으면 
         readyToLever = () => isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown 
                              && lever.transform.up == transform.up;
-        //������ ��� �ְ�, ������ ������ rotation�� ������ �ְ�, ���� ȭ��ǥ�� ������ ���� �� 
-
-        // Scene�� ���̺� ����Ʈ���� �������� ���� �� �÷��̾� ������ ����
-        // ���� Scene���� �Ѿ���� ������ �����͸� �ҷ��ͼ� ����
-
-       
+        
         if (!GameManager.instance.shouldSpawnSavePoint)
         {
             //GameManager ~> ���� ������ �� �÷��̾��� ��ġ ���� 
@@ -262,7 +249,7 @@ public class Player : MonoBehaviour
         {
             ChangeState(States.AccessRope);
         }
-        else if (readyToJump()) //�����̽��ٸ� ������ ���� �۵�
+        else if (readyToJump())
         {            
             ChangeState(States.Jump);
         }
