@@ -659,7 +659,7 @@ public class Player : MonoBehaviour
             ChangeState(States.ChangeGravityDir);
         }
         // 위 화살표 누르면 ~> 레버 작동 캔슬 
-        else if (Input.GetKeyUp(KeyCode.UpArrow)) 
+        else if (Input.GetKeyDown(KeyCode.UpArrow)) 
         {
             leverColl.GetComponent<lever>().lightTurnOn(); //다시 레버 불 킴 
 
