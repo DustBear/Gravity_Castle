@@ -23,30 +23,27 @@ public class GameManager : Singleton<GameManager>
     public SaveFileSeq saveFileSeq {get; set;}
     string saveFileSeqName = "/SaveFileSeq.json";
 
-    [SerializeField] Vector2 firstStartPos; // ���� ���� ��ġ
-    [SerializeField] int firstScene;
-
-    public AudioSource bgmMachine; //�� ���������� �´� bgm ����
+    public AudioSource bgmMachine;
     public AudioClip[] bgmGroup;
 
-    public AudioSource moodMachine; //�� ���������� �´� ���� ���� ���� 
+    public AudioSource moodMachine;
     public AudioClip[] moodSoundGroup;
 
-    [SerializeField] int purposeBgmIndex; //����Ǿ�� �ϴ� bgm ���� ��ȣ
-    [SerializeField] int curBgmIndex; //���� ����ǰ� �ִ� bgm ������ ��ȣ(0~10)
+    [SerializeField] int purposeBgmIndex; //실행시키고자 하는 bgm index
+    [SerializeField] int curBgmIndex; //현재 실행중인 bgm index
 
     void Awake() 
     {
         DontDestroyOnLoad(gameObject);
-        string filePath = Application.persistentDataPath + saveFileSeqName; 
+        string filePath = Application.persistentDataPath + saveFileSeqName; //현재 플레이중인 세이브파일의 저장경로 
         if (File.Exists(filePath)) //세이브파일이 존재하면 
         {
             string FromJsonData = File.ReadAllText(filePath);
-            saveFileSeq = JsonUtility.FromJson<SaveFileSeq>(FromJsonData); //svaeFileSeq �� �״�� �޾ƿ� 
+            saveFileSeq = JsonUtility.FromJson<SaveFileSeq>(FromJsonData); //svaeFileSeq 가져오기 
         }
-        else //���� �������� ���� �� 
+        else //처음 시작하는 게임이면 
         {
-            saveFileSeq = new SaveFileSeq(); //���� �ϳ� ������ �� 
+            saveFileSeq = new SaveFileSeq(); //SaveFileSeq 없으면 만들기 
             saveFileSeq.saveFileSeqList = new List<int>();
         }
 
@@ -56,47 +53,57 @@ public class GameManager : Singleton<GameManager>
         moodMachine = gameObject.AddComponent<AudioSource>();
     }
 
-    public void soundNumCheck() //���� ������ �� �� bgm�� ��µǾ�� �� �� üũ
+    public void soundNumCheck() //
     {
-        int sceneNum = SceneManager.GetActiveScene().buildIndex; //���� �� ��ȣ
+        int stageNum = gameData.curStageNum; //현재의 스테이지 번호에 따라 bgm 및 moodSound의 index 바뀜 
 
-        //���� ��ġ�� scene�� ��ȣ�� ���� ��ǥ bgm index�� ��ȭ��
-        if (sceneNum == 0) purposeBgmIndex = 9; //���θ޴� bgm�� index 9 
-        else if (sceneNum == 1) purposeBgmIndex = 10; //������ �� bgm�� index 10 
-        else if (2 <= sceneNum && sceneNum < 4) purposeBgmIndex = 0; //stage0
-        else if ((4 <= sceneNum && sceneNum < 7) || (sceneNum == 26) || (sceneNum == 27) || (sceneNum == 30)) purposeBgmIndex = 1; //stage1
-        else if ((7 <= sceneNum && sceneNum < 10) || (sceneNum == 28)) purposeBgmIndex = 2; //stage2
-        else if ((10 <= sceneNum && sceneNum < 12) || (sceneNum == 29)) purposeBgmIndex = 3; //stage3
-        else if (12 <= sceneNum && sceneNum < 14) purposeBgmIndex = 4; //stage4
-
-        if(purposeBgmIndex != curBgmIndex) //���� ������� bgm �ε����� ��ǥ �ε����� �ٸ� ~> ���� �ٲ���ٴ� ���̹Ƿ� �ε��� �ٲ���� ��
+        switch (stageNum)
         {
-            StopCoroutine("soundManager"); //���� �ڷ�ƾ�� �� ������ ���� ���¿��� ���� ���� �ڷ�ƾ �����ϸ� ���� �ڷ�ƾ�� ������ ��
+            case 1:
+                purposeBgmIndex = 1;
+                break;
+            case 2:
+                purposeBgmIndex = 2;
+                break;
+            case 3:
+                purposeBgmIndex = 3;
+                break;
+            case 4:
+                purposeBgmIndex = 4;
+                break;
+            default:
+                purposeBgmIndex = 9; //메인 테마곡 
+                break;
+        }
+
+        if(purposeBgmIndex != curBgmIndex) //현재 씬에서 실행해야 하는 bgm이 이미 실행되고 있으면 무시해야 함 
+        {
+            StopCoroutine("soundManager"); //기존에 실행중이던 sound 중지 
             StartCoroutine("soundManager");
         }
     } 
-    IEnumerator soundManager() //Ʃ�丮��:0 ���� ���� ~> ��������1 bgm�� index=1 / ���Ӹ޴��� bgm index=9(10��°)
+    IEnumerator soundManager()
     {
         curBgmIndex = purposeBgmIndex;
 
-        for (int index = 10; index >= 1; index--)
+        for (int index = 20; index >= 1; index--)
         {
             if (bgmMachine.volume == 0)
             {
                 break;
             }
 
-            bgmMachine.volume = bgmMachine.volume-0.1f;
+            bgmMachine.volume = bgmMachine.volume-0.05f;
             moodMachine.volume = bgmMachine.volume;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.05f);
 
-            //���� �ӵ��� volume�� �ٿ��� ���� ũ�� 0���� ����. 1���� ���������� 1�ʰ� �ɸ��� 0.5���� ���������� 0.5�ʰ� �ɸ�            
+            //볼륨을 서서히 줄여서 0으로 만듦        
         }
               
-        bgmMachine.clip = bgmGroup[purposeBgmIndex]; //bgm ���带 ��ǩ���� �°� ��ü     
+        bgmMachine.clip = bgmGroup[purposeBgmIndex]; //bgm clip 에 해당하는 bgm 파일 할당   
         moodMachine.clip = moodSoundGroup[purposeBgmIndex];
 
-        yield return new WaitForSeconds(1f); //��� ��ٷȴٰ�        
+        yield return new WaitForSeconds(1f); //1초간 음악 정지 
         bgmMachine.Play();
         moodMachine.Play();
    
@@ -104,18 +111,18 @@ public class GameManager : Singleton<GameManager>
         {
             bgmMachine.volume = 0.05f * index;
             moodMachine.volume = bgmMachine.volume;
-            yield return new WaitForSeconds(0.1f); //2�ʿ� ���� ���� ũ�� 1���� ����
+            yield return new WaitForSeconds(0.1f); //다시 서서히 volume 키움 
         }
 
     }
 
     void Start()
     {
-        //���� �����ϸ� mainMenu â ����
+        //게임이 시작하면 MainMenu 로드 
         SceneManager.LoadScene("MainMenu"); 
         
-        //bgm ���� �ڵ� 
-        purposeBgmIndex = 9; //main theme �� �ʱ갪�� �Ǿ�� ��
+        //bgm 과련 코드 
+        purposeBgmIndex = 9; //main theme 에서 틀어줘야 하는 bgm 은 9 
         curBgmIndex = 9;
         bgmMachine.clip = bgmGroup[9];
         moodMachine.clip = moodSoundGroup[9];
@@ -132,8 +139,7 @@ public class GameManager : Singleton<GameManager>
     {
         soundNumCheck();
 
-        //����� �۵��ϴ��� üũ�ϱ� ���� �ڵ� ~> ��� ��忡�� ����
-        
+        //게임이 제대로 작동하는 지 체크하기 위한 함수 ~> 출시버전에선 삭제해야 함 
         if (Input.GetKeyDown(KeyCode.U))
         {
             Debug.Log("curAchieve: " + gameData.curAchievementNum
@@ -145,33 +151,7 @@ public class GameManager : Singleton<GameManager>
         
     }
 
-    /*
-    public void StartGame(bool isStartNew) //true �� �ָ� ���� �����ϴ� ���� false�� �ָ� ���� ���̺꿡�� �����ϴ� ���� 
-    {
-        if (!isStartNew)
-        {
-
-        }
-
-
-        InitData(isLoadGame); //�ʱ�ȭ 
-        shouldSpawnSavePoint = true;
-
-        InputManager.instance.isInputBlocked = false; //�Է����� Ǯ�� 
-        InputManager.instance.isJumpBlocked = false; //�������� Ǯ�� 
-        Cursor.lockState = CursorLockMode.Locked; //�⺻������ ���콺 ��ױ� 
-
-        if (!shouldStartAtSavePoint) 
-        {
-            SceneManager.LoadScene(nextScene); //ó�� �����ϴ� ���̹Ƿ� �� ������ nextScene=1
-        }
-        else SceneManager.LoadScene(gameData.respawnScene); //ó�� �����ϴ� ���� �ƴ϶�� ������ ��ҿ��� ���� 
-
-        isStartWithFlipX = false;
-    }
-    */
-
-    //���̺����� �տ� ������ �����ߴ��� ���� ����� 
+    //세이브포인트 불러오기 버튼에 현재 진행도 표시하는 함수 
     public KeyValuePair<int, int> GetSavedData(int saveFileNum)
     {
         string filePath = Application.persistentDataPath + gameDataFileNames[saveFileNum];
@@ -181,103 +161,43 @@ public class GameManager : Singleton<GameManager>
             GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData);
             return new KeyValuePair<int, int>(curGameData.finalStageNum, curGameData.finalAchievementNum);
         }
-        return new KeyValuePair<int, int>(-1, -1); //��ο� ���̺������� ������ ~> '�� ����' �ؽ�Ʈ ǥ���ؾ� �� 
+        return new KeyValuePair<int, int>(-1, -1); //세이브가 없으면 (-1, -1) 반환 
     }  
 
-    /*
-    // Case 1) ���θ޴����� New Game�� ������ �� ȣ���
-    // Case 2) ���θ޴����� Load Game�� ������ �� ȣ��� 
-    // Case 3) ���� ������ ������� �� ȣ���
 
-    // Case 1�� savePoint�� �ƴ϶� �ʱ� ������ҿ��� ����. Case2,3�� savePoint���� ����
-    public void InitData(bool isLoadGame) //�÷��̿� �ʿ��� ������ �ʱ�ȭ or �ҷ����� �Լ� 
+    public void SaveData(int savePointNum, int stageNum, Vector2 playerPos) //세이브포인트에서 실행하는 함수 
     {
-        // Case 1
-        if (!shouldStartAtSavePoint) //��������0���� ����
-        {
-            // ���� ���� �� �ʿ��� ������ �ʱ�ȭ
-            nextScene = firstScene; //castleEnterance �� 
-            nextPos = firstStartPos; //�迡�� ������ ��ġ 
-            nextGravityDir = Vector2.down; //�����ϸ� �Ʒ��� ������ �߷� ����
-            nextState = Player.States.Walk; //�� ó�� ������ �� �÷��̾��� ���´� walk
-
-            // ������ �� �ʿ��� ������ �ʱ�ȭ
-            // ���� �������ڸ��� �����ٰ� �ٽ� �������� �� load�� �����ϵ���
-            gameData.curAchievementNum = 0; //���� �ƹ��� ���̺�����Ʈ�� Ȱ��ȭ���� �ʾҴٸ� 0 
-            gameData.curStageNum = 0; //castleEnterance�� ����������ȣ�� 0 
-            gameData.respawnScene = nextScene;
-            gameData.respawnPos = nextPos;
-            gameData.respawnGravityDir = nextGravityDir;
-            
-            for(int i=0; i<8; i++)
-            {
-                for(int j=0; j<50; j++)
-                {
-                    gameData.savePointUnlock[i, j] = false; //��� ���̺�����Ʈ ��Ȱ��ȭ 
-                }
-            }
-           
-            //������ ���� 
-            string ToJsonData = JsonUtility.ToJson(gameData);
-            string filePath = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
-            File.WriteAllText(filePath, ToJsonData);       
-        }
-
-        // Case 2
-        else
-        {
-            // Case 2�� ���, Json ������ �����͵��� ��� GameData class�� �ҷ���
-            if (isLoadGame) //�ҷ��� ���� �����Ͱ� ������ �ҷ���
-            {
-                string filePath = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
-                string FromJsonData = File.ReadAllText(filePath);
-                gameData = JsonUtility.FromJson<GameData>(FromJsonData);
-            }
-            // GameData class�� �����͵��� GameManager �����Ϳ� ����   
-
-            // Case 3�� ��� ������ ��� �����ʹ� �ױ� ���� �����ϹǷ� ���� �ʱ�ȭ�� �ʿ� ���� 
-            
-        }
-    }
-    */
-
-    // Save Point�� �������� ��, ���� �� ��, key ȹ���� �� ��� 
-    public void SaveData(int savePointNum, int stageNum, Vector2 playerPos) 
-        // ���̺�����Ʈ���� �̷������ ������ ����. SavePoint�� �۵��� �� ���� Json ���Ͽ� �����Ͱ� �����
-    {
-        gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //���� ������ �ٽ� ��Ȱ�ؾ� ��
+        gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //현재 세이브포인트가 있는 씬에서 리스폰해야 함 
         gameData.respawnPos = playerPos;
 
         gameData.curAchievementNum = savePointNum;
         gameData.curStageNum = stageNum;
 
-        if(gameData.finalStageNum < stageNum)
+        if(gameData.finalStageNum < stageNum) //만약 스테이지를 갱신하는 세이브포인트를 활성화시켰으면 
         {
-            gameData.finalStageNum = stageNum; //��� ���̺� �� ���������� finalStage���� �ռ� ������ finalStage ����
-            gameData.finalAchievementNum = savePointNum; //���������� ���ŵǾ����� achievement Num�� ������ �����ؾ� �� 
-        }else if(gameData.finalStageNum == stageNum)
+            gameData.finalStageNum = stageNum; //finalStage 갱신 
+            gameData.finalAchievementNum = savePointNum; //단순히 1이 되면x ~> stage4 에서 stage5 savePoint 2 로 한번에 넘어갈 수도 있기 때문 
+        }else if(gameData.finalStageNum == stageNum) //동일 스테이지 내에서 최종 achNum 만 갱신하는 세이브포인트를 활성화시켰으면 
         {
             if(gameData.finalAchievementNum < savePointNum)
             {
                 gameData.finalAchievementNum = savePointNum;
-                //���� ������������ �� ū achNum���� �̵��� �� ������ �� ex) (1,10) ~> (1,11)
-                //���� ���������� �� �۴ٸ� finalAch���� ū achNum�� ���͵� ���� ex) (2,10) ~> (1,13)���� �̵��� ���� finalAchNum ����x 
             }
         }
 
-        gameData.savePointUnlock[stageNum - 1, savePointNum - 1] = true; //�ش� ���̺�����Ʈ ����ߴٴ� ���� ����
+        gameData.savePointUnlock[stageNum - 1, savePointNum - 1] = true; //세이브포인트 활성화 여부 저장 
         gameData.respawnGravityDir = Physics2D.gravity.normalized;
         
-        // gameData class�� �����͵��� ��� Json ���Ͽ� ����
+        //GameData 에 데이터 저장 
         string ToJsonData = JsonUtility.ToJson(gameData);
         string filePath = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
         File.WriteAllText(filePath, ToJsonData);
     }
 
-    public void SaveSaveFileSeq()
+    public void SaveSaveFileSeq() //마지막으로 실행한 세이브 기억
     {
-        string ToJsonData = JsonUtility.ToJson(saveFileSeq); //saveFileSeq �� json ���Ϸ� ���� 
-        string filePath = Application.persistentDataPath + saveFileSeqName; //���ϰ�� ����
+        string ToJsonData = JsonUtility.ToJson(saveFileSeq);
+        string filePath = Application.persistentDataPath + saveFileSeqName; 
         File.WriteAllText(filePath, ToJsonData);
     }
     
