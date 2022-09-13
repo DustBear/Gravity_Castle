@@ -28,7 +28,7 @@ public class openingAnimation : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            SceneManager.LoadScene(GameManager.instance.nextScene); //tab 키 두번 누르면 스킵 가능 
+            SceneManager.LoadScene(GameManager.instance.nextScene); //tab 키 누르면 스킵 가능 
         }
     }
 

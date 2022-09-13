@@ -5,15 +5,16 @@ using TMPro;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using System.IO;
+using UnityEngine.UI;
 
 public class NewGameButton : MonoBehaviour
 {
-    public TextMeshProUGUI text;
+    public Text text;
     public bool isSaveFileExist;
 
     void Awake()
     {
-        text = GetComponentInChildren<TextMeshProUGUI>();
+        text = GetComponentInChildren<Text>();
     }
 
 

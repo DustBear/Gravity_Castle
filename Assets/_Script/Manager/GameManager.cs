@@ -111,7 +111,7 @@ public class GameManager : Singleton<GameManager>
         {
             bgmMachine.volume = 0.05f * index;
             moodMachine.volume = bgmMachine.volume;
-            yield return new WaitForSeconds(0.1f); //다시 서서히 volume 키움 
+            yield return new WaitForSeconds(0.05f); //다시 서서히 volume 키움 
         }
 
     }

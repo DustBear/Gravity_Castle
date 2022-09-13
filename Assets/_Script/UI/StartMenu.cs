@@ -11,124 +11,83 @@ public class StartMenu : MonoBehaviour
 
     public GameObject gameMenu; //시작하기, 이어하기, 불러오기 버튼 있는 창 
     public GameObject loadMenu; //세이브파일 버튼 1~4 뜨는 것 
-    public TextMeshProUGUI[] gameMenuButtonText = new TextMeshProUGUI[4];
-    public Button[] gameMenuButton = new Button[4];
+    
     public TextMeshProUGUI settingExp;
 
-    public GameObject quickMenu;
     public GameObject titleImage; //배경 영상 
     public GameObject fadeCover;
-    public float fadeSpeed;
     public GameObject gameMenuText; //'아무 버튼이나 눌러 시작하세요' 버튼 ~> 깜빡여야 함 
 
     Color fadeCoverColor;
 
     public bool isTitleMenuOpen;
     public bool isGameMenuOpen;
-    public bool isQuickMenuOpen;
     private void Start()
     {
         isTitleMenuOpen = true;
-        titleMenu.SetActive(true);
+        titleMenu.SetActive(true); //시작하면 titleMenu 에서 시작함 
+
+        //gameMenu, loadMenu 끔 
         isGameMenuOpen = false;
         gameMenu.SetActive(false);
-        isQuickMenuOpen = false;
-        quickMenu.SetActive(false);
+      
         loadMenu.SetActive(false);
 
 
         InputManager.instance.isInputBlocked = false; //메인 메뉴로 돌아오면 무조건 inputBlock 풀어줌
-
-        fadeCoverColor = fadeCover.GetComponent<Image>().color;
-        fadeCoverColor = new Color(0, 0, 0, 0); //처음에는 투명
         
-        for (int index = 0; index <= 3; index++)
-        {
-            gameMenuButtonText[index].color = new Color(1, 1, 1, 0);
-        }
-        for (int index = 0; index <= 3; index++)
-        {
-            gameMenuButton[index].GetComponent<Image>().color = new Color(1, 1, 1, 0);
-        }
         StartCoroutine("blink");
     }
 
     private void Update()
     {
-        if (Input.anyKeyDown && isTitleMenuOpen)
+        if (Input.anyKeyDown && isTitleMenuOpen) //타이틀화면이 열려 있는 상태에서 아무 키나 누르면 
         {
+            //타이틀화면 끄고 
             titleMenu.SetActive(false);
             isTitleMenuOpen = false;
-            StartCoroutine("gameMenuOpen");
-        }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && isQuickMenuOpen)
-        {
-            quickMenu.SetActive(false);
-            isQuickMenuOpen = false;
-        }
+            StartCoroutine("gameMenuOpen"); //게임메뉴 키기 
+        }  
     }
 
     IEnumerator gameMenuOpen() //메뉴 열고 닫는 중간에 페이드인/아웃 효과 있어야 함 
     {
+        fadeCover.GetComponent<Image>().color = new Color(0, 0, 0, 1); //처음에는 검은 화면에서 시작
+
+        //gameMenu 키고 
         isGameMenuOpen = true;
         gameMenu.SetActive(true);
- 
+
         //페이드인
-        while (fadeCoverColor.a <= 1) //투명도가 1이 될 때 까지 계속 투명도 높임 
+        float fadeTime = 2f; //페이드인이 완료되는 데 걸리는 시간 
+
+        for(int index=100; index>=1; index--)
         {
-            fadeCoverColor = new Color(0, 0, 0, fadeCoverColor.a + fadeSpeed);
-            for(int index=0; index <=3; index++)
-            {
-                gameMenuButtonText[index].color = new Color(1, 1, 1, gameMenuButtonText[index].color.a + fadeSpeed);
-            }
-            for (int index = 0; index <= 3; index++)
-            {
-                gameMenuButton[index].GetComponent<Image>().color = new Color(1, 1, 1, gameMenuButton[index].GetComponent<Image>().color.a + fadeSpeed);
-            }
-            yield return new WaitForFixedUpdate();
-        }              
+            fadeCover.GetComponent<Image>().color = new Color(0, 0, 0, 0.01f*index);
+            yield return new WaitForSeconds(0.01f * fadeTime);
+        }
+
+        fadeCover.GetComponent<Image>().color = new Color(0, 0, 0, 0);
     }
 
     IEnumerator blink() //시작 버튼 깜빡이게 만듦
-    {
-        if (isGameMenuOpen)
-        {
-            yield return null;
-        }
+    {       
         while (true)
         {
             gameMenuText.SetActive(true);
             yield return new WaitForSeconds(0.5f);
             gameMenuText.SetActive(false);
             yield return new WaitForSeconds(0.5f);
+
+            if (!isTitleMenuOpen)
+            {
+                yield break;
+            }
         }      
     }
 
-    public void openQuickMenu()
-    {
-        if (isQuickMenuOpen)
-        {
-            quickMenu.SetActive(false);
-            isQuickMenuOpen = false;
-        }
-        else if (!isQuickMenuOpen)
-        {
-            quickMenu.SetActive(true);
-            isQuickMenuOpen = true;
-        }
-    }
-
-    public void newStart() //스테이지1 이전에 튜토리얼이 삽입된 버전 
-    {
-        SceneManager.LoadScene(24); //튜토리얼은 24번째 씬 
-    }
-
-    public void OnClickTutorial()
-    {
-        Debug.Log("Start Tutorial!");
-    }
-
+ 
     public void OnClickSetting()
     {
         UIManager.instance.clickSoundGen();

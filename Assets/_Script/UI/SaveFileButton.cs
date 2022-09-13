@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.IO;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class SaveFileButton : MonoBehaviour
 {
     [SerializeField] int saveFileNum; 
-    TextMeshProUGUI text;
+    Text text;
     bool isSaveFileExist;
 
     public GameObject betaModeWindow; 
@@ -19,7 +20,7 @@ public class SaveFileButton : MonoBehaviour
 
     void Awake()
     {
-        text = GetComponentInChildren<TextMeshProUGUI>();
+        text = GetComponentInChildren<Text>();
         gameStartButton = GameObject.Find("NewGameButton");
     }
 

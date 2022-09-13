@@ -5,11 +5,8 @@ using UnityEngine.SceneManagement;
 using System.IO;
 
 public class InGameMenu : MonoBehaviour
-{
-    [SerializeField] Vector2 boatPos; //�÷��̾ �����ž� �ϴ� �� ���� ��ǥ 
-
-    // �Ͻ����� ���� �� ���θ޴���
-    public void OnClickExit()
+{   
+    public void OnClickExit() //메인메뉴로 나가기 버튼 누를 때 
     {
         UIManager.instance.clickSoundGen();
 
@@ -51,7 +48,7 @@ public class InGameMenu : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void OnClickMainStage() //inGameMenu ������ ���ư� 
+    public void OnClickMainStage() //인게임 메뉴로 나가기 버튼 누를 때 
     {
         UIManager.instance.clickSoundGen();        
         Time.timeScale = 1f;
@@ -80,7 +77,7 @@ public class InGameMenu : MonoBehaviour
             GameManager.instance.shouldUseOpeningElevator = false;
         }
        
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("InGameMenu");
         Cursor.lockState = CursorLockMode.None;
 
         gameObject.SetActive(false);

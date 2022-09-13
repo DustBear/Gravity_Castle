@@ -8,12 +8,12 @@ public class LoadButton : MonoBehaviour
 {
     [SerializeField] GameObject loadMenu;
     Button button;
-    TextMeshProUGUI text;
+    Text text;
 
     void Awake()
     {
         button = GetComponent<Button>();
-        text = GetComponentInChildren<TextMeshProUGUI>();
+        text = GetComponentInChildren<Text>();
     }
 
     void Start()
