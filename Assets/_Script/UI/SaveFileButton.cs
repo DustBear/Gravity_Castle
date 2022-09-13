@@ -7,11 +7,11 @@ using UnityEngine.SceneManagement;
 
 public class SaveFileButton : MonoBehaviour
 {
-    [SerializeField] int saveFileNum; //�� ��ư�� ���̺����� ��ȣ
+    [SerializeField] int saveFileNum; 
     TextMeshProUGUI text;
     bool isSaveFileExist;
 
-    public GameObject betaModeWindow; //��Ÿ�׽�Ʈ �������� �ٲٽðڽ��ϱ�? â ��� 
+    public GameObject betaModeWindow; 
     public GameObject saveDeleteWindow;
     public GameObject gameStartButton;
 
@@ -55,40 +55,40 @@ public class SaveFileButton : MonoBehaviour
 
         GameManager.instance.curSaveFileNum = saveFileNum; //GM의 현재 세이브파일 넘버 바꿔줌 
 
-        // SaveFile�� ������ �� ���� ���� 
+        // 저장된 saveFile 이 없으면
         if (!isSaveFileExist)
         {
-            GameManager.instance.saveFileSeq.saveFileSeqList.Add(saveFileNum); //���̺����� ���೻���� �÷����� ���̺����� ���� 
+            GameManager.instance.saveFileSeq.saveFileSeqList.Add(saveFileNum); //세이브포인트 실행기록에 현재 index 추가
             GameManager.instance.SaveSaveFileSeq();
 
-            GameManager.instance.curSaveFileNum = saveFileNum; //���̺����� �ѹ� ���� 
+            GameManager.instance.curSaveFileNum = saveFileNum; 
             
-            //GM �� ���� ���� �� ���� ���� Ȱ��ȭ�ǹǷ� �̹� GameData �� ��������ִ� ���� ~> ���⼭ �ʱ�ȭ��Ű�� ������ 
+            //게임데이터 초기화
             GameManager.instance.gameData.curStageNum = 1;
-            GameManager.instance.gameData.curAchievementNum = 0; //ó�� �����ϴ� ���� ~> ���� ������������ �ٽ� ���� 
+            GameManager.instance.gameData.curAchievementNum = 0; 
             GameManager.instance.gameData.finalStageNum = 1;
-            GameManager.instance.gameData.finalAchievementNum = 0; //���������Ȳ�� ���� 
+            GameManager.instance.gameData.finalAchievementNum = 0; 
             
             for (int i = 0; i < 7; i++)
             {
                 for (int j = 0; j < 50; j++)
                 {
-                    GameManager.instance.gameData.savePointUnlock[i, j] = false; //��� ���̺�����Ʈ ��Ȱ��ȭ 
+                    GameManager.instance.gameData.savePointUnlock[i, j] = false; 
                 }
             }
-            //�ʱ�ȭ��Ų GameData [saveFileNum]�� ���� 
+            //세이브포인트 저장
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[saveFileNum];
             File.WriteAllText(filePath, ToJsonData);
 
-            //���� �÷��̾ �� ��ġ�� ��ȯ�� �� �ֵ��� GameManager �� �ʱ�ȭ���� �� 
-            GameManager.instance.nextScene = 2; //tutorial_1 씬 
+            //GameManager 갱신
+            int tmpNextScene = SceneUtility.GetBuildIndexByScenePath("Assets/_Scenes/_tutorial/tutorial.unity"); //tutorial scene index
+            GameManager.instance.nextScene = tmpNextScene;
+
             GameManager.instance.shouldSpawnSavePoint = false; //맨 처음 시작하므로 따로 세이브포인트가 없다 
             GameManager.instance.shouldUseOpeningElevator = true; //오프닝 엘리베이터 이용해야 함 
 
-            //nextPos, nextDir �� ������ �̵��� ���� savePointManager���� �˾Ƽ� ������ �� 
-
-            SceneManager.LoadScene(37); //오프닝씬으로 들렀다가 nextScene으로 이동 
+            SceneManager.LoadScene("openingScene"); //오프닝씬으로 들렀다가 nextScene으로 이동 
         }
         // SaveFile�� ������ Load
         else

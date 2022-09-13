@@ -7,22 +7,22 @@ using System.IO;
 public class SavePoint : MonoBehaviour
 {
     GameObject cameraObj;
-    [SerializeField] int stageNum; //1���� ���� 
-    public int achievementNum; //1���� ����
+    [SerializeField] int stageNum; 
+    public int achievementNum; 
 
     Transform player;
-    public Vector2 respawnPos; //�÷��̾ ���̺�����Ʈ�� ��� ���� �������Ǵ� ��ġ    
-    public Vector2 respawnDir; //�÷��̾ ���̺�����Ʈ�� ��� ���� �������Ǵ� �߷¹���
+    public Vector2 respawnPos; //리스폰 위치 
+    public Vector2 respawnDir; //리스폰 방향
 
     bool isPlayerOnSensor;
     bool isSavePointActivated;
 
     SpriteRenderer spr;
     public Sprite[] spriteGroup;
-    /* [0] : Ȱ��ȭ���� �ʾҰ� �÷��̾ �������� ����  
-     * [1] : �÷��̾ ���� ���� ��ġ 
-     * [2]~[7] : ���̺�����Ʈ ������ �Ʒ��� �������� ����
-     * [7] : ���̺�����Ʈ�� �̹� Ȱ��ȭ 
+    /* [0] : 비활성화 상태(불 꺼짐)
+     * [1] : 비활성화 상태(불 켜짐)
+     * [2]~[7] : stone이 아래로 내려가는 동작 
+     * [7] : 활성화 상태
      */
 
     void Awake()
@@ -31,38 +31,40 @@ public class SavePoint : MonoBehaviour
         spr = GetComponent<SpriteRenderer>();
         cameraObj = GameObject.FindWithTag("MainCamera");
 
-        respawnPos = transform.position; //�÷��̾�� �ش� ���̺�����Ʈ�� ��ġ���� ��Ȱ 
-        
+        respawnPos = transform.position; //세이브포인트의 위치가 이 세이브를 이용할 때 리스폰돼야 하는 위치         
         float savePointRot = transform.rotation.z;
+    }
 
-        if (GameManager.instance.gameData.savePointUnlock[stageNum - 1, achievementNum - 1] == true) //���̺�����Ʈ �迭�� stage/achNum �� �� �� 0,0���� ���� 
-        {           
-            spr.sprite = spriteGroup[7]; //���̺�����Ʈ�� �̹� �۵��� ��� 
+    private void Start()
+    {
+        if (GameManager.instance.gameData.savePointUnlock[stageNum - 1, achievementNum - 1] == true) 
+        {
+            spr.sprite = spriteGroup[7]; //활성화 상태
             isSavePointActivated = true;
         }
         else
         {
-            spr.sprite = spriteGroup[0]; //���̺�����Ʈ�� �۵����� ���� ��� 
+            spr.sprite = spriteGroup[0]; //비활성화 상태 
             isSavePointActivated = false;
         }
     }
 
     private void Update()
     {
-        if (isSavePointActivated) return; //�̹� Ȱ��ȭ�� ���̺�����Ʈ�� ���� input ���� x 
+        if (isSavePointActivated) return; //활성화된 이후에는 따로 작동x 
         if(isPlayerOnSensor && Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(SaveData());
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision) //���̺�����Ʈ�� ���� �ǵ���� ���̺���
+    void OnTriggerEnter2D(Collider2D collision)
     {       
         if (collision.CompareTag("Player") && transform.up == player.transform.up && !isSavePointActivated) 
         {
-            //�÷��̾ ���̺�����Ʈ�� ���� angle�� ������ �ְ� ���� Ȱ��ȭ��Ű�� ���� ���̺�����Ʈ�� �� 
+            //플레이어가 세이브포인트에 닿아 있고 각도가 같을 때 저장 가능 
             isPlayerOnSensor = true;
-            spr.sprite = spriteGroup[1];
+            spr.sprite = spriteGroup[1]; //불 켜짐 
         }
     }
 
@@ -79,7 +81,7 @@ public class SavePoint : MonoBehaviour
     {
         isSavePointActivated = true;
 
-        //Debug.Log("savePointBackUp: " + achievementNum);
+        Debug.Log("savePointBackUp: " + achievementNum);
         GameManager.instance.SaveData(achievementNum, stageNum, respawnPos);
 
         for(int index=1; index<=7; index++)

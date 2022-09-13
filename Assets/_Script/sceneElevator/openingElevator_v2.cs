@@ -16,6 +16,9 @@ public class openingElevator_v2 : MonoBehaviour
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+    }
+    void Start()
+    {
         if (GameManager.instance.shouldUseOpeningElevator) //엘리베이터를 사용할지 말지는 GM 이 결정 
         {
             transform.position = pos1;
@@ -31,10 +34,6 @@ public class openingElevator_v2 : MonoBehaviour
             isElevatorArrived = true;
         }
 
-
-    }
-    void Start()
-    {
         InputManager.instance.isInputBlocked = false; //씬이 시작하면 inputBlock 해제 
     }
   
