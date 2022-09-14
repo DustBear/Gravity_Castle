@@ -28,6 +28,7 @@ public class openingAnimation : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
+            //이 시점에서 nextScene 에는 tutorial 의 index 가 할당 
             SceneManager.LoadScene(GameManager.instance.nextScene); //tab 키 누르면 스킵 가능 
         }
     }

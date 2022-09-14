@@ -7,16 +7,12 @@ using TMPro;
 
 public class UIManager : Singleton<UIManager>
 {
-    [SerializeField] GameObject inGameMenu;
-    [SerializeField] Image fade;
-    [SerializeField] GameObject textObj;
+    public GameObject inGameMenu;
+    public GameObject fadeObj;
+    Image fade;
+
     IEnumerator fadeCoroutine;
 
-    /*
-    public GameObject fadeCircle;
-    public Vector3 playerPos;   
-    public float fadeCircleDelay;
-    */
     AudioSource sound;
 
     void Awake()
@@ -24,59 +20,21 @@ public class UIManager : Singleton<UIManager>
         DontDestroyOnLoad(gameObject);
         sound = GetComponent<AudioSource>();
 
+        fade = fadeObj.GetComponent<Image>();
+
         fadeCoroutine = _FadeIn(1.5f);
+        fadeObj.SetActive(true);
+        fade.color = new Color(0, 0, 0, 0); //맨 처음 시작하면 fade는 투명화 
 
         //게임 시작하면 UI 메뉴는 전부 끄고 시작하기 
         inGameMenu.SetActive(false);       
-        //fadeCircle.SetActive(false);
     }
 
     private void Update()
     {
         
     }
-    /*
-    public void circleFade(bool bigger)
-    {
-        fadeCircle.SetActive(true);
-        StartCoroutine(circleFadeCor(bigger));
-    }
-    IEnumerator circleFadeCor(bool bigger)
-    {       
-        if (bigger) //circle이 커져야 하는 경우 ~> fadeOut 의 기능(어두워짐)
-        {           
-            fadeCircle.SetActive(true);
-            fadeCircle.GetComponent<RectTransform>().localScale = new Vector3(0,0,0);
-
-            Vector2 circleAimPos = Camera.main.WorldToScreenPoint(playerPos);
-            fadeCircle.GetComponent<RectTransform>().position = new Vector3(circleAimPos.x, circleAimPos.y, 5f);
-
-            for (int index = 1; index <= 200; index++)
-            {
-                fadeCircle.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1) * (index / 200);
-                yield return new WaitForSeconds(fadeCircleDelay / 200);
-            }
-        }
-        else
-        {
-            fadeCircle.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-
-            Vector2 circleAimPos = Camera.main.WorldToScreenPoint(playerPos);
-            Debug.Log(circleAimPos);
-            fadeCircle.GetComponent<RectTransform>().position = new Vector3(circleAimPos.x, circleAimPos.y, 5f);
-
-            for (int index = 200; index >= 1; index--)
-            {
-                Debug.Log(fadeCircle.GetComponent<RectTransform>().localScale);
-                fadeCircle.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1) * (index / 200);
-                yield return new WaitForSeconds(fadeCircleDelay / 200);
-            }
-
-            fadeCircle.SetActive(false);
-        }      
-    }
-    */
-
+   
     // Fade in과 Fade out이 동시에 실행될 수 없게 하였음
     public void FadeIn(float fadeTime)
     {
@@ -87,7 +45,6 @@ public class UIManager : Singleton<UIManager>
 
     public void FadeOut(float fadeTime)
     {
-
         StopCoroutine(fadeCoroutine);
         fadeCoroutine = _FadeOut(fadeTime);
         StartCoroutine(fadeCoroutine);
@@ -96,15 +53,12 @@ public class UIManager : Singleton<UIManager>
     IEnumerator _FadeIn(float delayTime) //화면 밝아짐 
     {        
         var wait = new WaitForSeconds(delayTime/200);
-        Color color = fade.color;
-        color.a = 1f;
-        fade.color = color;
-
+        fade.color = new Color(0, 0, 0, 1);
+        
         yield return new WaitForSeconds(0.3f);
-        while (color.a > 0f)
+        while (fade.color.a > 0f)
         {
-            color.a -= 0.005f;
-            fade.color = color;
+            fade.color = new Color(0, 0, 0, fade.color.a - 0.005f);
             yield return wait;
         }
     }
@@ -112,11 +66,10 @@ public class UIManager : Singleton<UIManager>
     IEnumerator _FadeOut(float delayTime) //화면 어두워짐 
     {        
         var wait = new WaitForSeconds(delayTime/200);
-        Color color = fade.color;
+        fade.color = new Color(0, 0, 0, 0);
         while (fade.color.a < 1f)
-        {           
-            color.a += 0.005f;
-            fade.color = color;
+        {
+            fade.color = new Color(0, 0, 0, fade.color.a + 0.005f);
             yield return wait;
         }
 
@@ -145,16 +98,5 @@ public class UIManager : Singleton<UIManager>
     public void clickSoundGen() //UI 클릭할 때 딸깍 소리 냄 
     {
         sound.Play();
-    }
-
-    public void showText(string content)
-    {
-        textObj.SetActive(true);
-        textObj.GetComponent<TextMeshProUGUI>().text = content;
-    }
-
-    public void hideText()
-    {
-        textObj.SetActive(false);
     }
 }

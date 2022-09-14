@@ -14,18 +14,19 @@ public class InGameMenu : MonoBehaviour
 
         if (GameManager.instance.gameData.curAchievementNum == 0)
         {
-            //opening Elevator Ÿ�� �������� ���� ������ ������ ù ���̺�����Ʈ������ Ȱ��ȭ�� ������ ħ 
+            //opening elevator에서 내리고 첫 번째 세이브를 활성화하기 전에 죽으면 그냥 save1 까지는 활성화시킨 것으로 치고 넘어감  
 
             GameManager.instance.gameData.curAchievementNum = 1;
             if (GameManager.instance.gameData.finalStageNum == GameManager.instance.gameData.curStageNum)
             {
                 if (GameManager.instance.gameData.finalAchievementNum == 0)
                 {
-                    GameManager.instance.gameData.finalAchievementNum = 1; //���� ���� ���൵�� �ִ� ���൵�� ��� final Ach ���� �ݿ��� 
+                    GameManager.instance.gameData.finalAchievementNum = 1; 
+                    //만약 현재 최고 진행도 이상이라면 final data 역시 갱신해줘야 함 
                 }
             }
-            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //ù��° ���̺�����Ʈ Ȱ��ȭ��Ŵ 
-            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //���� �״�� ���� 
+            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //세이브포인트 1 활성화 
+            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; // 
 
             //������ ����
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
