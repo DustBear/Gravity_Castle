@@ -13,7 +13,7 @@ public class stageMoveButton : MonoBehaviour
 
     public GameObject chapter_Instruction; //챕터 설명 이미지
     public GameObject chapter_name; //챕터 이름 텍스트    
-    public GameObject mapOpenSensor;
+    public GameObject stageManager;
 
     public string stageNameText;
     public int stageNum; //시작해야 하는 스테이지 번호
@@ -75,9 +75,9 @@ public class stageMoveButton : MonoBehaviour
         sound.clip = correct;
         sound.Play();
 
-        stageManager stageManagerScr = mapOpenSensor.GetComponent<stageManager>();
+        stageManager stageManagerScr = stageManager.GetComponent<stageManager>();
 
-        chapter_name.GetComponent<TextMeshProUGUI>().text = stageNameText; //스테이지 이름 바꿔주기 
+        chapter_name.GetComponent<Text>().text = stageNameText; //스테이지 이름 바꿔주기 
         chapter_Instruction.GetComponent<Image>().sprite = instruction_image;
         stageManagerScr.selectedStageNum = stageNum;
         stageManagerScr.selectedSavePointNum = 1; //스테이지가 넘어가면 세이브포인트 번호도 1로 초기화
@@ -89,13 +89,13 @@ public class stageMoveButton : MonoBehaviour
     {
         for(int index=3; index>=1; index--)
         {
-            GetComponent<RectTransform>().Rotate(0, 0, 10f * index);
+            transform.position = transform.position + new Vector3(0.08f, 0, 0);
             yield return new WaitForSeconds(0.05f);
-            GetComponent<RectTransform>().Rotate(0, 0, -10f * index);
+            transform.position = transform.position + new Vector3(-0.08f, 0, 0);
             yield return new WaitForSeconds(0.05f);
-            GetComponent<RectTransform>().Rotate(0, 0, -10f * index);
+            transform.position = transform.position + new Vector3(-0.08f, 0, 0);
             yield return new WaitForSeconds(0.05f);
-            GetComponent<RectTransform>().Rotate(0, 0, 10f * index);
+            transform.position = transform.position + new Vector3(0.08f, 0, 0);
         }
     }
 }

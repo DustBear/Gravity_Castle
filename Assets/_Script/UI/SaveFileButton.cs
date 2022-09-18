@@ -10,7 +10,7 @@ public class SaveFileButton : MonoBehaviour
 {
     [SerializeField] int saveFileNum; 
     Text text;
-    bool isSaveFileExist;
+    [SerializeField] bool isSaveFileExist;
 
     public GameObject betaModeWindow; 
     public GameObject saveDeleteWindow;
@@ -68,14 +68,13 @@ public class SaveFileButton : MonoBehaviour
             GameManager.instance.gameData.curStageNum = 1;
             GameManager.instance.gameData.curAchievementNum = 0; 
             GameManager.instance.gameData.finalStageNum = 1;
-            GameManager.instance.gameData.finalAchievementNum = 0; 
-            
-            for (int i = 0; i < 7; i++)
+            GameManager.instance.gameData.finalAchievementNum = 0;
+
+            GameManager.instance.gameData.savePointUnlock = new int[100]; //savePointGroup 초기화 
+
+            for (int i = 0; i < GameManager.instance.gameData.savePointUnlock.Length; i++)
             {
-                for (int j = 0; j < 50; j++)
-                {
-                    GameManager.instance.gameData.savePointUnlock[i, j] = false; 
-                }
+                GameManager.instance.gameData.savePointUnlock[i] = 0;
             }
             //세이브포인트 저장
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
@@ -91,7 +90,7 @@ public class SaveFileButton : MonoBehaviour
 
             SceneManager.LoadScene("openingScene"); //오프닝씬으로 들렀다가 nextScene으로 이동 
         }
-        // SaveFile�� ������ Load
+        // 이미 세이브 파일이 있으면 
         else
         {
             GameManager.instance.saveFileSeq.saveFileSeqList.Remove(saveFileNum);
@@ -128,6 +127,7 @@ public class SaveFileButton : MonoBehaviour
         File.Delete(filePath);
         
         text.text = "새 게임";
+        isSaveFileExist = false;
 
         bool isEveryFileDelete  = true; //만약 모든 세이브파일이 삭제되었다면 saveFileSeq 도 같이 삭제해야 함 
         for(int index = 0; index < 4; index++)
@@ -139,11 +139,12 @@ public class SaveFileButton : MonoBehaviour
             }
         }
 
+        //모든 데이터를 삭제했다면 saveFileSeq 도 삭제해야 함 
         if (isEveryFileDelete)
         {
             string seqfilePath = Application.persistentDataPath + "/SaveFileSeq.json";
             File.Delete(seqfilePath);
-            gameStartButton.GetComponent<NewGameButton>().text.text = "새로하기"; //��� �����Ͱ� �����Ǿ����Ƿ� �ٽ� �����ϱ� ��ư ���� 
+            gameStartButton.GetComponent<NewGameButton>().text.text = "새로하기"; //gameStart 버튼 바꾸기 
             gameStartButton.GetComponent<NewGameButton>().isSaveFileExist = false;
         }
 

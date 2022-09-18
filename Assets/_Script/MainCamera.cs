@@ -157,9 +157,17 @@ public class MainCamera : MonoBehaviour
         while (true)
         {
             transform.position = Vector3.SmoothDamp(transform.position, newAimPos, ref dampSpeed, lookDownSIde_smoothTime);
+
+            //카메라가 원위치로 100% 돌아온 후 inputlock 이 풀리면 좀 답답함 ~> 여유시간을 두고 inputlock 풀어줌 
+            if(Mathf.Abs((transform.position - newAimPos).magnitude) <= 0.1f)
+            {
+                if (InputManager.instance.isInputBlocked)
+                {
+                    InputManager.instance.isInputBlocked = false;
+                }
+            }
             if (Mathf.Abs((transform.position - newAimPos).magnitude) <= 0.02f)
             {
-                InputManager.instance.isInputBlocked = false;
                 transform.position = newAimPos; //카메라 위치 고정 
                 break;
             }

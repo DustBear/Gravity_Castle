@@ -62,7 +62,10 @@ public class InputManager : Singleton<InputManager>
         
         // ���� �����߿� esc ������ �޴� �¿��� ����
         esc = Input.GetButtonDown("Cancel");
-        if (esc && SceneManager.GetActiveScene().name != "MainMenu" && SceneManager.GetActiveScene().name != "openingScene") //���θ޴����� ESC ���� �� ���� 
+
+        if (esc && SceneManager.GetActiveScene().name != "MainMenu" 
+            && SceneManager.GetActiveScene().name != "openingScene"
+            && SceneManager.GetActiveScene().name != "InGameMenu") //esc 를 눌러 mainMenu 씬을 열 수 있는 조건 
         {
             UIManager.instance.OnOffInGameMenu();
         }

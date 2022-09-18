@@ -49,15 +49,9 @@ public class NewGameButton : MonoBehaviour
             GameManager.instance.gameData.curStageNum = 1;
             GameManager.instance.gameData.curAchievementNum = 0; //맨 처음 시작하면 achiNum = 0  
             GameManager.instance.gameData.finalStageNum = 1;
-            GameManager.instance.gameData.finalAchievementNum = 0; 
+            GameManager.instance.gameData.finalAchievementNum = 0;
 
-            for (int i = 0; i < 7; i++)
-            {
-                for (int j = 0; j < 50; j++)
-                {
-                    GameManager.instance.gameData.savePointUnlock[i, j] = false; //모든 세이브포인트 비활성화 
-                }
-            }
+            GameManager.instance.gameData.savePointUnlock = new int[100]; //세이브포인트 그룹 새로 초기화 
 
             //GameData [0] 에 데이터 저장 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
@@ -77,21 +71,23 @@ public class NewGameButton : MonoBehaviour
         //세이브파일이 이미 있으면 불러오기 
         else
         {
-            GameManager.instance.curSaveFileNum = GameManager.instance.saveFileSeq.saveFileSeqList.Last(); //마지막으로 실행했던 세이브파일 가져옴 
+            Debug.Log("load");
+            //GameManager.instance.curSaveFileNum = GameManager.instance.saveFileSeq.saveFileSeqList.Last(); //마지막으로 실행했던 세이브파일 가져옴 
             
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             string FromJsonData = File.ReadAllText(filePath);
 
-            GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData); //선택한 세이브파일의 GameData 불러옴 
-            
+            //GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData); //선택한 세이브파일의 GameData 불러옴 
+           // GameManager.instance.gameData = JsonUtility.FromJson<GameData>(FromJsonData);
+
             //GM 데이터 갱신 
-            GameManager.instance.nextScene = curGameData.respawnScene;
-            GameManager.instance.nextPos = curGameData.respawnPos;
-            GameManager.instance.nextGravityDir = curGameData.respawnGravityDir;
+            GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
+            GameManager.instance.nextPos = GameManager.instance.gameData.respawnPos;
+            GameManager.instance.nextGravityDir = GameManager.instance.gameData.respawnGravityDir;
             GameManager.instance.nextState = Player.States.Walk; //States.Walk 가 기본값 
 
             GameManager.instance.shouldSpawnSavePoint = true;
-            if(curGameData.curAchievementNum == 0)
+            if(GameManager.instance.gameData.curAchievementNum == 0)
             {
                 GameManager.instance.shouldSpawnSavePoint = false;
                 GameManager.instance.shouldUseOpeningElevator = true; 

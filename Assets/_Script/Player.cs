@@ -1018,7 +1018,7 @@ public class Player : MonoBehaviour
                 }
             }     
 
-            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true;
+            GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, 1))] = 1;
             GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex;
 
             //GameData 저장해 줌 

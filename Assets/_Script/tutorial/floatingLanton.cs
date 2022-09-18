@@ -18,7 +18,11 @@ public class floatingLanton : MonoBehaviour
 
     void Start()
     {
-        playerDir = playerObj.transform.up;
+        if(playerObj != null)
+        {
+            playerDir = playerObj.transform.up;
+        }
+
         initPos = transform.position;
         rotateCorrect();
     }
@@ -27,6 +31,7 @@ public class floatingLanton : MonoBehaviour
     {
         sinMove();
 
+        if (playerObj == null) return;
         //플레이어의 방향이 바뀔때만 호출 
         if (playerDir != playerObj.transform.up)
         {

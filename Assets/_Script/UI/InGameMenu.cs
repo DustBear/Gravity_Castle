@@ -25,7 +25,7 @@ public class InGameMenu : MonoBehaviour
                     //만약 현재 최고 진행도 이상이라면 final data 역시 갱신해줘야 함 
                 }
             }
-            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //세이브포인트 1 활성화 
+            GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, 1))] = 1; //세이브포인트 1 활성화 
             GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; // 
 
             //������ ����
@@ -66,7 +66,7 @@ public class InGameMenu : MonoBehaviour
                     GameManager.instance.gameData.finalAchievementNum = 1; //���� ���� ���൵�� �ִ� ���൵�� ��� final Ach ���� �ݿ��� 
                 }
             }
-            GameManager.instance.gameData.savePointUnlock[GameManager.instance.gameData.curStageNum - 1, 0] = true; //ù��° ���̺�����Ʈ Ȱ��ȭ��Ŵ 
+            GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, 1))] = 1; //ù��° ���̺�����Ʈ Ȱ��ȭ��Ŵ 
             GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //���� �״�� ���� 
 
             //������ ����

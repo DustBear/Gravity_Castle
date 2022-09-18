@@ -24,5 +24,5 @@ public class GameData
     public int finalAchievementNum;
     public int finalStageNum;
 
-    public bool[ , ] savePointUnlock = new bool[7,50]; //[����������ȣ, ���뵵��ȣ] �ش� ���̺�����Ʈ�� Ȱ��ȭ�Ǿ����� üũ 
+    public int[] savePointUnlock; //0부터 7까지 8개 스테이지, 각 최대 50개의 세이브포인트 ~> 0이면 false, 1이면 true
 }

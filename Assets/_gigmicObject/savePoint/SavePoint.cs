@@ -37,7 +37,7 @@ public class SavePoint : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.instance.gameData.savePointUnlock[stageNum - 1, achievementNum - 1] == true) 
+        if (GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(stageNum, achievementNum))] == 1) 
         {
             spr.sprite = spriteGroup[7]; //활성화 상태
             isSavePointActivated = true;

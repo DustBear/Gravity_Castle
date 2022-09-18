@@ -24,6 +24,8 @@ public class moveBox_lever : MonoBehaviour
     public Vector2 pos1;
     public Vector2 pos2;
 
+    public GameObject leverArrow;
+
     private void Awake()
     {
         rigid = moveStone.GetComponent<Rigidbody2D>();
@@ -47,6 +49,7 @@ public class moveBox_lever : MonoBehaviour
         }
         spr.sprite = spriteGroup[0];
         anim.SetFloat("wheelSpeed", 0f);
+        leverArrow.SetActive(false);
     }
 
     
@@ -59,6 +62,7 @@ public class moveBox_lever : MonoBehaviour
             if (!isLeverAct)
             {
                 isLeverAct = true;
+                leverArrow.SetActive(true);
                 rigid.bodyType = RigidbodyType2D.Dynamic;
                 rigid.gravityScale = 0;
                 InputManager.instance.isInputBlocked = true;
@@ -66,6 +70,7 @@ public class moveBox_lever : MonoBehaviour
             else
             {
                 isLeverAct = false;
+                leverArrow.SetActive(false);
                 rigid.bodyType = RigidbodyType2D.Kinematic;
                 InputManager.instance.isInputBlocked = false;
             }

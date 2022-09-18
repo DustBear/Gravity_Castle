@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System.Linq;
 
 public class GameManager : Singleton<GameManager>
 {    
     public bool shouldSpawnSavePoint = true;    
     public bool shouldUseOpeningElevator = false;
 
+    public int[] saveNumForStage = new int[7]; //각 스테이지별로 세이브포인트가 몇개 있는지 저장하는 배열 
     public int nextScene {get; set;}
     public Vector2 nextPos {get; set;}
     public Vector2 nextGravityDir {get; set;}
@@ -19,7 +21,7 @@ public class GameManager : Singleton<GameManager>
     public string[] gameDataFileNames = {"/GameData0.json", "/GameData1.json", "/GameData2.json", "/GameData3.json"};
     public int curSaveFileNum; //현재 플레이중인 세이브파일 번호 
     public int saveFileCount; //전체 세이브파일 개수 
-    public GameData gameData {get; private set;}
+    public GameData gameData { get; private set; }
     public SaveFileSeq saveFileSeq {get; set;}
     string saveFileSeqName = "/SaveFileSeq.json";
 
@@ -36,19 +38,34 @@ public class GameManager : Singleton<GameManager>
     {
         DontDestroyOnLoad(gameObject);
         string filePath = Application.persistentDataPath + saveFileSeqName; //현재 플레이중인 세이브파일의 저장경로 
+
+        gameData = new GameData(); //gameData 생성하기 
+
         if (File.Exists(filePath)) //세이브파일이 존재하면 
         {
+            Debug.Log("file exist");
+
             string FromJsonData = File.ReadAllText(filePath);
             saveFileSeq = JsonUtility.FromJson<SaveFileSeq>(FromJsonData); //svaeFileSeq 가져오기 
+
+            curSaveFileNum = saveFileSeq.saveFileSeqList.Last(); //마지막으로 실행했던 세이브파일 번호
+
+            
+            string filePath_2 = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
+            string FromJsonData_2 = File.ReadAllText(filePath_2);
+
+            gameData = JsonUtility.FromJson<GameData>(FromJsonData_2); //선택한 세이브파일의 GameData 불러옴 
+            
         }
         else //처음 시작하는 게임이면 
         {
+            Debug.Log("file dont exist");
+
             saveFileSeq = new SaveFileSeq(); //SaveFileSeq 없으면 만들기 
             saveFileSeq.saveFileSeqList = new List<int>();
+       
         }
-
-        gameData = new GameData();
-
+        
         bgmMachine = gameObject.AddComponent<AudioSource>();
         moodMachine = gameObject.AddComponent<AudioSource>();
     }
@@ -148,6 +165,27 @@ public class GameManager : Singleton<GameManager>
                 + "  finalStage: " + gameData.finalStageNum
                 );
         }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            string outputStr = "";
+
+            for (int index=0; index<gameData.savePointUnlock.Length; index++)
+            {
+                if (gameData.savePointUnlock[index]==1) 
+                {
+                    outputStr += "True, ";
+                }
+                else
+                {
+                    outputStr += "False, ";
+                }
+
+                if ((index+1) % 8 == 0) outputStr += "\n";
+            }
+
+            Debug.Log(outputStr);
+        }
         
     }
 
@@ -184,8 +222,8 @@ public class GameManager : Singleton<GameManager>
                 gameData.finalAchievementNum = savePointNum;
             }
         }
-
-        gameData.savePointUnlock[stageNum - 1, savePointNum - 1] = true; //세이브포인트 활성화 여부 저장 
+        
+        gameData.savePointUnlock[saveNumCalculate(new Vector2(stageNum, savePointNum))] = 1; //세이브포인트 활성화 여부 저장 
         gameData.respawnGravityDir = Physics2D.gravity.normalized;
         
         //GameData 에 데이터 저장 
@@ -201,4 +239,22 @@ public class GameManager : Singleton<GameManager>
         File.WriteAllText(filePath, ToJsonData);
     }
     
+    //(stageNum, saveNum) 이 들어오면 int (전체 게임에서 몇 번째 세이브인지) 로 환산해 반환하는 함수 
+    // 입력값은 (1,1) 부터 시작하고 출력값은 index 기준으로 0부터 시작한다 
+    public int saveNumCalculate(Vector2 saveData) //x가 stageNum, y가 savePointNum 
+    {
+        if (saveData.x == 1)
+        {
+            return ((int)saveData.y - 1);
+        }
+
+        int saveIndex = 0;
+        for (int index = 0; index < (int)saveData.x - 1; index++) //ex) stage 3 이라면 stage1, stage2의 전체 세이브포인트 개수를 더하고,
+        {
+            saveIndex += saveNumForStage[index];
+        }
+
+        saveIndex += (int)saveData.y - 1; //stage3에서 내가 몇번째 세이브인지도 더해야 함 
+        return saveIndex;
+    }
 }
