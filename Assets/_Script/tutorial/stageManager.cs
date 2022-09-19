@@ -32,7 +32,9 @@ public class stageManager : MonoBehaviour
     {       
         selectedStageNum = GameManager.instance.gameData.curStageNum; //이전에 플레이하던 stage에서 시작해야 함 ( 1부터 시작 ) 
         selectedStageButton = stageButton[selectedStageNum - 1].gameObject;
-        selectedSavePointNum = 1; 
+        selectedSavePointNum = 1;
+
+        savePointCount = selectedStageButton.GetComponent<stageMoveButton>().savePointCount;
 
         firstIconPos = firstIconPosAnchor.transform.position;
 
@@ -199,16 +201,16 @@ public class stageManager : MonoBehaviour
         isStartButtonShake = false;
     }
     
-    public void betaModeActive() //���൵�� �ִ�ġ�� ����ִ� �ý���
+    public void betaModeActive() //개발용 베타테스트 버튼 ~> 정식출시 버전에선 삭제해야 함
     {
-        //Debug.Log("beta-mode activated");
+        Debug.Log("beta-mode activated");
 
         GameManager.instance.gameData.finalAchievementNum = stageButton[2].GetComponent<stageMoveButton>().savePointCount;
         GameManager.instance.gameData.finalStageNum = 3;
 
         for(int index=0; index< GameManager.instance.gameData.savePointUnlock.Length; index++)
         {
-            GameManager.instance.gameData.savePointUnlock[index] = 1;
+            GameManager.instance.gameData.savePointUnlock[index] = 1; //모든 세이브포인트 활성화 
         }
         string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
         string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
