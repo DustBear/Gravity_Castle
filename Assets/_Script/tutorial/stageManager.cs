@@ -29,7 +29,9 @@ public class stageManager : MonoBehaviour
     bool isStartButtonShake = false;
 
     void Start()
-    {       
+    {
+        UIManager.instance.FadeIn(1f);
+
         selectedStageNum = GameManager.instance.gameData.curStageNum; //이전에 플레이하던 stage에서 시작해야 함 ( 1부터 시작 ) 
         selectedStageButton = stageButton[selectedStageNum - 1].gameObject;
         selectedSavePointNum = 1;

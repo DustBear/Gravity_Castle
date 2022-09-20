@@ -48,19 +48,19 @@ public class stage01_side2_moveWall : MonoBehaviour
     IEnumerator moveAni_right()
     {
         //moveTime 동안 4바퀴 회전(시계방향)
-        for(int index=1; index<=20; index++)
+        for(int index=1; index<=spriteGroup.Length*4; index++)
         {
-            spr.sprite = spriteGroup[index % 5];
-            yield return new WaitForSeconds(moveTime / 19);
+            spr.sprite = spriteGroup[index % spriteGroup.Length];
+            yield return new WaitForSeconds(moveTime / (spriteGroup.Length * 4 - 1));
         }
     }
     IEnumerator moveAni_left()
     {
         //moveTime 동안 4바퀴 회전(반시계방향)
-        for (int index = 20; index >= 1; index--)
+        for (int index = spriteGroup.Length * 4; index >= 1; index--)
         {
-            spr.sprite = spriteGroup[index % 5];
-            yield return new WaitForSeconds(moveTime / 19);
+            spr.sprite = spriteGroup[index % spriteGroup.Length];
+            yield return new WaitForSeconds(moveTime / (spriteGroup.Length * 4 - 1));
         }
     }
 

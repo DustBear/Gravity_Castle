@@ -16,11 +16,19 @@ public class dynamicBox_lever : MonoBehaviour
     [SerializeField] bool isBoxGrab;
     [SerializeField] bool isPlayerOn;
 
-    public float grabThreshold; //�� �Ÿ� �̻� box�� �÷��̾ �־����� grab �� �����ȴ� 
+    public float grabThreshold; //플레이어가 box를 잡을 수 있는 거리 기준 
 
     public float grabSpeed;
     float initWalkSpeed;
     float boxOffset;
+
+    public int activeSavePointNum;
+    //box가 작동하는 세이브포인트 번호
+    //아직 해당 퍼즐에 진입하기 전에 박스가 자기 마음대로 움직이면 곤란함 
+
+    int pastSavePoint;
+    int curSavePoint;
+    //매 프레임마다 현재의 진행도 체크 ~> 진행도가 달라질 때 마다 rigidBody 상태 그에 맞게 초기화해 줌 
 
     private void Awake()
     {
@@ -33,30 +41,59 @@ public class dynamicBox_lever : MonoBehaviour
     }
     void Start()
     {
-        rigid.bodyType = RigidbodyType2D.Dynamic;
+        rigid.bodyType = RigidbodyType2D.Static;
         initWalkSpeed = playerscr.walkSpeed;
         isPlayerOn = false;
         isBoxGrab = false;
+
+        curSavePoint = GameManager.instance.gameData.curAchievementNum;
+        pastSavePoint = curSavePoint;
+
+        if(curSavePoint == activeSavePointNum)
+        {
+            dynamicBox.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic; //중력 영향 받아야 함 
+        }
     }
 
     void Update()
     {
+        curSavePoint = GameManager.instance.gameData.curAchievementNum;
+
+        if(curSavePoint != pastSavePoint) //새로운 세이브포인트가 활성화되면
+        {
+            if(curSavePoint != activeSavePointNum)
+            {
+                dynamicBox.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static; //중력 영향 안받게 함 
+                pastSavePoint = curSavePoint;
+                return; //여타 동작 전부 stop 
+            }
+            else
+            {
+                dynamicBox.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic; //중력 영향 받아야 함 
+                pastSavePoint = curSavePoint;
+            }
+        }
+        else
+        {
+            pastSavePoint = curSavePoint;
+        }
+
         leverRay();
 
-        if(Input.GetKeyDown(KeyCode.E)) //E �� ������ �� 
+        if(Input.GetKeyDown(KeyCode.E))
         {
-            if (isPlayerOn && !isBoxGrab) //�÷��̾ ���� ���� �ְ� ���� box�� ��� ���� ������ 
+            if (isPlayerOn && !isBoxGrab) //박스를 잡지 않은 상태에서 E를 누르면 박스 잡기
             {
                 isBoxGrab = true;
                 playerscr.isPlayerGrab = true;
-                playerscr.walkSpeed = grabSpeed; //box ��������� �ӵ� ������ 
+                playerscr.walkSpeed = grabSpeed; //box들고있는 상태에선 더 느리게 걸음 
 
                 StartCoroutine(boxGrab());
             }           
 
             else if (isBoxGrab)
             {
-                isBoxGrab = false; //���� �������� 
+                isBoxGrab = false; //박스 잡고있는 상태에서 E 누르면 내려놓기 
                 playerscr.isPlayerGrab = false;
                 playerscr.walkSpeed = initWalkSpeed;
             }

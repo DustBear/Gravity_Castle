@@ -26,7 +26,7 @@ public class stage01_side2_moveStoneLever : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player" && collision.transform.rotation == transform.rotation)
+        if (collision.tag == "Player" && collision.transform.up == transform.up)
         {
             isPlayerOn = true;
         }

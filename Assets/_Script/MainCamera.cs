@@ -147,12 +147,13 @@ public class MainCamera : MonoBehaviour
             yield return new WaitForSeconds(Time.deltaTime);
         }
         
-        while (Input.GetKey(KeyCode.LeftShift))
-        {            
+        while (Input.GetKey(KeyCode.LeftShift) && !(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)))
+        {
             yield return null;
         }
 
         Vector3 newAimPos = transform.position + player.transform.up * lookDownSide_distance;
+        InputManager.instance.isInputBlocked = false;
 
         while (true)
         {
@@ -163,7 +164,7 @@ public class MainCamera : MonoBehaviour
             {
                 if (InputManager.instance.isInputBlocked)
                 {
-                    InputManager.instance.isInputBlocked = false;
+                    //InputManager.instance.isInputBlocked = false;
                 }
             }
             if (Mathf.Abs((transform.position - newAimPos).magnitude) <= 0.02f)
