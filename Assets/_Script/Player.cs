@@ -983,6 +983,10 @@ public class Player : MonoBehaviour
     {
         isDieCorWork = true; //이미 코루틴이 실행하고 있는동안은 다음 코루틴을 실행시키지 않음 
 
+        if (isPlayerGrab)
+        {
+            isPlayerGrab = false; //만약 상자를 잡고 있는 상태에서 죽는다면 상자를 내려놔야 함 
+        }
         GameManager.instance.shouldSpawnSavePoint = true; //죽은 경우는 일단 세이브포인트에서 시작해야 함 
         cameraObj.GetComponent<MainCamera>().isCameraLock = true; //죽은 경우 카메라는 고정
         cameraObj.GetComponent<MainCamera>().cameraShake(0.5f, 0.7f);
