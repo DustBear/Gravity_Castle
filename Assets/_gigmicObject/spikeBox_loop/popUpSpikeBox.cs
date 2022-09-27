@@ -10,6 +10,8 @@ public class popUpSpikeBox : MonoBehaviour
     public float iniOffset; //씬이 활성화되고 처음 가시가 나오는 데 걸리는 시간
     public Sprite[] spriteGroup; //[0]은 가시가 들어간 스프라이트, [3]은 가시가 튀어나온 스프라이트 
 
+    [SerializeField] float[] spikeOffsetGroup;
+
     SpriteRenderer spr;
     BoxCollider2D spikeColl;
 
@@ -31,26 +33,25 @@ public class popUpSpikeBox : MonoBehaviour
     IEnumerator spikeLoop()
     {
         yield return new WaitForSeconds(iniOffset);
-        spr.sprite = spriteGroup[3]; //초기 오프셋 지난 이후 가시 튀어나옴 
-        spikeColl.enabled = true; //가시 활성화 
+        //초기 오프셋 지난 이후 가시 튀어나옴 
 
         while (true)
         {
+            yield return new WaitForSeconds(popUpDelay - 0.2f);
+            for (int index = 0; index <= 3; index++)
+            {
+                spr.sprite = spriteGroup[index];
+                spikeColl.offset = new Vector2(0, spikeOffsetGroup[index]);
+                yield return new WaitForSeconds(0.05f);
+            }
+
             yield return new WaitForSeconds(spikeDelay-0.2f);
             for(int index=3; index>=0; index--)
             {
                 spr.sprite = spriteGroup[index];
+                spikeColl.offset = new Vector2(0, spikeOffsetGroup[index]);
                 yield return new WaitForSeconds(0.05f);
             }
-            spikeColl.enabled = false;
-
-            yield return new WaitForSeconds(popUpDelay-0.2f);
-            for (int index = 0; index <= 3; index++)
-            {
-                spr.sprite = spriteGroup[index];
-                yield return new WaitForSeconds(0.05f);
-            }
-            spikeColl.enabled = true;
         }
     }
 }

@@ -29,7 +29,7 @@ public class floatingLanton : MonoBehaviour
 
     void Update()
     {
-        sinMove();
+        //sinMove();
 
         if (playerObj == null) return;
         //플레이어의 방향이 바뀔때만 호출 
