@@ -72,13 +72,14 @@ public class StartMenu : MonoBehaviour
     }
 
     IEnumerator blink() //Ω√¿€ πˆ∆∞ ±Ù∫˝¿Ã∞‘ ∏∏µÍ
-    {       
+    {
+        float cosTimer = 0;
+        float blinkPeriod = 0.6f;
         while (true)
         {
-            gameMenuText.SetActive(true);
-            yield return new WaitForSeconds(0.5f);
-            gameMenuText.SetActive(false);
-            yield return new WaitForSeconds(0.5f);
+            gameMenuText.GetComponent<Text>().color = new Color(1, 1, 1, Mathf.Cos(cosTimer/blinkPeriod)/2 + 0.5f);
+            cosTimer += 0.01f;
+            yield return new WaitForSeconds(0.01f);
 
             if (!isTitleMenuOpen)
             {
