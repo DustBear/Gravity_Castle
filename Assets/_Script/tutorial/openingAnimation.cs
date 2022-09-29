@@ -6,205 +6,154 @@ using UnityEngine.SceneManagement;
 
 public class openingAnimation : MonoBehaviour
 {
-    public GameObject[] cutScene = new GameObject[6];
-    bool whileTyping = false;
-    
-    void Start()
+    public GameObject[] cutScene;
+    public Text[] textObj;
+    public string[] message;
+
+    bool isSceneWorking = false;
+
+    private void Start()
     {
-        //ì²˜ìŒì—ëŠ” ëª¨ë“  ì»·ì„ ë‹¤ ëˆ ìƒíƒœë¡œ ì‹œì‘ 
-        for (int index = 0; index < cutScene.Length; index++)
+        for(int n=0; n<cutScene.Length; n++)
         {
-            for(int j=0; j < cutScene[index].transform.childCount; j++)
-            {
-                cutScene[index].transform.GetChild(j).gameObject.SetActive(false);
-            }
-            cutScene[index].SetActive(false); 
+            cutScene[n].SetActive(false); //½ÃÀÛÇÏ¸é ¸ğµç ÄÆ¾À ºñÈ°¼ºÈ­ 
+        }
+        for (int n = 0; n < textObj.Length; n++)
+        {
+            textObj[n].gameObject.SetActive(false); //½ÃÀÛÇÏ¸é ¸ğµç ÅØ½ºÆ® ºñÈ°¼ºÈ­ 
         }
 
-        StartCoroutine(sceneStart());
+        message = new string[textObj.Length]; //message´Â °¢ ÅØ½ºÆ®ÀÇ ³»¿ë ´ã°í ÀÖÀ½ 
+        for(int index=0; index<textObj.Length; index++)
+        {
+            message[index] = textObj[index].text;
+        }
+
+        StartCoroutine(openingSceneStart());
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            //ì´ ì‹œì ì—ì„œ nextScene ì—ëŠ” tutorial ì˜ index ê°€ í• ë‹¹ 
-            SceneManager.LoadScene(GameManager.instance.nextScene); //tab í‚¤ ëˆ„ë¥´ë©´ ìŠ¤í‚µ ê°€ëŠ¥ 
+            SceneManager.LoadScene(4);
         }
     }
 
-    IEnumerator sceneStart() //ë…¸ê°€ë‹¤ ~> ë‚˜ì¤‘ì— ìˆ˜ì •í•  ê²ƒ 
+    IEnumerator openingSceneStart()
     {
-        //cut 1----------------------------
-        yield return new WaitForSeconds(3f);
-        cutScene[0].SetActive(true);
-        cutScene[0].transform.GetChild(0).gameObject.SetActive(true); //ì´ë¯¸ì§€ ë³´ì—¬ì£¼ê¸° 
+        yield return new WaitForSeconds(3f); //½ÃÀÛÇÏ¸é Àá½Ã ½° 
+
+        //#1 : ÁÖÀÎ°øÀÇ ¸ÁÅä°¡ ¹Ù¶÷¿¡ Èğ³¯¸² 
+        StartCoroutine(cutSceneStart(cutScene[0], 3));        
+        while (isSceneWorking)
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(2f); //Àá½Ã ¾îµÎ¿î È­¸é 
+
+        //#2 : ÅØ½ºÆ®Å¸ÀÌÇÎ: È¤½Ã ¾Ë¾Æ? ¶ó½ºÆ® ´ÙÀÌºê Àü, ¿µÈ¥ ºñ¼®À» ¼¼¿ì´Â ÀÌÀ¯ ¸»ÀÌ¾ß 
+        StartCoroutine(textTyping(textObj[0], message[0], 0.1f));
+        while (whileTyping)
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(1.5f); //Àá½Ã ¾îµÎ¿î È­¸é 
+
+        //#3 : µ¹¾Æ°¡´Â Åé´Ï¹ÙÄûµé 
+        StartCoroutine(cutSceneStart(cutScene[1], 2));
+        while (isSceneWorking)
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(1f);
+
+        //#4 : ÇÃ·¹ÀÌ¾î ¹åÁÙÀÌ ³»·Á°¨ 
+        StartCoroutine(cutSceneStart(cutScene[2], 1));
+        while (isSceneWorking)
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(2f);
+
+        //#5 : ÅØ½ºÆ®Å¸ÀÌÇÎ : Á×Àº ÀÌÈÄ¿¡µµ ÀÌ¸§À» ³²±â±â À§ÇØ¼­ÀÎ°¡?
+        StartCoroutine(textTyping(textObj[1], message[1], 0.1f));
+        while (whileTyping)
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(2f); //Àá½Ã ¾îµÎ¿î È­¸é 
+
+        //#6 : ÁñºñÇÑ ºñ¼®À» º¸¿©ÁÜ 
+        StartCoroutine(cutSceneStart(cutScene[3], 2));
+        while (isSceneWorking)
+        {
+            yield return null;
+        }
         yield return new WaitForSeconds(1.5f);
 
-        cutScene[0].transform.GetChild(1).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[0].transform.GetChild(1).GetComponent<Text>(), cutScene[0].transform.GetChild(1).GetComponent<Text>().text, 0.06f));
+        //#7 : ÅØ½ºÆ®Å¸ÀÌÇÎ : ¾ó¸¶³ª ¸¹Àº ¹«ÁöÇÑ ÀÚµéÀÌ ¸ñ¼ûÀ» ³¶ºñÇß´ÂÁö, °æ°íÇÏ±â À§ÇØ¼­¾ß
+        StartCoroutine(textTyping(textObj[2], message[2], 0.1f));
+        while (whileTyping)
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(3f); //Àá½Ã ¾îµÎ¿î È­¸é 
+
+        //#8 : ±×·¡ºñÆ¼ Ä³½½ÀÇ ÀÔ±¸°¡ µå·¯³² 
+        StartCoroutine(cutSceneStart(cutScene[4], 2));
+        while (isSceneWorking)
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(2f);
+
+        //#9 : ÅØ½ºÆ® ÆäÀÌµåÀÎ(Å¸ÀÌÇÎÈ¿°ú ¾øÀ½) : °áÄÚ ¿ë¼­¹ŞÁö ¸øÇÏ¸®¶ó. 
+        textObj[3].gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+
+        for(int index=1; index<=100; index++)
+        {
+            textObj[3].color = new Color(1, 1, 1, 1 - index * 0.01f);
+            yield return new WaitForSeconds(0.015f);
+        }
         
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(0.5f);
-
-        cutScene[0].transform.GetChild(2).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[0].transform.GetChild(2).GetComponent<Text>(), cutScene[0].transform.GetChild(2).GetComponent<Text>().text, 0.06f));
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
         yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene(4);
 
-        cutScene[0].transform.GetChild(3).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[0].transform.GetChild(3).GetComponent<Text>(), cutScene[0].transform.GetChild(3).GetComponent<Text>().text, 0.06f));
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(1f);
-
-        cutScene[0].SetActive(false);
-        yield return new WaitForSeconds(1f);
-
-        //cut 2---------------------------
-        cutScene[1].SetActive(true);
-        cutScene[1].transform.GetChild(0).gameObject.SetActive(true); //ì´ë¯¸ì§€ ë³´ì—¬ì£¼ê¸° 
-        yield return new WaitForSeconds(1.5f);
-
-        cutScene[1].transform.GetChild(1).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[1].transform.GetChild(1).GetComponent<Text>(), cutScene[1].transform.GetChild(1).GetComponent<Text>().text, 0.06f));
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(0.5f);
-
-        cutScene[1].transform.GetChild(2).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[1].transform.GetChild(2).GetComponent<Text>(), cutScene[1].transform.GetChild(2).GetComponent<Text>().text, 0.06f));
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(1f);
-
-        cutScene[1].transform.GetChild(3).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[1].transform.GetChild(3).GetComponent<Text>(), cutScene[1].transform.GetChild(3).GetComponent<Text>().text, 0.06f));
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(1f);
-
-        cutScene[1].SetActive(false);
-        yield return new WaitForSeconds(1f);
-
-        //cut 3---------------------------
-        cutScene[2].SetActive(true);
-        cutScene[2].transform.GetChild(0).gameObject.SetActive(true); //ì´ë¯¸ì§€ ë³´ì—¬ì£¼ê¸° 
-        yield return new WaitForSeconds(1f);
-
-        cutScene[2].transform.GetChild(1).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[2].transform.GetChild(1).GetComponent<Text>(), cutScene[2].transform.GetChild(1).GetComponent<Text>().text, 0.06f));
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(0.5f);
-
-        cutScene[2].transform.GetChild(2).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[2].transform.GetChild(2).GetComponent<Text>(), cutScene[2].transform.GetChild(2).GetComponent<Text>().text, 0.06f));
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(2f);
-
-        cutScene[2].transform.GetChild(3).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[2].transform.GetChild(3).GetComponent<Text>(), cutScene[2].transform.GetChild(3).GetComponent<Text>().text, 0.06f));
-        yield return new WaitForSeconds(2f);
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(1f);
-
-        cutScene[2].SetActive(false);
-        yield return new WaitForSeconds(2f);
-
-        //cut 4---------------------------
-        cutScene[3].SetActive(true);
-        cutScene[3].transform.GetChild(0).gameObject.SetActive(true); //ì´ë¯¸ì§€ ë³´ì—¬ì£¼ê¸° 
-        yield return new WaitForSeconds(1f);
-
-        cutScene[3].transform.GetChild(1).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[3].transform.GetChild(1).GetComponent<Text>(), cutScene[3].transform.GetChild(1).GetComponent<Text>().text, 0.06f));
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(0.5f);
-
-        cutScene[3].transform.GetChild(2).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
-        StartCoroutine(textTyping(cutScene[3].transform.GetChild(2).GetComponent<Text>(), cutScene[3].transform.GetChild(2).GetComponent<Text>().text, 0.06f));
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(1f);
-        cutScene[3].SetActive(false);
-        yield return new WaitForSeconds(2f);
-
-        //cut 5------------------------------
-        cutScene[4].SetActive(true);
-        cutScene[4].transform.GetChild(0).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸° 
-        StartCoroutine(textTyping(cutScene[4].transform.GetChild(0).GetComponent<Text>(), cutScene[4].transform.GetChild(0).GetComponent<Text>().text, 0.06f));
-
-        while (true) //ì´ì „ íƒ€ì´í•‘ ëë‚˜ê¸° ì „ê¹Œì§€ ê·¸ ë‹¤ìŒìœ¼ë¡œ ì•ˆë„˜ì–´ê°€ê²Œ í†µì œ 
-        {
-            if (!whileTyping) break;
-            yield return null;
-        }
-        yield return new WaitForSeconds(2f);
-        cutScene[4].SetActive(false); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸° 
-        yield return new WaitForSeconds(2f);
-
-        //cut 6----------------------------
-        cutScene[5].SetActive(true);
-        cutScene[5].transform.GetChild(0).gameObject.SetActive(true); //ì´ë¯¸ì§€ ë³´ì—¬ì£¼ê¸° 
-        yield return new WaitForSeconds(3f);
-        cutScene[5].transform.GetChild(1).gameObject.SetActive(true); //í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸° 
-        yield return new WaitForSeconds(3f);
-
-        SceneManager.LoadScene(GameManager.instance.nextScene);
     }
+
+    IEnumerator cutSceneStart(GameObject scene, int repeatTime) //¿øÇÏ´Â ¾À ¾Ö´Ï¸ŞÀÌ¼ÇÀ» ½ÇÇà½ÃÅ°´Â ÇÔ¼ö 
+    {
+        scene.SetActive(true);
+
+        Debug.Log(scene.name + " started");
+        Debug.Log(scene.GetComponent<openingAnim_cut>().spriteGroup.Length);
+        isSceneWorking = true;
+
+        openingAnim_cut sceneScr = scene.GetComponent<openingAnim_cut>();
+        float frameDelay = sceneScr.frameDelay;
+
+        for(int r=0; r<repeatTime; r++) //¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ·çÇÁÀÎ °æ¿ì ¿©·¯ ¹ø ¹İº¹ÇØ¾ß ÇÏ´Â °æ¿ì°¡ ÀÖÀ» ¼ö ÀÖÀ½ 
+        {
+            for (int index = 0; index < sceneScr.spriteGroup.Length; index++)
+            {
+                scene.GetComponent<SpriteRenderer>().sprite = sceneScr.spriteGroup[index];
+                yield return new WaitForSeconds(frameDelay);
+            }
+        }
+
+        scene.SetActive(false);
+        isSceneWorking = false;
+        Debug.Log(scene.name + " finished");
+    }
+
+    bool whileTyping;
 
     IEnumerator textTyping(Text typingText, string message, float period)
     {
         whileTyping = true;
+        typingText.gameObject.SetActive(true);
 
         for (int i = 0; i < message.Length; i++)
         {
@@ -212,7 +161,10 @@ public class openingAnimation : MonoBehaviour
             yield return new WaitForSeconds(period);
         }
 
+        yield return new WaitForSeconds(1.5f);
+        typingText.gameObject.SetActive(false);
         whileTyping = false;
     }
+
 
 }
