@@ -53,7 +53,7 @@ public class openingAnimation : MonoBehaviour
         yield return new WaitForSeconds(2f); //잠시 어두운 화면 
 
         //#2 : 텍스트타이핑: 혹시 알아? 라스트 다이브 전, 영혼 비석을 세우는 이유 말이야 
-        StartCoroutine(textTyping(textObj[0], message[0], 0.1f));
+        StartCoroutine(textTyping(textObj[0], message[0], 0.08f));
         while (whileTyping)
         {
             yield return null;
@@ -77,7 +77,7 @@ public class openingAnimation : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         //#5 : 텍스트타이핑 : 죽은 이후에도 이름을 남기기 위해서인가?
-        StartCoroutine(textTyping(textObj[1], message[1], 0.1f));
+        StartCoroutine(textTyping(textObj[1], message[1], 0.08f));
         while (whileTyping)
         {
             yield return null;
@@ -93,7 +93,7 @@ public class openingAnimation : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         //#7 : 텍스트타이핑 : 얼마나 많은 무지한 자들이 목숨을 낭비했는지, 경고하기 위해서야
-        StartCoroutine(textTyping(textObj[2], message[2], 0.1f));
+        StartCoroutine(textTyping(textObj[2], message[2], 0.08f));
         while (whileTyping)
         {
             yield return null;
@@ -126,9 +126,6 @@ public class openingAnimation : MonoBehaviour
     IEnumerator cutSceneStart(GameObject scene, int repeatTime) //원하는 씬 애니메이션을 실행시키는 함수 
     {
         scene.SetActive(true);
-
-        Debug.Log(scene.name + " started");
-        Debug.Log(scene.GetComponent<openingAnim_cut>().spriteGroup.Length);
         isSceneWorking = true;
 
         openingAnim_cut sceneScr = scene.GetComponent<openingAnim_cut>();
@@ -145,7 +142,6 @@ public class openingAnimation : MonoBehaviour
 
         scene.SetActive(false);
         isSceneWorking = false;
-        Debug.Log(scene.name + " finished");
     }
 
     bool whileTyping;
