@@ -19,7 +19,9 @@ public class popUpSpikeBox : MonoBehaviour
     {
         spr = GetComponent<SpriteRenderer>();
         spikeColl = GetComponent<BoxCollider2D>();
+
         spr.sprite = spriteGroup[0];
+        spikeColl.offset = new Vector2(0, spikeOffsetGroup[0]);
 
         StartCoroutine(spikeLoop());
     }
