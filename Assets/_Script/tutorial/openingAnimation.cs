@@ -52,7 +52,7 @@ public class openingAnimation : MonoBehaviour
         }
         yield return new WaitForSeconds(2f); //잠시 어두운 화면 
 
-        //#2 : 텍스트타이핑: 혹시 알아? 라스트 다이브 전, 영혼 비석을 세우는 이유 말이야 
+        //#2 : 텍스트타이핑: 혹시 알아? 순례길에 오르기 전, 영혼 비석을 세우는 이유 말이야 
         StartCoroutine(textTyping(textObj[0], message[0], 0.08f));
         while (whileTyping)
         {
@@ -68,8 +68,8 @@ public class openingAnimation : MonoBehaviour
         }
         yield return new WaitForSeconds(1f);
 
-        //#4 : 플레이어 밧줄이 내려감 
-        StartCoroutine(cutSceneStart(cutScene[2], 1));
+        //#4 : 엘리베이터로 내려가기 직전의 플레이어 
+        StartCoroutine(cutSceneStart(cutScene[2], 2));
         while (isSceneWorking)
         {
             yield return null;
@@ -84,31 +84,52 @@ public class openingAnimation : MonoBehaviour
         }
         yield return new WaitForSeconds(2f); //잠시 어두운 화면 
 
-        //#6 : 즐비한 비석을 보여줌 
-        StartCoroutine(cutSceneStart(cutScene[3], 2));
+        //#6 : 엘리베이터가 하강함 
+        StartCoroutine(cutSceneStart(cutScene[3], 1));
+        while (isSceneWorking)
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(3f);
+
+
+        //#7 : 즐비한 비석을 보여줌 
+        StartCoroutine(cutSceneStart(cutScene[4], 1));
         while (isSceneWorking)
         {
             yield return null;
         }
         yield return new WaitForSeconds(1.5f);
 
-        //#7 : 텍스트타이핑 : 얼마나 많은 무지한 자들이 목숨을 낭비했는지, 경고하기 위해서야
+        //#8 : 텍스트타이핑 : 얼마나 많은 무지한 자들이 목숨을 낭비했는지, 경고하기 위해서야
         StartCoroutine(textTyping(textObj[2], message[2], 0.08f));
         while (whileTyping)
         {
             yield return null;
         }
-        yield return new WaitForSeconds(3f); //잠시 어두운 화면 
 
-        //#8 : 그래비티 캐슬의 입구가 드러남 
-        StartCoroutine(cutSceneStart(cutScene[4], 2));
-        while (isSceneWorking)
-        {
-            yield return null;
-        }
+        UIManager.instance.FadeOut(0.1f);
         yield return new WaitForSeconds(2f);
 
-        //#9 : 텍스트 페이드인(타이핑효과 없음) : 결코 용서받지 못하리라. 
+        UIManager.instance.FadeIn(3f);
+        //#9 : 그래비티 캐슬의 입구가 드러남 : 이 씬은 시작과 끝에 페이드인/아웃 효과를 넣음 
+        StartCoroutine(cutSceneStart(cutScene[5], 2));
+
+        float timer = 0;
+        while (isSceneWorking)
+        {
+            timer += Time.deltaTime;
+            if (timer >= 10f)
+            {
+                UIManager.instance.FadeOut(3f);
+                yield return new WaitForSeconds(3f);
+                SceneManager.LoadScene(4);
+            }
+            yield return null;
+        }
+
+        /*
+        //#10 : 텍스트 페이드인(타이핑효과 없음) : 결코 용서받지 못하리라. 
         textObj[3].gameObject.SetActive(true);
         yield return new WaitForSeconds(2f);
 
@@ -117,9 +138,7 @@ public class openingAnimation : MonoBehaviour
             textObj[3].color = new Color(1, 1, 1, 1 - index * 0.01f);
             yield return new WaitForSeconds(0.015f);
         }
-        
-        yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene(4);
+        */
 
     }
 
