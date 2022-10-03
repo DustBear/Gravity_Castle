@@ -5,31 +5,47 @@ using UnityEngine;
 public class floorDoorSensor : MonoBehaviour
 {
     //센서 위에 플레이어 or Box가 올라가면 센서가 인식해서 문을 열어줌
-    public GameObject door_1;
-    public GameObject door_2;
-    //door_1이 x든 y든 +값으로 커지면서 열리는 문, door_2는 반대 
 
-    public float doorLength; //door_1, door_2 문 길이 
-    public float doorOpenDelay; //문이 완전히 닫히거나 열리는데 걸리는 시간
+    [SerializeField] bool isPlayerOn;
+    [SerializeField] bool isObjectOn;
 
-    bool isObjectOn;
-    bool isPlayerOn;
+    public GameObject doorCol;
+    SpriteRenderer spr;
+    BoxCollider2D doorBox;
 
-    Vector3 iniPos_door1;
-    Vector3 iniPos_door2;
-    //맨 처음 닫혀있는 상태에서의 door1/door2 문 위치 
-    //Door 는 로컬위치를 기준으로 움직임 ~> 항상 rotation = 0 유지할 것 
+    public Sprite[] doorSpr_idle;
+    public Sprite[] doorSpr_active;
 
-    void Start()
+    IEnumerator curCoroutine; //한 번에 하나의 코루틴만 작동하도록 함 
+
+    bool isDoorActing = false;
+
+    private void Awake()
     {
-        iniPos_door1 = door_1.transform.localPosition;
-        iniPos_door2 = door_2.transform.localPosition;
+        spr = doorCol.GetComponent<SpriteRenderer>();
+        doorBox = doorCol.GetComponent<BoxCollider2D>();
     }
 
+    void Start()
+    { 
+        spr.sprite = doorSpr_idle[0];
+
+        if (curCoroutine != null)
+        {
+            StopCoroutine(curCoroutine);
+        }
+
+        curCoroutine = doorIdle();
+        StartCoroutine(curCoroutine); //시작하면 기본 애니메이션 실행
+    }
     
     void Update()
     {
-        doorCheck();   
+        if(!isDoorActing)
+        {
+            curCoroutine = doorIdle();
+            StartCoroutine(curCoroutine);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -37,11 +53,27 @@ public class floorDoorSensor : MonoBehaviour
         if(collision.tag == "Player")
         {
             isPlayerOn = true;
+            if (curCoroutine != doorOpen())
+            {
+                StopCoroutine(curCoroutine);
+                curCoroutine = doorOpen();
+
+                StartCoroutine(curCoroutine);
+            }
         }
-        else if(collision.tag == "Platform")
+        if(collision.tag == "Platform")
         {
+            Debug.Log(collision.gameObject.name);
+
             isObjectOn = true;
-        }
+            if (curCoroutine != doorOpen())
+            {
+                StopCoroutine(curCoroutine);
+                curCoroutine = doorOpen();
+
+                StartCoroutine(curCoroutine);
+            }
+        }   
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -49,62 +81,70 @@ public class floorDoorSensor : MonoBehaviour
         if (collision.tag == "Player")
         {
             isPlayerOn = false;
+            if (!isObjectOn) //센서 위에 아무것도 없는 경우 ~> 문 닫음 
+            {
+                StopCoroutine(curCoroutine);
+                curCoroutine = doorClose();
+
+                StartCoroutine(curCoroutine);
+            }
         }
         else if (collision.tag == "Platform")
         {
             isObjectOn = false;
+            if (!isPlayerOn) //센서 위에 아무것도 없는 경우 ~> 문 닫음 
+            {
+                StopCoroutine(curCoroutine);
+                curCoroutine = doorClose();
+
+                StartCoroutine(curCoroutine);
+            }
         }
     }
-
-    void doorCheck()
+   
+    IEnumerator doorIdle() //가만히 있을 때 작동하는 애니메이션
     {
-        if(isPlayerOn || isObjectOn) //플레이어나 박스 중 하나라도 센서 위에 올라가 있으면 문 엶
+        isDoorActing = true;
+
+        while (true)
         {
-            StopCoroutine(doorClose());
-            StartCoroutine(doorOpen());
-        }
-        else //그 밖에는 문 닫음
-        {
-            StopCoroutine(doorOpen());
-            StartCoroutine(doorClose());
+            for (int index = 0; index < doorSpr_idle.Length; index++)
+            {
+                spr.sprite = doorSpr_idle[index];
+                yield return new WaitForSeconds(0.08f);
+            }
         }
     }
 
     IEnumerator doorOpen()
-    {       
-            while (true)
-            {
-                float centerYpos = (iniPos_door1.y + iniPos_door2.y) / 2; //두 문의 중심위치 ~> 여기를 대칭으로 두 문이 움직임 
+    {
+        isDoorActing = true;
 
-                door_1.transform.localPosition = new Vector3(door_1.transform.localPosition.x, door_1.transform.localPosition.y + (doorLength / 100), 0);
-                door_2.transform.localPosition = new Vector3(door_2.transform.localPosition.x, 2*centerYpos - door_1.transform.localPosition.y, 0);
-                
-                if(door_1.transform.localPosition.y >= iniPos_door1.y + doorLength)
-                {
-                    door_1.transform.localPosition = new Vector3(door_1.transform.localPosition.x, iniPos_door1.y + doorLength, 0); //도착하면 문 고정 
-                    break;
-                } //어차피 door2는 door1의 대칭이므로 굳이 따로 트리거 만들 필요 X 
+        for (int index = 0; index < doorSpr_active.Length; index++)
+        {
+            spr.sprite = doorSpr_active[index];
+            yield return new WaitForSeconds(0.05f);
+        }
 
-                yield return new WaitForSeconds(doorOpenDelay / 100);
-            }       
+        spr.enabled = false; //문 여는 애니메이션 끝나면 아예 안 보이게 함 
+        doorBox.enabled = false;
+
+        isDoorActing = false;
     }
 
     IEnumerator doorClose()
-    {        
-            while (true)
-            {
-                float centerYpos = (iniPos_door1.y + iniPos_door2.y) / 2; //두 문의 중심위치 ~> 여기를 대칭으로 두 문이 움직임 
+    {
+        isDoorActing = true;
+        
+        spr.enabled = true;
+        doorBox.enabled = true;
 
-                door_1.transform.localPosition = new Vector3(door_1.transform.localPosition.x, door_1.transform.localPosition.y - (doorLength / 100), 0);
-                door_2.transform.localPosition = new Vector3(door_2.transform.localPosition.x, 2 * centerYpos - door_1.transform.localPosition.y, 0);
-                
-                if (door_1.transform.localPosition.y <= iniPos_door1.y)
-                {
-                    door_1.transform.localPosition = new Vector3(door_1.transform.localPosition.x, iniPos_door1.y, 0); //도착하면 문 고정 
-                    break;
-                } //어차피 door2는 door1의 대칭이므로 굳이 따로 트리거 만들 필요 X 
+        for (int index = doorSpr_active.Length-1; index >= 0; index--)
+        {
+            spr.sprite = doorSpr_active[index];
+            yield return new WaitForSeconds(0.05f);
+        }
 
-                yield return new WaitForSeconds(doorOpenDelay / 100);
-            }       
+        isDoorActing = false; 
     }
 }

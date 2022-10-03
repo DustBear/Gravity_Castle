@@ -351,18 +351,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteGroup:
-  - {fileID: 3396072860851308679, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: 7392869035614304548, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: 3886021254063566908, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: 4078350776907751324, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: 8384333987173909163, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: 9066370981855495661, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: 2246412984398732819, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: 6010402480291405842, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: 8049582196688335504, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: -7932820547137373610, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: -1892392490294781520, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
-  - {fileID: -3333723361451476686, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: -5084526861050062184, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 3107081617500631585, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 1247674330339835248, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: -7716656461290599875, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 7839134371653797503, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: -8715705874911117866, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 1626238094646217869, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: -3352880536932177906, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 4302621842792875837, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: -3335488823261975090, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 1000730243331546982, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 4634115063444002184, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 1802397488930799898, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 7712749189215680930, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 6127897129694415463, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 1732899057754290383, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 1936012189369699173, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 6674871630105382425, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: -724623566811958860, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  - {fileID: 7519204512286821532, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
   frameDelay: 0.2
 --- !u!212 &168262784
 SpriteRenderer:
@@ -404,12 +412,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 3396072860851308679, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
+  m_Sprite: {fileID: -5084526861050062184, guid: fc7fb69eb2bc1ce4282faf3d5b7ce266, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 10, y: 14}
+  m_Size: {x: 11, y: 15}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -562,7 +570,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 742300555}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1055308070}
@@ -974,7 +982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1542103256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1208,16 +1216,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteGroup:
-  - {fileID: 21300000, guid: 9b1661fbb64f9604d97ac1910c7d976e, type: 3}
-  - {fileID: 21300000, guid: 20f61b84eea8b9248aa1d5e71130485e, type: 3}
-  - {fileID: 21300000, guid: 4e64bab0a3e75d34bbbb591d4fd60df0, type: 3}
-  - {fileID: 21300000, guid: f2af0f1f10dc15b4ab0aadb8ad55558d, type: 3}
-  - {fileID: 21300000, guid: ee39442bdfee6e04fa969572b77812a4, type: 3}
-  - {fileID: 21300000, guid: c3b2af05a7282404ab8812e380e6c2e7, type: 3}
-  - {fileID: 21300000, guid: 1771d760fa310db4bbfa68882f15c501, type: 3}
-  - {fileID: 21300000, guid: ca3d080f1d89e3c49aad5f1b39a654f1, type: 3}
-  - {fileID: 21300000, guid: d0012ab410c9e0847810f047b22ba1ed, type: 3}
-  - {fileID: 21300000, guid: fe2bef3841c6ce243a3e3e343983210a, type: 3}
+  - {fileID: 5460121055663149298, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
+  - {fileID: 616194388402831491, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
+  - {fileID: -990653243420704614, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
+  - {fileID: 8612463616424291450, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
+  - {fileID: 3215471568201794814, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
+  - {fileID: 3996150448754521359, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
+  - {fileID: -3452054538636810102, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
+  - {fileID: -8112570126109949494, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
+  - {fileID: 5211662676976338660, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
+  - {fileID: -2765580439347036343, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
   frameDelay: 0.2
 --- !u!212 &1677095042
 SpriteRenderer:
@@ -1259,12 +1267,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9b1661fbb64f9604d97ac1910c7d976e, type: 3}
+  m_Sprite: {fileID: 5460121055663149298, guid: 032ea1ca404a8a44a9688fba4526700d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 10, y: 14}
+  m_Size: {x: 19, y: 15}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1456,7 +1464,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2112235072
 MonoBehaviour:
   m_ObjectHideFlags: 0

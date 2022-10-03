@@ -33,7 +33,7 @@ public class dynamicBox_lever : MonoBehaviour
     private void Awake()
     {
         spr = GetComponent<SpriteRenderer>();
-        dynamicBox = transform.parent.gameObject;
+        dynamicBox = transform.parent.gameObject; //이 스크립트가 들어가 있는 박스 오브젝트 
         rigid = dynamicBox.GetComponent<Rigidbody2D>();
         playerObj = GameObject.FindWithTag("Player");
         playerscr = playerObj.GetComponent<Player>();
@@ -56,7 +56,7 @@ public class dynamicBox_lever : MonoBehaviour
     }
 
     void Update()
-    {
+    {       
         curSavePoint = GameManager.instance.gameData.curAchievementNum;
 
         if(curSavePoint != pastSavePoint) //새로운 세이브포인트가 활성화되면
@@ -113,46 +113,37 @@ public class dynamicBox_lever : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //Debug.Log("platform detected");
-        if(collision.tag == "Platform")
-        {
-
-        }
-    }
-
     Vector3 initDistance;
     
     IEnumerator boxGrab()
     {
         initDistance = dynamicBox.transform.position - playerObj.transform.position;
-        if(playerObj.transform.up == new Vector3(0,1,0) || playerObj.transform.up == new Vector3(0, -1, 0)) //�÷��̾ 0, 180�� ������ �Ӹ��� �� �� 
+        if(playerObj.transform.up == new Vector3(0,1,0) || playerObj.transform.up == new Vector3(0, -1, 0))
         {
-            initDistance = new Vector3(initDistance.x, 0, 0);
+            initDistance = new Vector3(initDistance.x, 0, 0); //플레이어와 box 사이의 수평 방향 거리만 남김 
         }
-        else //�÷��̾ 90, 270�� ������ �Ӹ��� �� �� 
+        else
         {
             initDistance = new Vector3(0, initDistance.y, 0);
         }
 
         initDistance = initDistance.normalized * 0.5f * flipOffset;
        
-        dynamicBox.transform.rotation = Quaternion.Euler(0, 0, 0); //���� ���� 
-        rigid.constraints = RigidbodyConstraints2D.FreezeRotation; //�÷��̾ ����ִ� ���ȿ��� �𼭸��� �ε���� ȸ������ ���� 
+        dynamicBox.transform.rotation = Quaternion.Euler(0, 0, 0); 
+        rigid.constraints = RigidbodyConstraints2D.FreezeRotation; 
 
-        dynamicBox.GetComponent<BoxCollider2D>().isTrigger = true; //��� �÷��̾�� �����ϴ� �ݶ��̴� �浹 ��� �÷����� �����ϴ� �ݶ��̴��� ���� 
-        playerBoxColl.SetActive(true);
+        dynamicBox.GetComponent<BoxCollider2D>().isTrigger = true; //플레이어가 박스를 집어드는 순간 충돌하지 않도록 트리거 체크 
+        playerBoxColl.SetActive(true); //대신 박스와 다른 오브젝트 사이의 충돌은 원래대로 일어나도록 별도의 콜라이더 켜기 
         
-        while (isBoxGrab) //�÷��̾ box�� ��� �ִ� ���� 
+        while (isBoxGrab) //플레이어가 박스를 잡고있는 동안 코루틴은 현재 상태에 머무름 
         {
             if (!playerObj.GetComponent<SpriteRenderer>().flipX)
             {
-                dynamicBox.transform.position = playerObj.transform.position + initDistance + playerObj.transform.up * 0.5f; //box��ġ�� �÷��̾ ���� �����ϵ��� ���� 
+                dynamicBox.transform.position = playerObj.transform.position + initDistance + playerObj.transform.up * 0.5f; //box는 플레이어에 대해 고정된 위치에서 움직임 
                 playerBoxColl.transform.position = dynamicBox.transform.position;
                 yield return null;
             }
-            else //�÷��̾ flipX�� ���� ������ ���ڴ� �ݴ������� �������� �� 
+            else
             {
                 dynamicBox.transform.position = playerObj.transform.position - initDistance + playerObj.transform.up * 0.5f; //box��ġ�� �÷��̾ ���� �����ϵ��� ���� 
                 playerBoxColl.transform.position = dynamicBox.transform.position;
@@ -160,7 +151,7 @@ public class dynamicBox_lever : MonoBehaviour
             }            
         }
 
-        //box ��������        
+        //box를 놓으면   
         if (!playerObj.GetComponent<SpriteRenderer>().flipX)
         {
             dynamicBox.transform.position = dynamicBox.transform.position + 2*initDistance;
@@ -173,7 +164,7 @@ public class dynamicBox_lever : MonoBehaviour
         rigid.constraints = RigidbodyConstraints2D.None;
         
         playerBoxColl.SetActive(false);
-        dynamicBox.GetComponent<BoxCollider2D>().isTrigger = false; //�ٽ� �ݶ��̴� Ŵ 
+        dynamicBox.GetComponent<BoxCollider2D>().isTrigger = false; //박스 콜라이더 다시 켜기 
     }
 
 

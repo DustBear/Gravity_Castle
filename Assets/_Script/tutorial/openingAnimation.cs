@@ -45,7 +45,7 @@ public class openingAnimation : MonoBehaviour
         yield return new WaitForSeconds(3f); //시작하면 잠시 쉼 
 
         //#1 : 주인공의 망토가 바람에 흩날림 
-        StartCoroutine(cutSceneStart(cutScene[0], 3));        
+        StartCoroutine(cutSceneStart(cutScene[0], 2));        
         while (isSceneWorking)
         {
             yield return null;
@@ -122,7 +122,7 @@ public class openingAnimation : MonoBehaviour
             if (timer >= 10f)
             {
                 UIManager.instance.FadeOut(3f);
-                yield return new WaitForSeconds(3f);
+                yield return new WaitForSeconds(4f);
                 SceneManager.LoadScene(4);
             }
             yield return null;
