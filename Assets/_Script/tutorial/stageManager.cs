@@ -59,7 +59,7 @@ public class stageManager : MonoBehaviour
             GameObject temp = Instantiate(stageIcon); //세이브포인트 아이콘 생성 
             savePointIcon.Add(temp);
 
-            temp.transform.position = firstIconPos + new Vector2(iconGap * index, 0);
+            temp.transform.position = firstIconPos + new Vector2(iconGap * (index % 10) , -index/10); //아이콘 생성할 때 10줄 단위로 엔터 침
             temp.GetComponent<savePointIconButton>().savePointNum = index + 1;
             temp.transform.SetParent(iconGroup.transform); //아이콘 그룹에 넣어서 정리 
 
@@ -90,7 +90,6 @@ public class stageManager : MonoBehaviour
             {
                 savePointIcon[index - 1].GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f, 1);
             }
-
         }
     }
 
