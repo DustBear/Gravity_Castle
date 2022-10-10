@@ -74,6 +74,7 @@ public class Player : MonoBehaviour
 
     // 플레이어가 땅에 닿아있는지의 여부 
     [SerializeField]public bool isGrounded;
+    [SerializeField] public bool isOnMovePlatform;
     [SerializeField] bool isOnJumpPlatform = false; 
     RaycastHit2D rayHitIcePlatform;
     RaycastHit2D rayHitJumpBoost;
@@ -1170,15 +1171,17 @@ public class Player : MonoBehaviour
     void HorizontalMove()
     {        
         // 플레이어 좌우움직임 구현 
-        int stageNum = GameManager.instance.gameData.curStageNum;
+        int stageNum = GameManager.instance.gameData.curStageNum; //현재 플레이어가 플레이중인 스테이지 번호 
+
         if (stageNum == 3 && (isHorizontalWind && Physics2D.gravity.x == 0f || isVerticalWind && Physics2D.gravity.y == 0f))
         {
             // Stage3에서 바람이 부는 방향으로는 플레이어가 움직이지 않음 
             return;
         }
 
-        Vector2 locVel = transform.InverseTransformDirection(rigid.velocity);
+        Vector2 locVel = transform.InverseTransformDirection(rigid.velocity); //월드좌표 속도를 로컬좌표 속도로 변환 
 
+        //몇몇 스테이지는 속도 변환값에 보정이 필요 
         if (stageNum == 6 && rayHitIcePlatform.collider != null && InputManager.instance.horizontal == 0f)
         { 
             locVel = new Vector2(Vector2.Lerp(locVel, Vector2.zero, Time.deltaTime * slidingDegree).x , locVel.y);
@@ -1191,8 +1194,15 @@ public class Player : MonoBehaviour
         else 
         {
             locVel = new Vector2(InputManager.instance.horizontal * walkSpeed, locVel.y);
+
+            if (isOnMovePlatform) //움직이는 플랫폼 위에 있을 땐 상대속도를 더해줘야 함 
+            {
+                Vector2 movingPlatformVel = transform.InverseTransformDirection(transform.parent.GetComponent<Rigidbody2D>().velocity);
+                locVel = new Vector2(InputManager.instance.horizontal * walkSpeed + movingPlatformVel.x, locVel.y);
+            }
         }
-        rigid.velocity = transform.TransformDirection(locVel);
+
+        rigid.velocity = transform.TransformDirection(locVel); //로컬좌표 속도를 월드좌표 속도로 변환 
     }
 
     void LimitFallingSpeed()
@@ -1206,17 +1216,31 @@ public class Player : MonoBehaviour
     //플레이어의 오른발, 왼발 ray 체크를 다르게 함 
     RaycastHit2D rayPosHit_left; //왼발
     RaycastHit2D rayPosHit_right; //오른발  
-
+    
     void CheckGround()
-    {        
-        RaycastHit2D rayHitMovingFloor = Physics2D.BoxCast(transform.position, new Vector2(0.5f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 16);
+    {
+        //movingFloor 만 체크하는 rayCast 
+        int layerMask = (-1) - (1 << LayerMask.NameToLayer("Player"));
+        RaycastHit2D rayHitMovingFloor = Physics2D.Raycast(transform.position -  transform.up, -transform.up, 0.05f, layerMask);
+        Debug.DrawRay(transform.position - transform.up, -transform.up * 0.2f, new Color(1, 0, 0));
+
         if (rayHitMovingFloor.collider != null && curState != States.ChangeGravityDir)
         {
-            transform.parent = rayHitMovingFloor.collider.transform;
+            if(rayHitMovingFloor.collider.tag == "MovingFloor")
+            {
+                transform.parent = rayHitMovingFloor.collider.transform;
+                isOnMovePlatform = true;
+            }
+            else
+            {
+                transform.parent = null;
+                isOnMovePlatform = false;
+            }
         }
-        else if (curState != States.MoveOnRope)
+        else
         {
             transform.parent = null;
+            isOnMovePlatform = false;
         }
 
         RaycastHit2D rayHit;

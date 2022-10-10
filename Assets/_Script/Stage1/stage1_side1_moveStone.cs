@@ -11,7 +11,6 @@ public class stage1_side1_moveStone : MonoBehaviour
 
     [SerializeField] Vector3 startPos;
     [SerializeField] Vector3 finishPos;
-    [SerializeField] GameObject fallingSensor;
 
     public bool shouldStoneStart;
     public bool shouldStoneMove;
@@ -19,7 +18,7 @@ public class stage1_side1_moveStone : MonoBehaviour
     Rigidbody2D rigid;
 
     public GameObject moveStoneGear;
-    [SerializeField] float fallDelay;
+    float fallDelay;
 
 
     void Start()
@@ -39,36 +38,39 @@ public class stage1_side1_moveStone : MonoBehaviour
         if (shouldStoneStart)
         {
             StartCoroutine(stoneStart());
-        }
-        if (shouldStoneMove)
-        {
-            stoneMove();
-        }
-        if (shouldStoneFall)
-        {
-            stoneFall();
-        }
+        }       
     }
 
     IEnumerator stoneStart()
     {
         shouldStoneStart = false;
-     
-        transform.position += new Vector3(0, 0.05f, 0);
+
+        Vector3 vibrateDir = (startPos - finishPos).normalized;
+
+        //stone이 움직이기 전 위 아래로 살짝 진동함 
+        transform.position += vibrateDir * 0.05f;
         yield return new WaitForSeconds(0.08f);
-        transform.position += new Vector3(0, -0.05f, 0);
+        transform.position -= vibrateDir * 0.05f;
         yield return new WaitForSeconds(0.08f);
-        transform.position += new Vector3(0, 0.05f, 0);
+        transform.position -= vibrateDir * 0.05f;
         yield return new WaitForSeconds(0.08f);
-        transform.position += new Vector3(0, -0.05f, 0);
+        transform.position += vibrateDir * 0.05f;
         yield return new WaitForSeconds(0.08f);
 
         yield return new WaitForSeconds(0.5f); //레버를 당기고 0.82초가 지나야 돌이 움직이기 시작
+
+        //stone 진동이 끝나면 목표지점으로 움직이기 시작 
         shouldStoneMove = true;
+        while (shouldStoneMove)
+        {
+            stoneMove();
+            yield return null;
+        }
+        
     }
     void stoneMove()
     {
-        rigid.velocity = transform.up * moveSpeed;
+        rigid.velocity = (finishPos - startPos).normalized * moveSpeed;
         moveStoneGear.transform.Rotate(0, 0, 360/moveTime * Time.deltaTime); //stone이 움직이는 동안 기어는 시계방향으로 한바퀴 회전함
 
         Vector3 toStartPos = startPos - transform.position;
@@ -101,18 +103,25 @@ public class stage1_side1_moveStone : MonoBehaviour
 
         shouldStoneFall = true;
         fallDelay = 0; //타이머 초기화 
+
+        while (shouldStoneFall)
+        {
+            stoneFall();
+            yield return null;
+        }
     }
  
     void stoneFall()
     {
+        int gravityScale = 3;
         if (rigid.velocity.y <= -limitSpeed) //속도 상한에 도달하면 속도 고정 
         {
-            rigid.velocity = -transform.up * limitSpeed;
+            rigid.velocity = -(finishPos - startPos).normalized * limitSpeed;
         }
         else
         {
-            float fallSpeed = 4.9f * fallDelay; //가속도 9.8인 등가속도운동(1/2*t^2에 비례)
-            rigid.velocity = -transform.up * fallSpeed;
+            float fallSpeed = gravityScale * 4.9f * fallDelay; //가속도 9.8인 등가속도운동(1/2*t^2에 비례)
+            rigid.velocity = -(finishPos - startPos).normalized * fallSpeed;
         }
         
         

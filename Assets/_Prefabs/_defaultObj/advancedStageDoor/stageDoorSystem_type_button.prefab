@@ -128,9 +128,10 @@ GameObject:
   - component: {fileID: 6715983682375319597}
   - component: {fileID: 6715983682375319598}
   - component: {fileID: 5645501833033756275}
+  - component: {fileID: 7135275830964715758}
   m_Layer: 3
   m_Name: stageDoor
-  m_TagString: Platform
+  m_TagString: MovingFloor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -224,6 +225,7 @@ MonoBehaviour:
   doorLength: 4
   doorPeriod: 1.5
   thresholdPoint: {fileID: 0}
+  doorActiveThreshold: 0
   disposable: 0
 --- !u!61 &6715983682375319598
 BoxCollider2D:
@@ -347,6 +349,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!50 &7135275830964715758
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6715983682375319586}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &6715983682383562859
 GameObject:
   m_ObjectHideFlags: 0

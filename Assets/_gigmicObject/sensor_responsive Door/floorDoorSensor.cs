@@ -63,8 +63,6 @@ public class floorDoorSensor : MonoBehaviour
         }
         if(collision.tag == "Platform")
         {
-            Debug.Log(collision.gameObject.name);
-
             isObjectOn = true;
             if (curCoroutine != doorOpen())
             {
