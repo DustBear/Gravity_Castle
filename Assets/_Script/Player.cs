@@ -399,9 +399,14 @@ public class Player : MonoBehaviour
         else if (readyToLand())
         {
             ChangeState(States.Land); 
-        }else if (readyToJump())
+        }
+        else if (readyToJump())
         {
             ChangeState(States.Jump); 
+        }
+        else if (readyToLever())
+        {
+            ChangeState(States.AccessLever);
         }
     }
 
