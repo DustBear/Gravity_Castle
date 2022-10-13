@@ -5,15 +5,13 @@ using UnityEngine;
 public class moveBox_lever : MonoBehaviour
 {
     public GameObject moveStone;
-
-    Animator anim;
+   
     Rigidbody2D rigid;
     SpriteRenderer spr;
     public Sprite[] spriteGroup; //[0]=idle  [1]=left  [2]=right
 
     public float accelSpeed; //가속도 
     public float maxSpeed;
-    public int animWheelDir; // 1 or -1 
 
     [SerializeField] bool isPlayerOn;
     [SerializeField] bool isLeverAct;
@@ -31,7 +29,6 @@ public class moveBox_lever : MonoBehaviour
         rigid = moveStone.GetComponent<Rigidbody2D>();
         rigid.bodyType = RigidbodyType2D.Kinematic;
 
-        anim = moveStone.GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
 
         isPlayerOn = false;
@@ -48,7 +45,6 @@ public class moveBox_lever : MonoBehaviour
             isMoveHorizontal = true;
         }
         spr.sprite = spriteGroup[0];
-        anim.SetFloat("wheelSpeed", 0f);
         leverArrow.SetActive(false);
     }
 
@@ -142,42 +138,6 @@ public class moveBox_lever : MonoBehaviour
         {
             rigid.velocity = Vector3.zero;//오른쪽 화살표에서 손을 뗐고 왼쪽 화살표 또한 누르지 않고 있을 때 
             spr.sprite = spriteGroup[0];
-        }
-
-        animationManager();
-    }
-
-    void animationManager()
-    {       
-        if (isMoveHorizontal)
-        {
-            if(rigid.velocity.x > 0.1f)
-            {
-                if(anim.GetFloat("wheelSpeed") != animWheelDir) anim.SetFloat("wheelSpeed", animWheelDir);
-            }
-            else if(rigid.velocity.x < -0.1f)
-            {
-                if (anim.GetFloat("wheelSpeed") != -animWheelDir) anim.SetFloat("wheelSpeed", -animWheelDir);
-            }
-            else
-            {
-                if (anim.GetFloat("wheelSpeed") != 0) anim.SetFloat("wheelSpeed", 0f);
-            }
-        }
-        else
-        {
-            if (rigid.velocity.y > 0.1f)
-            {
-                if (anim.GetFloat("wheelSpeed") != animWheelDir) anim.SetFloat("wheelSpeed", animWheelDir);
-            }
-            else if (rigid.velocity.y < -0.1f)
-            {
-                if (anim.GetFloat("wheelSpeed") != -animWheelDir) anim.SetFloat("wheelSpeed", -animWheelDir);
-            }
-            else
-            {
-                if (anim.GetFloat("wheelSpeed") != 0) anim.SetFloat("wheelSpeed", 0);
-            }
         }
     }
 

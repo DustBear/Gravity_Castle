@@ -602,7 +602,7 @@ MonoBehaviour:
   jumpChargeSpeed: 20
   ropeAccessSpeed: 8
   ropeMoveSpeed: 4
-  leverRotateDelay: 1.8
+  leverRotateDelay: 1.2
   windForce: 60
   slidingDegree: 8
   isPlayerExitFromWInd: 0
@@ -616,6 +616,7 @@ MonoBehaviour:
   destRot: 0
   isPlayerGrab: 0
   isGrounded: 1
+  isOnMovePlatform: 0
   isOnJumpPlatform: 0
   leftArrow: {fileID: 5135453549317223075}
   rightArrow: {fileID: 5135453548562255226}

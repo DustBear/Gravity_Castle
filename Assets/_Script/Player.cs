@@ -753,7 +753,7 @@ public class Player : MonoBehaviour
     float initZRot;
     void ChangeGravityDir_Update()
     {
-        if (isCameraShake) return; //카메라 회전이 끝나고 레버회전 시작 
+        if (isCameraShake) return; //카메라 진동이 끝나고 레버회전 시작 
 
         cameraObj.transform.position = cameraObj.GetComponent<MainCamera>().cameraPosCal();
         transform.localPosition = Vector2.MoveTowards(transform.localPosition, destPos_afterLevering, Time.unscaledDeltaTime / leverRotateDelay);

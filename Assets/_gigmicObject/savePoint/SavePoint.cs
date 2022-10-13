@@ -122,6 +122,6 @@ public class SavePoint : MonoBehaviour
             spr.sprite = spriteGroup[index];
             yield return new WaitForSeconds(0.03f);
         }
-        cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.5f); //세이브스톤이 박힐 때 카메라 진동 
+        cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.4f); //세이브스톤이 박힐 때 카메라 진동 
     }
 }

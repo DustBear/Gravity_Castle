@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class stage1_side1_moveStone : MonoBehaviour
 {
-    [SerializeField] float moveTime; //stone이 최고점에 도달하는 데 걸리는 시간
-    float moveSpeed;
+    [SerializeField] float moveTime; //stone이 목적지에 도달하는 데 걸리는 시간
+    float moveSpeed; //이동거리를 moveTime으로 나눈 값 
+
     [SerializeField] float limitSpeed; //떨어질 때 낙하속도 상한 
     [SerializeField] float floatTime; //stone이 최고점에 도달하고 정지해 있는 시간
 
@@ -15,21 +16,26 @@ public class stage1_side1_moveStone : MonoBehaviour
     public bool shouldStoneStart;
     public bool shouldStoneMove;
     public bool shouldStoneFall;
+    public Sprite[] spriteGroup; //[0]은 불 꺼진 상태 [1]~[14] 은 불이 서서히 들어오는 상태(14 frame) 
     Rigidbody2D rigid;
 
-    public GameObject moveStoneGear;
-    float fallDelay;
-
+    float fallDelay; //stone이 떨어진 후 걸린 시간 
+    SpriteRenderer spr;
+    GameObject cameraObj;
 
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
+        spr = GetComponent<SpriteRenderer>();
+        cameraObj = GameObject.Find("Main Camera");
 
         shouldStoneStart = false;
         shouldStoneMove = false;
 
         moveTime = moveTime - 0.82f;
         moveSpeed = (finishPos - startPos).magnitude / moveTime; //moveSpeed는 moveTime에 따라 달라진다 
+
+        spr.sprite = spriteGroup[0]; //불 꺼진 상태 
     }
 
     void Update()
@@ -47,13 +53,18 @@ public class stage1_side1_moveStone : MonoBehaviour
 
         Vector3 vibrateDir = (startPos - finishPos).normalized;
 
-        //stone이 움직이기 전 위 아래로 살짝 진동함 
+        //stone이 움직이기 전 위 아래로 살짝 진동하면서 깜빡임 
         transform.position += vibrateDir * 0.05f;
+        spr.sprite = spriteGroup[spriteGroup.Length - 1]; 
         yield return new WaitForSeconds(0.08f);
+
         transform.position -= vibrateDir * 0.05f;
         yield return new WaitForSeconds(0.08f);
+
         transform.position -= vibrateDir * 0.05f;
+        spr.sprite = spriteGroup[0];
         yield return new WaitForSeconds(0.08f);
+
         transform.position += vibrateDir * 0.05f;
         yield return new WaitForSeconds(0.08f);
 
@@ -68,10 +79,24 @@ public class stage1_side1_moveStone : MonoBehaviour
         }
         
     }
+
+    float spriteTimer = 0; //stone이 움직이는 동안 타이머가 돌아가며 진행도에 맞춰 sprite 바꿔줌 
+    int spriteIndex = 1;
+
     void stoneMove()
     {
+        spriteTimer += Time.deltaTime;
         rigid.velocity = (finishPos - startPos).normalized * moveSpeed;
-        moveStoneGear.transform.Rotate(0, 0, 360/moveTime * Time.deltaTime); //stone이 움직이는 동안 기어는 시계방향으로 한바퀴 회전함
+
+        if(spriteTimer >= moveTime / (spriteGroup.Length - 1))
+        {
+            if(spriteIndex < spriteGroup.Length - 1)
+            {
+                spriteIndex++;
+                spr.sprite = spriteGroup[spriteIndex];
+                spriteTimer = 0; //타이머 초기화 
+            }            
+        }
 
         Vector3 toStartPos = startPos - transform.position;
         Vector3 toFinishPos = finishPos - transform.position;
@@ -79,10 +104,11 @@ public class stage1_side1_moveStone : MonoBehaviour
         if((Vector3.Dot(toStartPos,toFinishPos) > 0) && rigid.velocity.magnitude > 0) 
             //stone으로부터 finishPos 까지의 벡터의 방향이 stone-startPos 벡터의 방향과 같고 stone의 속도가 0이상이면 목표지점에 도착한것으로 봄
         {
+            spriteTimer = 0;
             shouldStoneMove = false;
             rigid.velocity = Vector3.zero;
             transform.position = finishPos;
-            moveStoneGear.transform.rotation = Quaternion.Euler(0, 0, 0);
+            spriteIndex = 1;
 
             StartCoroutine("stoneFloat");
         }
@@ -90,15 +116,12 @@ public class stage1_side1_moveStone : MonoBehaviour
     
     IEnumerator stoneFloat() //stone이 공중에 머무른 상태에서 잠시 머무르다가 떨어짐
     {
-        for (int index = 1; index <= 4; index++) //4번 반시계방향으로 90도씩 회전한 뒤 낙하
+        for (int index = 1; index <= 4; index++) //4번 깜빡인 다음 낙하 
         {
-            yield return new WaitForSeconds(floatTime / 4 - 0.1f);
-            moveStoneGear.transform.Rotate(0, 0, -90);
-
-            yield return new WaitForSeconds(0.05f);
-            moveStoneGear.transform.Rotate(0, 0, -10);
-            yield return new WaitForSeconds(0.05f);
-            moveStoneGear.transform.Rotate(0, 0, 10);           
+            yield return new WaitForSeconds(floatTime / 8);
+            spr.sprite = spriteGroup[0];
+            yield return new WaitForSeconds(floatTime / 8);
+            spr.sprite = spriteGroup[spriteGroup.Length-1];
         }
 
         shouldStoneFall = true;
@@ -134,7 +157,9 @@ public class stage1_side1_moveStone : MonoBehaviour
             shouldStoneFall = false;
             rigid.velocity = Vector3.zero;
             transform.position = startPos;
-            moveStoneGear.transform.rotation = Quaternion.Euler(0, 0, 0);
+            spr.sprite = spriteGroup[0];
+
+            cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.4f);
         }
     }
 }
