@@ -751,18 +751,34 @@ public class Player : MonoBehaviour
 
     float timer=0;
     float initZRot;
+
     void ChangeGravityDir_Update()
     {
         if (isCameraShake) return; //카메라 진동이 끝나고 레버회전 시작 
 
         cameraObj.transform.position = cameraObj.GetComponent<MainCamera>().cameraPosCal();
         transform.localPosition = Vector2.MoveTowards(transform.localPosition, destPos_afterLevering, Time.unscaledDeltaTime / leverRotateDelay);
-       
-        float newRotZ = transform.eulerAngles.z + destRot * Time.unscaledDeltaTime / leverRotateDelay;
+        float newRotZ;
+
+        //90도 회전하는 경우와 180도 회전하는 경우 모두에 회전 각속도 일정하게 함 
+        if (!shouldRotateHalf) //90도 회전하는 경우
+        {
+            newRotZ = transform.eulerAngles.z + destRot * Time.unscaledDeltaTime / leverRotateDelay;
+        }
+        else //180도 회전하는 경우 
+        {
+            newRotZ = transform.eulerAngles.z + destRot * Time.unscaledDeltaTime / (leverRotateDelay*2);
+
+        }
+
         transform.rotation = Quaternion.Euler(0, 0, newRotZ);
         timer += Time.unscaledDeltaTime;
 
-        if(timer >= leverRotateDelay)
+        if(timer >= leverRotateDelay && !shouldRotateHalf)
+        {
+            rotationCorrect();
+        }
+        else if(timer >= leverRotateDelay*2 && shouldRotateHalf)
         {
             rotationCorrect();
         }
