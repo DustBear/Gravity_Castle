@@ -12,6 +12,7 @@ public class stage01_side2_moveWall : MonoBehaviour
     public bool isMoving; //움직이고 있는 동안은 레버 조작x 
 
     public Sprite[] spriteGroup;
+    public int cycleNum; //spriteGroup 주기를 몇 번 돌릴지 
     SpriteRenderer spr;
     void Start()
     {
@@ -47,21 +48,27 @@ public class stage01_side2_moveWall : MonoBehaviour
 
     IEnumerator moveAni_right()
     {
-        //moveTime 동안 4바퀴 회전(시계방향)
-        for(int index=1; index<=spriteGroup.Length*4; index++)
+        //moveTime 동안 1바퀴 회전(시계방향)
+        for(int count=1; count<=cycleNum; count++)
         {
-            spr.sprite = spriteGroup[index % spriteGroup.Length];
-            yield return new WaitForSeconds(moveTime / (spriteGroup.Length * 4 - 1));
-        }
+            for (int index = 0; index < spriteGroup.Length; index++)
+            {
+                spr.sprite = spriteGroup[index];
+                yield return new WaitForSeconds(moveTime / (spriteGroup.Length*cycleNum-1));
+            }            
+        }       
     }
     IEnumerator moveAni_left()
     {
-        //moveTime 동안 4바퀴 회전(반시계방향)
-        for (int index = spriteGroup.Length * 4; index >= 1; index--)
+        //moveTime 동안 1바퀴 회전(반시계방향)
+        for(int count=1; count<=cycleNum; count++)
         {
-            spr.sprite = spriteGroup[index % spriteGroup.Length];
-            yield return new WaitForSeconds(moveTime / (spriteGroup.Length * 4 - 1));
-        }
+            for (int index = spriteGroup.Length - 1; index >= 0; index--)
+            {
+                spr.sprite = spriteGroup[index];
+                yield return new WaitForSeconds(moveTime / (spriteGroup.Length*cycleNum-1));
+            }
+        }       
     }
 
     IEnumerator stoneMoveCor(int dirPos) //dirPos=1,2 중 한 군데로 이동 
@@ -85,7 +92,7 @@ public class stage01_side2_moveWall : MonoBehaviour
             direction = -direction;//방향 반대로 바꿔줘야 함 
         }
 
-        float frameTime = moveTime / 100;
+        float frameTime = moveTime / 200;
         switch (dirPos) //기어 돌아가는 애니메이션 실행 
         {
             case 1:
@@ -96,9 +103,9 @@ public class stage01_side2_moveWall : MonoBehaviour
                 break;
         }
 
-        for(int index=1; index<=100; index++)
+        for(int index=1; index<=200; index++)
         {
-            transform.position += (direction*distance)/100;
+            transform.position += (direction*distance)/200;
             yield return new WaitForSeconds(frameTime);
         }
 

@@ -75,8 +75,7 @@ public class elevatorCage : MonoBehaviour
     {
         if(collision.tag == "Player" && collision.transform.up == transform.up)
         {
-            //플레이어와 엘리베이터의 회전각이 다르면 활성화 안됨
-            InputManager.instance.isJumpBlocked = true; //엘리베이터 내에서는 점프 불가능 
+            //플레이어와 엘리베이터의 회전각이 다르면 활성화 안됨 
             isPlayerOnBell = true;
         }       
     }
@@ -84,8 +83,7 @@ public class elevatorCage : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            InputManager.instance.isJumpBlocked = false;
-            isPlayerOnBell = false;
+            isPlayerOnBell = false;           
         }
     }
     void Update()

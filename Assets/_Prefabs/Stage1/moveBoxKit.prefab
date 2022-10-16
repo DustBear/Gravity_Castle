@@ -27,8 +27,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1155660111025552002}
   - {fileID: 5036662207063838440}
+  - {fileID: 1155660111025552002}
   m_Father: {fileID: 2811746285003243354}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -61,7 +61,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2598044911820844659}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2566125588821943654
 SpriteRenderer:
@@ -248,6 +248,8 @@ MonoBehaviour:
   - {fileID: 5265027350604027503, guid: da5a857990160d04ea5d2090a74a0eab, type: 3}
   - {fileID: -3247546508449898186, guid: da5a857990160d04ea5d2090a74a0eab, type: 3}
   - {fileID: -3874759380448987934, guid: da5a857990160d04ea5d2090a74a0eab, type: 3}
+  boxSprites: []
+  curSpriteIndex: 0
   accelSpeed: 0
   maxSpeed: 0
   isPlayerOn: 0
@@ -293,7 +295,6 @@ GameObject:
   - component: {fileID: 2811746285703900672}
   - component: {fileID: 2811746285703900687}
   - component: {fileID: 2811746285703900686}
-  - component: {fileID: 2552000641871578858}
   m_Layer: 3
   m_Name: moveBox
   m_TagString: Platform
@@ -413,25 +414,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!95 &2552000641871578858
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2811746285703900685}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 83cfff276a940824cb2e0e44854ca8cb, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6736200018182372164
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,7 +443,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2598044911820844659}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &758275983832433330
 SpriteRenderer:

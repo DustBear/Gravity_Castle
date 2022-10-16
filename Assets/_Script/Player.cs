@@ -38,7 +38,8 @@ public class Player : MonoBehaviour
     }
     StateMachine<States> fsm;
     public static States curState {get; private set;}
-    Func<bool> readyToFall, readyToLand, readyToJump, readyToGrab, readyToPowerJump, readyToRope, readyToLever , readyToPowerLever;
+    Func<bool> readyToFall, readyToJump, readyToGrab, readyToPowerJump, readyToRope, readyToLever , readyToPowerLever;
+    //readyToLand 만 별도 함수로 분리하여 선언 
 
     // Walk
     public bool isPlayerExitFromWInd; 
@@ -95,12 +96,12 @@ public class Player : MonoBehaviour
     //사운드 기믹 
     AudioSource sound;
     [SerializeField] AudioClip moveSound; 
-    [SerializeField] AudioClip jump_landSound; 
+    [SerializeField] AudioClip jump_landSound;
+    [SerializeField] AudioClip activeSound; //플레이어가 E 눌러서 활성화시킬 때의 소리
+    [SerializeField] AudioClip selectSound; //플레이어가 양 화살표를 눌러 중력을 바꿀 때의 소리 
 
     GameObject cameraObj;
     public bool isCameraShake;
-
-    public bool isLand;
 
     void Awake()
     {
@@ -128,9 +129,7 @@ public class Player : MonoBehaviour
         InputManager.instance.isJumpBlocked = false;
 
         //플레이어가 각 state 로 전이하기 위한 조건 
-        readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //땅이나 강화발판에 닿아있지 않으면 
-        readyToLand = () => (isGrounded || isOnJumpPlatform) && (int)transform.InverseTransformDirection(rigid.velocity).y <= 0; 
-        //
+        readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //땅이나 강화발판에 닿아있지 않으면         
         readyToGrab = () => isPlayerGrab; //isPlayerGrab 이 true 이면 오브젝트 잡기로 이동 
 
         readyToJump = () => (jumpTimer > 0) && (!isOnJumpPlatform) && (groundedRemember > 0);
@@ -177,13 +176,62 @@ public class Player : MonoBehaviour
         jumpTimer = 0; //jumpTimer 초기화
         boxGrabColl.SetActive(false);
        
-        UIManager.instance.FadeIn(1.5f);
+        if(GameManager.instance.gameData.curAchievementNum != 0) //스테이지를 맨 처음 시작할 땐 별도의 연출코드가 붙음
+        {
+            UIManager.instance.FadeIn(1.5f);
+        }
     }
 
-    private void Update()
+    bool readyToLand() //착지 동작은 발판이 움직이는 물체인지 아닌지에 따라 달라져야 하므로 복잡한 알고리즘 가짐. 별도 함수로 구분 
     {
-        isLand = readyToLand();
+        //Debug.Log("error occured");
+        if (transform.parent == null) //플레이어의 부모오브젝트가 없음 
+        {
+            if ((isGrounded || isOnJumpPlatform) && (int)transform.InverseTransformDirection(rigid.velocity).y <= 0)
+            {
+                //땅 or 강화발판에 닿아있으면서 y축방향 속도가 음수이면 true 반환
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else //플레이어 부모오브젝트가 있으면 
+        {
+            Vector3 platformVel; //플레이어가 밟고있는 발판의 속도 
 
+            if (transform.parent.GetComponent<Rigidbody2D>() != null) //발판이 rigidBody를 자체적으로 가지고 있으면 
+            {
+                platformVel = transform.parent.GetComponent<Rigidbody2D>().velocity;
+            }
+            else //만약 발판이 자체 rigidBody를 가지고있지 않으면 (ex) 엘리베이터 
+            {
+                GameObject parentObj = transform.parent.gameObject;
+                transform.parent = parentObj.transform.parent.transform; //발판의 부모 오브젝트로 플레이어 계층 이동 
+
+                platformVel = transform.parent.GetComponent<Rigidbody2D>().velocity;
+            }
+
+            float relativeVel = transform.InverseTransformDirection(rigid.velocity).y - Vector3.Dot(transform.up, platformVel);
+
+            //플레이어가 밟고있는 발판에 대한 플레이어의 상대속도 
+            //발판의 플레이어 수직축 방향 속도성분은 플레이어의 transform.up 과 발판의 속도를 내적하여 구함 
+
+            if ((isGrounded || isOnJumpPlatform) && (int)relativeVel <= 0)
+            {
+                //땅 or 강화발판에 닿아있으면서 y축방향 속도가 음수이면 true 반환
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+   
+    private void Update()
+    {        
         walkSoundCheck();
         AnimationManager();
 
@@ -208,7 +256,8 @@ public class Player : MonoBehaviour
 
     void walkSoundCheck()
     {
-        if(fsm.State == States.Walk && (isGrounded || isOnJumpPlatform))
+        if(fsm.State == States.Walk && (isGrounded || isOnJumpPlatform) 
+            && Mathf.Abs(transform.InverseTransformDirection(rigid.velocity).x) > 0.1f ) //속도가 0.1보다 커야 함
         {
             if (!sound.isPlaying)
             {
@@ -655,6 +704,9 @@ public class Player : MonoBehaviour
     {
         leftArrow.SetActive(true);
         rightArrow.SetActive(true);
+
+        sound.clip = activeSound;
+        sound.Play();
     }
 
     void SelectGravityDir_Update()
@@ -662,6 +714,9 @@ public class Player : MonoBehaviour
         // 좌우 화살표 누르면 ~> 실제 레버 작동단계로 이행
         if (InputManager.instance.horizontalDown)
         {
+            sound.clip = selectSound;
+            sound.Play();
+
             ChangeState(States.ChangeGravityDir);
         }
         // 위 화살표 누르면 ~> 레버 작동 캔슬 
@@ -883,7 +938,6 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        // 어떤 스테이지든 spike에 닿으면 죽음 
         if (other.gameObject.CompareTag("Spike") && !isDieCorWork)
         {
             StartCoroutine(Die());
@@ -1218,6 +1272,11 @@ public class Player : MonoBehaviour
 
             if (isOnMovePlatform) //움직이는 플랫폼 위에 있을 땐 상대속도를 더해줘야 함 
             {
+                if(transform.parent.GetComponent<Rigidbody2D>() == null)
+                {
+                    transform.parent = transform.parent.parent.transform; //만약 플레이어의 parent 가 rigidbody 없으면 그 부모오브젝트로 이동 
+                }
+
                 Vector2 movingPlatformVel = transform.InverseTransformDirection(transform.parent.GetComponent<Rigidbody2D>().velocity);
                 locVel = new Vector2(InputManager.instance.horizontal * walkSpeed + movingPlatformVel.x, locVel.y);
             }
@@ -1320,8 +1379,8 @@ public class Player : MonoBehaviour
                     rayStartPos_right = middlePos + new Vector2(0, centerToLeg);
                 }
 
-                rayPosHit_left = Physics2D.Raycast(rayStartPos_left, -transform.up, 0.05f, LayerMask.GetMask("Platform"));
-                rayPosHit_right = Physics2D.Raycast(rayStartPos_right, -transform.up, 0.05f, LayerMask.GetMask("Platform"));
+                rayPosHit_left = Physics2D.Raycast(rayStartPos_left, -transform.up, 0.1f, LayerMask.GetMask("Platform"));
+                rayPosHit_right = Physics2D.Raycast(rayStartPos_right, -transform.up, 0.1f, LayerMask.GetMask("Platform"));
 
                 //Debug.DrawRay(rayStartPos_left, -transform.up * 0.2f, new Color(1, 0, 0));
                 //Debug.DrawRay(rayStartPos_right, -transform.up * 0.2f, new Color(1, 0, 0));

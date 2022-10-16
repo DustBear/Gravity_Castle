@@ -208,12 +208,17 @@ MonoBehaviour:
   - {fileID: -3428844462333834928, guid: ce6ec502307b05a4e8c415e493e52bc2, type: 3}
   - {fileID: 7328505282499275857, guid: ce6ec502307b05a4e8c415e493e52bc2, type: 3}
   - {fileID: -7836598406832983630, guid: ce6ec502307b05a4e8c415e493e52bc2, type: 3}
-  spikeColl: {fileID: 604410337332910307}
+  spikeColl: {fileID: 604410337332910317}
   doorType: 2
   doorLength: 3
   doorPeriod: 1.5
   thresholdPoint: {fileID: 0}
   doorActiveThreshold: 0
+  spikeOffsetGroup:
+  - {x: 0, y: 0}
+  - {x: 0.3, y: 0}
+  - {x: 0.5, y: 0}
+  - {x: 0.8, y: 0}
   disposable: 0
 --- !u!61 &604410335805974111
 BoxCollider2D:
@@ -316,6 +321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 604410337332910316}
   - component: {fileID: 604410337332910317}
+  - component: {fileID: 2314086057745203726}
   m_Layer: 19
   m_Name: stageDoor_spikeColl
   m_TagString: Spike
@@ -363,6 +369,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 2.6}
   m_EdgeRadius: 0
+--- !u!50 &2314086057745203726
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604410337332910307}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &604410337489264561
 GameObject:
   m_ObjectHideFlags: 0

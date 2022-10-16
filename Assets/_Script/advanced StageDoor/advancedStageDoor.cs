@@ -5,7 +5,7 @@ using UnityEngine;
 public class advancedStageDoor : MonoBehaviour
 {
     public Sprite[] spritesGroup = new Sprite[4]; //0은 가시가 없는 버전, 3는 가시가 완전히 활성화된 버전
-    public GameObject spikeColl;
+    public BoxCollider2D spikeColl;
     public int doorType;
     //type1 은 원래는 내려가 있지만 버튼 누르면 올라가는 타입(sprite0로 시작, sprite3로 끝)
     //type2 는 원래 올라가 있고 콜라이더 통과하면 내려가는 타입(sprite3로 시작, sprite0로 끝)
@@ -19,7 +19,10 @@ public class advancedStageDoor : MonoBehaviour
     AudioSource sound;
 
     Vector2 initialPos; //맨 처음 초기화 할 위치
-    
+
+    public Vector2[] spikeOffsetGroup; 
+    //[0]이 가시 들어간 상태, [3]이 가시 튀어나온 상태 
+
     public bool disposable; 
     //이 조건이 설정된 문은 사이드 스테이지 내의 퍼즐기믹에 포함된 문으로 리스폰할 때 마다 '매번' 원 상태로 초기화된다
 
@@ -41,13 +44,13 @@ public class advancedStageDoor : MonoBehaviour
             if(doorType == 1)
             {
                 spr.sprite = spritesGroup[3];
-                spikeColl.SetActive(true);
+                spikeColl.offset = spikeOffsetGroup[3];
             }
 
             else if(doorType == 2)
             {
                 spr.sprite = spritesGroup[0];
-                spikeColl.SetActive(false);
+                spikeColl.offset = spikeOffsetGroup[0];
             }
         }       
         else //일반적인 메인 스테이지 내에 있는 문
@@ -58,13 +61,13 @@ public class advancedStageDoor : MonoBehaviour
                 {
                     spr.sprite = spritesGroup[0];
                     transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + doorLength, 0);
-                    spikeColl.SetActive(false);
+                    spikeColl.offset = spikeOffsetGroup[0];
                 }
                 else //콜라이더 반응하면 내려오는 문 ~> 내려온 채로 있어야 함
                 {
                     spr.sprite = spritesGroup[3];
                     transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - doorLength, 0);
-                    spikeColl.SetActive(true);
+                    spikeColl.offset = spikeOffsetGroup[3];
                 }
             }
 
@@ -73,12 +76,12 @@ public class advancedStageDoor : MonoBehaviour
                 if (doorType == 1)
                 {
                     spr.sprite = spritesGroup[3];
-                    spikeColl.SetActive(true);
+                    spikeColl.offset = spikeOffsetGroup[3];
                 }
                 else
                 {
                     spr.sprite = spritesGroup[0];
-                    spikeColl.SetActive(false);
+                    spikeColl.offset = spikeOffsetGroup[0];
                 }
             }
         }       
@@ -162,10 +165,9 @@ public class advancedStageDoor : MonoBehaviour
         for(int index=0; index<4; index++)
         {
             spr.sprite = spritesGroup[index];
-            yield return new WaitForSeconds(0.5f);
+            spikeColl.offset = spikeOffsetGroup[index];
+            yield return new WaitForSeconds(0.25f);
         }
-
-        spikeColl.SetActive(true);
     }
 
     IEnumerator spikeDeActive() //가시 비활성화시키는 함수 
@@ -173,25 +175,24 @@ public class advancedStageDoor : MonoBehaviour
         for (int index = 3; index >=0; index--)
         {
             spr.sprite = spritesGroup[index];
-            yield return new WaitForSeconds(0.5f);
+            spikeColl.offset = spikeOffsetGroup[index];
+            yield return new WaitForSeconds(0.25f);
         }
-
-        spikeColl.SetActive(false);
     }
 
-    IEnumerator doorShake() //문이 열릴 때, 문이 닫힐 때 흔들림 ~> 0.6초간 흔들림 
+    IEnumerator doorShake() //문이 열릴 때, 문이 닫힐 때 흔들림 ~> 0.48초간 흔들림 
     {
         float shakeDegree = 0.03f; //위아래로 흔들림
         for(int index=0; index<3; index++)
         {
             transform.localPosition = new Vector3(transform.localPosition.x, initialPos.y + shakeDegree, 0);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.04f);
             transform.localPosition = new Vector3(transform.localPosition.x, initialPos.y - shakeDegree, 0);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.04f);
             transform.localPosition = new Vector3(transform.localPosition.x, initialPos.y - shakeDegree, 0);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.04f);
             transform.localPosition = new Vector3(transform.localPosition.x, initialPos.y + shakeDegree, 0);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.04f);
         }
     }
 }

@@ -8,7 +8,12 @@ using System.Text;
 public class textInform : MonoBehaviour
 {
     public GameObject Canvas;
+    AudioSource sound;
 
+    private void Awake()
+    {
+        sound = GetComponent<AudioSource>();
+    }
     private void Start()
     {
         Canvas.SetActive(false);        
@@ -18,6 +23,8 @@ public class textInform : MonoBehaviour
         if(collision.tag == "Player")
         {
             Canvas.SetActive(true);
+            sound.Stop();
+            sound.Play();
         }
     }
 

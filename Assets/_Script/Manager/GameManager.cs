@@ -70,27 +70,43 @@ public class GameManager : Singleton<GameManager>
         moodMachine = gameObject.AddComponent<AudioSource>();
     }
 
-    public void soundNumCheck() //
+    public void soundNumCheck() //매 프레임마다 실행 
     {
-        int stageNum = gameData.curStageNum; //현재의 스테이지 번호에 따라 bgm 및 moodSound의 index 바뀜 
-
-        switch (stageNum)
+        int curSceneNum = SceneManager.GetActiveScene().buildIndex;
+        if(curSceneNum == 0)
         {
-            case 1:
-                purposeBgmIndex = 1;
-                break;
-            case 2:
-                purposeBgmIndex = 2;
-                break;
-            case 3:
-                purposeBgmIndex = 3;
-                break;
-            case 4:
-                purposeBgmIndex = 4;
-                break;
-            default:
-                purposeBgmIndex = 9; //메인 테마곡 
-                break;
+            //메인메뉴
+            purposeBgmIndex = 0;
+        }
+        else if(curSceneNum == 1)
+        {
+            //인게임 메뉴 
+            purposeBgmIndex = 0;
+        }
+        else if(curSceneNum == 2)
+        {
+            //오프닝 애니메이션
+            purposeBgmIndex = 0;
+        }
+        else //각각의 스테이지에 진입했을 때 
+        {
+            int stageNum = gameData.curStageNum; //현재의 스테이지 번호에 따라 bgm 및 moodSound의 index 바뀜 
+
+            switch (stageNum)
+            {
+                case 1:
+                    purposeBgmIndex = 1;
+                    break;
+                case 2:
+                    purposeBgmIndex = 2;
+                    break;
+                case 3:
+                    purposeBgmIndex = 3;
+                    break;
+                case 4:
+                    purposeBgmIndex = 4;
+                    break;
+            }
         }
 
         if(purposeBgmIndex != curBgmIndex) //현재 씬에서 실행해야 하는 bgm이 이미 실행되고 있으면 무시해야 함 
@@ -114,7 +130,7 @@ public class GameManager : Singleton<GameManager>
             moodMachine.volume = bgmMachine.volume;
             yield return new WaitForSeconds(0.05f);
 
-            //볼륨을 서서히 줄여서 0으로 만듦        
+            //현재 볼륨이 얼마이든 서서히 줄여서 0으로 만듦        
         }
               
         bgmMachine.clip = bgmGroup[purposeBgmIndex]; //bgm clip 에 해당하는 bgm 파일 할당   
@@ -130,8 +146,25 @@ public class GameManager : Singleton<GameManager>
             moodMachine.volume = bgmMachine.volume;
             yield return new WaitForSeconds(0.05f); //다시 서서히 volume 키움 
         }
-
     }
+
+    IEnumerator soundOff() //GM에 의한 bgm 제어를 끄고 해당 씬에서 직접 음향을 제어해야 할 때 사용
+    {
+        for (int index = 20; index >= 1; index--)
+        {
+            if (bgmMachine.volume == 0)
+            {
+                break;
+            }
+
+            bgmMachine.volume = bgmMachine.volume - 0.05f;
+            moodMachine.volume = bgmMachine.volume;
+            yield return new WaitForSeconds(0.05f);
+
+            //현재 볼륨이 얼마이든 서서히 줄여서 0으로 만듦        
+        }
+    }
+
 
     void Start()
     {

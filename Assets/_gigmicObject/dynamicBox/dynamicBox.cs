@@ -15,7 +15,7 @@ public class dynamicBox : MonoBehaviour
     */
 
     Rigidbody2D rigid;
-    public bool isCollide;
+    public bool isCollide = false;
     void Start()
     {        
         rigid = GetComponent<Rigidbody2D>();
@@ -84,10 +84,12 @@ public class dynamicBox : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        /*
         if (collision.gameObject.tag == "Platform")
         {
             isCollide = true;
             rigid.bodyType = RigidbodyType2D.Kinematic;
         }
+        */
     }
 }

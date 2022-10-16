@@ -28,6 +28,8 @@ public class collecting : MonoBehaviour
     {
         if(collision.tag == "Player" && collision.transform.up == transform.up)
         {
+            GetComponent<AudioSource>().Play();
+
             cameraScript.cameraShake(0.5f, 0.3f);
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0); //≈ı∏Ì»≠ 
             part.Play();

@@ -8,8 +8,8 @@ public class lever : MonoBehaviour
     Animator ani;
     GameObject playerObj;
 
-    public bool isPowerLever; //true �̸� 180�� ȸ�������� ����, false�� 90���� ȸ�������� ���� 
-
+    public bool isPowerLever; //true 이면 180도 회전하는 레버가 됨 
+    
     private void Awake()
     {
         ani = GetComponent<Animator>();
