@@ -15,10 +15,17 @@ public class startScene_circleDoor : MonoBehaviour
     public Sprite[] doorOpenSprites;
 
     public GameObject[] firstInform; //맨 처음 좌우조작키 설명은 문이 완전히 열린 뒤 떠야 함 
+
+    public AudioClip activeSound;
+    public AudioClip openSound;
+    public AudioClip rotateSound;
+
+    AudioSource sound;
     private void Awake()
     {
         spr = playerObj.GetComponent<SpriteRenderer>();
         thisSpr = GetComponent<SpriteRenderer>();
+        sound = GetComponent<AudioSource>();
     }
     void Start()
     {
@@ -56,12 +63,20 @@ public class startScene_circleDoor : MonoBehaviour
 
         for (int index = 0; index < 3; index++) //잠금장치 작동직전 진동 
         {
+            sound.clip = activeSound;
+            sound.Play();
+
             transform.position += new Vector3(0, 1, 0) * 0.06f;
             yield return new WaitForSeconds(0.06f);
             transform.position -= new Vector3(0, 1, 0) * 0.06f;
             yield return new WaitForSeconds(0.06f);          
         }
         yield return new WaitForSeconds(1f);
+
+        sound.Stop();
+        sound.loop = true;
+        sound.clip = rotateSound;
+        sound.Play();
 
         for (int num=0; num<=3; num++) //잠금장치가 4회 회전 
         {
@@ -73,6 +88,9 @@ public class startScene_circleDoor : MonoBehaviour
         }
         thisSpr.sprite = doorRotateSprites[0];
 
+        sound.Stop();
+        sound.loop = false;
+
         yield return new WaitForSeconds(1f);
 
         for (int index = 0; index <= doorOpenSprites.Length - 2; index++)
@@ -82,15 +100,22 @@ public class startScene_circleDoor : MonoBehaviour
         }
 
         yield return new WaitForSeconds(2f);
+     
+        sound.clip = activeSound;
+        sound.Play();
 
         for (int index=0; index<3; index++) //문 올라가기 직전 진동함 
-        {
+        {           
             transform.position += new Vector3(0, 1, 0) * 0.06f;
             yield return new WaitForSeconds(0.06f);
             transform.position -= new Vector3(0, 1, 0) * 0.06f;
             yield return new WaitForSeconds(0.06f);           
         }
         yield return new WaitForSeconds(1f);
+
+        sound.Stop();
+        sound.clip = openSound;
+        sound.Play();
 
         for (int index=0; index<200; index++) //문 올라감 
         {

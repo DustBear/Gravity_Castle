@@ -14,6 +14,13 @@ public class stage01_side2_moveWall : MonoBehaviour
     public Sprite[] spriteGroup;
     public int cycleNum; //spriteGroup 주기를 몇 번 돌릴지 
     SpriteRenderer spr;
+
+    AudioSource sound;
+
+    private void Awake()
+    {
+        sound = GetComponent<AudioSource>();
+    }
     void Start()
     {
         spr = GetComponent<SpriteRenderer>();
@@ -34,7 +41,7 @@ public class stage01_side2_moveWall : MonoBehaviour
     
     void Update()
     {
-        
+  
     }
 
     public void stoneMove()
@@ -74,6 +81,9 @@ public class stage01_side2_moveWall : MonoBehaviour
     IEnumerator stoneMoveCor(int dirPos) //dirPos=1,2 중 한 군데로 이동 
     {
         isMoving = true;
+
+        sound.Stop();
+        sound.Play();
 
         float distance = (pos2 - pos1).magnitude; //움직여야 할 거리 
         Vector3 direction = (pos1 - pos2).normalized; //pos1이 목표일 때 
@@ -122,5 +132,6 @@ public class stage01_side2_moveWall : MonoBehaviour
         }
 
         isMoving = false;
+        sound.Stop();
     }
 }

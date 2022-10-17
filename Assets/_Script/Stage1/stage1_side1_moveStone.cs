@@ -23,11 +23,17 @@ public class stage1_side1_moveStone : MonoBehaviour
     SpriteRenderer spr;
     GameObject cameraObj;
 
+    public AudioClip moveSound;
+    public AudioClip smashSound;
+    public AudioClip bibSound;
+
+    AudioSource sound;
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
         spr = GetComponent<SpriteRenderer>();
         cameraObj = GameObject.Find("Main Camera");
+        sound = GetComponent<AudioSource>();
 
         shouldStoneStart = false;
         shouldStoneMove = false;
@@ -51,6 +57,10 @@ public class stage1_side1_moveStone : MonoBehaviour
     {
         shouldStoneStart = false;
 
+        sound.Stop();
+        sound.clip = bibSound;
+        sound.Play();
+
         Vector3 vibrateDir = (startPos - finishPos).normalized;
 
         //stone이 움직이기 전 위 아래로 살짝 진동하면서 깜빡임 
@@ -72,6 +82,11 @@ public class stage1_side1_moveStone : MonoBehaviour
 
         //stone 진동이 끝나면 목표지점으로 움직이기 시작 
         shouldStoneMove = true;
+
+        sound.Stop();
+        sound.clip = moveSound;
+        sound.Play();
+
         while (shouldStoneMove)
         {
             stoneMove();
@@ -160,6 +175,9 @@ public class stage1_side1_moveStone : MonoBehaviour
             spr.sprite = spriteGroup[0];
 
             cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.4f);
+            sound.Stop();
+            sound.clip = smashSound;
+            sound.Play();
         }
     }
 }

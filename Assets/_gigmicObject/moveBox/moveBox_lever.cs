@@ -33,6 +33,11 @@ public class moveBox_lever : MonoBehaviour
 
     IEnumerator clockCor;
     IEnumerator reclockCor;
+
+    public AudioClip activeSound;
+    public AudioClip moveSound;
+
+    AudioSource sound;
     private void Awake()
     {
         rigid = moveStone.GetComponent<Rigidbody2D>();
@@ -40,6 +45,7 @@ public class moveBox_lever : MonoBehaviour
 
         spr = GetComponent<SpriteRenderer>();
         boxSpr = moveStone.GetComponent<SpriteRenderer>();
+        sound = GetComponent<AudioSource>();
 
         isPlayerOn = false;
         isLeverAct = false;
@@ -76,7 +82,7 @@ public class moveBox_lever : MonoBehaviour
     }
     void Update()
     {
-        stoneMove();
+        stoneMove();       
     }
 
     void stoneMove()
@@ -85,6 +91,10 @@ public class moveBox_lever : MonoBehaviour
 
         if (isPlayerOn && Input.GetKeyDown(KeyCode.E)) //플레이어가 인식범위 내에서 E 누르면 활성화 ~> 비활성화 / 비활성화 ~> 활성화 상태로 만듦 
         {
+            sound.Stop();
+            sound.clip = activeSound;
+            sound.Play();
+
             if (!isLeverAct)
             {
                 isLeverAct = true;
@@ -104,6 +114,13 @@ public class moveBox_lever : MonoBehaviour
 
         if (isLeverAct)
         {
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                sound.Stop();
+                sound.clip = moveSound;
+                sound.Play();
+            }
+
             if (Input.GetAxisRaw("Horizontal") == -1) // [<--] 누르면 ~> 값이 작아지는 방향으로 움직임 
             {
                 //이미 pos2 좌표에 도달했다면 더 이상 pos2 방향으로는 움직이지 않음 

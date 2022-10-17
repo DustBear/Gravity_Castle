@@ -95,10 +95,13 @@ public class Player : MonoBehaviour
 
     //사운드 기믹 
     AudioSource sound;
+
     [SerializeField] AudioClip moveSound; 
     [SerializeField] AudioClip jump_landSound;
     [SerializeField] AudioClip activeSound; //플레이어가 E 눌러서 활성화시킬 때의 소리
     [SerializeField] AudioClip selectSound; //플레이어가 양 화살표를 눌러 중력을 바꿀 때의 소리 
+    [SerializeField] AudioClip dieSound; //플레이어가 죽는 소리 
+    [SerializeField] AudioClip leverRoateSound; //레버가 돌아가는 소리 
 
     GameObject cameraObj;
     public bool isCameraShake;
@@ -737,6 +740,10 @@ public class Player : MonoBehaviour
 
     void ChangeGravityDir_Enter()
     {
+        sound.Stop();
+        sound.clip = leverRoateSound;
+        sound.Play();
+
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
 
@@ -841,6 +848,7 @@ public class Player : MonoBehaviour
 
     void rotationCorrect()
     {
+        sound.Stop();
         transform.rotation = Quaternion.Euler(0, 0, initZRot + destRot);
 
         Vector2 gravity = -transform.up * 9.8f;
@@ -1058,6 +1066,10 @@ public class Player : MonoBehaviour
     IEnumerator Die()
     {
         isDieCorWork = true; //이미 코루틴이 실행하고 있는동안은 다음 코루틴을 실행시키지 않음 
+
+        sound.Stop();
+        sound.clip = dieSound;
+        sound.Play();
 
         if (isPlayerGrab)
         {

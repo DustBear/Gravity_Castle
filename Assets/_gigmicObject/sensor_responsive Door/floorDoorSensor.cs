@@ -11,10 +11,13 @@ public class floorDoorSensor : MonoBehaviour
 
     public GameObject doorCol;
     SpriteRenderer spr;
+    SpriteRenderer sensorSpr;
     BoxCollider2D doorBox;
 
     public Sprite[] doorSpr_idle;
     public Sprite[] doorSpr_active;
+
+    public Sprite[] sensorLight; //[0]이 불 꺼진 센서 [1]이 불 켜진 센서
 
     IEnumerator curCoroutine; //한 번에 하나의 코루틴만 작동하도록 함 
 
@@ -23,12 +26,14 @@ public class floorDoorSensor : MonoBehaviour
     private void Awake()
     {
         spr = doorCol.GetComponent<SpriteRenderer>();
+        sensorSpr = GetComponent<SpriteRenderer>();
         doorBox = doorCol.GetComponent<BoxCollider2D>();
     }
 
     void Start()
     { 
         spr.sprite = doorSpr_idle[0];
+        sensorSpr.sprite = sensorLight[0];
 
         if (curCoroutine != null)
         {
@@ -117,6 +122,7 @@ public class floorDoorSensor : MonoBehaviour
     IEnumerator doorOpen()
     {
         isDoorActing = true;
+        sensorSpr.sprite = sensorLight[1];
 
         for (int index = 0; index < doorSpr_active.Length; index++)
         {
@@ -133,7 +139,8 @@ public class floorDoorSensor : MonoBehaviour
     IEnumerator doorClose()
     {
         isDoorActing = true;
-        
+        sensorSpr.sprite = sensorLight[0];
+
         spr.enabled = true;
         doorBox.enabled = true;
 

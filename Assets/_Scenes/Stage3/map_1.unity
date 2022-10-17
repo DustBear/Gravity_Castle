@@ -501,7 +501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.5
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2698,7 +2698,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1476648101
-  m_SortingLayer: -3
+  m_SortingLayer: -4
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -4783,7 +4783,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.5
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4866,7 +4866,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 37.5
+      value: 37
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6713,7 +6713,7 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_LightVolumeOpacity: 0
-  m_ApplyToSortingLayers: 035aa460975c9946a5dc035861d9c12eab50480f9508b7385b7e6d70000000008977b1d83d0378b88d8246e88119c6fc
+  m_ApplyToSortingLayers: 035aa460a5dc0358000000008977b1d83d0378b823216785c72b63f3
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
   m_LightOrder: 0
@@ -8915,7 +8915,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1200094403
-  m_SortingLayer: -4
+  m_SortingLayer: -5
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 152c74f62efc4ff458b822c921041e30, type: 3}
   m_Color: {r: 0.50980395, g: 0.50980395, b: 0.50980395, a: 1}
@@ -25072,7 +25072,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -17.5
+      value: -17
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -25848,7 +25848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 32.5
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -68754,7 +68754,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.5
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 8674618247971947669, guid: dcba04720ad74c346a10f65a0bc53ae1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -70727,12 +70727,17 @@ MonoBehaviour:
   - {fileID: 5265027350604027503, guid: da5a857990160d04ea5d2090a74a0eab, type: 3}
   - {fileID: -3247546508449898186, guid: da5a857990160d04ea5d2090a74a0eab, type: 3}
   - {fileID: -3874759380448987934, guid: da5a857990160d04ea5d2090a74a0eab, type: 3}
-  moveSpeed: 2
+  boxSprites: []
+  curSpriteIndex: 0
+  accelSpeed: 0
+  maxSpeed: 0
   isPlayerOn: 0
   isLeverAct: 0
-  isMoveHorizontal: 0
   pos1: {x: 28, y: -13}
   pos2: {x: 28, y: -18}
+  leverArrow: {fileID: 0}
+  activeSound: {fileID: 0}
+  moveSound: {fileID: 0}
 --- !u!1 &5376716634930895352
 GameObject:
   m_ObjectHideFlags: 0

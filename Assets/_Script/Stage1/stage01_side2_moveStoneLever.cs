@@ -20,6 +20,7 @@ public class stage01_side2_moveStoneLever : MonoBehaviour
     {
         if (isPlayerOn && Input.GetKeyDown(KeyCode.E))
         {
+            GetComponent<AudioSource>().Play();
             StartCoroutine("spriteAni"); //작동여부에 상관없이 레버 애니메이션은 작동
             moveWall.GetComponent<stage01_side2_moveWall>().stoneMove();
         }
