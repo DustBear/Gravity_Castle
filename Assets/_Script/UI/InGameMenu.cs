@@ -38,14 +38,7 @@ public class InGameMenu : MonoBehaviour
         }
 
         SceneManager.LoadScene("MainMenu");
-
-        if (InputManager.instance.isJumpBlocked)
-        {
-            InputManager.instance.isJumpBlocked = false;
-            //jumpBlock�� ���������͸� Ÿ�� true. ���������� Ÿ�� �ִ� �߰��� �޴��� ������ 
-            // ���� ���� ������ ���� jumpBlock�� �������� �ʾƼ� ���� �Ұ����� ���� �߻� ~> ���� ���� �ذ����� 
-        }
-
+       
         gameObject.SetActive(false);
     }
 

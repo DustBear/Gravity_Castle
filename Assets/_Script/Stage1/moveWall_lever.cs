@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class stage01_side2_moveStoneLever : MonoBehaviour
+public class moveWall_lever : MonoBehaviour
 {
     public Sprite[] leverSprite;
     public GameObject moveWall;
@@ -22,7 +22,7 @@ public class stage01_side2_moveStoneLever : MonoBehaviour
         {
             GetComponent<AudioSource>().Play();
             StartCoroutine("spriteAni"); //작동여부에 상관없이 레버 애니메이션은 작동
-            moveWall.GetComponent<stage01_side2_moveWall>().stoneMove();
+            moveWall.GetComponent<moveWall>().stoneMove();
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)

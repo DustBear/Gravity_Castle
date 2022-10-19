@@ -129,7 +129,6 @@ public class Player : MonoBehaviour
     void Start()
     {
         InputManager.instance.isInputBlocked = false;
-        InputManager.instance.isJumpBlocked = false;
 
         //플레이어가 각 state 로 전이하기 위한 조건 
         readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //땅이나 강화발판에 닿아있지 않으면         

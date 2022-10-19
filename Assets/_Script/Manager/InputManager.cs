@@ -15,12 +15,7 @@ public class InputManager : Singleton<InputManager>
     [HideInInspector] public bool esc {get; private set;}
 
     [HideInInspector] public bool isInputBlocked {get; set;}
-    [HideInInspector] public bool isJumpBlocked { get; set; } 
-    //���������� Ż ���� ���� �Ұ����ϰ� ����. 
-    //���� player �˰���� �����δ� �÷��̾ ������ �� y�� �ӵ��� �������� ������ ������ ���� 
-    //���������͸� Ÿ�� �ö󰡴� ���� �����ϰ� �����ϸ� y�� �۷ι� ��ǥ �ӵ��� ����̹Ƿ� ���� ���� ���� 
-    //�ܱⰣ�� �ذ��ϱ� ���� ������ ���̹Ƿ� �׳� ���������͸� Ÿ�� ������ ������ �Ұ����ϵ��� ������. 
-
+   
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -28,26 +23,16 @@ public class InputManager : Singleton<InputManager>
 
     void Update()
     {        
-        if (!isInputBlocked) //InputBlocked �Ǹ� ���� �Ұ���
+        if (!isInputBlocked) //InputBlocked 상태에서는 플레이어조작 금지 
         {
             horizontal = Input.GetAxisRaw("Horizontal");
             horizontalDown = Input.GetButtonDown("Horizontal");
             vertical = Input.GetAxisRaw("Vertical");
             verticalDown = Input.GetButtonDown("Vertical");
 
-            //vertical�� ���� �˰���򿡼� ���. jump�� ���� �˰���򿡼� ��� 
-            if (!isJumpBlocked)
-            {
-                jumpDown = Input.GetKeyDown(KeyCode.Space);
-                jump = Input.GetKey(KeyCode.Space);
-                jumpUp = Input.GetKeyUp(KeyCode.Space);
-            }
-            else
-            {
-                jumpDown = false;
-                jump = false;
-                jumpUp = false;
-            }       
+            jumpDown = Input.GetKeyDown(KeyCode.Space);
+            jump = Input.GetKey(KeyCode.Space);
+            jumpUp = Input.GetKeyUp(KeyCode.Space);
         }
         else
         {
@@ -60,7 +45,7 @@ public class InputManager : Singleton<InputManager>
             jumpUp = false;
         }
         
-        // ���� �����߿� esc ������ �޴� �¿��� ����
+        // 메인메뉴, 오프닝씬, 인게임메뉴 이외의 창에서 esc 누르면 인게임 메뉴 열어줌 
         esc = Input.GetButtonDown("Cancel");
 
         if (esc && SceneManager.GetActiveScene().name != "MainMenu" 
