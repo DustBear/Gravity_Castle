@@ -8,21 +8,28 @@ public class WindButton : MonoBehaviour
     [SerializeField] GameObject windZone;
     [SerializeField] GameObject wind;
 
-    SpriteRenderer render;    
+    public Sprite[] leverSprite;
+    //[0]은 왼쪽, [1]는 오른쪽으로 기울어진 레버 
+  
     public int windType;
-    // 1이면 버튼으로 on/off 하는 환풍기
+    // 1이면 레버로 on/off 하는 환풍기
+    // on 상태면 레버는 sprite[0], off 상태면 레버는 sprite[1] 로 좌/우를 왔다갔다해야 함 
+
     // 2이면 타이머 내장 환풍기/ 평소에 꺼져있다가 버튼누르면 켜지는 방식 or 평소에 켜져있다가 버튼누르면 꺼지는 방식
+    // on 상태면 레버는 sprite[0], off 상태면 레버는 sprite[1], 타이머가 다 되면 레버 스프라이트도 자동으로 바뀌어야 함 
+
     // 3이면 특정 주기에 따라 켜졌다 꺼졌다를 반복하는 환풍기 
+    // 레버의 spr 은 끄고 보이지 않게 숨겨둬야 함 
 
     //type1
-    bool isActive; //현재 windHome 이 작동하고 있는지의 여부 
-    bool isButtonClicked; //현재 버튼이 눌려져 있는지의 여부 
-    public float buttonClickDelay; //버튼이 눌려져 있는 시간 
+    bool isActive; //현재 windHome 이 작동하고 있는지의 여부     
 
     //type 2
-    public bool isActDefault; //true 이면 켜져있는게 디폴트인 환풍기 
     public bool isTimerAct; //현재 타이머가 흘러가고 있는지의 여부 
     public float TimerActiveTime; //타이머 내장된 button이 작동하는 시간
+
+    //type1 && type2 
+    public bool isActDefault; //true 이면 켜져있는게 디폴트인 환풍기 
 
     //type 3 : 이 경우는 버튼이 필요없이 환풍기가 알아서 작동하는 경우이므로, 버튼은 보이지 않는 곳에 숨겨두고 투명화시켜야 함 
     public float loopOffset; //맨 처음 시작하고 환풍기가 켜지기까지의 시간 
@@ -30,27 +37,31 @@ public class WindButton : MonoBehaviour
     public float loopActive; //환풍기가 켜져 있는 시간 
 
     BoxCollider2D windZoneColl;
+    SpriteRenderer spr;
+
+    bool isPlayerOn= false;
+
+    AudioSource sound;
     void Awake()
     {
         windZoneColl = windZone.GetComponent<BoxCollider2D>();
+        spr = GetComponent<SpriteRenderer>();
+        sound = GetComponent<AudioSource>();
 
-        if(windType == 1 && isActDefault)
+        //환풍기의 초기상태 설정 
+
+        if(isActDefault && (windType == 1 || windType == 2)) 
+            //환풍기가 type1 or type2 이면서 켜진 상태가 디폴트이면 환풍기는 처음부터 켜져야 함 
         {
             windHome.enabled = true;
             windZoneColl.enabled = true;
             wind.SetActive(true);
 
             isActive = true;
-        }
-        else if (windType == 2 && isActDefault) //type 2 인데 켜진 상태가 default 인 환풍기일 경우
-        {
-            windHome.enabled = true;
-            windZoneColl.enabled = true;
-            wind.SetActive(true);
-
-            isTimerAct = false;
+            spr.sprite = leverSprite[1]; 
         }
         else
+            //그 밖의 경우는 꺼 둠 
         {
             windHome.enabled = false;
             windZoneColl.enabled = false;
@@ -58,34 +69,53 @@ public class WindButton : MonoBehaviour
 
             isActive = false;
             isTimerAct = false;
+            spr.sprite = leverSprite[0];
         }
     }
 
     void Start()
     {
-        if(windType == 3)
+        if(windType == 3) //type3이면 플레이어가 상호작용 할 필요 없이 바로 코루틴 시작함 
         {
             StartCoroutine(type3_windAct());
         }
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void Update()
     {
-        if (isButtonClicked && windType == 1) return;
-        //type1: 버튼이 다시 올라오기 전이면 작동x
-        if (isTimerAct && windType == 2) return;
-        //type2: 타이머 시간이 흘러가는 중에는 버튼 눌러도 반응x 
+        if (windType == 2 && isTimerAct) return;
+        //type2 환풍기의 경우 타이머 작동중이면 플레이어 동작 무시 
 
-        if(collision.gameObject.tag == "Player" && collision.transform.up == transform.up)
+        if(isPlayerOn && Input.GetKeyDown(KeyCode.E))
         {
-            if(windType == 1)
+            if (windType == 1)
             {
                 type1_windAct();
-            }            
-            else if(windType == 2)
-            {
-                type2_windAct();
+
+                sound.Stop();
+                sound.Play();
             }
+            else if (windType == 2)
+            {
+                StartCoroutine(type2_windAct());
+
+                sound.Stop();
+                sound.Play();
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Player" && collision.transform.up == transform.up)
+        {
+            isPlayerOn = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player" && collision.transform.up == transform.up)
+        {
+            isPlayerOn = false;
         }
     }
 
@@ -98,8 +128,7 @@ public class WindButton : MonoBehaviour
             wind.SetActive(true);
 
             isActive = true;
-            buttonClick(); //버튼이 눌림 
-            Invoke("buttonReturn", buttonClickDelay);
+            spr.sprite = leverSprite[1]; //레버 킴 
         }
         else
         {
@@ -108,54 +137,44 @@ public class WindButton : MonoBehaviour
             wind.SetActive(false);
 
             isActive = false;
-            buttonClick(); //버튼이 눌림 
-            Invoke("buttonReturn", buttonClickDelay);
+            spr.sprite = leverSprite[0]; //레버 끔 
         }        
     }
 
-    void type2_windAct()
+    IEnumerator type2_windAct() //레버 당기면 타이머가 시작, 타이머 끝나면 다시 원래대로 돌아옴 
     {
-        if (isActDefault)
+        if (isActDefault) //켜져있는 상태가 디폴트이면 
         {
             windHome.enabled = false;
             windZoneColl.enabled = false;
             wind.SetActive(false);
-
             isTimerAct = true;
-            buttonClick(); //버튼이 눌림 
+            spr.sprite = leverSprite[1];
 
-            Invoke("type2_windOn", TimerActiveTime); //설정된 시간이 흐른 뒤 환풍기 저절로 끔 
-            Invoke("buttonReturn", buttonClickDelay);
+            yield return new WaitForSeconds(TimerActiveTime);
+
+            windHome.enabled = true;
+            windZoneColl.enabled = true;
+            wind.SetActive(true);
+            isTimerAct = false;
+            spr.sprite = leverSprite[0];
         }
         else
         {
             windHome.enabled = true;
             windZoneColl.enabled = true;
             wind.SetActive(true);
-
             isTimerAct = true;
-            buttonClick(); //버튼이 눌림 
+            spr.sprite = leverSprite[0];
 
-            Invoke("type2_windOff", TimerActiveTime); //설정된 시간이 흐른 뒤 환풍기 저절로 끔 
-            Invoke("buttonReturn", buttonClickDelay);
+            yield return new WaitForSeconds(TimerActiveTime);
+
+            windHome.enabled = false;
+            windZoneColl.enabled = false;
+            wind.SetActive(false);
+            isTimerAct = false;
+            spr.sprite = leverSprite[1];
         }      
-    }
-
-    void type2_windOn()
-    {
-        windHome.enabled = true;
-        windZoneColl.enabled = true;
-        wind.SetActive(true);
-
-        isTimerAct = false;
-    }
-    void type2_windOff()
-    {
-        windHome.enabled = false;
-        windZoneColl.enabled = false;
-        wind.SetActive(false);
-
-        isTimerAct = false;
     }
 
     IEnumerator type3_windAct()
@@ -177,16 +196,5 @@ public class WindButton : MonoBehaviour
 
             yield return new WaitForSeconds(loopDelay);
         }
-    }
-
-    void buttonClick()
-    {
-        transform.position -= transform.up * 0.2f;
-        isButtonClicked = true;
-    }
-    void buttonReturn()
-    {
-        transform.position += transform.up * 0.2f;
-        isButtonClicked = false;
     }
 }

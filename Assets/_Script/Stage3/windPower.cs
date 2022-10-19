@@ -11,7 +11,7 @@ public class windPower : MonoBehaviour
     public float maxWindForce; //플레이어가 windZone 내에서 가지는 최고 속도 
 
     public float InertialTime = 1; //관성력이 적용되는 시간 
-    public float timer; //플레이어가 관성력을 받는 시간 타이머  
+    float timer; //플레이어가 관성력을 받는 시간 타이머  
     bool shouldTimerWork;
     float exitPlayerVel; //플레이어가 windZone을 빠져나오는 순간 가지는 속도 
 
