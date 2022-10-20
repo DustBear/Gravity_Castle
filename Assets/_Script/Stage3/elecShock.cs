@@ -6,14 +6,16 @@ public class elecShock : MonoBehaviour
 {
     public GameObject electric; //통제할 전기 오브젝트 
     public int elecType;
-    // type 1 은 버튼 눌러서 on/off 하는 버전 
+    public Sprite[] leverSprite;
+    bool isPlayerOn;
+
+    // type 1 은 레버 당겨서 on/off 하는 버전 
     // type 2 는 loop 주기에 따라 켜졌다 꺼졌다 하는 버전 
 
     //type 1
     bool isElecAct; //현재 elec 이 작동하고 있는지의 여부 
-    bool isButtonClicked; //현재 버튼이 눌려져 있는지의 여부 
     bool isCoroutineWork; //현재 코루틴이 진행중인지의 여부 
-    public float buttonClickDelay; //버튼이 눌려져 있는 시간 
+    bool isLeverActing; //현재 레버 코루틴이 작동중인지의 여부 
     public bool isElecActFirst; //true 이면 시작할 때 부터 켜져 있는 전기 
 
     //type 2
@@ -27,13 +29,17 @@ public class elecShock : MonoBehaviour
     //3 ~> 2 ~> 1 ~> 0 이 전기 소멸 
 
     SpriteRenderer spr;
+    SpriteRenderer leverSpr;
     BoxCollider2D coll;
     void Start()
     {
         spr = electric.GetComponent<SpriteRenderer>();
+        leverSpr = GetComponent<SpriteRenderer>();
         coll = electric.GetComponent<BoxCollider2D>();
 
-        if(elecType == 1 && isElecActFirst)
+        leverSpr.sprite = leverSprite[0];
+
+        if (elecType == 1 && isElecActFirst) //type1 이고 전기가 흐르는 게 디폴트면 전기 켜 놓음 
         {
             coll.enabled = true;
             spr.enabled = true;
@@ -46,26 +52,39 @@ public class elecShock : MonoBehaviour
             spr.enabled = false;
         }
         
-        if(elecType == 2)
+        if(elecType == 2) //type2 면 플레이어 상호작용 없으므로 그냥 작동 시작 
         {
             StartCoroutine(delayManager());
         }       
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void Update()
     {
-        if (collision.gameObject.tag != "Player") return;
+        if (isPlayerOn && Input.GetKeyDown(KeyCode.E))
+        {            
+            if ((isCoroutineWork || isLeverActing) && elecType == 1) return;
+            //type1: 전기 생성/소멸 애니메이션이 동작 중이면 작동x 
 
-        if ((isButtonClicked || isCoroutineWork) && elecType == 1) return;
-        //type1: 버튼이 다시 올라오기 전이거나 전기 생성/소멸 애니메이션이 동작 중이면 작동x 
-        if (elecType == 2) return; //elecType 이 2이면 버튼 없이 작동하는 elec 임 
-        
-        if (collision.gameObject.tag == "Player" && collision.transform.up == transform.up)
-        {
-            if (elecType == 1)
+            if (elecType == 2) return; //elecType 이 2이면 버튼 없이 작동하는 elec 임 
+            else
             {
                 type1_elecAct();
-            }           
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "Player" && collision.transform.up == transform.up)
+        {
+            isPlayerOn = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Player" && collision.transform.up == transform.up)
+        {
+            isPlayerOn = false;
         }
     }
 
@@ -74,28 +93,24 @@ public class elecShock : MonoBehaviour
         if (!isElecAct) //꺼져 있을땐 다시 켜야 함 
         {
             StartCoroutine(elecAni_appear());
-            buttonClick(); //버튼이 눌림 
-            Invoke("buttonReturn", buttonClickDelay);
+            StartCoroutine(leverAct());
         }
         else
         {
             StartCoroutine(elecAni_dissapear());
-            Debug.Log("elec stop");
-
-            buttonClick(); //버튼이 눌림 
-            Invoke("buttonReturn", buttonClickDelay);
+            StartCoroutine(leverAct());
         }
     }
 
-    void buttonClick()
+    IEnumerator leverAct()
     {
-        transform.position -= transform.up * 0.2f;
-        isButtonClicked = true;
-    }
-    void buttonReturn()
-    {
-        transform.position += transform.up * 0.2f;
-        isButtonClicked = false;
+        isLeverActing = true;
+
+        leverSpr.sprite = leverSprite[1];
+        yield return new WaitForSeconds(0.5f);
+
+        leverSpr.sprite = leverSprite[0];
+        isLeverActing = false;
     }
 
     IEnumerator elecAni_appear() //전기가 발생하는 동작 
@@ -169,7 +184,7 @@ public class elecShock : MonoBehaviour
         }
     }
 
-    IEnumerator shockActive()
+    IEnumerator shockActive() //type2 코드 
     {
         spr.enabled = true;
 

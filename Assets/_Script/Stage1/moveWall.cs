@@ -6,7 +6,7 @@ public class moveWall : MonoBehaviour
 {
     [SerializeField] Vector3 pos1;
     [SerializeField] Vector3 pos2;
-    [SerializeField] float moveTime; //움직이는 데 걸리는 시간
+    public float moveTime; //움직이는 데 걸리는 시간
     public int curPos; //현재 stone의 위치가 어디인지 
     public int initialPos; //시작할 때의 위치 
     public bool isMoving; //움직이고 있는 동안은 레버 조작x 
@@ -16,10 +16,12 @@ public class moveWall : MonoBehaviour
     SpriteRenderer spr;
 
     AudioSource sound;
+    Rigidbody2D rigid;
 
     private void Awake()
     {
         sound = GetComponent<AudioSource>();
+        rigid = GetComponent<Rigidbody2D>();
     }
     void Start()
     {
@@ -57,7 +59,7 @@ public class moveWall : MonoBehaviour
     {
         //moveTime 동안 1바퀴 회전(시계방향)
 
-        var waitFrame = new WaitForSeconds(moveTime / (spriteGroup.Length * cycleNum - 1));
+        var waitFrame = new WaitForSeconds(moveTime / (spriteGroup.Length * cycleNum));
         for(int count=1; count<=cycleNum; count++)
         {
             for (int index = 0; index < spriteGroup.Length; index++)
@@ -71,7 +73,7 @@ public class moveWall : MonoBehaviour
     {
         //moveTime 동안 1바퀴 회전(반시계방향)
 
-        var waitFrame = new WaitForSeconds(moveTime / (spriteGroup.Length * cycleNum - 1));
+        var waitFrame = new WaitForSeconds(moveTime / (spriteGroup.Length * cycleNum));
         for (int count=1; count<=cycleNum; count++)
         {
             for (int index = spriteGroup.Length - 1; index >= 0; index--)
@@ -85,7 +87,6 @@ public class moveWall : MonoBehaviour
     IEnumerator stoneMoveCor(int dirPos) //dirPos=1,2 중 한 군데로 이동 
     {
         isMoving = true;
-        elapsedTime = 0;
 
         sound.Stop();
         sound.Play();
@@ -106,9 +107,7 @@ public class moveWall : MonoBehaviour
         {
             direction = -direction;//방향 반대로 바꿔줘야 함 
         }
-
-        float frameTime = moveTime / 30;
-        
+       
         switch (dirPos) //기어 돌아가는 애니메이션 실행 
         {
             case 1:
@@ -119,12 +118,11 @@ public class moveWall : MonoBehaviour
                 break;
         }
 
-        var waitFrame = new WaitForSeconds(frameTime);
-        for (int index=1; index<=30; index++)
-        {
-            transform.position += (direction*distance)/30;
-            yield return waitFrame;
-        }
+        float moveSpeed = distance / moveTime;
+        rigid.velocity = moveSpeed * direction;
+
+        yield return new WaitForSeconds(moveTime);
+        rigid.velocity = Vector3.zero;
 
         switch (dirPos) //물리엔진 오차가 발생할 수 있으므로 stone이 도착하고 나면 좌표를 별도로 고정해 준다 
         {
