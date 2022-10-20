@@ -59,7 +59,7 @@ public class moveWall : MonoBehaviour
     {
         //moveTime 동안 1바퀴 회전(시계방향)
 
-        var waitFrame = new WaitForSeconds(moveTime / (spriteGroup.Length * cycleNum));
+        var waitFrame = new WaitForSeconds(moveTime / (spriteGroup.Length * cycleNum + 1));
         for(int count=1; count<=cycleNum; count++)
         {
             for (int index = 0; index < spriteGroup.Length; index++)
@@ -73,7 +73,7 @@ public class moveWall : MonoBehaviour
     {
         //moveTime 동안 1바퀴 회전(반시계방향)
 
-        var waitFrame = new WaitForSeconds(moveTime / (spriteGroup.Length * cycleNum));
+        var waitFrame = new WaitForSeconds(moveTime / (spriteGroup.Length * cycleNum + 1));
         for (int count=1; count<=cycleNum; count++)
         {
             for (int index = spriteGroup.Length - 1; index >= 0; index--)
