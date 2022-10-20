@@ -38,10 +38,10 @@ public class moveWall : MonoBehaviour
                 break;
         }
     }
-    
+
     void Update()
     {
-  
+       
     }
 
     public void stoneMove()
@@ -60,7 +60,6 @@ public class moveWall : MonoBehaviour
         var waitFrame = new WaitForSeconds(moveTime / (spriteGroup.Length * cycleNum - 1));
         for(int count=1; count<=cycleNum; count++)
         {
-            Debug.Log(count);
             for (int index = 0; index < spriteGroup.Length; index++)
             {
                 spr.sprite = spriteGroup[index];
@@ -75,7 +74,6 @@ public class moveWall : MonoBehaviour
         var waitFrame = new WaitForSeconds(moveTime / (spriteGroup.Length * cycleNum - 1));
         for (int count=1; count<=cycleNum; count++)
         {
-            Debug.Log(count);
             for (int index = spriteGroup.Length - 1; index >= 0; index--)
             {
                 spr.sprite = spriteGroup[index];
@@ -83,10 +81,11 @@ public class moveWall : MonoBehaviour
             }
         }       
     }
-    
+
     IEnumerator stoneMoveCor(int dirPos) //dirPos=1,2 중 한 군데로 이동 
     {
         isMoving = true;
+        elapsedTime = 0;
 
         sound.Stop();
         sound.Play();
