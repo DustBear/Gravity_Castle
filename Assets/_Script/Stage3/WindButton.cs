@@ -149,7 +149,8 @@ public class WindButton : MonoBehaviour
             windZoneColl.enabled = false;
             wind.SetActive(false);
             isTimerAct = true;
-            spr.sprite = leverSprite[1];
+
+            StartCoroutine(leverAct());
 
             yield return new WaitForSeconds(TimerActiveTime);
 
@@ -157,7 +158,6 @@ public class WindButton : MonoBehaviour
             windZoneColl.enabled = true;
             wind.SetActive(true);
             isTimerAct = false;
-            spr.sprite = leverSprite[0];
         }
         else
         {
@@ -165,7 +165,8 @@ public class WindButton : MonoBehaviour
             windZoneColl.enabled = true;
             wind.SetActive(true);
             isTimerAct = true;
-            spr.sprite = leverSprite[0];
+
+            StartCoroutine(leverAct());
 
             yield return new WaitForSeconds(TimerActiveTime);
 
@@ -175,6 +176,14 @@ public class WindButton : MonoBehaviour
             isTimerAct = false;
             spr.sprite = leverSprite[1];
         }      
+    }
+
+    IEnumerator leverAct()
+    {
+        spr.sprite = leverSprite[0];
+        yield return new WaitForSeconds(1f);
+
+        spr.sprite = leverSprite[1];
     }
 
     IEnumerator type3_windAct()

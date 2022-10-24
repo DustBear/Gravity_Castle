@@ -15,10 +15,13 @@ public class InputManager : Singleton<InputManager>
     [HideInInspector] public bool esc {get; private set;}
 
     [HideInInspector] public bool isInputBlocked {get; set;}
-   
+
+
+    public bool isPlayerDying= false;
+    //플레이어가 죽는 동작 중 메인메뉴로 나가버리면 에러 발생
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);       
     }
 
     void Update()
@@ -50,7 +53,8 @@ public class InputManager : Singleton<InputManager>
 
         if (esc && SceneManager.GetActiveScene().name != "MainMenu" 
             && SceneManager.GetActiveScene().name != "openingScene"
-            && SceneManager.GetActiveScene().name != "InGameMenu") //esc 를 눌러 mainMenu 씬을 열 수 있는 조건 
+            && SceneManager.GetActiveScene().name != "InGameMenu"
+            && !isPlayerDying) //esc 를 눌러 mainMenu 씬을 열 수 있는 조건 
         {
             UIManager.instance.OnOffInGameMenu();
         }

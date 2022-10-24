@@ -288,7 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shouldSpawnSavePoint: 1
   shouldUseOpeningElevator: 0
-  saveNumForStage: 1d000000000000001000000000000000000000000000000000000000
+  saveNumForStage: 04000000190000001300000000000000000000000000000000000000
   isStartWithFlipX: 0
   gameDataFileNames:
   - /GameData0.json
@@ -658,6 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a05d82240105f05448d9378b8150ee39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayerDying: 0
 --- !u!4 &858874936
 Transform:
   m_ObjectHideFlags: 0

@@ -40,10 +40,12 @@ public class movingSpike : MonoBehaviour
         if(initPos == 1) //pos1에서 출발 ~> pos2로 가야 함 
         {
             rigid.velocity = (pos2 - pos1).normalized * moveSpeed;
+            anim.SetFloat("animSpeed", -1);
         }
-        else
+        else //pos2에서 출발 ~> pos1로 가야 함 
         {
             rigid.velocity = (pos1 - pos2).normalized * moveSpeed;
+            anim.SetFloat("animSpeed", 1);
         }
 
         while (true)

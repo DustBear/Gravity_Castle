@@ -206,8 +206,8 @@ public class stageManager : MonoBehaviour
     {
         Debug.Log("beta-mode activated");
 
-        GameManager.instance.gameData.finalAchievementNum = stageButton[2].GetComponent<stageMoveButton>().savePointCount;
-        GameManager.instance.gameData.finalStageNum = 3;
+        GameManager.instance.gameData.finalAchievementNum = stageButton[3].GetComponent<stageMoveButton>().savePointCount;
+        GameManager.instance.gameData.finalStageNum = 4;
 
         for(int index=0; index< GameManager.instance.gameData.savePointUnlock.Length; index++)
         {

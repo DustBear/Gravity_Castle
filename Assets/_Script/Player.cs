@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     //플레이어 사망 시 튕겨져 나가는 파편 오브젝트 
     public GameObject[] parts = new GameObject[4];
     public GameObject boxGrabColl;
-    bool isDieCorWork;
+    public bool isDieCorWork;
 
     [SerializeField] float defaultGravityScale;
     [SerializeField] float maxFallingSpeed;
@@ -70,8 +70,8 @@ public class Player : MonoBehaviour
     public bool isPlayerGrab = false; //플레이어가 오브젝트를 잡고 있는지의 여부 
 
     // Wind
-    bool isHorizontalWind;
-    bool isVerticalWind;
+    [SerializeField] bool isHorizontalWind;
+    [SerializeField] bool isVerticalWind;
 
     // 플레이어가 땅에 닿아있는지의 여부 
     [SerializeField]public bool isGrounded;
@@ -1065,6 +1065,7 @@ public class Player : MonoBehaviour
     IEnumerator Die()
     {
         isDieCorWork = true; //이미 코루틴이 실행하고 있는동안은 다음 코루틴을 실행시키지 않음 
+        InputManager.instance.isPlayerDying = true;
 
         sound.Stop();
         sound.clip = dieSound;
@@ -1126,6 +1127,8 @@ public class Player : MonoBehaviour
         GameManager.instance.nextPos = GameManager.instance.gameData.respawnPos;
         GameManager.instance.nextGravityDir = GameManager.instance.gameData.respawnGravityDir;
         GameManager.instance.nextState = States.Walk;
+
+        InputManager.instance.isPlayerDying = false;
 
         SceneManager.LoadScene(GameManager.instance.nextScene);
     }

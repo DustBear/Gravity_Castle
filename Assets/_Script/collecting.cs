@@ -8,6 +8,8 @@ public class collecting : MonoBehaviour
     MainCamera cameraScript;
     public ParticleSystem part;
 
+    bool isParticlePlayed;
+
     private void Awake()
     {
 
@@ -16,6 +18,8 @@ public class collecting : MonoBehaviour
     {
         cameraObj = GameObject.FindWithTag("MainCamera");
         cameraScript = cameraObj.GetComponent<MainCamera>();
+
+        isParticlePlayed = false;
     }
 
     // Update is called once per frame
@@ -27,12 +31,18 @@ public class collecting : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player" && collision.transform.up == transform.up)
-        {
-            GetComponent<AudioSource>().Play();
+        {            
+            if (!isParticlePlayed)
+            {
+                part.Play();               
+                GetComponent<AudioSource>().Play();
 
-            cameraScript.cameraShake(0.5f, 0.3f);
-            GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0); //투명화 
-            part.Play();
+                cameraScript.cameraShake(0.5f, 0.3f);
+                GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0); //투명화 
+
+                isParticlePlayed = true;
+            }
+
             Invoke("deActive", 2f);
         }
     }
