@@ -41,6 +41,13 @@ public class windPower : MonoBehaviour
     //플레이어가 땅에 닿거나 벽에 부딪히는 순간 속도 추가는 정지 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (playerScript.isPlayerGrab)
+        {
+            //플레이어가 박스를 잡고있을땐 바람 영향 x
+            //박스가 바람을 가리고 있을 땐 영향 x 
+            return;
+        }
+
         if(gameObject.tag == "UpWind" || gameObject.tag == "DownWind") 
         {
             if(playerObj.transform.up == new Vector3(1,0,0) || playerObj.transform.up == new Vector3(-1, 0, 0)) //플레이어가 오른쪽/왼쪽으로 서있을 때 

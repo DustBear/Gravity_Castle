@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 using System.IO;
 
 public class Player : MonoBehaviour
-{   
+{
     //플레이어 사망 시 튕겨져 나가는 파편 오브젝트 
     public GameObject[] parts = new GameObject[4];
     public GameObject boxGrabColl;
@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
     [SerializeField] float ropeMoveSpeed; // rope 위에서 움직이는 속도 
     [SerializeField] float leverRotateDelay; // lever를 작동시킨 후 화면이 회전하는 데 걸리는 시간 
     public float windForce; // Stage3에서 windHome 이 플레이어를 가속시키는 가속력 
-    [SerializeField] float slidingDegree; 
+    [SerializeField] float slidingDegree;
 
     public enum States
     {
@@ -37,21 +37,21 @@ public class Player : MonoBehaviour
         GhostUsingLever, FallAfterGhostLevering // Stage4 기믹
     }
     StateMachine<States> fsm;
-    public static States curState {get; private set;}
-    Func<bool> readyToFall, readyToJump, readyToGrab, readyToPowerJump, readyToRope, readyToLever , readyToPowerLever;
+    public static States curState { get; private set; }
+    Func<bool> readyToFall, readyToJump, readyToGrab, readyToPowerJump, readyToRope, readyToLever, readyToPowerLever;
     //readyToLand 만 별도 함수로 분리하여 선언 
 
     // Walk
-    public bool isPlayerExitFromWInd; 
+    public bool isPlayerExitFromWInd;
     //stage 3 에서 플레이어가 바람을 빠져나온 직후 땅에 닿기 전 까지는 가속력을 받으며 관성에 따른 운동 계속해야 함 
 
     // Jump
-    [SerializeField]float jumpGauge;
-    [SerializeField] float jumpTimer; 
-    public float jumpTimerOffset; 
+    [SerializeField] float jumpGauge;
+    [SerializeField] float jumpTimer;
+    public float jumpTimerOffset;
     public float jumpHeightCut; //플레이어가 체공중일 때 스페이스바를 떼면 플레이어의 속도가 줄어들면서 땅으로 떨어짐 
 
-    [SerializeField] float groundedRemember; 
+    [SerializeField] float groundedRemember;
     [SerializeField] float groundedRememberOffset;
 
     // Rope
@@ -64,19 +64,31 @@ public class Player : MonoBehaviour
     GameObject lever; //현재 플레이어가 작동시키려는 lever
     Vector3 destPos_afterLevering; // Lever 작동직후 플레이어가 이동해야 할 position
     [SerializeField] int destRot; // Lever 작동후
-    float destGhostRot; 
+    float destGhostRot;
 
     // Grab
     public bool isPlayerGrab = false; //플레이어가 오브젝트를 잡고 있는지의 여부 
 
-    // Wind
-    [SerializeField] bool isHorizontalWind;
-    [SerializeField] bool isVerticalWind;
+    // Wind   
+    GameObject upWindHome;
+    GameObject rightWindHome;
+    GameObject downWindHome;
+    GameObject leftWindHome;
+
+    public bool upWindActive;
+    public bool rightWindActive;
+    public bool downWindActive;
+    public bool leftWindActive;
+
+    public bool upWindBlock;
+    public bool RightWindBlock;
+    public bool DownWindBlock;
+    public bool LeftWindBlock;
 
     // 플레이어가 땅에 닿아있는지의 여부 
-    [SerializeField]public bool isGrounded;
+    [SerializeField] public bool isGrounded;
     [SerializeField] public bool isOnMovePlatform;
-    [SerializeField] bool isOnJumpPlatform = false; 
+    [SerializeField] bool isOnJumpPlatform = false;
     RaycastHit2D rayHitIcePlatform;
     RaycastHit2D rayHitJumpBoost;
 
@@ -96,7 +108,7 @@ public class Player : MonoBehaviour
     //사운드 기믹 
     AudioSource sound;
 
-    [SerializeField] AudioClip moveSound; 
+    [SerializeField] AudioClip moveSound;
     [SerializeField] AudioClip jump_landSound;
     [SerializeField] AudioClip activeSound; //플레이어가 E 눌러서 활성화시킬 때의 소리
     [SerializeField] AudioClip selectSound; //플레이어가 양 화살표를 눌러 중력을 바꿀 때의 소리 
@@ -120,7 +132,7 @@ public class Player : MonoBehaviour
         sound = GetComponent<AudioSource>();
         cameraObj = GameObject.FindWithTag("MainCamera");
 
-        for(int index=0; index<parts.Length; index++)
+        for (int index = 0; index < parts.Length; index++)
         {
             parts[index].SetActive(false);
         }
@@ -131,16 +143,16 @@ public class Player : MonoBehaviour
         InputManager.instance.isInputBlocked = false;
 
         //플레이어가 각 state 로 전이하기 위한 조건 
-        readyToFall = () => (!isGrounded)&&(!isOnJumpPlatform); //땅이나 강화발판에 닿아있지 않으면         
+        readyToFall = () => (!isGrounded) && (!isOnJumpPlatform); //땅이나 강화발판에 닿아있지 않으면         
         readyToGrab = () => isPlayerGrab; //isPlayerGrab 이 true 이면 오브젝트 잡기로 이동 
 
         readyToJump = () => (jumpTimer > 0) && (!isOnJumpPlatform) && (groundedRemember > 0);
 
-        readyToPowerJump = () =>  InputManager.instance.jumpUp && (isOnJumpPlatform) && (groundedRemember > 0);
+        readyToPowerJump = () => InputManager.instance.jumpUp && (isOnJumpPlatform) && (groundedRemember > 0);
         readyToRope = () => isCollideRope && InputManager.instance.vertical == 1; //위쪽 화살표를 누르면서 로프 콜라이더에 닿아 있으면 
-        readyToLever = () => isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown 
+        readyToLever = () => isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown
                              && lever.transform.up == transform.up;
-        
+
         if (!GameManager.instance.shouldSpawnSavePoint)
         {
             //GameManager ~> 세이브포인트에서 시작하는 것이 아닐 때 GM이 플레이어 초기화 담당 ~> 스테이지 처음 시작할 때, 한 씬에서 통로를 통해 다음씬 넘어갈 때 
@@ -170,15 +182,15 @@ public class Player : MonoBehaviour
         if (GameManager.instance.isStartWithFlipX)
         {
             sprite.flipX = true;
-        }else
+        } else
         {
             sprite.flipX = false;
         }
 
         jumpTimer = 0; //jumpTimer 초기화
         boxGrabColl.SetActive(false);
-       
-        if(GameManager.instance.gameData.curAchievementNum != 0) //스테이지를 맨 처음 시작할 땐 별도의 연출코드가 붙음
+
+        if (GameManager.instance.gameData.curAchievementNum != 0) //스테이지를 맨 처음 시작할 땐 별도의 연출코드가 붙음
         {
             UIManager.instance.FadeIn(1.5f);
         }
@@ -231,9 +243,9 @@ public class Player : MonoBehaviour
             }
         }
     }
-   
+
     private void Update()
-    {        
+    {
         walkSoundCheck();
         AnimationManager();
 
@@ -247,7 +259,7 @@ public class Player : MonoBehaviour
         if (isGrounded)
         {
             groundedRemember = groundedRememberOffset;
-        }          
+        }
     }
 
     public void ChangeState(in States nextState)
@@ -258,30 +270,30 @@ public class Player : MonoBehaviour
 
     void walkSoundCheck()
     {
-        if(fsm.State == States.Walk && (isGrounded || isOnJumpPlatform) 
-            && Mathf.Abs(transform.InverseTransformDirection(rigid.velocity).x) > 0.1f ) //속도가 0.1보다 커야 함
+        if (fsm.State == States.Walk && (isGrounded || isOnJumpPlatform)
+            && Mathf.Abs(transform.InverseTransformDirection(rigid.velocity).x) > 0.1f) //속도가 0.1보다 커야 함
         {
             if (!sound.isPlaying)
             {
                 sound.clip = moveSound;
                 sound.Play();
-            }           
+            }
         }
         else
         {
-            if(sound.clip == moveSound)
+            if (sound.clip == moveSound)
             {
                 sound.Stop();
-            }           
+            }
         }
     }
 
-    void Walk_Enter() 
+    void Walk_Enter()
     {
-        jumpGauge = minJumpPower;   
+        jumpGauge = minJumpPower;
     }
 
-    void Walk_Update() 
+    void Walk_Update()
     {
         CheckGround();
         HorizontalMove();
@@ -290,7 +302,7 @@ public class Player : MonoBehaviour
         {
             ChargeJumpGauge();
         }
-          
+
         if (readyToLever())
         {
             ChangeState(States.AccessLever);
@@ -300,17 +312,17 @@ public class Player : MonoBehaviour
             ChangeState(States.AccessRope);
         }
         else if (readyToJump())
-        {            
+        {
             ChangeState(States.Jump);
         }
         else if (readyToPowerJump())
-        {          
+        {
             ChangeState(States.PowerJump);
-        }          
+        }
         else if (readyToFall())
-        {           
+        {
             ChangeState(States.Fall);
-        }else if (readyToGrab())
+        } else if (readyToGrab())
         {
             ChangeState(States.Grab);
         }
@@ -323,7 +335,7 @@ public class Player : MonoBehaviour
             if (rayHitJumpBoost.collider != null)
             {
                 jumpGauge = Mathf.Clamp(jumpGauge + jumpChargeSpeed * Time.deltaTime, minJumpPower, maxJumpBoostPower);
-            }            
+            }
         }
     }
 
@@ -333,9 +345,9 @@ public class Player : MonoBehaviour
     {
         jumpTimer = 0;
         rigid.velocity = Vector2.zero; //움직이는 발판 위에서 점프하거나 할 때 속도 바뀌지 않도록 속도 초기화  
-        
+
         Vector2 addForceDirection;
-        
+
         if (transform.up == new Vector3(0, 1, 0)) //머리가 위를 바라봄
         {
             addForceDirection = new Vector2(0, 1);
@@ -358,7 +370,7 @@ public class Player : MonoBehaviour
         sound.clip = jump_landSound;
         sound.Play();
     }
-    
+
     public float fallingGravity;
     void Jump_Update()
     {
@@ -370,13 +382,13 @@ public class Player : MonoBehaviour
         {
             if (transform.up.normalized == new Vector3(0, 1, 0) && rigid.velocity.y > 0)
             {
-                rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0); 
+                rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0);
             }
             else if (transform.up.normalized == new Vector3(0, -1, 0) && rigid.velocity.y < 0)
             {
                 rigid.velocity = new Vector3(rigid.velocity.x, rigid.velocity.y * jumpHeightCut, 0);
             }
-            else if (transform.up.normalized == new Vector3(1, 0, 0) && rigid.velocity.x > 0) 
+            else if (transform.up.normalized == new Vector3(1, 0, 0) && rigid.velocity.x > 0)
             {
                 rigid.velocity = new Vector3(rigid.velocity.x * jumpHeightCut, rigid.velocity.y, 0);
             }
@@ -424,11 +436,11 @@ public class Player : MonoBehaviour
     }
 
     void Jump_Exit()
-    {   
+    {
     }
 
     void PowerJump_Exit()
-    {     
+    {
     }
 
     void Fall_Enter()
@@ -449,11 +461,11 @@ public class Player : MonoBehaviour
         }
         else if (readyToLand())
         {
-            ChangeState(States.Land); 
+            ChangeState(States.Land);
         }
         else if (readyToJump())
         {
-            ChangeState(States.Jump); 
+            ChangeState(States.Jump);
         }
         else if (readyToLever())
         {
@@ -466,11 +478,11 @@ public class Player : MonoBehaviour
 
     }
 
-    
+
     void Land_Enter()
     {
-        rigid.gravityScale = 3f;        
-        jumpGauge = minJumpPower;      
+        rigid.gravityScale = 3f;
+        jumpGauge = minJumpPower;
         sound.clip = jump_landSound;
         sound.Play();
     }
@@ -500,9 +512,9 @@ public class Player : MonoBehaviour
 
     void Land_Exit()
     {
-        
+
     }
-    
+
     void Grab_Update()
     {
         CheckGround();
@@ -520,7 +532,7 @@ public class Player : MonoBehaviour
 
 
     void AccessRope_Enter()
-    {        
+    {
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
     }
@@ -537,7 +549,7 @@ public class Player : MonoBehaviour
         }
         else //가로 로프일 때 
         {
-            destPos_rope = new Vector2(transform.position.x, rope.transform.position.y-0.1f);
+            destPos_rope = new Vector2(transform.position.x, rope.transform.position.y - 0.1f);
         }
 
         transform.position = Vector2.MoveTowards(transform.position, destPos_rope, Time.deltaTime * ropeAccessSpeed);
@@ -553,7 +565,7 @@ public class Player : MonoBehaviour
     {
         jumpGauge = minJumpPower;
 
-        
+
     }
 
     void MoveOnRope_Update()
@@ -613,15 +625,15 @@ public class Player : MonoBehaviour
     }
 
     void MoveOnRope_Exit()
-    { 
+    {
         transform.parent = null;
-        rigid.gravityScale = defaultGravityScale;      
+        rigid.gravityScale = defaultGravityScale;
     }
 
     void AccessLever_Enter()
     {
         rigid.velocity = Vector2.zero;
-        if(leverColl != null)
+        if (leverColl != null)
         {
             leverColl.GetComponent<lever>().lightTurnOff();
             //플레이어가 레버를 작동시키려고 하면 레버 불을 끔 
@@ -694,14 +706,14 @@ public class Player : MonoBehaviour
 
         // 레버 돌리는 속도 
         float moveToLeverSpeed = 9f;
-        transform.position = Vector2.MoveTowards(transform.position, destPos_beforeLevering, moveToLeverSpeed * Time.deltaTime);        
+        transform.position = Vector2.MoveTowards(transform.position, destPos_beforeLevering, moveToLeverSpeed * Time.deltaTime);
 
         if ((Vector2)transform.position == destPos_beforeLevering)
         {
             ChangeState(States.SelectGravityDir);
         }
     }
-   
+
     void SelectGravityDir_Enter()
     {
         leftArrow.SetActive(true);
@@ -722,7 +734,7 @@ public class Player : MonoBehaviour
             ChangeState(States.ChangeGravityDir);
         }
         // 위 화살표 누르면 ~> 레버 작동 캔슬 
-        else if (Input.GetKeyDown(KeyCode.UpArrow)) 
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             leverColl.GetComponent<lever>().lightTurnOn(); //다시 레버 불 킴 
 
@@ -734,7 +746,7 @@ public class Player : MonoBehaviour
 
     void SelectGravityDir_Exit()
     {
-          
+
     }
 
     void ChangeGravityDir_Enter()
@@ -749,8 +761,8 @@ public class Player : MonoBehaviour
         transform.parent = null;
 
         if (!shouldRotateHalf) //90도 회전해야 하는 경우
-        {           
-            if(InputManager.instance.horizontal == 1) 
+        {
+            if (InputManager.instance.horizontal == 1)
             {
                 leftArrow.SetActive(false);
                 destRot = -90;
@@ -781,10 +793,10 @@ public class Player : MonoBehaviour
         {
             switch (lever.transform.eulerAngles.z)
             {
-                case 0f:  case 180f:
+                case 0f: case 180f:
                     destPos_afterLevering = new Vector2(transform.position.x, lever.transform.position.y);
                     break;
-                case 90f: case 270f:               
+                case 90f: case 270f:
                     destPos_afterLevering = new Vector2(lever.transform.position.x, transform.position.y);
                     break;
             }
@@ -793,10 +805,10 @@ public class Player : MonoBehaviour
         {
             switch (lever.transform.eulerAngles.z)
             {
-                case 0f:  case 180f:               
+                case 0f: case 180f:
                     destPos_afterLevering = new Vector2(transform.position.x, transform.position.y);
                     break;
-                case 90f: case 270f:               
+                case 90f: case 270f:
                     destPos_afterLevering = new Vector2(transform.position.x, transform.position.y);
                     break;
             }
@@ -810,7 +822,7 @@ public class Player : MonoBehaviour
         cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.5f);
     }
 
-    float timer=0;
+    float timer = 0;
     float initZRot;
 
     void ChangeGravityDir_Update()
@@ -828,18 +840,18 @@ public class Player : MonoBehaviour
         }
         else //180도 회전하는 경우 
         {
-            newRotZ = transform.eulerAngles.z + destRot * Time.unscaledDeltaTime / (leverRotateDelay*2);
+            newRotZ = transform.eulerAngles.z + destRot * Time.unscaledDeltaTime / (leverRotateDelay * 2);
 
         }
 
         transform.rotation = Quaternion.Euler(0, 0, newRotZ);
         timer += Time.unscaledDeltaTime;
 
-        if(timer >= leverRotateDelay && !shouldRotateHalf)
+        if (timer >= leverRotateDelay && !shouldRotateHalf)
         {
             rotationCorrect();
         }
-        else if(timer >= leverRotateDelay*2 && shouldRotateHalf)
+        else if (timer >= leverRotateDelay * 2 && shouldRotateHalf)
         {
             rotationCorrect();
         }
@@ -879,7 +891,7 @@ public class Player : MonoBehaviour
         LimitFallingSpeed();
 
         if (readyToLand())
-        {           
+        {
             InputManager.instance.isInputBlocked = false;
             ChangeState(States.Land);
         }
@@ -895,15 +907,15 @@ public class Player : MonoBehaviour
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
 
-        if(transform.up == new Vector3(0, 1, 0))
+        if (transform.up == new Vector3(0, 1, 0))
         {
             destGhostRot = 0;
         }
-        else  if(transform.up == new Vector3(-1, 0, 0))
+        else if (transform.up == new Vector3(-1, 0, 0))
         {
             destGhostRot = -90f;
         }
-        else if(transform.up == new Vector3(1, 0, 0))
+        else if (transform.up == new Vector3(1, 0, 0))
         {
             destGhostRot = 90f;
         }
@@ -918,9 +930,9 @@ public class Player : MonoBehaviour
         transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z + (1 / leverRotateDelay * destGhostRot * Time.unscaledDeltaTime));
 
         int angle = Mathf.RoundToInt(transform.eulerAngles.z);
-        if (angle == 0 || angle == 360 )
+        if (angle == 0 || angle == 360)
         {
-            ChangeState(States.FallAfterGhostLevering);    
+            ChangeState(States.FallAfterGhostLevering);
         }
     }
 
@@ -952,7 +964,7 @@ public class Player : MonoBehaviour
 
         switch (GameManager.instance.gameData.curStageNum)
         {
-            case 2: case 6: case 7:               
+            case 2: case 6: case 7:
                 if (other.gameObject.CompareTag("Projectile") && !isDieCorWork)
                 {
                     StartCoroutine(Die());
@@ -987,14 +999,33 @@ public class Player : MonoBehaviour
         {
             leverColl = null;
         }
-        
+
         switch (GameManager.instance.gameData.curStageNum)
         {
-            case 3:
-                if (other.CompareTag("RightWind") || other.CompareTag("LeftWind")) isHorizontalWind = true;
-                else if (other.CompareTag("UpWind") || other.CompareTag("DownWind")) isVerticalWind = true;
-                break;
             case 4:
+                if (other.CompareTag("UpWind")) 
+                {
+                    upWindHome = other.transform.parent.gameObject;
+                    upWindActive = true; 
+                }
+                if (other.CompareTag("RightWind")) 
+                {
+                    rightWindHome = other.transform.parent.gameObject;
+                    rightWindActive = true; 
+                }
+                if (other.CompareTag("DownWind")) 
+                {
+                    downWindHome = other.transform.parent.gameObject;
+                    downWindActive = true; 
+                }
+                if (other.CompareTag("LeftWind")) 
+                {
+                    leftWindHome = other.transform.parent.gameObject;
+                    leftWindActive = true;
+                }
+
+                break;
+            case 5:
                 if (other.CompareTag("Ghost") && other.GetComponent<SpriteRenderer>().color.a != 0f) StartCoroutine(Die());
                 break;
             case 6:
@@ -1005,10 +1036,12 @@ public class Player : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
-        if (GameManager.instance.gameData.curStageNum == 3 && curState != States.AccessRope && curState != States.MoveOnRope)
+        //바람 안에 있을 때 플레이어의 움직임. 플레이어가 박스를 잡고있을 땐 바람의 영향 x 
+        if (curState != States.AccessRope && curState != States.MoveOnRope && !isPlayerGrab)
         {
-            if (other.CompareTag("UpWind"))
+            if (other.CompareTag("UpWind") && !upWindBlock)
             {
+                CheckWind(0);
                 if (rigid.velocity.y >= maxWindSpeed)
                 {
                     rigid.velocity = new Vector2(rigid.velocity.x, maxWindSpeed);
@@ -1016,17 +1049,22 @@ public class Player : MonoBehaviour
                 }
                 rigid.AddForce(Vector2.up * windForce, ForceMode2D.Force);
             }
-            else if (other.CompareTag("DownWind"))
+            if (other.CompareTag("DownWind"))
             {
-                if (rigid.velocity.y <= -maxWindSpeed)
+                CheckWind(2);
+                if (!DownWindBlock)
                 {
-                    rigid.velocity = new Vector2(rigid.velocity.x, -maxWindSpeed);
-                    return;
-                }
-                rigid.AddForce(Vector2.down * windForce, ForceMode2D.Force);
+                    if (rigid.velocity.y <= -maxWindSpeed)
+                    {
+                        rigid.velocity = new Vector2(rigid.velocity.x, -maxWindSpeed);
+                        return;
+                    }
+                    rigid.AddForce(Vector2.down * windForce, ForceMode2D.Force);
+                }               
             }
-            else if (other.CompareTag("RightWind"))
+            if (other.CompareTag("RightWind") && !RightWindBlock)
             {
+                CheckWind(1);
                 if (rigid.velocity.x >= maxWindSpeed)
                 {
                     rigid.velocity = new Vector2(maxWindSpeed, rigid.velocity.y);
@@ -1034,8 +1072,9 @@ public class Player : MonoBehaviour
                 }
                 rigid.AddForce(Vector2.right * windForce, ForceMode2D.Force);
             }
-            else if (other.CompareTag("LeftWind"))
+            if (other.CompareTag("LeftWind") && !LeftWindBlock)
             {
+                CheckWind(3);
                 if (rigid.velocity.x <= -maxWindSpeed)
                 {
                     rigid.velocity = new Vector2(-maxWindSpeed, rigid.velocity.y);
@@ -1055,10 +1094,28 @@ public class Player : MonoBehaviour
             if (shouldRotateHalf) shouldRotateHalf = false;
         }
         
-        if (GameManager.instance.gameData.curStageNum == 3)
+        if (GameManager.instance.gameData.curStageNum == 4)
         {
-            if (other.CompareTag("RightWind") || other.CompareTag("LeftWind")) isHorizontalWind = false;
-            if (other.CompareTag("UpWind") || other.CompareTag("DownWind")) isVerticalWind = false;
+            if (other.CompareTag("UpWind"))
+            {
+                upWindActive = false;
+                upWindBlock = false;
+            }
+            if (other.CompareTag("RightWind"))
+            {
+                rightWindActive = false;
+                RightWindBlock = false;
+            }
+            if (other.CompareTag("DownWind"))
+            {
+                downWindActive = false;
+                DownWindBlock = false;
+            }
+            if (other.CompareTag("LeftWind"))
+            {
+                leftWindActive = false;
+                LeftWindBlock = false;
+            }
         }
     }
 
@@ -1262,12 +1319,28 @@ public class Player : MonoBehaviour
         // 플레이어 좌우움직임 구현 
         int stageNum = GameManager.instance.gameData.curStageNum; //현재 플레이어가 플레이중인 스테이지 번호 
 
-        if (stageNum == 3 && (isHorizontalWind && Physics2D.gravity.x == 0f || isVerticalWind && Physics2D.gravity.y == 0f))
+        // Stage4에서 바람이 부는 방향으로는 플레이어가 움직이지 않음 
+        // 단, 플레이어가 박스를 잡고 있거나 박스가 바람을 막고있는 동안은 예외 
+        if (!isPlayerGrab)
         {
-            // Stage3에서 바람이 부는 방향으로는 플레이어가 움직이지 않음 
-            return;
+            if (Physics2D.gravity.x == 0f)
+            //플레이어가 위/아래쪽을 향하고 있을 때
+            {
+                if ((rightWindActive && !RightWindBlock) || (leftWindActive && !LeftWindBlock))
+                {
+                    return;
+                }
+            }
+            else if (Physics2D.gravity.y == 0f)
+            //플레이어가 오른쪽/왼쪽을 향하고 있을 때
+            {
+                if ((upWindActive && !upWindBlock) || (downWindActive && !DownWindBlock))
+                {
+                    return;
+                }
+            }
         }
-
+        
         Vector2 locVel = transform.InverseTransformDirection(rigid.velocity); //월드좌표 속도를 로컬좌표 속도로 변환 
 
         //몇몇 스테이지는 속도 변환값에 보정이 필요 
@@ -1275,7 +1348,7 @@ public class Player : MonoBehaviour
         { 
             locVel = new Vector2(Vector2.Lerp(locVel, Vector2.zero, Time.deltaTime * slidingDegree).x , locVel.y);
         }
-        else if (stageNum == 3 && isPlayerExitFromWInd)
+        else if (stageNum == 4 && isPlayerExitFromWInd)
         {
             return;
         }
@@ -1311,6 +1384,135 @@ public class Player : MonoBehaviour
     RaycastHit2D rayPosHit_left; //왼발
     RaycastHit2D rayPosHit_right; //오른발  
     
+    void CheckWind(int type) //플레이어가 windZone 내에 있을 때 바람을 막아주는 오브젝트가 있는지 없는지 체크 
+    {
+        if(type == 0) //upWind 안에 있을 때 
+        {
+            float laserGap;
+            //플레이어의 양 끝에서 windHome을 향해 ray 2개 발사 ~> 두 ray 사이의 간격 
+            //플레이어가 수직방향으로 서 있으면 두 다리 사이의 거리, 수평방향으로 서 있으면 머리-발 사이의 거리 
+            if (transform.up == new Vector3(0, 1, 0) || transform.up == new Vector3(0, -1, 0)) laserGap = transform.GetComponent<BoxCollider2D>().size.x;
+            else laserGap = transform.GetComponent<BoxCollider2D>().size.y;
+
+            //RaycastHit2D hit_1, hit_2;
+            bool isHit_1, isHit_2;
+
+            float rayDistance = Mathf.Abs(transform.position.y - upWindHome.transform.position.y);
+            //플레이어로부터 현재 영향을 받고 있는 windHome 까지의 거리 
+
+            int layerMask = 1 << LayerMask.NameToLayer("windBlock"); //플레이어와 windHome 사이에 windBlock 이 있으면 바람이 막힌 것 
+            isHit_1 = Physics2D.Raycast(transform.position + new Vector3(0.5f * laserGap, 0, 0), new Vector3(0, -1, 0), rayDistance, layerMask);
+            isHit_2 = Physics2D.Raycast(transform.position - new Vector3(0.5f * laserGap, 0, 0), new Vector3(0, -1, 0), rayDistance, layerMask);
+
+            Debug.DrawRay(transform.position + new Vector3(0.5f * laserGap, 0, 0), new Vector3(0, -1, 0) * rayDistance, Color.red);
+            Debug.DrawRay(transform.position - new Vector3(0.5f * laserGap, 0, 0), new Vector3(0, -1, 0) * rayDistance, Color.red);
+
+            if (isHit_1 && isHit_2) //플레이어에서 발사된 두 ray가 모두 windBlock에 가로막힌다면 wind 영향을 제거함 
+            {
+                upWindBlock = true;
+            }
+            else
+            {
+                upWindBlock = false;
+            }
+        }
+
+        if(type == 1) //rightWind 안에 있을 때 
+        {
+            float laserGap;
+            //플레이어의 양 끝에서 windHome을 향해 ray 2개 발사 ~> 두 ray 사이의 간격 
+            //플레이어가 수직방향으로 서 있으면 두 다리 사이의 거리, 수평방향으로 서 있으면 머리-발 사이의 거리 
+            if (transform.up == new Vector3(0, 1, 0) || transform.up == new Vector3(0, -1, 0)) laserGap = transform.GetComponent<BoxCollider2D>().size.y;
+            else laserGap = transform.GetComponent<BoxCollider2D>().size.x;
+
+            //RaycastHit2D hit_1, hit_2;
+            bool isHit_1, isHit_2;
+
+            float rayDistance = Mathf.Abs(transform.position.x - rightWindHome.transform.position.x);
+            //플레이어로부터 현재 영향을 받고 있는 windHome 까지의 거리 
+
+            int layerMask = 1 << LayerMask.NameToLayer("windBlock"); //플레이어와 windHome 사이에 windBlock 이 있으면 바람이 막힌 것 
+            isHit_1 = Physics2D.Raycast(transform.position + new Vector3(0, 0.5f * laserGap, 0), new Vector3(1, 0, 0), rayDistance, layerMask);
+            isHit_2 = Physics2D.Raycast(transform.position - new Vector3(0, 0.5f * laserGap, 0), new Vector3(1, 0, 0), rayDistance, layerMask);
+
+            Debug.DrawRay(transform.position + new Vector3(0.5f * laserGap, 0, 0), new Vector3(1, 0, 0) * rayDistance, Color.red);
+            Debug.DrawRay(transform.position - new Vector3(0.5f * laserGap, 0, 0), new Vector3(1, 0, 0) * rayDistance, Color.red);
+           
+            if (isHit_1 && isHit_2) //플레이어에서 발사된 두 ray가 모두 windBlock에 가로막힌다면 wind 영향을 제거함 
+            {
+                RightWindBlock = true;
+            }
+            else
+            {
+                RightWindBlock = false;
+            }
+        }
+       
+        if (type == 2) //downWind 안에 있을 때 
+        {
+            float laserGap; 
+            //플레이어의 양 끝에서 windHome을 향해 ray 2개 발사 ~> 두 ray 사이의 간격 
+            //플레이어가 수직방향으로 서 있으면 두 다리 사이의 거리, 수평방향으로 서 있으면 머리-발 사이의 거리 
+            if (transform.up == new Vector3(0, 1, 0) || transform.up == new Vector3(0, -1, 0)) laserGap = transform.GetComponent<BoxCollider2D>().size.x;
+            else laserGap = transform.GetComponent<BoxCollider2D>().size.y;
+
+            //RaycastHit2D hit_1, hit_2;
+            bool isHit_1, isHit_2;
+
+            float rayDistance = Mathf.Abs(transform.position.y - downWindHome.transform.position.y);
+            //플레이어로부터 현재 영향을 받고 있는 windHome 까지의 거리 
+
+            int layerMask = 1 << LayerMask.NameToLayer("windBlock"); //플레이어와 windHome 사이에 windBlock 이 있으면 바람이 막힌 것 
+            isHit_1 = Physics2D.Raycast(transform.position + new Vector3(0.5f * laserGap, 0, 0), new Vector3(0, 1, 0), rayDistance, layerMask);
+            isHit_2 = Physics2D.Raycast(transform.position - new Vector3(0.5f * laserGap, 0, 0), new Vector3(0, 1, 0), rayDistance, layerMask);
+
+            Debug.DrawRay(transform.position + new Vector3(0.5f * laserGap, 0, 0), new Vector3(0, 1, 0) * rayDistance, Color.red);
+            Debug.DrawRay(transform.position - new Vector3(0.5f * laserGap, 0, 0), new Vector3(0, 1, 0) * rayDistance, Color.red);
+
+            if (isHit_1 && isHit_2) //플레이어에서 발사된 두 ray가 모두 windBlock에 가로막힌다면 wind 영향을 제거함 
+            {
+                DownWindBlock = true;
+            }
+            else
+            {
+                DownWindBlock = false;
+            }
+        }
+
+        if (type == 3) //leftWind 안에 있을 때 
+        {
+            float laserGap;
+            //플레이어의 양 끝에서 windHome을 향해 ray 2개 발사 ~> 두 ray 사이의 간격 
+            //플레이어가 수직방향으로 서 있으면 두 다리 사이의 거리, 수평방향으로 서 있으면 머리-발 사이의 거리 
+            if (transform.up == new Vector3(0, 1, 0) || transform.up == new Vector3(0, -1, 0)) laserGap = transform.GetComponent<BoxCollider2D>().size.y;
+            else laserGap = transform.GetComponent<BoxCollider2D>().size.x;
+
+            //RaycastHit2D hit_1, hit_2;
+            bool isHit_1, isHit_2;
+
+            float rayDistance = Mathf.Abs(transform.position.x - leftWindHome.transform.position.x);
+            //플레이어로부터 현재 영향을 받고 있는 windHome 까지의 거리 
+
+            int layerMask = 1 << LayerMask.NameToLayer("windBlock"); //플레이어와 windHome 사이에 windBlock 이 있으면 바람이 막힌 것 
+            isHit_1 = Physics2D.Raycast(transform.position + new Vector3(0, 0.5f * laserGap, 0), new Vector3(-1, 0, 0), rayDistance, layerMask);
+            isHit_2 = Physics2D.Raycast(transform.position - new Vector3(0, 0.5f * laserGap, 0), new Vector3(-1, 0, 0), rayDistance, layerMask);
+
+            Debug.DrawRay(transform.position + new Vector3(0.5f * laserGap, 0, 0), new Vector3(-1, 0, 0) * rayDistance, Color.red);
+            Debug.DrawRay(transform.position - new Vector3(0.5f * laserGap, 0, 0), new Vector3(-1, 0, 0) * rayDistance, Color.red);
+
+            if (isHit_1 && isHit_2) //플레이어에서 발사된 두 ray가 모두 windBlock에 가로막힌다면 wind 영향을 제거함 
+            {
+                LeftWindBlock = true;
+            }
+            else
+            {
+                LeftWindBlock = false;
+            }
+        }
+
+
+    }
+
     void CheckGround()
     {
         //movingFloor 만 체크하는 rayCast 
@@ -1393,8 +1595,10 @@ public class Player : MonoBehaviour
                     rayStartPos_right = middlePos + new Vector2(0, centerToLeg);
                 }
 
-                rayPosHit_left = Physics2D.Raycast(rayStartPos_left, -transform.up, 0.1f, LayerMask.GetMask("Platform"));
-                rayPosHit_right = Physics2D.Raycast(rayStartPos_right, -transform.up, 0.1f, LayerMask.GetMask("Platform"));
+                int groundCheckMask = (1 << LayerMask.NameToLayer("Platform")) + (1 << LayerMask.NameToLayer("windBlock"));
+
+                rayPosHit_left = Physics2D.Raycast(rayStartPos_left, -transform.up, 0.1f, groundCheckMask);
+                rayPosHit_right = Physics2D.Raycast(rayStartPos_right, -transform.up, 0.1f, groundCheckMask);
 
                 //Debug.DrawRay(rayStartPos_left, -transform.up * 0.2f, new Color(1, 0, 0));
                 //Debug.DrawRay(rayStartPos_right, -transform.up * 0.2f, new Color(1, 0, 0));

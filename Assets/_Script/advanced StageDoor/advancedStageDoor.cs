@@ -6,6 +6,7 @@ public class advancedStageDoor : MonoBehaviour
 {
     public Sprite[] spritesGroup = new Sprite[4]; //0은 가시가 없는 버전, 3는 가시가 완전히 활성화된 버전
     public BoxCollider2D spikeColl;
+    Rigidbody2D rigid;
     public int doorType;
     //type1 은 원래는 내려가 있지만 버튼 누르면 올라가는 타입(sprite0로 시작, sprite3로 끝)
     //type2 는 원래 올라가 있고 콜라이더 통과하면 내려가는 타입(sprite3로 시작, sprite0로 끝)
@@ -18,7 +19,7 @@ public class advancedStageDoor : MonoBehaviour
     SpriteRenderer spr;
     AudioSource sound;
 
-    Vector2 initialPos; //맨 처음 초기화 할 위치
+    Vector3 initialPos; //맨 처음 초기화 할 위치
 
     public Vector2[] spikeOffsetGroup; 
     //[0]이 가시 들어간 상태, [3]이 가시 튀어나온 상태 
@@ -30,6 +31,7 @@ public class advancedStageDoor : MonoBehaviour
     {
         spr = GetComponent<SpriteRenderer>();
         sound = GetComponent<AudioSource>();
+        rigid = GetComponent<Rigidbody2D>();
         if(thresholdPoint.gameObject != null)//disposable 로 설정된 문은 따로 thresholdPoint 가 없다 
         {
             doorActiveThreshold = thresholdPoint.GetComponent<SavePoint>().achievementNum;
@@ -37,17 +39,18 @@ public class advancedStageDoor : MonoBehaviour
     }
     void Start() //door 는 localPos 를 기준으로 움직임: 회전은 stageDoor 그룹 자체에 줘야 함 
     {
-        initialPos = transform.localPosition;
+        initialPos = transform.position; //초기 위치 저장 
 
-        if (disposable)
+        // 가시 스프라이트 및 오프셋 설정 
+        if (disposable) //일회성 문일 경우 
         {
-            if(doorType == 1)
+            if(doorType == 1) //내려온 상태가 디폴트 
             {
                 spr.sprite = spritesGroup[3];
                 spikeColl.offset = spikeOffsetGroup[3];
             }
 
-            else if(doorType == 2)
+            else if(doorType == 2) //올라간 상태가 디폴트 
             {
                 spr.sprite = spritesGroup[0];
                 spikeColl.offset = spikeOffsetGroup[0];
@@ -60,13 +63,13 @@ public class advancedStageDoor : MonoBehaviour
                 if (doorType == 1) //버튼 누르면 올라가는 문 ~> 올라간 채로 있어야 함
                 {
                     spr.sprite = spritesGroup[0];
-                    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + doorLength, 0);
+                    transform.position = initialPos + transform.up * doorLength;
                     spikeColl.offset = spikeOffsetGroup[0];
                 }
                 else //콜라이더 반응하면 내려오는 문 ~> 내려온 채로 있어야 함
                 {
                     spr.sprite = spritesGroup[3];
-                    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - doorLength, 0);
+                    transform.position = initialPos - transform.up * doorLength;
                     spikeColl.offset = spikeOffsetGroup[3];
                 }
             }
@@ -121,14 +124,13 @@ public class advancedStageDoor : MonoBehaviour
         StartCoroutine("doorShake");
         yield return new WaitForSeconds(0.6f);
 
-        int frameIndex = 1;
-        while(frameIndex <= 50)
-        {
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + doorLength/50, 0);
+        float moveSpeed = doorLength / doorPeriod; //문이 올라가는 속도 
 
-            frameIndex++;
-            yield return new WaitForSeconds(doorPeriod / 50);
-        }
+        rigid.velocity = transform.up * moveSpeed;
+        yield return new WaitForSeconds(doorPeriod);
+        rigid.velocity = Vector3.zero;
+        transform.position = initialPos + transform.up * doorLength; //문의 위치 올라간채로 고정 
+
         if (sound != null)
         {
             sound.Stop();
@@ -146,15 +148,12 @@ public class advancedStageDoor : MonoBehaviour
         StartCoroutine("doorShake");
         yield return new WaitForSeconds(0.6f);
 
-        int frameIndex = 1;
-        while (frameIndex <= 50)
-        {
-            float doorYPos = initialPos.y - (doorLength / 50 * frameIndex);
-            transform.localPosition = new Vector3(transform.localPosition.x, doorYPos, 0);
+        float moveSpeed = doorLength / doorPeriod; //문이 올라가는 속도 
 
-            frameIndex++;
-            yield return new WaitForSeconds(doorPeriod / 50);
-        }
+        rigid.velocity = -transform.up * moveSpeed;
+        yield return new WaitForSeconds(doorPeriod);
+        rigid.velocity = Vector3.zero;
+        transform.position = initialPos - transform.up * doorLength; //문의 위치 내려온채로 고정 
 
         StartCoroutine("spikeActive");
         if (sound != null) sound.Stop();
@@ -185,14 +184,18 @@ public class advancedStageDoor : MonoBehaviour
         float shakeDegree = 0.03f; //위아래로 흔들림
         for(int index=0; index<3; index++)
         {
-            transform.localPosition = new Vector3(transform.localPosition.x, initialPos.y + shakeDegree, 0);
+            transform.position = initialPos + transform.up * shakeDegree;
             yield return new WaitForSeconds(0.04f);
-            transform.localPosition = new Vector3(transform.localPosition.x, initialPos.y - shakeDegree, 0);
+
+            transform.position = initialPos - transform.up * shakeDegree;
             yield return new WaitForSeconds(0.04f);
-            transform.localPosition = new Vector3(transform.localPosition.x, initialPos.y - shakeDegree, 0);
+
+            transform.position = initialPos - transform.up * shakeDegree;
             yield return new WaitForSeconds(0.04f);
-            transform.localPosition = new Vector3(transform.localPosition.x, initialPos.y + shakeDegree, 0);
+
+            transform.position = initialPos + transform.up * shakeDegree;
             yield return new WaitForSeconds(0.04f);
+
         }
     }
 }
