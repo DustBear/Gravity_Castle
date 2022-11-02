@@ -93,7 +93,7 @@ public class startScene_circleDoor : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        for (int index = 0; index <= doorOpenSprites.Length - 2; index++)
+        for (int index = 0; index <= doorOpenSprites.Length - 1; index++)
         {
             thisSpr.sprite = doorOpenSprites[index];
             yield return new WaitForSeconds(0.1f);

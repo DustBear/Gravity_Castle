@@ -120,7 +120,6 @@ public class advancedStageDoor : MonoBehaviour
         }
        
         StartCoroutine("spikeDeActive");
-        yield return new WaitForSeconds(1.5f);
         StartCoroutine("doorShake");
         yield return new WaitForSeconds(0.6f);
 

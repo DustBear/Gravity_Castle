@@ -1547,11 +1547,13 @@ public class Player : MonoBehaviour
 
         switch (GameManager.instance.gameData.curStageNum)
         {
+            /*
             case 2:
                 // Platform, Launcher, Stone
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3 | 1 << 6 | 1 << 15);
                 isGrounded = rayHit.collider != null || rayHitMovingFloor.collider != null;
                 break;
+            */
             case 5:
                 // Platform, JumpBoost
                 rayHit = Physics2D.BoxCast(transform.position, new Vector2(0.85f, 0.1f), transform.eulerAngles.z, -transform.up, 1f, 1 << 3);
