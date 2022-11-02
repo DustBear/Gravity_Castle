@@ -56,7 +56,6 @@ public class MainCamera : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if (isCameraLock) return;
         DampMove();
     }  
 
@@ -74,7 +73,9 @@ public class MainCamera : MonoBehaviour
         transform.position = cameraPosCal();
     }
     public void DampMove() //Damp 기능이 걸린 채로 움직임(일반적인 움직임에서 사용)
-    {               
+    {
+        if (isCameraLock) return;
+
         Vector3 aimPos = cameraPosCal();
         transform.position = Vector3.SmoothDamp(transform.position, aimPos, ref dampSpeed, smoothTime);
     }

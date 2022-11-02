@@ -70,9 +70,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1200094403
-  m_SortingLayer: -5
-  m_SortingOrder: 0
+  m_SortingLayerID: -2056838877
+  m_SortingLayer: -2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 3976855231250922447, guid: d528df1d0eb0b124e8b665cccd248880, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -191,9 +191,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1200094403
-  m_SortingLayer: -5
-  m_SortingOrder: 0
+  m_SortingLayerID: -2056838877
+  m_SortingLayer: -2
+  m_SortingOrder: 3
   m_Sprite: {fileID: -6312079992757958954, guid: d528df1d0eb0b124e8b665cccd248880, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -380,9 +380,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1200094403
-  m_SortingLayer: -5
-  m_SortingOrder: 0
+  m_SortingLayerID: -2056838877
+  m_SortingLayer: -2
+  m_SortingOrder: 3
   m_Sprite: {fileID: -7624296624032290757, guid: d528df1d0eb0b124e8b665cccd248880, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -592,6 +592,7 @@ MonoBehaviour:
   - {fileID: 3386804356356760829}
   - {fileID: 7488369049646998059}
   boxGrabColl: {fileID: 6223863724256448046}
+  isDieCorWork: 0
   defaultGravityScale: 3
   maxFallingSpeed: 20
   walkSpeed: 6
@@ -615,6 +616,14 @@ MonoBehaviour:
   shouldRotateHalf: 0
   destRot: 0
   isPlayerGrab: 0
+  upWindActive: 0
+  rightWindActive: 0
+  downWindActive: 0
+  leftWindActive: 0
+  upWindBlock: 0
+  RightWindBlock: 0
+  DownWindBlock: 0
+  LeftWindBlock: 0
   isGrounded: 1
   isOnMovePlatform: 0
   isOnJumpPlatform: 0
@@ -1045,9 +1054,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1200094403
-  m_SortingLayer: -5
-  m_SortingOrder: 0
+  m_SortingLayerID: -2056838877
+  m_SortingLayer: -2
+  m_SortingOrder: 3
   m_Sprite: {fileID: -5616932090583745004, guid: d528df1d0eb0b124e8b665cccd248880, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

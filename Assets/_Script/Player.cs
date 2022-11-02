@@ -192,7 +192,7 @@ public class Player : MonoBehaviour
 
         if (GameManager.instance.gameData.curAchievementNum != 0) //스테이지를 맨 처음 시작할 땐 별도의 연출코드가 붙음
         {
-            UIManager.instance.FadeIn(1.5f);
+            UIManager.instance.FadeIn(1f);
         }
     }
 
@@ -962,6 +962,15 @@ public class Player : MonoBehaviour
             StartCoroutine(Die());
         }
 
+        if(other.gameObject.CompareTag("electricPlatform") && !isDieCorWork)
+        {
+            if (other.gameObject.GetComponent<electricSensor>().magWork)
+            {
+                //전기가 통하는 상태에서 플랫폼 밟으면 죽음 
+                StartCoroutine(Die());
+            }
+        }
+
         switch (GameManager.instance.gameData.curStageNum)
         {
             case 2: case 6: case 7:
@@ -1119,10 +1128,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator Die()
+    public IEnumerator Die()
     {
         isDieCorWork = true; //이미 코루틴이 실행하고 있는동안은 다음 코루틴을 실행시키지 않음 
         InputManager.instance.isPlayerDying = true;
+        GetComponent<BoxCollider2D>().enabled = false; //죽은 상태에선 콜라이더 끔 
+        rigid.bodyType = RigidbodyType2D.Kinematic;
 
         sound.Stop();
         sound.clip = dieSound;
@@ -1132,7 +1143,8 @@ public class Player : MonoBehaviour
         {
             isPlayerGrab = false; //만약 상자를 잡고 있는 상태에서 죽는다면 상자를 내려놔야 함 
         }
-        GameManager.instance.shouldSpawnSavePoint = true; //죽은 경우는 일단 세이브포인트에서 시작해야 함 
+        GameManager.instance.shouldSpawnSavePoint = true; //죽은 경우는 일단 세이브포인트에서 시작해야 함
+
         cameraObj.GetComponent<MainCamera>().isCameraLock = true; //죽은 경우 카메라는 고정
         cameraObj.GetComponent<MainCamera>().cameraShake(0.5f, 0.7f);
         sprite.color = new Color(1, 1, 1, 0); 
