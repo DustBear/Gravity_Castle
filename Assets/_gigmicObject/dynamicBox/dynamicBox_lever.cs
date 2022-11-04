@@ -108,7 +108,7 @@ public class dynamicBox_lever : MonoBehaviour
                 playerscr.walkSpeed = initWalkSpeed;
 
                 rigid.constraints = RigidbodyConstraints2D.None;
-                dynamicBox.GetComponent<BoxCollider2D>().isTrigger = false; //�ٽ� �ݶ��̴� Ŵ 
+                dynamicBox.GetComponent<BoxCollider2D>().isTrigger = false;
             }
         }
     }
@@ -134,6 +134,7 @@ public class dynamicBox_lever : MonoBehaviour
 
         dynamicBox.GetComponent<BoxCollider2D>().isTrigger = true; //플레이어가 박스를 집어드는 순간 충돌하지 않도록 트리거 체크 
         playerBoxColl.SetActive(true); //대신 박스와 다른 오브젝트 사이의 충돌은 원래대로 일어나도록 별도의 콜라이더 켜기 
+        rigid.gravityScale = 0f;
         
         while (isBoxGrab) //플레이어가 박스를 잡고있는 동안 코루틴은 현재 상태에 머무름 
         {
@@ -162,6 +163,7 @@ public class dynamicBox_lever : MonoBehaviour
         }
 
         rigid.constraints = RigidbodyConstraints2D.None;
+        rigid.gravityScale = 3f;
         
         playerBoxColl.SetActive(false);
         dynamicBox.GetComponent<BoxCollider2D>().isTrigger = false; //박스 콜라이더 다시 켜기 

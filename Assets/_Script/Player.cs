@@ -1170,8 +1170,8 @@ public class Player : MonoBehaviour
         }
         yield return new WaitForSeconds(1.5f);
 
-        UIManager.instance.FadeOut(1f); //화면 어두워짐 
-        yield return new WaitForSeconds(2f);
+        UIManager.instance.FadeOut(0.8f); //화면 어두워짐 
+        yield return new WaitForSeconds(2.5f);
 
         isDieCorWork = false;
 
