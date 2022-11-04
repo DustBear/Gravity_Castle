@@ -9,9 +9,9 @@ public class magnaticObj : MonoBehaviour
     [SerializeField] bool isContact; //현재 매그네틱필드에 닿아있는지의 여부 
     [SerializeField] bool isMagnetic; //현재 매그네틱필드에 자기장이 걸려 있는지의 여부
 
-    [SerializeField] bool isPlayerContact; //현재 플레이어와 닿아있는지의 여부 
     GameObject magneticField;
 
+    public int activeAchNum; //현재 퍼즐을 풀고 있는 동안만 작동 
     private void Awake()
     {        
         rigid = GetComponent<Rigidbody2D>();
@@ -19,13 +19,32 @@ public class magnaticObj : MonoBehaviour
 
     void Start()
     {
-       
+       if(GameManager.instance.gameData.curAchievementNum != activeAchNum)
+        {
+            rigid.bodyType = RigidbodyType2D.Kinematic; //비활성화 상태에선 멈춘다 
+        }
+        else
+        {
+            rigid.bodyType = RigidbodyType2D.Dynamic;
+        }
     }
 
     Vector3 initLocalPos;
 
     void Update()
     {
+        if(GameManager.instance.gameData.curAchievementNum != activeAchNum)
+        {
+            return;
+        }
+        else
+        {
+            if(rigid.bodyType != RigidbodyType2D.Dynamic)
+            {
+                rigid.bodyType = RigidbodyType2D.Dynamic;
+            }
+        }
+
         if (!isContact)
         {
             if (isMagnetic) //매그네틱필드에 닿아있지 않으면 자기장도 없음 
@@ -47,7 +66,7 @@ public class magnaticObj : MonoBehaviour
             }
         }
     }
-     
+    /*
     private void OnCollisionEnter2D(Collision2D collision)
     {        
         if (collision.gameObject.tag == "electricPlatform")
@@ -55,33 +74,23 @@ public class magnaticObj : MonoBehaviour
             isContact = true;
             magneticField = collision.gameObject;
             transform.parent = magneticField.transform; //이 오브젝트를 매그네틱필드의 자식오브젝트로 넣음 
-
-            initLocalPos = transform.localPosition;
-
+           
             StartCoroutine(magnetic_check()); 
         }
-        else if(collision.gameObject.tag == "Player" && !isMagnetic) //자석에 닿아있는 동안에는 어차피 움직일 수 없으므로 고려 x 
-        {
-            isPlayerContact = true;
-
-            initPos = transform.position;
-            StartCoroutine(playerContact());
-        }        
     }
-
-    [SerializeField] Vector3 initPos;
-
-    IEnumerator playerContact()
+    */
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        initPos = transform.position;
-        //플레이어와 닿아있는 동안 플레이어가 뚫고 지나가지 못하게 막음 
-        while (isPlayerContact)
+        if (collision.gameObject.tag == "electricPlatform")
         {
-            transform.position = initPos;
-            yield return null;
+            isContact = true;
+            magneticField = collision.gameObject;
+            transform.parent = magneticField.transform; //이 오브젝트를 매그네틱필드의 자식오브젝트로 넣음 
+
+            StartCoroutine(magnetic_check());
         }
     }
-
+    /*
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "electricPlatform")
@@ -91,16 +100,30 @@ public class magnaticObj : MonoBehaviour
             isContact = false;
             isMagnetic = false;
         }
-        else if (collision.gameObject.tag == "Player" && !isMagnetic) //자석에 닿아있는 동안에는 어차피 움직일 수 없으므로 고려 x 
+    }
+    */
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "electricPlatform")
         {
-            isPlayerContact = false;
-            transform.position = initPos;
+            magneticField = null;
+            transform.parent = null;
+            isContact = false;
+            isMagnetic = false;
         }
     }
-   
+    /*
     private void OnCollisionStay2D(Collision2D collision)
     //자석에 붙어있는 상태에서 전류 끊으면 떨어져야 함 
     //자석에 붙어있는 동안 매 프레임 호출
+    {
+        if (collision.gameObject.tag == "electricPlatform")
+        {
+            isMagnetic = collision.gameObject.GetComponent<electricSensor>().magWork;
+        }
+    }
+    */
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "electricPlatform")
         {
@@ -112,9 +135,13 @@ public class magnaticObj : MonoBehaviour
     //자석에 붙어있는 상태에서 전류 끊으면 떨어져야 함 
     //자석에 붙어있는 동안 매 프레임 호출
     {
-        while(magneticField != null)
+        while(magneticField != null) //현재 붙어있는 매그네틱필드의 magWork 값 매 프레임 받아옴 
         {
             isMagnetic = magneticField.GetComponent<electricSensor>().magWork;
+            if (isMagnetic)
+            {
+                initLocalPos = transform.localPosition;
+            }
             yield return null;
         }
     }

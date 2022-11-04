@@ -1048,15 +1048,18 @@ public class Player : MonoBehaviour
         //바람 안에 있을 때 플레이어의 움직임. 플레이어가 박스를 잡고있을 땐 바람의 영향 x 
         if (curState != States.AccessRope && curState != States.MoveOnRope && !isPlayerGrab)
         {
-            if (other.CompareTag("UpWind") && !upWindBlock)
+            if (other.CompareTag("UpWind"))
             {
                 CheckWind(0);
-                if (rigid.velocity.y >= maxWindSpeed)
+                if (!upWindBlock)
                 {
-                    rigid.velocity = new Vector2(rigid.velocity.x, maxWindSpeed);
-                    return;
-                }
-                rigid.AddForce(Vector2.up * windForce, ForceMode2D.Force);
+                    if (rigid.velocity.y >= maxWindSpeed)
+                    {
+                        rigid.velocity = new Vector2(rigid.velocity.x, maxWindSpeed);
+                        return;
+                    }
+                    rigid.AddForce(Vector2.up * windForce, ForceMode2D.Force);
+                }              
             }
             if (other.CompareTag("DownWind"))
             {
@@ -1071,25 +1074,31 @@ public class Player : MonoBehaviour
                     rigid.AddForce(Vector2.down * windForce, ForceMode2D.Force);
                 }               
             }
-            if (other.CompareTag("RightWind") && !RightWindBlock)
+            if (other.CompareTag("RightWind"))
             {
                 CheckWind(1);
-                if (rigid.velocity.x >= maxWindSpeed)
+                if (!RightWindBlock)
                 {
-                    rigid.velocity = new Vector2(maxWindSpeed, rigid.velocity.y);
-                    return;
-                }
-                rigid.AddForce(Vector2.right * windForce, ForceMode2D.Force);
+                    if (rigid.velocity.x >= maxWindSpeed)
+                    {
+                        rigid.velocity = new Vector2(maxWindSpeed, rigid.velocity.y);
+                        return;
+                    }
+                    rigid.AddForce(Vector2.right * windForce, ForceMode2D.Force);
+                }               
             }
-            if (other.CompareTag("LeftWind") && !LeftWindBlock)
+            if (other.CompareTag("LeftWind"))
             {
                 CheckWind(3);
-                if (rigid.velocity.x <= -maxWindSpeed)
+                if (!LeftWindBlock)
                 {
-                    rigid.velocity = new Vector2(-maxWindSpeed, rigid.velocity.y);
-                    return;
-                }
-                rigid.AddForce(Vector2.left * windForce, ForceMode2D.Force);
+                    if (rigid.velocity.x <= -maxWindSpeed)
+                    {
+                        rigid.velocity = new Vector2(-maxWindSpeed, rigid.velocity.y);
+                        return;
+                    }
+                    rigid.AddForce(Vector2.left * windForce, ForceMode2D.Force);
+                }                
             }            
         }
     }
@@ -1132,7 +1141,7 @@ public class Player : MonoBehaviour
     {
         isDieCorWork = true; //이미 코루틴이 실행하고 있는동안은 다음 코루틴을 실행시키지 않음 
         InputManager.instance.isPlayerDying = true;
-        GetComponent<BoxCollider2D>().enabled = false; //죽은 상태에선 콜라이더 끔 
+        GetComponent<BoxCollider2D>().isTrigger = true; //죽은 상태에선 콜라이더 통과가능하게 만들어야 함(그 위에 박스가 떠있지 않게) 
         rigid.bodyType = RigidbodyType2D.Kinematic;
 
         sound.Stop();

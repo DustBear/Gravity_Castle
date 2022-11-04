@@ -48,13 +48,10 @@ public class objectPlayerCrash : MonoBehaviour
         Vector2 movingDir = new Vector2(curVel.x, curVel.y); //충돌시점에서 오브젝트 이동방향 
         Vector2 playerDir = playerObj.transform.position - transform.position; //오브젝트에서 플레이어까지의 거리 
 
-        Vector2 toDir = playerDir - movingDir;
-        //float degree = Mathf.Atan2(toDir.y, toDir.x) * Mathf.Rad2Deg;
-        //
         float degree = Mathf.Acos(Vector2.Dot(movingDir, playerDir) / (movingDir.magnitude * playerDir.magnitude)) * Mathf.Rad2Deg;
         //현재 오브젝트의 이동방향 벡터와 플레이어와의 상대적 위치벡터 사이의 각 ~> 충돌각 의미 
 
-        Debug.Log("movingDIr: " + movingDir +  ", playerDir: " + playerDir + ", degree: " + degree);
+        //Debug.Log("movingDIr: " + movingDir +  ", playerDir: " + playerDir + ", degree: " + degree);
 
         if(Mathf.Abs(degree) <= 45f && curVel.magnitude >= thresholdSpeed) //기준치 이상 속도로 충돌하며 충돌각의 절댓값이 45도 이하일 때 
         {
@@ -71,7 +68,7 @@ public class objectPlayerCrash : MonoBehaviour
 
         if(collision.gameObject.tag == "Player")
         {
-            Debug.Log("player Detect, speed: " + curVel.magnitude);
+            //Debug.Log("player Detect, speed: " + curVel.magnitude);
 
             playerObj = collision.gameObject;
             playerScr = playerObj.GetComponent<Player>();
