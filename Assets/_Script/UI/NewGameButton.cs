@@ -65,7 +65,8 @@ public class NewGameButton : MonoBehaviour
             GameManager.instance.shouldSpawnSavePoint = false;
             GameManager.instance.shouldUseOpeningElevator = true;
 
-            SceneManager.LoadScene("openingScene");
+            UIManager.instance.FadeOut(1f);
+            StartCoroutine(loadSceneDelay(1));
         }
         
         //세이브파일이 이미 있으면 불러오기 
@@ -93,8 +94,22 @@ public class NewGameButton : MonoBehaviour
                 GameManager.instance.shouldUseOpeningElevator = true; 
             }
 
-            SceneManager.LoadScene(GameManager.instance.nextScene);
+            UIManager.instance.FadeOut(1f);
+            StartCoroutine(loadSceneDelay(2));
         }
 
+    }
+    IEnumerator loadSceneDelay(int type)
+    {
+        yield return new WaitForSeconds(1.5f);
+        switch (type)
+        {
+            case 1:
+                SceneManager.LoadScene("openingScene"); //오프닝씬으로 들렀다가 nextScene으로 이동 
+                break;
+            case 2:
+                SceneManager.LoadScene(GameManager.instance.nextScene);
+                break;
+        }
     }
 }

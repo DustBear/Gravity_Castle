@@ -15,7 +15,7 @@ public class StartMenu : MonoBehaviour
     public TextMeshProUGUI settingExp;
 
     public GameObject titleImage; //배경 영상 
-    public GameObject fadeCover;
+    //public GameObject fadeCover;
     public GameObject gameMenuText; //'아무 버튼이나 눌러 시작하세요' 버튼 ~> 깜빡여야 함 
 
     Color fadeCoverColor;
@@ -45,32 +45,25 @@ public class StartMenu : MonoBehaviour
     {
         if (Input.anyKeyDown && isTitleMenuOpen) //타이틀화면이 열려 있는 상태에서 아무 키나 누르면 
         {
-            //타이틀화면 끄고 
-            titleMenu.SetActive(false);
-            isTitleMenuOpen = false;
-
             StartCoroutine("gameMenuOpen"); //게임메뉴 키기 
         }  
     }
 
     IEnumerator gameMenuOpen() //메뉴 열고 닫는 중간에 페이드인/아웃 효과 있어야 함 
     {
-        fadeCover.GetComponent<Image>().color = new Color(0, 0, 0, 1); //처음에는 검은 화면에서 시작
+        UIManager.instance.FadeOut(0.6f);
+
+        yield return new WaitForSeconds(1f); //화면이 완전히 어두워지면 
+
+        //타이틀화면 끄고 
+        titleMenu.SetActive(false);
+        isTitleMenuOpen = false;
 
         //gameMenu 키고 
         isGameMenuOpen = true;
         gameMenu.SetActive(true);
 
-        //페이드인
-        float fadeTime = 2f; //페이드인이 완료되는 데 걸리는 시간 
-
-        for(int index=100; index>=1; index--)
-        {
-            fadeCover.GetComponent<Image>().color = new Color(0, 0, 0, 0.01f*index);
-            yield return new WaitForSeconds(0.01f * fadeTime);
-        }
-
-        fadeCover.GetComponent<Image>().color = new Color(0, 0, 0, 0);
+        UIManager.instance.FadeIn(0.6f);
     }
 
     IEnumerator blink() //시작 버튼 깜빡이게 만듦

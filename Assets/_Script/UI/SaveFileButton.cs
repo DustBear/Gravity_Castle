@@ -53,6 +53,7 @@ public class SaveFileButton : MonoBehaviour
     public void OnClickButton()
     {
         UIManager.instance.clickSoundGen();
+        UIManager.instance.FadeOut(1f);
 
         GameManager.instance.curSaveFileNum = saveFileNum; //GM의 현재 세이브파일 넘버 바꿔줌 
 
@@ -88,7 +89,7 @@ public class SaveFileButton : MonoBehaviour
             GameManager.instance.shouldSpawnSavePoint = false; //맨 처음 시작하므로 따로 세이브포인트가 없다 
             GameManager.instance.shouldUseOpeningElevator = true; //오프닝 엘리베이터 이용해야 함 
 
-            SceneManager.LoadScene("openingScene"); //오프닝씬으로 들렀다가 nextScene으로 이동 
+            StartCoroutine(loadSceneDelay(1));
         }
         // 이미 세이브 파일이 있으면 
         else
@@ -112,10 +113,22 @@ public class SaveFileButton : MonoBehaviour
 
             GameManager.instance.shouldSpawnSavePoint = true;
 
-            SceneManager.LoadScene(GameManager.instance.nextScene);
-        }
+            StartCoroutine(loadSceneDelay(2));
+        }       
+    }
 
-        
+    IEnumerator loadSceneDelay(int type)
+    {
+        yield return new WaitForSeconds(1.5f);
+        switch (type)
+        {
+            case 1:
+                SceneManager.LoadScene("openingScene"); //오프닝씬으로 들렀다가 nextScene으로 이동 
+                break;
+            case 2:
+                SceneManager.LoadScene(GameManager.instance.nextScene);
+                break;
+        }
     }
 
     public void saveDelete() //���̺����� ������ ������ ó�� �����ϴ� ���·� �ʱ�ȭ��Ŵ 
