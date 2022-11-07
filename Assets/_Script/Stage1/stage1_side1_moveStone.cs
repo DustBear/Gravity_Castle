@@ -158,7 +158,7 @@ public class stage1_side1_moveStone : MonoBehaviour
         }
         else
         {
-            float fallSpeed = gravityScale * 4.9f * fallDelay; //가속도 9.8인 등가속도운동(1/2*t^2에 비례)
+            float fallSpeed = gravityScale * 4.9f * fallDelay*fallDelay; //가속도 9.8인 등가속도운동(1/2*t^2에 비례)
             rigid.velocity = -(finishPos - startPos).normalized * fallSpeed;
         }
         

@@ -156,7 +156,6 @@ GameObject:
   - component: {fileID: 5260450419321129310}
   - component: {fileID: 5260450419321129309}
   - component: {fileID: 4792140236446139004}
-  - component: {fileID: 2210862780483379122}
   m_Layer: 21
   m_Name: stage01_lever
   m_TagString: Lever
@@ -270,26 +269,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29dd8bfd60868d04987daba8e39fee27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteGroup:
+  - {fileID: 2065314539359280724, guid: 9210a967484e7304d9079daabeb8dfc7, type: 3}
+  - {fileID: 2665210355943079806, guid: 9210a967484e7304d9079daabeb8dfc7, type: 3}
+  - {fileID: 6714900646210000477, guid: 9210a967484e7304d9079daabeb8dfc7, type: 3}
+  - {fileID: -5609667503646652630, guid: 9210a967484e7304d9079daabeb8dfc7, type: 3}
+  - {fileID: -3109593586698827373, guid: 9210a967484e7304d9079daabeb8dfc7, type: 3}
+  - {fileID: -8773352097622140898, guid: 9210a967484e7304d9079daabeb8dfc7, type: 3}
+  - {fileID: 7908086016997323492, guid: 9210a967484e7304d9079daabeb8dfc7, type: 3}
   isPowerLever: 0
---- !u!95 &2210862780483379122
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5260450419321129308}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1e974b4a4502089489753de91f7d0299, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6726926538459757658
 GameObject:
   m_ObjectHideFlags: 0
@@ -5076,7 +5064,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1200094403
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_RenderMode: 4
   m_SortMode: 0

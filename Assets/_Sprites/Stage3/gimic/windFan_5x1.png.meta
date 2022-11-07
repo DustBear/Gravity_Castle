@@ -1,13 +1,25 @@
 fileFormatVersion: 2
-guid: 1ccb8518b6562f84d98b848834497712
+guid: b9800838d0087be4aaae4c259f826888
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1260581251217846897
-    second: lever_new_0
+      213: 5215100882859692629
+    second: windFan_5x1_0
   - first:
-      213: 3506578734746700066
-    second: lever_new_1
+      213: -6977022271871304073
+    second: windFan_5x1_1
+  - first:
+      213: -3012168390453588606
+    second: windFan_5x1_2
+  - first:
+      213: -8320266365037880543
+    second: windFan_5x1_3
+  - first:
+      213: 5491342300467461928
+    second: windFan_5x1_4
+  - first:
+      213: 8398288157208473047
+    second: windFan_5x1_5
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -97,43 +109,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: lever_new_0
+      name: windFan_5x1_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 32
-        height: 32
+        height: 80
       alignment: 9
-      pivot: {x: 0.5, y: 0.75}
+      pivot: {x: 0.25, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f8d84a6e704818ee0800000000000000
-      internalID: -1260581251217846897
+      spriteID: 5529da64f92cf5840800000000000000
+      internalID: 5215100882859692629
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: lever_new_1
+      name: windFan_5x1_1
       rect:
         serializedVersion: 2
         x: 32
         y: 0
         width: 32
-        height: 32
+        height: 80
       alignment: 9
-      pivot: {x: 0.5, y: 0.75}
+      pivot: {x: 0.25, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2290485d7ced9a030800000000000000
-      internalID: 3506578734746700066
+      spriteID: 77e3f17a533ac2f90800000000000000
+      internalID: -6977022271871304073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: windFan_5x1_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 80
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28d8a5bdec0a236d0800000000000000
+      internalID: -3012168390453588606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: windFan_5x1_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 80
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12b594bd2d9788c80800000000000000
+      internalID: -8320266365037880543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: windFan_5x1_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 80
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82f70775aba253c40800000000000000
+      internalID: 5491342300467461928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: windFan_5x1_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 80
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7dde7cb3596bc8470800000000000000
+      internalID: 8398288157208473047
       vertices: []
       indices: 
       edges: []
@@ -147,9 +243,7 @@ TextureImporter:
     indices: 
     edges: []
     weights: []
-    secondaryTextures:
-    - texture: {fileID: 2800000, guid: 0f0f3b6502584444c8573d469f698598, type: 3}
-      name: _Emission
+    secondaryTextures: []
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

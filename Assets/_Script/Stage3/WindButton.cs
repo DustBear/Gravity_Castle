@@ -47,23 +47,26 @@ public class WindButton : MonoBehaviour
         windZoneColl = windZone.GetComponent<BoxCollider2D>();
         spr = GetComponent<SpriteRenderer>();
         sound = GetComponent<AudioSource>();
+    }
 
+    void Start()
+    {
         //환풍기의 초기상태 설정 
 
-        if(isActDefault && (windType == 1 || windType == 2)) 
-            //환풍기가 type1 or type2 이면서 켜진 상태가 디폴트이면 환풍기는 처음부터 켜져야 함 
+        if (isActDefault && (windType == 1 || windType == 2))
+        //환풍기가 type1 or type2 이면서 켜진 상태가 디폴트이면 환풍기는 처음부터 켜져야 함 
         {
-            windHome.enabled = true;
+            windHome.windAnimAct();
             windZoneColl.enabled = true;
             wind.SetActive(true);
 
             isActive = true;
-            spr.sprite = leverSprite[1]; 
+            spr.sprite = leverSprite[1];
         }
         else
-            //그 밖의 경우는 꺼 둠 
+        //그 밖의 경우는 꺼 둠 
         {
-            windHome.enabled = false;
+            windHome.windAnimStop();
             windZoneColl.enabled = false;
             wind.SetActive(false);
 
@@ -71,11 +74,8 @@ public class WindButton : MonoBehaviour
             isTimerAct = false;
             spr.sprite = leverSprite[0];
         }
-    }
 
-    void Start()
-    {
-        if(windType == 3) //type3이면 플레이어가 상호작용 할 필요 없이 바로 코루틴 시작함 
+        if (windType == 3) //type3이면 플레이어가 상호작용 할 필요 없이 바로 코루틴 시작함 
         {
             StartCoroutine(type3_windAct());
         }
@@ -123,7 +123,7 @@ public class WindButton : MonoBehaviour
     {
         if (!isActive) //꺼져 있을땐 다시 켜야 함 
         {
-            windHome.enabled = true;
+            windHome.windAnimAct();
             windZoneColl.enabled = true;
             wind.SetActive(true);
 
@@ -132,7 +132,7 @@ public class WindButton : MonoBehaviour
         }
         else
         {
-            windHome.enabled = false;
+            windHome.windAnimStop();
             windZoneColl.enabled = false;
             wind.SetActive(false);
 
@@ -145,7 +145,7 @@ public class WindButton : MonoBehaviour
     {
         if (isActDefault) //켜져있는 상태가 디폴트이면 
         {
-            windHome.enabled = false;
+            windHome.windAnimStop();
             windZoneColl.enabled = false;
             wind.SetActive(false);
             isTimerAct = true;
@@ -154,14 +154,14 @@ public class WindButton : MonoBehaviour
 
             yield return new WaitForSeconds(TimerActiveTime);
 
-            windHome.enabled = true;
+            windHome.windAnimAct();
             windZoneColl.enabled = true;
             wind.SetActive(true);
             isTimerAct = false;
         }
         else
         {
-            windHome.enabled = true;
+            windHome.windAnimAct();
             windZoneColl.enabled = true;
             wind.SetActive(true);
             isTimerAct = true;
@@ -170,7 +170,7 @@ public class WindButton : MonoBehaviour
 
             yield return new WaitForSeconds(TimerActiveTime);
 
-            windHome.enabled = false;
+            windHome.windAnimStop();
             windZoneColl.enabled = false;
             wind.SetActive(false);
             isTimerAct = false;
@@ -193,13 +193,13 @@ public class WindButton : MonoBehaviour
         while (true)
         {
             //환풍기 켜기 
-            windHome.enabled = true;
+            windHome.windAnimAct();
             windZoneColl.enabled = true;
             wind.SetActive(true);
 
             yield return new WaitForSeconds(loopActive);
 
-            windHome.enabled = false;
+            windHome.windAnimStop();
             windZoneColl.enabled = false;
             wind.SetActive(false);
 

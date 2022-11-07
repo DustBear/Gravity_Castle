@@ -82,10 +82,13 @@ public class advancedStageDoor_button : MonoBehaviour
     IEnumerator buttonSpin()
     {
         keyIcon.SetActive(false);
+        InputManager.instance.isInputBlocked = true; //레버 돌리는 동안은 플레이어 움직이지 못함 
         for (int index=0; index<leverSpriteGroup.Length; index++)
         {
             spr.sprite = leverSpriteGroup[index];
             yield return new WaitForSeconds(0.06f);
         }
+
+        InputManager.instance.isInputBlocked = false;
     }
 }

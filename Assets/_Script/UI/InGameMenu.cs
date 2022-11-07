@@ -28,7 +28,7 @@ public class InGameMenu : MonoBehaviour
             GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, 1))] = 1; //세이브포인트 1 활성화 
             GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; // 
 
-            //������ ����
+            //세이브파일에 데이터 저장 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             File.WriteAllText(filePath, ToJsonData);
@@ -37,9 +37,8 @@ public class InGameMenu : MonoBehaviour
             GameManager.instance.shouldUseOpeningElevator = false;
         }
 
-        SceneManager.LoadScene("MainMenu");
-       
-        gameObject.SetActive(false);
+        UIManager.instance.FadeOut(1f);
+        Invoke("loadMainMenu", 1.5f);
     }
 
     public void OnClickMainStage() //인게임 메뉴로 나가기 버튼 누를 때 
@@ -49,20 +48,20 @@ public class InGameMenu : MonoBehaviour
 
         if(GameManager.instance.gameData.curAchievementNum == 0)
         {
-            //opening Elevator Ÿ�� �������� ���� ������ ������ ù ���̺�����Ʈ������ Ȱ��ȭ�� ������ ħ 
+            //opening Elevator 작동중이고 아직 첫 세이브포인트를 활성화시키지 않았을 때 
 
-            GameManager.instance.gameData.curAchievementNum = 1;
+            GameManager.instance.gameData.curAchievementNum = 1; 
             if (GameManager.instance.gameData.finalStageNum == GameManager.instance.gameData.curStageNum)
             {
                 if (GameManager.instance.gameData.finalAchievementNum == 0)
                 {
-                    GameManager.instance.gameData.finalAchievementNum = 1; //���� ���� ���൵�� �ִ� ���൵�� ��� final Ach ���� �ݿ��� 
+                    GameManager.instance.gameData.finalAchievementNum = 1; //진행도 갱신한 거면 데이터 반영해 줌
                 }
             }
-            GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, 1))] = 1; //ù��° ���̺�����Ʈ Ȱ��ȭ��Ŵ 
-            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //���� �״�� ���� 
+            GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, 1))] = 1; 
+            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex;
 
-            //������ ����
+            //세이브파일에 데이터 저장 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             File.WriteAllText(filePath, ToJsonData);
@@ -70,9 +69,22 @@ public class InGameMenu : MonoBehaviour
             GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
             GameManager.instance.shouldUseOpeningElevator = false;
         }
-       
+
+        UIManager.instance.FadeOut(1f);
+        Invoke("loadInGameMenu", 1.5f);
+    }
+
+    void loadInGameMenu()
+    {
         SceneManager.LoadScene("InGameMenu");
         Cursor.lockState = CursorLockMode.None;
+
+        gameObject.SetActive(false);
+    }
+
+    void loadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
 
         gameObject.SetActive(false);
     }

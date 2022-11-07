@@ -31,12 +31,10 @@ public class electricSensor_lever : MonoBehaviour
 
             if (magPlatform.GetComponent<electricSensor>().magWork)
             {
-                sensorSpr.color = Color.red;
                 spr.sprite = leverSprite[1];
             }
             else
             {
-                sensorSpr.color = Color.white;
                 spr.sprite = leverSprite[0];
             }
         }

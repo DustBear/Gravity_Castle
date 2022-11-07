@@ -95,7 +95,6 @@ MonoBehaviour:
   windForceSize: 0
   maxWindForce: 0
   InertialTime: 1
-  timer: 0
 --- !u!1 &1168494902526093076
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,7 +107,6 @@ GameObject:
   - component: {fileID: 1168494902526093087}
   - component: {fileID: 1168494902526093072}
   - component: {fileID: 1168494902526093074}
-  - component: {fileID: 3149269181256495693}
   m_Layer: 12
   m_Name: WindHome
   m_TagString: windHome
@@ -153,7 +151,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: bd8e392e604e05e4eab0d0d3afe8b9c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -171,15 +169,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -659458167
-  m_SortingLayer: 2
+  m_SortingLayerID: -2056838877
+  m_SortingLayer: -2
   m_SortingOrder: 1
-  m_Sprite: {fileID: -1456873225409118650, guid: 5f8f3900c01377346a3efbbd74e4ef1e, type: 3}
+  m_Sprite: {fileID: 5215100882859692629, guid: b9800838d0087be4aaae4c259f826888, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 5}
+  m_Size: {x: 2, y: 5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -219,25 +217,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windParticle: {fileID: 1184893297765902887}
---- !u!95 &3149269181256495693
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1168494902526093076}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 23321aad3a86dd141981153485774cce, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  spriteGroup:
+  - {fileID: 5215100882859692629, guid: b9800838d0087be4aaae4c259f826888, type: 3}
+  - {fileID: -6977022271871304073, guid: b9800838d0087be4aaae4c259f826888, type: 3}
+  - {fileID: -3012168390453588606, guid: b9800838d0087be4aaae4c259f826888, type: 3}
+  - {fileID: -8320266365037880543, guid: b9800838d0087be4aaae4c259f826888, type: 3}
+  - {fileID: 5491342300467461928, guid: b9800838d0087be4aaae4c259f826888, type: 3}
+  - {fileID: 8398288157208473047, guid: b9800838d0087be4aaae4c259f826888, type: 3}
+  particleKill: {fileID: 6653733522816578113}
 --- !u!1 &6455866451898995238
 GameObject:
   m_ObjectHideFlags: 0
@@ -5019,7 +5006,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2056838877
   m_SortingLayer: -2
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -5056,7 +5043,6 @@ GameObject:
   - component: {fileID: 341229516426659919}
   - component: {fileID: 3433743354691990521}
   - component: {fileID: 7441355596272537614}
-  - component: {fileID: 8208742033520212365}
   m_Layer: 12
   m_Name: particleKill_collider
   m_TagString: windHome
@@ -5094,9 +5080,9 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 5}
-    newSize: {x: 1, y: 5}
+    pivot: {x: 0.25, y: 0.5}
+    oldSize: {x: 2, y: 5}
+    newSize: {x: 2, y: 5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -5123,7 +5109,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: bd8e392e604e05e4eab0d0d3afe8b9c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5141,39 +5127,20 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -659458167
-  m_SortingLayer: 2
+  m_SortingLayerID: -2056838877
+  m_SortingLayer: -2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1456873225409118650, guid: 5f8f3900c01377346a3efbbd74e4ef1e, type: 3}
+  m_Sprite: {fileID: 5215100882859692629, guid: b9800838d0087be4aaae4c259f826888, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 5}
+  m_Size: {x: 2, y: 5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &8208742033520212365
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6653733522816578113}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 23321aad3a86dd141981153485774cce, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8105201595318104383
 GameObject:
   m_ObjectHideFlags: 0
@@ -5275,8 +5242,8 @@ BoxCollider2D:
   m_Offset: {x: 0, y: -0.42}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    pivot: {x: 0.5, y: 0.6666667}
+    oldSize: {x: 2, y: 3}
     newSize: {x: 2, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

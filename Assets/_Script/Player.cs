@@ -1453,11 +1453,11 @@ public class Player : MonoBehaviour
             //플레이어로부터 현재 영향을 받고 있는 windHome 까지의 거리 
 
             int layerMask = 1 << LayerMask.NameToLayer("windBlock"); //플레이어와 windHome 사이에 windBlock 이 있으면 바람이 막힌 것 
-            isHit_1 = Physics2D.Raycast(transform.position + new Vector3(0, 0.5f * laserGap, 0), new Vector3(1, 0, 0), rayDistance, layerMask);
-            isHit_2 = Physics2D.Raycast(transform.position - new Vector3(0, 0.5f * laserGap, 0), new Vector3(1, 0, 0), rayDistance, layerMask);
+            isHit_1 = Physics2D.Raycast(transform.position + new Vector3(0, 0.4f * laserGap, 0), new Vector3(-1, 0, 0), rayDistance, layerMask);
+            isHit_2 = Physics2D.Raycast(transform.position - new Vector3(0, 0.4f * laserGap, 0), new Vector3(-1, 0, 0), rayDistance, layerMask);
 
-            Debug.DrawRay(transform.position + new Vector3(0.5f * laserGap, 0, 0), new Vector3(1, 0, 0) * rayDistance, Color.red);
-            Debug.DrawRay(transform.position - new Vector3(0.5f * laserGap, 0, 0), new Vector3(1, 0, 0) * rayDistance, Color.red);
+            Debug.DrawRay(transform.position + new Vector3(0, 0.4f * laserGap, 0), new Vector3(-1, 0, 0) * rayDistance, Color.red);
+            Debug.DrawRay(transform.position - new Vector3(0, 0.4f * laserGap, 0), new Vector3(-1, 0, 0) * rayDistance, Color.red);
            
             if (isHit_1 && isHit_2) //플레이어에서 발사된 두 ray가 모두 windBlock에 가로막힌다면 wind 영향을 제거함 
             {
@@ -1515,11 +1515,11 @@ public class Player : MonoBehaviour
             //플레이어로부터 현재 영향을 받고 있는 windHome 까지의 거리 
 
             int layerMask = 1 << LayerMask.NameToLayer("windBlock"); //플레이어와 windHome 사이에 windBlock 이 있으면 바람이 막힌 것 
-            isHit_1 = Physics2D.Raycast(transform.position + new Vector3(0, 0.5f * laserGap, 0), new Vector3(-1, 0, 0), rayDistance, layerMask);
-            isHit_2 = Physics2D.Raycast(transform.position - new Vector3(0, 0.5f * laserGap, 0), new Vector3(-1, 0, 0), rayDistance, layerMask);
+            isHit_1 = Physics2D.Raycast(transform.position + new Vector3(0, 0.4f * laserGap, 0), new Vector3(1, 0, 0), rayDistance, layerMask);
+            isHit_2 = Physics2D.Raycast(transform.position - new Vector3(0, 0.4f * laserGap, 0), new Vector3(1, 0, 0), rayDistance, layerMask);
 
-            Debug.DrawRay(transform.position + new Vector3(0.5f * laserGap, 0, 0), new Vector3(-1, 0, 0) * rayDistance, Color.red);
-            Debug.DrawRay(transform.position - new Vector3(0.5f * laserGap, 0, 0), new Vector3(-1, 0, 0) * rayDistance, Color.red);
+            Debug.DrawRay(transform.position + new Vector3(0, 0.4f * laserGap, 0), new Vector3(1, 0, 0) * rayDistance, Color.red);
+            Debug.DrawRay(transform.position - new Vector3(0, 0.4f * laserGap, 0), new Vector3(1, 0, 0) * rayDistance, Color.red);
 
             if (isHit_1 && isHit_2) //플레이어에서 발사된 두 ray가 모두 windBlock에 가로막힌다면 wind 영향을 제거함 
             {

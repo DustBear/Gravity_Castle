@@ -23,10 +23,10 @@ public class ObjManager : Singleton<ObjManager>
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        InitPool(arrowNum, ref arrow, ref arrowQueue);
-        InitPool(cannonNum, ref cannon, ref cannonQueue);
-        InitPool(fireNum, ref fire, ref fireQueue);
-        InitPool(fireFallingNum, ref fireFalling, ref fireFallingQueue);
+        //InitPool(arrowNum, ref arrow, ref arrowQueue);
+        //InitPool(cannonNum, ref cannon, ref cannonQueue);
+        //InitPool(fireNum, ref fire, ref fireQueue);
+        //InitPool(fireFallingNum, ref fireFalling, ref fireFallingQueue);
     }
 
     void InitPool(int objNum, ref GameObject obj, ref Queue<GameObject> queue)

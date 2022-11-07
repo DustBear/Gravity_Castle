@@ -183,6 +183,13 @@ public class stageManager : MonoBehaviour
 
         GameManager.instance.shouldSpawnSavePoint = true; //세이브포인트에서 시작해야 함 
         GameManager.instance.shouldUseOpeningElevator = false;
+
+        UIManager.instance.FadeOut(1f);
+        Invoke("chapterStart_invoke", 1.5f);
+    }
+
+    void chapterStart_invoke()
+    {
         SceneManager.LoadScene(GameManager.instance.nextScene);
     }
 

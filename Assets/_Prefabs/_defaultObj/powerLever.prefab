@@ -156,7 +156,6 @@ GameObject:
   - component: {fileID: 7046021929928791366}
   - component: {fileID: 7046021929928791365}
   - component: {fileID: 7658857646888246884}
-  - component: {fileID: 4606940563097586639}
   m_Layer: 21
   m_Name: powerLever
   m_TagString: Lever
@@ -270,26 +269,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29dd8bfd60868d04987daba8e39fee27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteGroup:
+  - {fileID: -1202803055503761943, guid: ddafb916d4df79341bbbf282e9726033, type: 3}
+  - {fileID: 627455470394495392, guid: ddafb916d4df79341bbbf282e9726033, type: 3}
+  - {fileID: 5487358620138569250, guid: ddafb916d4df79341bbbf282e9726033, type: 3}
+  - {fileID: 2807718320810923920, guid: ddafb916d4df79341bbbf282e9726033, type: 3}
+  - {fileID: 2935907210782500226, guid: ddafb916d4df79341bbbf282e9726033, type: 3}
+  - {fileID: -938371941496529800, guid: ddafb916d4df79341bbbf282e9726033, type: 3}
+  - {fileID: -6471419582584860868, guid: ddafb916d4df79341bbbf282e9726033, type: 3}
   isPowerLever: 1
---- !u!95 &4606940563097586639
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7046021929928791364}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 64863b0d99f1108498e80c1e6c7f854a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &9102571657195575040
 GameObject:
   m_ObjectHideFlags: 0
@@ -5076,7 +5064,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1200094403
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_RenderMode: 4
   m_SortMode: 0

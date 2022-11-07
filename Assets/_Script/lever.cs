@@ -5,43 +5,50 @@ using UnityEngine;
 public class lever : MonoBehaviour
 {
     Sprite lightOff; //불 꺼진 모습 
-    Animator ani;
+    SpriteRenderer spr;
     GameObject playerObj;
 
+    public Sprite[] spriteGroup; //[0] ~[5]는 default, [6]은 불 꺼짐 
+
     public bool isPowerLever; //true 이면 180도 회전하는 레버가 됨 
+    bool shouldLightOn = true;
     
     private void Awake()
     {
-        ani = GetComponent<Animator>();
         playerObj = GameObject.Find("Player");
-
-        lightTurnOn();
+        spr = GetComponent<SpriteRenderer>();
     }
     private void Start()
     {
-        
+        StartCoroutine(default_anim());
     }
     
     public void lightTurnOff()
     {
-        if (!isPowerLever)
-        {
-            ani.Play("lever_90_default");
-        }
-        else
-        {
-            ani.Play("lever_180_default");
-        }       
+        shouldLightOn = false;
+        spr.sprite = spriteGroup[spriteGroup.Length-1];
     }
     public void lightTurnOn()
     {
-        if (!isPowerLever)
+        shouldLightOn = true;
+        StartCoroutine(default_anim());
+    }
+
+    IEnumerator default_anim()
+    {
+        var frame= new WaitForSeconds(0.14f);
+        while (true)
         {
-            ani.Play("lever_90");
-        }
-        else
-        {
-            ani.Play("lever_180");
+            for(int index=0; index<spriteGroup.Length-1; index++)
+            {
+                if (!shouldLightOn)
+                {
+                    yield break;
+                }
+
+                spr.sprite = spriteGroup[index];
+                yield return frame;
+            }
         }
     }
 }

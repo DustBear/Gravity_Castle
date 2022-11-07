@@ -24,6 +24,8 @@ public class StartMenu : MonoBehaviour
     public bool isGameMenuOpen;
     private void Start()
     {
+        UIManager.instance.FadeIn(1f);
+
         isTitleMenuOpen = true;
         titleMenu.SetActive(true); //시작하면 titleMenu 에서 시작함 
 
