@@ -13,9 +13,13 @@ public class advancedStageDoor_button : MonoBehaviour
     bool isPlayerOn = false;
     public GameObject keyIcon;
 
+    AudioSource sound;
+    public AudioClip popUpSound;
+    public AudioClip rotateSound;
     private void Awake()
     {
         spr = GetComponent<SpriteRenderer>();
+        sound = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -65,6 +69,9 @@ public class advancedStageDoor_button : MonoBehaviour
             isPlayerOn = true;
             if (!isActived)
             {
+                sound.Stop();
+                sound.clip = popUpSound;
+                sound.Play();
                 keyIcon.SetActive(true);
             }
         }   
@@ -81,6 +88,10 @@ public class advancedStageDoor_button : MonoBehaviour
 
     IEnumerator buttonSpin()
     {
+        sound.Stop();
+        sound.clip = rotateSound;
+        sound.Play();
+
         keyIcon.SetActive(false);
         InputManager.instance.isInputBlocked = true; //레버 돌리는 동안은 플레이어 움직이지 못함 
         for (int index=0; index<leverSpriteGroup.Length; index++)

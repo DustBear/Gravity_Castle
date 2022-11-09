@@ -187,7 +187,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Update()
     {
-        soundNumCheck();
+        //soundNumCheck();
 
         //게임이 제대로 작동하는 지 체크하기 위한 함수 ~> 출시버전에선 삭제해야 함 
         if (Input.GetKeyDown(KeyCode.U))

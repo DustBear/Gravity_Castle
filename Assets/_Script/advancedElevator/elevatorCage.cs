@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class elevatorCage : MonoBehaviour
 {
-    public int purposePoint; //엘리베이터가 현재 목표로 하는 지점의 번호
-    public bool isAchieved; //엘리베이턱 목표 지점에 도달했는지의 여부 
+    public int purposePoint; 
+    //엘리베이터가 현재 목표로 하는 지점의 번호
     //1이면 Pos1, 2이면 Pos2
+
+    public bool isAchieved; //엘리베이턱 목표 지점에 도달했는지의 여부 
 
     [SerializeField] Vector2 pos1;
     [SerializeField] Vector2 pos2;
@@ -31,10 +33,13 @@ public class elevatorCage : MonoBehaviour
     [SerializeField] Vector3 addForceDir; //엘리베이터의 각도에 따라 플레이어에게 힘을 가하는 방향도 달라져야 함 
 
     AudioSource bellSound;
-    AudioSource elevatorSound;
+    AudioSource elevatorSound;//출발, 도착 사운드 
+    AudioSource elevatorLoopSound;
 
     public AudioClip bellEffect;
+    public AudioClip elevatorDepart;
     public AudioClip elevatorEffect;
+    public AudioClip elevatorArrive;
 
     private void Awake()
     {
@@ -57,9 +62,18 @@ public class elevatorCage : MonoBehaviour
         //맨 처음 시작할 때는 purposePoint와 현재 위치가 동일하도록 맞춰 줘야 함 
 
         bellSound = gameObject.AddComponent<AudioSource>();
+        bellSound.loop = false;
+        bellSound.playOnAwake = false;
         bellSound.clip = bellEffect;
+
         elevatorSound = gameObject.AddComponent<AudioSource>();
-        elevatorSound.clip = elevatorEffect;
+        elevatorSound.playOnAwake = false;
+        elevatorSound.loop = false;
+
+        elevatorLoopSound = gameObject.AddComponent<AudioSource>();
+        elevatorLoopSound.playOnAwake = false;
+        elevatorLoopSound.loop = true;
+        elevatorLoopSound.clip = elevatorEffect;
     }
 
     void Start()
@@ -69,6 +83,7 @@ public class elevatorCage : MonoBehaviour
         initialBellRotation = bell.transform.rotation;
 
         gearAni.SetBool("gearMove", false);
+        StartCoroutine(soundCheck());
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -94,32 +109,37 @@ public class elevatorCage : MonoBehaviour
             //센서 내에 플레이어가 있는 상태로 상호작용키 누르면 벨 울리면서 purposePoint 바뀜 
         }
 
-        if (isAchieved)
-        {
-            elevatorSound.Play();
-        }
-
         elevatorMove();
         weightMove();
-        //soundCheck();
     }
 
-    /*
-    void soundCheck()
+    
+    IEnumerator soundCheck()
     {
-        if(rigid.velocity.magnitude >= 0.05f) //엘리베이터가 움직이는 중이면 
+        while (true)
         {
-            if (!soundPlayer.isPlaying)
+            if (rigid.velocity.magnitude >= 0.05f) //엘리베이터가 움직이는 중이면 
             {
-                soundPlayer.Play();
+                if (!elevatorLoopSound.isPlaying) //만약 움직이는 사운드가 재생중이지 않으면 
+                {
+                    elevatorLoopSound.Play();
+                }
             }
-        }
-        else
-        {
-            soundPlayer.Stop();
-        }
+            else
+            {
+                if (elevatorLoopSound.isPlaying)
+                {
+                    yield return new WaitForSeconds(0.1f); 
+                    //이동 사운드를 바로 중단시키면 도착 사운드와 이동 사운드 사이에 틈이 생겨 부자연스러움
+                    //0.1초만 딜레이를 줌 
+                    elevatorLoopSound.Stop();
+                }
+            }
+
+            yield return null; //매 프레임마다 실행 
+        }        
     }
-    */
+    
     void elevatorMove()
     {
         if (isAchieved)
@@ -131,7 +151,7 @@ public class elevatorCage : MonoBehaviour
         Vector2 moveDirection;
 
         if (purposePoint == 1) //현재 pos2 에서 pos1으로 이동하고 있는 중이면 
-        {
+        {           
             gearAni.SetBool("gearMove", true);
             gearAni.SetFloat("gearSpeed", 2f);
 
@@ -141,6 +161,10 @@ public class elevatorCage : MonoBehaviour
 
             if (vectorJudge())
             {
+                elevatorSound.Stop();
+                elevatorSound.clip = elevatorArrive;
+                elevatorSound.Play();
+
                 gearAni.SetBool("gearMove", false);
                 transform.position = pos1; //위치 고정하고 
                 rigid.velocity = Vector3.zero; //속도 정지시키고 
@@ -148,7 +172,7 @@ public class elevatorCage : MonoBehaviour
             }
         }
         else //현재 pos1 에서 pos2 으로 이동하고 있는 중이면 
-        {
+        {           
             gearAni.SetBool("gearMove", true);
             gearAni.SetFloat("gearSpeed", -2f);
 
@@ -158,6 +182,10 @@ public class elevatorCage : MonoBehaviour
 
             if (vectorJudge())
             {
+                elevatorSound.Stop();
+                elevatorSound.clip = elevatorArrive;
+                elevatorSound.Play();
+
                 gearAni.SetBool("gearMove", false);
                 transform.position = pos2; //위치 고정하고 
                 rigid.velocity = Vector3.zero; //속도 정지시키고 
@@ -170,6 +198,13 @@ public class elevatorCage : MonoBehaviour
   
     void bellRing() 
     {
+        if (isAchieved) //정지해 있던 상태에서 벨 울릴 때 
+        {
+            elevatorSound.Stop();
+            elevatorSound.clip = elevatorDepart;
+            elevatorSound.Play();
+        }
+
         isAchieved = false;
         bellSound.Stop();
         bellSound.Play();

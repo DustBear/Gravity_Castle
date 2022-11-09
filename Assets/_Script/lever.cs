@@ -12,11 +12,17 @@ public class lever : MonoBehaviour
 
     public bool isPowerLever; //true 이면 180도 회전하는 레버가 됨 
     bool shouldLightOn = true;
+
+    public AudioSource sound;
+    public AudioClip rotateSound_90;
+    public AudioClip rotateSound_180;
+    public AudioClip accessSound;
     
     private void Awake()
     {
         playerObj = GameObject.Find("Player");
         spr = GetComponent<SpriteRenderer>();
+        sound = GetComponent<AudioSource>();
     }
     private void Start()
     {
@@ -27,6 +33,10 @@ public class lever : MonoBehaviour
     {
         shouldLightOn = false;
         spr.sprite = spriteGroup[spriteGroup.Length-1];
+
+        sound.Stop();
+        sound.clip = accessSound;
+        sound.Play();
     }
     public void lightTurnOn()
     {

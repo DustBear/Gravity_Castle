@@ -14,6 +14,8 @@ public class introCanvas : MonoBehaviour
     public Text _introText;
 
     float initAlpha = (float)200/255; //초기 background image의 알파값 
+
+    AudioSource sound;
   
     void Start()
     {
@@ -41,6 +43,7 @@ public class introCanvas : MonoBehaviour
     {
         yield return new WaitForSeconds(timeOffset);
 
+        sound.Play();
         for(int index=0; index<=frameCount; index++)
         {
             _blackBackground.color = new Color(0, 0, 0, (float)index / frameCount * initAlpha);

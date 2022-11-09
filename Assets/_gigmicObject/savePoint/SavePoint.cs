@@ -33,6 +33,10 @@ public class SavePoint : MonoBehaviour
     public ParticleSystem leftBurst;
 
     AudioSource sound;
+
+    public AudioClip lightOnSound;
+    public AudioClip lightOffSound;
+    public AudioClip activeSound;
     void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -116,6 +120,11 @@ public class SavePoint : MonoBehaviour
     IEnumerator lightOn()
     {
         isCorWorking = true;
+
+        sound.Stop();
+        sound.clip = lightOnSound;
+        sound.Play();
+
         for(int index=curSpriteNum; index<=lastIndex-1; index++)
         {
             spr.sprite = spriteGroup[index];
@@ -127,6 +136,11 @@ public class SavePoint : MonoBehaviour
     IEnumerator lightOff()
     {
         isCorWorking = true;
+
+        sound.Stop();
+        sound.clip = lightOffSound;
+        sound.Play();
+
         for (int index=curSpriteNum; index>=0; index--)
         {
             spr.sprite = spriteGroup[index];
@@ -150,8 +164,11 @@ public class SavePoint : MonoBehaviour
         rightBurst.Play();
         leftBurst.Play();
 
-        cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.5f); //세이브스톤이 박힐 때 카메라 진동 
+        sound.Stop();
+        sound.clip = activeSound;
         sound.Play();
+
+        cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.5f); //세이브스톤이 박힐 때 카메라 진동 
 
         yield return null;
     }
@@ -178,7 +195,10 @@ public class SavePoint : MonoBehaviour
         rightBurst.Play();
         leftBurst.Play();
 
-        cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.4f); //세이브스톤이 박힐 때 카메라 진동 
+        sound.Stop();
+        sound.clip = activeSound;
         sound.Play();
+
+        cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.4f); //세이브스톤이 박힐 때 카메라 진동 
     }
 }

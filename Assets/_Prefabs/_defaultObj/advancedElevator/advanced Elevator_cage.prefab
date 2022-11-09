@@ -217,8 +217,10 @@ MonoBehaviour:
   gear: {fileID: 4038668396303456406}
   gearAni: {fileID: 0}
   addForceDir: {x: 0, y: 0, z: 0}
-  bellEffect: {fileID: 8300000, guid: 04e2796de66a609489a20d7bea7a4415, type: 3}
-  elevatorEffect: {fileID: 8300000, guid: 8bd052f53f508e940b460b1256e8f7bb, type: 3}
+  bellEffect: {fileID: 8300000, guid: 365d20e33aea7cb47b99f4b1c01f1824, type: 3}
+  elevatorDepart: {fileID: 8300000, guid: f49ff9634dcec29428a9a6385eab75df, type: 3}
+  elevatorEffect: {fileID: 8300000, guid: a0070f32e971ff84cb73d4bbe837796d, type: 3}
+  elevatorArrive: {fileID: 8300000, guid: b54aa46bc1e5fe9458ac7ab026457cb0, type: 3}
 --- !u!61 &4038668396107618010
 BoxCollider2D:
   m_ObjectHideFlags: 0

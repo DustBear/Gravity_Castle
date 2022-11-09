@@ -28,13 +28,25 @@ public class stageManager : MonoBehaviour
     public GameObject chapterStartButton;
     bool isStartButtonShake = false;
 
+    public Sprite[] chapterImage;
+
+    //각 스테이지별 세이브포인트 이미지 
+    public Sprite[] savePointImage_1;
+    public Sprite[] savePointImage_2;
+    public Sprite[] savePointImage_3;
+    public Sprite[] savePointImage_4;
+    public Sprite[] savePointImage_5;
+
+    public Image chapterInstruction;
+    public Image saveInstruction;
+
     void Start()
     {
         UIManager.instance.FadeIn(1f);
 
         selectedStageNum = GameManager.instance.gameData.curStageNum; //이전에 플레이하던 stage에서 시작해야 함 ( 1부터 시작 ) 
         selectedStageButton = stageButton[selectedStageNum - 1].gameObject;
-        selectedSavePointNum = 1;
+        selectedSavePointNum = GameManager.instance.gameData.curAchievementNum;
 
         savePointCount = selectedStageButton.GetComponent<stageMoveButton>().savePointCount;
 
@@ -59,7 +71,7 @@ public class stageManager : MonoBehaviour
             GameObject temp = Instantiate(stageIcon); //세이브포인트 아이콘 생성 
             savePointIcon.Add(temp);
 
-            temp.transform.position = firstIconPos + new Vector2(iconGap * (index % 10) , -index/10); //아이콘 생성할 때 10줄 단위로 엔터 침
+            temp.transform.position = firstIconPos + new Vector2(iconGap * (index % 15) , -index/15); //아이콘 생성할 때 10줄 단위로 엔터 침
             temp.GetComponent<savePointIconButton>().savePointNum = index + 1;
             temp.transform.SetParent(iconGroup.transform); //아이콘 그룹에 넣어서 정리 
 
@@ -121,6 +133,7 @@ public class stageManager : MonoBehaviour
     void Update()
     {       
         iconInputCheck();
+        instructionImageCheck();
 
         //베타모드 실행창이 켜져 있으면 Q 눌러서 끌 수 있음 
         if(betaModeWindow.activeSelf && Input.GetKeyDown(KeyCode.Q))
@@ -128,6 +141,49 @@ public class stageManager : MonoBehaviour
             betaModeWindow.SetActive(false);
         }
     }
+
+    void instructionImageCheck()
+    {
+        if(chapterInstruction.sprite != chapterImage[selectedStageNum - 1])
+        {
+            chapterInstruction.sprite = chapterImage[selectedStageNum - 1];
+        }
+
+        Sprite[] tmpArray;
+        switch (selectedStageNum)
+        {
+            case 1:
+                tmpArray = savePointImage_1;
+                break;
+            case 2:
+                tmpArray = savePointImage_2;
+                break;
+            case 3:
+                tmpArray = savePointImage_3;
+                break;
+            case 4:
+                tmpArray = savePointImage_4;
+                break;
+            case 5:
+                tmpArray = savePointImage_5;
+                break;
+            default:
+                tmpArray = null;
+                break;
+        }
+
+        if(tmpArray != null)
+        {
+            if(tmpArray[selectedSavePointNum-1] != null)
+            {
+                saveInstruction.sprite = tmpArray[selectedSavePointNum - 1];
+            }
+            
+        }
+    }
+
+
+
     public void ChapterStart() //선택한 스테이지, 세이브포인트 시작하는 버튼 
     {
         UIManager.instance.clickSoundGen();

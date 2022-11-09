@@ -110,10 +110,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] AudioClip moveSound;
     [SerializeField] AudioClip jump_landSound;
-    [SerializeField] AudioClip activeSound; //플레이어가 E 눌러서 활성화시킬 때의 소리
-    [SerializeField] AudioClip selectSound; //플레이어가 양 화살표를 눌러 중력을 바꿀 때의 소리 
-    [SerializeField] AudioClip dieSound; //플레이어가 죽는 소리 
-    [SerializeField] AudioClip leverRoateSound; //레버가 돌아가는 소리 
+     [SerializeField] AudioClip dieSound; //플레이어가 죽는 소리 
 
     GameObject cameraObj;
     public bool isCameraShake;
@@ -704,7 +701,7 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        // 레버 돌리는 속도 
+        // 레버까지 이동하는 속도 
         float moveToLeverSpeed = 9f;
         transform.position = Vector2.MoveTowards(transform.position, destPos_beforeLevering, moveToLeverSpeed * Time.deltaTime);
 
@@ -718,18 +715,24 @@ public class Player : MonoBehaviour
     {
         leftArrow.SetActive(true);
         rightArrow.SetActive(true);
-
-        sound.clip = activeSound;
-        sound.Play();
     }
 
     void SelectGravityDir_Update()
     {
+        AudioSource leverSound = leverColl.GetComponent<lever>().sound;
         // 좌우 화살표 누르면 ~> 실제 레버 작동단계로 이행
         if (InputManager.instance.horizontalDown)
-        {
-            sound.clip = selectSound;
-            sound.Play();
+        {          
+            leverSound.Stop();
+            if (!shouldRotateHalf)
+            {
+                leverSound.clip = leverColl.GetComponent<lever>().rotateSound_90;
+            }
+            else
+            {
+                leverSound.clip = leverColl.GetComponent<lever>().rotateSound_180;
+            }
+            leverSound.Play();           
 
             ChangeState(States.ChangeGravityDir);
         }
@@ -750,11 +753,7 @@ public class Player : MonoBehaviour
     }
 
     void ChangeGravityDir_Enter()
-    {
-        sound.Stop();
-        sound.clip = leverRoateSound;
-        sound.Play();
-
+    {        
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
 
@@ -859,7 +858,6 @@ public class Player : MonoBehaviour
 
     void rotationCorrect()
     {
-        sound.Stop();
         transform.rotation = Quaternion.Euler(0, 0, initZRot + destRot);
 
         Vector2 gravity = -transform.up * 9.8f;

@@ -17,7 +17,14 @@ public class advancedStageDoor : MonoBehaviour
     public int doorActiveThreshold; //thresholdPoint 가 다른 씬에 있어서 오브젝트를 가져올 수 없는 경우 수동으로 입력 
     
     SpriteRenderer spr;
-    AudioSource sound;
+    AudioSource[] sounds;
+
+    AudioSource playOnceSound;
+    AudioSource loopSound;
+
+    public AudioClip doorShakeSound;
+    public AudioClip doorOpenLoopSound;
+    public AudioClip doorHitSound;
 
     Vector3 initialPos; //맨 처음 초기화 할 위치
 
@@ -30,7 +37,14 @@ public class advancedStageDoor : MonoBehaviour
     private void Awake()
     {
         spr = GetComponent<SpriteRenderer>();
-        sound = GetComponent<AudioSource>();
+        sounds = GetComponents<AudioSource>();
+
+        playOnceSound = sounds[0];
+        loopSound = sounds[1];
+
+        playOnceSound.loop = false;
+        loopSound.loop = true;
+
         rigid = GetComponent<Rigidbody2D>();
         if(thresholdPoint.gameObject != null)//disposable 로 설정된 문은 따로 thresholdPoint 가 없다 
         {
@@ -114,26 +128,28 @@ public class advancedStageDoor : MonoBehaviour
         //(2) 문 진동
         //(3) 문이 올라감 
 
-        if(sound != null)
-        {
-            sound.Play();
-        }
-       
         StartCoroutine("spikeDeActive");
+        yield return new WaitForSeconds(0.5f);
         StartCoroutine("doorShake");
         yield return new WaitForSeconds(0.6f);
+
+        loopSound.clip = doorOpenLoopSound;
+        loopSound.Play();
 
         float moveSpeed = doorLength / doorPeriod; //문이 올라가는 속도 
 
         rigid.velocity = transform.up * moveSpeed;
-        yield return new WaitForSeconds(doorPeriod);
+
+        yield return new WaitForSeconds(doorPeriod - 0.1f);
+        playOnceSound.Stop();
+        playOnceSound.clip = doorHitSound;
+        playOnceSound.Play();
+
+        yield return new WaitForSeconds(0.1f);
         rigid.velocity = Vector3.zero;
         transform.position = initialPos + transform.up * doorLength; //문의 위치 올라간채로 고정 
 
-        if (sound != null)
-        {
-            sound.Stop();
-        }
+        loopSound.Stop();
     }
 
     IEnumerator doorDown()
@@ -142,20 +158,31 @@ public class advancedStageDoor : MonoBehaviour
         //(1) 문 진동 
         //(2) 문이 내려감
         //(3) 가시 활성화 
-        if (sound != null) sound.Play();
 
         StartCoroutine("doorShake");
         yield return new WaitForSeconds(0.6f);
 
+        loopSound.clip = doorOpenLoopSound;
+        loopSound.Play();
+
         float moveSpeed = doorLength / doorPeriod; //문이 올라가는 속도 
 
         rigid.velocity = -transform.up * moveSpeed;
-        yield return new WaitForSeconds(doorPeriod);
+
+        yield return new WaitForSeconds(doorPeriod-0.1f);
+        playOnceSound.Stop();
+        playOnceSound.clip = doorHitSound;
+        playOnceSound.Play();
+
+        yield return new WaitForSeconds(0.1f);
+
         rigid.velocity = Vector3.zero;
         transform.position = initialPos - transform.up * doorLength; //문의 위치 내려온채로 고정 
 
+        loopSound.Stop();
+
+        yield return new WaitForSeconds(0.5f);
         StartCoroutine("spikeActive");
-        if (sound != null) sound.Stop();
     }
 
     IEnumerator spikeActive() //가시 활성화하는 함수 
@@ -164,7 +191,7 @@ public class advancedStageDoor : MonoBehaviour
         {
             spr.sprite = spritesGroup[index];
             spikeColl.offset = spikeOffsetGroup[index];
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
@@ -174,12 +201,16 @@ public class advancedStageDoor : MonoBehaviour
         {
             spr.sprite = spritesGroup[index];
             spikeColl.offset = spikeOffsetGroup[index];
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
     IEnumerator doorShake() //문이 열릴 때, 문이 닫힐 때 흔들림 ~> 0.48초간 흔들림 
     {
+        playOnceSound.Stop();
+        playOnceSound.clip = doorShakeSound;
+        playOnceSound.Play();
+
         float shakeDegree = 0.03f; //위아래로 흔들림
         for(int index=0; index<3; index++)
         {
