@@ -92,7 +92,7 @@ public class stageManager : MonoBehaviour
 
     public void iconCheck() //현재 선택된 세이브포인트의 번호에 맞게 색상 조정 
     {
-        for (int index = 1; index <= savePointCount; index++)
+        for (int index = 1; index <= selectedStageButton.GetComponent<stageMoveButton>().savePointCount; index++)
         {
             if (index == selectedSavePointNum)
             {
@@ -105,11 +105,26 @@ public class stageManager : MonoBehaviour
         }
     }
 
-    public void iconInputCheck() //좌우 화살표 조작을 통해 선택중인 세이브포인트 번호를 바꿀 수 있도록 함 
+    public void stageButtonCheck()
+    {
+        for(int index=0; index<stageButton.Length; index++)
+        {
+            if(index == selectedStageNum - 1)
+            {
+                stageButton[index].GetComponent<Image>().color = new Color(1, 1, 1, 1);
+            }
+            else
+            {
+                stageButton[index].GetComponent<Image>().color = new Color(1, 1, 1, 0.6f);
+            }
+        }
+    }
+
+    public void iconInputCheck() //좌우 화살표 조작을 통해 선택중인 세이브포인트 번호, 스테이지 번호를 바꿀 수 있도록 함 
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (selectedSavePointNum < savePointCount)
+            if (selectedSavePointNum < selectedStageButton.GetComponent<stageMoveButton>().savePointCount)
             {
                 selectedSavePointNum++;
                 iconCheck();
@@ -123,9 +138,67 @@ public class stageManager : MonoBehaviour
                 iconCheck();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            int curSelectedStageNum = selectedStageNum; //현재의 스테이지 번호 임시저장
+            if(selectedStageNum < 8)
+            {
+                while (true) //만약 다음 스테이지가 비활성화상태이면 그 다음 스테이지로 넘어가야 함 
+                {
+                    if(selectedStageNum == 8) //마지막 스테이지에 도달했는데 이것도 비활성화 상태일 때
+                    {
+                        selectedStageNum = curSelectedStageNum;
+                        break;
+                    }
+
+                    selectedStageNum++;
+                    if (stageButton[selectedStageNum - 1].GetComponent<stageMoveButton>().isActive)
+                    {
+                        selectedSavePointNum = 1;
+                        break;
+                    }
+                }               
+
+                iconMake();
+                iconCheck();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            int curSelectedStageNum = selectedStageNum; //현재의 스테이지 번호 임시저장
+            if (selectedStageNum > 1)
+            {
+                while (true) //만약 다음 스테이지가 비활성화상태이면 그 다음 스테이지로 넘어가야 함 
+                {
+                    if (selectedStageNum == 1) //맨 처음 스테이지에 도달했는데 이것도 비활성화 상태일 때
+                    {
+                        selectedStageNum = curSelectedStageNum;
+                        break;
+                    }
+
+                    selectedStageNum--;
+                    if (stageButton[selectedStageNum - 1].GetComponent<stageMoveButton>().isActive)
+                    {
+                        selectedSavePointNum = 1;
+                        break;
+                    }
+                }
+                
+                iconMake();
+                iconCheck();
+            }
+        }
     }
 
     public void backToMainMenu() //메인메뉴로 돌아가는 함수 
+    {
+        UIManager.instance.FadeOut(1f);
+        Invoke("backToMainMenuInvoke", 1.5f);
+    }
+
+    void backToMainMenuInvoke()
     {
         SceneManager.LoadScene("MainMenu");
     }
@@ -134,6 +207,7 @@ public class stageManager : MonoBehaviour
     {       
         iconInputCheck();
         instructionImageCheck();
+        stageButtonCheck();
 
         //베타모드 실행창이 켜져 있으면 Q 눌러서 끌 수 있음 
         if(betaModeWindow.activeSelf && Input.GetKeyDown(KeyCode.Q))

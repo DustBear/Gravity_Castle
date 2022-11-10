@@ -16,7 +16,11 @@ public class introCanvas : MonoBehaviour
     float initAlpha = (float)200/255; //초기 background image의 알파값 
 
     AudioSource sound;
-  
+
+    private void Awake()
+    {
+        sound = GetComponent<AudioSource>();
+    }
     void Start()
     {
         _blackBackground.color = new Color(0, 0, 0, 0);

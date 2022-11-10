@@ -5132,6 +5132,8 @@ GameObject:
   - component: {fileID: 432934823}
   - component: {fileID: 432934822}
   - component: {fileID: 432934825}
+  - component: {fileID: 432934826}
+  - component: {fileID: 432934827}
   m_Layer: 0
   m_Name: circleDoor
   m_TagString: Untagged
@@ -5176,9 +5178,13 @@ MonoBehaviour:
   - {fileID: 1018173838}
   - {fileID: 1216760709}
   - {fileID: 1204419275}
-  activeSound: {fileID: 8300000, guid: 3e6947290c68ea848babd4b13407568d, type: 3}
-  openSound: {fileID: 8300000, guid: e95a4807edb5be1429a1a6b0c0d1b13f, type: 3}
-  rotateSound: {fileID: 8300000, guid: 01ca07a44bb843741b6d78a3b2f0ec22, type: 3}
+  doorShake: {fileID: 8300000, guid: 9b407673662847142a35404bbef92d79, type: 3}
+  doorRotate: {fileID: 8300000, guid: 8c44472b7c5de5d4cb61796fca2b8c17, type: 3}
+  doorRotateComplete: {fileID: 8300000, guid: ed6557ebb7a0e7f4f8ce31d72a870b48, type: 3}
+  doorLockOpen: {fileID: 8300000, guid: 8a5a517dc52d7de4d942ccc7f1956157, type: 3}
+  doorOpen: {fileID: 8300000, guid: 1175073ea3cc50e40809c31f9ae35e6f, type: 3}
+  doorOpenComplete: {fileID: 8300000, guid: 5ac649601e63a434e94221e71192e910, type: 3}
+  windBlow: {fileID: 8300000, guid: 4daa9553abb3ac24dabec7949af5f2c8, type: 3}
 --- !u!212 &432934823
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5258,7 +5264,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -5340,6 +5346,123 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!82 &432934826
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432934821}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 30
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.045780946
+      value: 1
+      inSlope: -0.050635092
+      outSlope: -0.050635092
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.27127984
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.14779747
+      outSlope: -0.14779747
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2555827
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!50 &432934827
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432934821}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &437198448
 GameObject:
   m_ObjectHideFlags: 0
@@ -6414,7 +6537,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &604655877
 MonoBehaviour:
   m_ObjectHideFlags: 0

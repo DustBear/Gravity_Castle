@@ -11,6 +11,9 @@ public class stageMoveButton : MonoBehaviour
     //클릭하면 chapter_instruction 화면 세이브포인트 위치로 바꿔주고 chapter_name 해당 스테이지 이름으로 바꿔줌
     //이후 그 스테이지로 이동은 gameStartButton 눌러서 수행
 
+    public bool isActive;
+    //이 항목이 체크돼 있으면 활성화되지 않은 스테이지 
+
     public GameObject chapter_Instruction; //챕터 설명 이미지
     public GameObject chapter_name; //챕터 이름 텍스트    
     public GameObject stageManager;

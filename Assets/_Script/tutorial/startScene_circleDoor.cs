@@ -16,16 +16,23 @@ public class startScene_circleDoor : MonoBehaviour
 
     public GameObject[] firstInform; //맨 처음 좌우조작키 설명은 문이 완전히 열린 뒤 떠야 함 
 
-    public AudioClip activeSound;
-    public AudioClip openSound;
-    public AudioClip rotateSound;
+    public AudioClip doorShake;
+    public AudioClip doorRotate;
+    public AudioClip doorRotateComplete;
+    public AudioClip doorLockOpen;
+    public AudioClip doorOpen;
+    public AudioClip doorOpenComplete;
+    public AudioClip windBlow;
 
     AudioSource sound;
+    AudioSource windSound;
     private void Awake()
     {
         spr = playerObj.GetComponent<SpriteRenderer>();
         thisSpr = GetComponent<SpriteRenderer>();
-        sound = GetComponent<AudioSource>();
+
+        sound = GetComponents<AudioSource>()[0];
+        windSound = GetComponents<AudioSource>()[1];
     }
     void Start()
     {
@@ -53,6 +60,14 @@ public class startScene_circleDoor : MonoBehaviour
         
     }
 
+    void soundPlay(AudioClip soundFile, bool isLoop)
+    {
+        sound.Stop();
+        sound.loop = isLoop;
+        sound.clip = soundFile;
+        sound.Play();
+    }
+
     IEnumerator doorOpenScene()
     {        
         spr.sortingLayerName = "stageStartPlayer"; //처음에는 플레이어가 문 뒤에 있어야 함 
@@ -61,22 +76,19 @@ public class startScene_circleDoor : MonoBehaviour
         UIManager.instance.FadeIn(4f); //4초에 걸쳐 화면 밝아짐 
         yield return new WaitForSeconds(7f);
 
+        soundPlay(doorShake, false);
         for (int index = 0; index < 3; index++) //잠금장치 작동직전 진동 
         {
-            sound.clip = activeSound;
-            sound.Play();
 
             transform.position += new Vector3(0, 1, 0) * 0.06f;
             yield return new WaitForSeconds(0.06f);
             transform.position -= new Vector3(0, 1, 0) * 0.06f;
             yield return new WaitForSeconds(0.06f);          
         }
+
         yield return new WaitForSeconds(1f);
 
-        sound.Stop();
-        sound.loop = true;
-        sound.clip = rotateSound;
-        sound.Play();
+        soundPlay(doorRotate, true);
 
         for (int num=0; num<=3; num++) //잠금장치가 4회 회전 
         {
@@ -86,23 +98,24 @@ public class startScene_circleDoor : MonoBehaviour
                 yield return new WaitForSeconds(0.35f);
             }
         }
+
+        soundPlay(doorOpenComplete, false);
         thisSpr.sprite = doorRotateSprites[0];
-
-        sound.Stop();
-        sound.loop = false;
-
+      
         yield return new WaitForSeconds(1f);
 
-        for (int index = 0; index <= doorOpenSprites.Length - 1; index++)
+        //잠금장치 해제 
+        for (int index = 0; index < doorOpenSprites.Length - 1; index++)
         {
             thisSpr.sprite = doorOpenSprites[index];
             yield return new WaitForSeconds(0.1f);
         }
 
+        soundPlay(doorLockOpen, false);
+
         yield return new WaitForSeconds(2f);
-     
-        sound.clip = activeSound;
-        sound.Play();
+
+        soundPlay(doorShake, false);
 
         for (int index=0; index<3; index++) //문 올라가기 직전 진동함 
         {           
@@ -113,15 +126,16 @@ public class startScene_circleDoor : MonoBehaviour
         }
         yield return new WaitForSeconds(1f);
 
-        sound.Stop();
-        sound.clip = openSound;
-        sound.Play();
+        soundPlay(doorOpen, true);
 
-        for (int index=0; index<200; index++) //문 올라감 
-        {
-            transform.position += new Vector3(0, 1, 0) * (doorMoveLength / 200);
-            yield return new WaitForSeconds(doorMoveDelay / 200);
-        }
+        float doorMoveSpeed = doorMoveLength / doorMoveDelay;
+        GetComponent<Rigidbody2D>().velocity = new Vector2(0, doorMoveSpeed);
+        yield return new WaitForSeconds(doorMoveDelay);
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+        soundPlay(doorOpenComplete, false);
+        windSound.clip = windBlow;
+        windSound.Play();
 
         spr.sortingLayerName = "Player"; //플레이어가 문 앞으로 옴 
         yield return new WaitForSeconds(1f);

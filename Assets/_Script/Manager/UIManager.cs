@@ -52,24 +52,24 @@ public class UIManager : Singleton<UIManager>
 
     IEnumerator _FadeIn(float delayTime) //È­¸é ¹à¾ÆÁü 
     {        
-        var wait = new WaitForSeconds(delayTime/200);
+        var wait = new WaitForSeconds(delayTime/10f);
         fade.color = new Color(0, 0, 0, 1);
-        
+
         yield return new WaitForSeconds(0.3f);
         while (fade.color.a > 0f)
         {
-            fade.color = new Color(0, 0, 0, fade.color.a - 0.005f);
+            fade.color = new Color(0, 0, 0, fade.color.a - 0.1f);
             yield return wait;
         }
     }
 
     IEnumerator _FadeOut(float delayTime) //È­¸é ¾îµÎ¿öÁü 
     {        
-        var wait = new WaitForSeconds(delayTime/200);
+        var wait = new WaitForSeconds(delayTime/10f);
         fade.color = new Color(0, 0, 0, 0);
         while (fade.color.a < 1f)
         {
-            fade.color = new Color(0, 0, 0, fade.color.a + 0.005f);
+            fade.color = new Color(0, 0, 0, fade.color.a + 0.1f);
             yield return wait;
         }
 
