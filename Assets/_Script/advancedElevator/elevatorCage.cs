@@ -10,8 +10,8 @@ public class elevatorCage : MonoBehaviour
 
     public bool isAchieved; //엘리베이턱 목표 지점에 도달했는지의 여부 
 
-    [SerializeField] Vector2 pos1;
-    [SerializeField] Vector2 pos2;
+    public Vector2 pos1;
+    public Vector2 pos2;
     //주의: 항상 '로컬 위치 기준'으로 위쪽 점을 pos1으로 해야 함 
     [SerializeField] float elevatorSpeed;   
     [SerializeField] int initialPos; //시작할 때 위치할 지점 ~> 1이면 Pos1, 2이면 Pos2 가 된다

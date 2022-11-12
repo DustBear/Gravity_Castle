@@ -108,9 +108,14 @@ public class Player : MonoBehaviour
     //사운드 기믹 
     AudioSource sound;
 
-    [SerializeField] AudioClip moveSound;
-    [SerializeField] AudioClip jump_landSound;
-     [SerializeField] AudioClip dieSound; //플레이어가 죽는 소리 
+    public AudioClip moveSound;
+    public AudioClip jump_landSound;
+
+    public AudioClip ropeGrab;
+    public AudioClip ropeMove;
+    public AudioClip ropeBounce;
+
+    public AudioClip dieSound; //플레이어가 죽는 소리 
 
     GameObject cameraObj;
     public bool isCameraShake;
@@ -151,7 +156,7 @@ public class Player : MonoBehaviour
                              && lever.transform.up == transform.up;
 
         if (!GameManager.instance.shouldSpawnSavePoint)
-        {
+        {            
             //GameManager ~> 세이브포인트에서 시작하는 것이 아닐 때 GM이 플레이어 초기화 담당 ~> 스테이지 처음 시작할 때, 한 씬에서 통로를 통해 다음씬 넘어갈 때 
             transform.position = GameManager.instance.nextPos;
             Physics2D.gravity = GameManager.instance.nextGravityDir * 9.8f;
@@ -162,12 +167,15 @@ public class Player : MonoBehaviour
             States nextState = GameManager.instance.nextState;
             if (nextState == States.MoveOnRope) ChangeState(States.AccessRope);
             else if (nextState == States.Jump) ChangeState(States.Fall);
-            else ChangeState(nextState);
+            else ChangeState(nextState);           
         }
 
         //세이브포인트에서 시작해야 할 때 ~> GameData 에서 플레이어 초기화 담당 
         else
         {
+            //세이브포인트에서 시작할 땐 플레이어 앉아있다 일어나는 애니메이션에서 자동으로 페이드인 해줌 
+            //StartCoroutine(sceneStartAnimation());
+
             transform.position = GameManager.instance.gameData.respawnPos;
             Physics2D.gravity = GameManager.instance.gameData.respawnGravityDir * 9.8f;
             transform.up = -GameManager.instance.gameData.respawnGravityDir;
@@ -187,10 +195,8 @@ public class Player : MonoBehaviour
         jumpTimer = 0; //jumpTimer 초기화
         boxGrabColl.SetActive(false);
 
-        if (GameManager.instance.gameData.curAchievementNum != 0) //스테이지를 맨 처음 시작할 땐 별도의 연출코드가 붙음
-        {
-            UIManager.instance.FadeIn(1f);
-        }
+        UIManager.instance.fade.color = new Color(0, 0, 0, 1);
+        UIManager.instance.FadeIn(1f);
     }
 
     bool readyToLand() //착지 동작은 발판이 움직이는 물체인지 아닌지에 따라 달라져야 하므로 복잡한 알고리즘 가짐. 별도 함수로 구분 
@@ -272,17 +278,24 @@ public class Player : MonoBehaviour
         {
             if (!sound.isPlaying)
             {
-                sound.clip = moveSound;
-                sound.Play();
+                //sound.clip = moveSound;
+                //sound.Play();
             }
         }
         else
         {
             if (sound.clip == moveSound)
             {
-                sound.Stop();
+                //sound.Stop();
             }
         }
+    }
+
+    void audioController(AudioClip source)
+    {
+        sound.Stop();
+        sound.clip = source;
+        sound.Play();
     }
 
     void Walk_Enter()
@@ -364,8 +377,8 @@ public class Player : MonoBehaviour
 
         rigid.AddForce(jumpPower * addForceDirection, ForceMode2D.Impulse);
 
-        sound.clip = jump_landSound;
-        sound.Play();
+        //sound.clip = jump_landSound;
+        //sound.Play();
     }
 
     public float fallingGravity;
@@ -412,8 +425,8 @@ public class Player : MonoBehaviour
         rigid.velocity = Vector2.zero;
         rigid.AddForce(transform.up * jumpGauge, ForceMode2D.Impulse);
 
-        sound.clip = jump_landSound;
-        sound.Play();
+        //sound.clip = jump_landSound;
+        //sound.Play();
     }
 
     void PowerJump_Update()
@@ -480,8 +493,8 @@ public class Player : MonoBehaviour
     {
         rigid.gravityScale = 3f;
         jumpGauge = minJumpPower;
-        sound.clip = jump_landSound;
-        sound.Play();
+        //sound.clip = jump_landSound;
+        //sound.Play();
     }
 
     void Land_Update()
@@ -532,6 +545,8 @@ public class Player : MonoBehaviour
     {
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
+
+        audioController(ropeGrab); //로프 매달리는 소리 남
     }
 
     void AccessRope_Update()
@@ -561,8 +576,6 @@ public class Player : MonoBehaviour
     void MoveOnRope_Enter()
     {
         jumpGauge = minJumpPower;
-
-
     }
 
     void MoveOnRope_Update()
@@ -614,9 +627,27 @@ public class Player : MonoBehaviour
             }
         }
 
+        if(rigid.velocity.magnitude < 0.1f)
+        {
+            if(!(sound.clip == ropeGrab && sound.isPlaying))
+            {
+                //맨 처음 로프를 잡을 때 소리는 멈추지 않고 살려야 함 
+                sound.Stop();
+            }
+        }
+        else
+        {
+            if (!sound.isPlaying) //로프 위에서 움직이는 소리 
+            {
+                sound.clip = ropeMove;
+                sound.Play();
+            }
+        }
+
         // Rope에서 점프할 때 
         if (readyToJump())
         {
+            audioController(ropeBounce);
             ChangeState(States.Jump);
         }
     }
@@ -740,6 +771,9 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             leverColl.GetComponent<lever>().lightTurnOn(); //다시 레버 불 킴 
+
+            leverSound.clip = leverColl.GetComponent<lever>().accessSound;
+            leverSound.Play();
 
             leftArrow.SetActive(false);
             rightArrow.SetActive(false);
@@ -1211,6 +1245,20 @@ public class Player : MonoBehaviour
 
     //현재 플레이어의 애니메이션 
     string curAnim;
+    bool isSceneStartAni = false;
+
+    IEnumerator sceneStartAnimation()
+    {
+        Debug.Log("sceneStartAnim");
+
+        UIManager.instance.FadeIn(1f);
+        isSceneStartAni = true;
+        InputManager.instance.isInputBlocked = true;
+
+        yield return new WaitForSeconds(3f);
+        InputManager.instance.isInputBlocked = false;
+        isSceneStartAni = false;
+    }
     void changeAnimation(string newAnim)
     {
         if (newAnim == curAnim) return;
@@ -1224,6 +1272,11 @@ public class Player : MonoBehaviour
     float jumpAniThreshold = 3f;
     void AnimationManager() //플레이어 애니메이션 전체 관리
     {
+        if (isSceneStartAni)
+        {
+            return;
+        }
+
         if(fsm.State == States.Walk ||  fsm.State == States.Grab) // Walk, Grab ~> 속도에 따라서 walk / idle 애니메이션 할당 
         {
             //바라보는 방향에 따라 flipX 바꿔줌 

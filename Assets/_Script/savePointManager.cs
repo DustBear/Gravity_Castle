@@ -41,7 +41,7 @@ public class savePointManager : MonoBehaviour
                     File.WriteAllText(filePath, ToJsonData);
                 }               
             }
-            GameManager.instance.shouldSpawnSavePoint = false;
+            //GameManager.instance.shouldSpawnSavePoint = false;
         }
     }
 }

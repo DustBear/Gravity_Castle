@@ -12,7 +12,7 @@ public class objectFallSound : MonoBehaviour
     AudioSource sound;
     void Start()
     {
-        sound = GetComponent<AudioSource>();   
+        sound = GetComponents<AudioSource>()[0];
     }
 
     void Update()

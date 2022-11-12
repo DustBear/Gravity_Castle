@@ -36,13 +36,14 @@ public class stageManager : MonoBehaviour
     public Sprite[] savePointImage_3;
     public Sprite[] savePointImage_4;
     public Sprite[] savePointImage_5;
+    public Sprite savePointLock;
 
     public Image chapterInstruction;
     public Image saveInstruction;
 
     void Start()
     {
-        UIManager.instance.FadeIn(1f);
+        UIManager.instance.FadeIn(1.5f);
 
         selectedStageNum = GameManager.instance.gameData.curStageNum; //이전에 플레이하던 stage에서 시작해야 함 ( 1부터 시작 ) 
         selectedStageButton = stageButton[selectedStageNum - 1].gameObject;
@@ -124,6 +125,7 @@ public class stageManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
+            UIManager.instance.clickSoundGen();
             if (selectedSavePointNum < selectedStageButton.GetComponent<stageMoveButton>().savePointCount)
             {
                 selectedSavePointNum++;
@@ -132,6 +134,7 @@ public class stageManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
+            UIManager.instance.clickSoundGen();
             if (selectedSavePointNum > 1)
             {
                 selectedSavePointNum--;
@@ -155,6 +158,7 @@ public class stageManager : MonoBehaviour
                     selectedStageNum++;
                     if (stageButton[selectedStageNum - 1].GetComponent<stageMoveButton>().isActive)
                     {
+                        UIManager.instance.clickSoundGen();
                         selectedSavePointNum = 1;
                         break;
                     }
@@ -181,6 +185,7 @@ public class stageManager : MonoBehaviour
                     selectedStageNum--;
                     if (stageButton[selectedStageNum - 1].GetComponent<stageMoveButton>().isActive)
                     {
+                        UIManager.instance.clickSoundGen();
                         selectedSavePointNum = 1;
                         break;
                     }
@@ -246,13 +251,17 @@ public class stageManager : MonoBehaviour
                 break;
         }
 
-        if(tmpArray != null)
+        if (tmpArray != null)
         {
-            if(tmpArray[selectedSavePointNum-1] != null)
+            if (GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(selectedStageNum, selectedSavePointNum))] == 1)
             {
+                //해당 세이브파일이 이미 언락된 상태일 때 
                 saveInstruction.sprite = tmpArray[selectedSavePointNum - 1];
             }
-            
+            else
+            {
+                saveInstruction.sprite = savePointLock;
+            }
         }
     }
 

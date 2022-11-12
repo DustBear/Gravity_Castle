@@ -14,12 +14,12 @@ public class sceneMoveElevator : MonoBehaviour
     public float moveTime; //엘리베이터가 내려가는 시간 
     public float moveSpeed; //엘리베이터의 하강 속도 
 
-    bool isPlayerOn;
-    public AnimationCurve velCurve; //초반 엘리베이터 하강할 때의 가속도 곡선 
-    public float accelPeriod; //가속도 곡선을 이용하는 시간 
+    bool isPlayerOn;    
 
     Rigidbody2D rigid;
     GameObject cameraObj;
+
+    public GameObject elevatorLever;
 
     private void Awake()
     {
@@ -35,6 +35,7 @@ public class sceneMoveElevator : MonoBehaviour
     {
         if(isPlayerOn && Input.GetKeyDown(KeyCode.E))
         {
+            StartCoroutine(elevatorLeverAct());
             StartCoroutine(elevatorMove());
         }
     }
@@ -56,18 +57,13 @@ public class sceneMoveElevator : MonoBehaviour
     }
 
     IEnumerator elevatorMove()
-    {       
-        for(int index=1; index<=200; index++) //엘리베이터 출발 
-        {
-            float moveVel = moveSpeed * velCurve.Evaluate(index * accelPeriod / 200);
-            rigid.velocity = new Vector2(0, -moveVel);
-
-            yield return new WaitForSeconds(accelPeriod / 200);
-        }
-
+    {              
         rigid.velocity = new Vector2(0, -moveSpeed); //엘리베이터 등속운동 시작 
-        yield return new WaitForSeconds(moveTime - accelPeriod);
+        yield return new WaitForSeconds(moveTime-2f);
 
+        UIManager.instance.FadeOut(1.5f);
+
+        yield return new WaitForSeconds(2f);
         moveToNextScene();
     }
 
@@ -91,5 +87,14 @@ public class sceneMoveElevator : MonoBehaviour
         File.WriteAllText(filePath, ToJsonData);
 
         SceneManager.LoadScene(sceneNum);
+    }
+
+    IEnumerator elevatorLeverAct()
+    {
+        elevatorLever.transform.rotation = Quaternion.Euler(0, 0, 20f);
+        yield return new WaitForSeconds(0.1f);
+        elevatorLever.transform.rotation = Quaternion.Euler(0, 0, -15f);
+        yield return new WaitForSeconds(0.1f);
+        elevatorLever.transform.rotation = Quaternion.Euler(0, 0, 0f);
     }
 }

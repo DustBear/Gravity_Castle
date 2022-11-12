@@ -9,7 +9,7 @@ public class UIManager : Singleton<UIManager>
 {
     public GameObject inGameMenu;
     public GameObject fadeObj;
-    Image fade;
+    public Image fade;
 
     IEnumerator fadeCoroutine;
 
@@ -22,7 +22,7 @@ public class UIManager : Singleton<UIManager>
 
         fade = fadeObj.GetComponent<Image>();
 
-        fadeCoroutine = _FadeIn(1.5f);
+        fadeCoroutine = _FadeIn(1f);
         fadeObj.SetActive(true);
         fade.color = new Color(0, 0, 0, 0); //맨 처음 시작하면 fade는 투명화 
 
@@ -37,43 +37,41 @@ public class UIManager : Singleton<UIManager>
    
     // Fade in과 Fade out이 동시에 실행될 수 없게 하였음
     public void FadeIn(float fadeTime)
-    {
+    {       
         StopCoroutine(fadeCoroutine);
         fadeCoroutine = _FadeIn(fadeTime);
         StartCoroutine(fadeCoroutine);
     }
 
     public void FadeOut(float fadeTime)
-    {
+    {        
         StopCoroutine(fadeCoroutine);
         fadeCoroutine = _FadeOut(fadeTime);
         StartCoroutine(fadeCoroutine);
     }
 
     IEnumerator _FadeIn(float delayTime) //화면 밝아짐 
-    {        
-        var wait = new WaitForSeconds(delayTime/10f);
-        fade.color = new Color(0, 0, 0, 1);
+    {
+        var wait = new WaitForSeconds(delayTime / 50f);
 
-        yield return new WaitForSeconds(0.3f);
         while (fade.color.a > 0f)
         {
-            fade.color = new Color(0, 0, 0, fade.color.a - 0.1f);
+            fade.color = new Color(0, 0, 0, fade.color.a - 0.02f);
             yield return wait;
         }
+        fade.color = new Color(0, 0, 0, 0);
     }
 
     IEnumerator _FadeOut(float delayTime) //화면 어두워짐 
-    {        
-        var wait = new WaitForSeconds(delayTime/10f);
-        fade.color = new Color(0, 0, 0, 0);
+    {
+        var wait = new WaitForSeconds(delayTime/50f);
+
         while (fade.color.a < 1f)
         {
-            fade.color = new Color(0, 0, 0, fade.color.a + 0.1f);
+            fade.color = new Color(0, 0, 0, fade.color.a + 0.02f);
             yield return wait;
         }
-
-        yield return new WaitForSeconds(1f);
+        fade.color = new Color(0, 0, 0, 1);
     }
    
     public void OnOffInGameMenu() //메뉴창이 켜져있으면 끄고 꺼져있으면 킨다 
@@ -98,5 +96,10 @@ public class UIManager : Singleton<UIManager>
     public void clickSoundGen() //UI 클릭할 때 딸깍 소리 냄 
     {
         sound.Play();
+    }
+
+    public void cameraShake()
+    {
+
     }
 }

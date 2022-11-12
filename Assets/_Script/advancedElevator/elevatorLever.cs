@@ -27,15 +27,20 @@ public class elevatorLever : MonoBehaviour
         {
             StartCoroutine("spriteAni"); //작동여부에 상관없이 레버 애니메이션은 작동
 
-            elevatorScript.isAchieved = false;
-            if (leverPos == 1)
+            Vector2 elePos = advancedElevator.transform.position;
+            float dis2Pos1 = (elePos - elevatorScript.pos1).magnitude;
+            float dis2Pos2 = (elePos - elevatorScript.pos2).magnitude;
+
+            if (leverPos == 1 && dis2Pos1>0.1f) //이미 엘리베이터가 pos1에 도달한 상황에선 작동 x
             {               
                 elevatorScript.purposePoint = 1;
+                elevatorScript.isAchieved = false;
             }
 
-            else if(leverPos == 2)
+            else if(leverPos == 2 && dis2Pos2>0.1f) //이미 엘리베이터가 pos2에 도달한 상황에선 작동 x
             {               
                 elevatorScript.purposePoint = 2;
+                elevatorScript.isAchieved = false;
             }
         }
     }

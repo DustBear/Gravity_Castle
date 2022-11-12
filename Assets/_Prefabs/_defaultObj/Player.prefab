@@ -495,7 +495,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b3e435233c60489489f1ab9c3b8921e2, type: 2}
+  - {fileID: 2100000, guid: bd8e392e604e05e4eab0d0d3afe8b9c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -516,7 +516,7 @@ SpriteRenderer:
   m_SortingLayerID: -976024869
   m_SortingLayer: -3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 4034364271785777135, guid: 896890a14e080ae43bd558b54283148f, type: 3}
+  m_Sprite: {fileID: 5119692432603595767, guid: 4a32b33cc1a087149a7fdfa8208e03ef, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -633,10 +633,10 @@ MonoBehaviour:
   isBlackHole: 0
   moveSound: {fileID: 8300000, guid: c4a2d7ee4bd6ca3458a1c886b76c90bc, type: 3}
   jump_landSound: {fileID: 8300000, guid: f87fd00702db8764c9c75341925bb875, type: 3}
-  activeSound: {fileID: 8300000, guid: ebf924bb98dec154dba5f518b966edba, type: 3}
-  selectSound: {fileID: 8300000, guid: ebf924bb98dec154dba5f518b966edba, type: 3}
+  ropeGrab: {fileID: 8300000, guid: 8030e9424ebb6a64e9f07ab3e59353cc, type: 3}
+  ropeMove: {fileID: 8300000, guid: 2aed02715ff20d541b3c149bfbcbc51e, type: 3}
+  ropeBounce: {fileID: 8300000, guid: 5b00e9095be7bbe46a4f4559c354ce4f, type: 3}
   dieSound: {fileID: 8300000, guid: 3769e6ce60309fe4793b63b7b1f838d8, type: 3}
-  leverRoateSound: {fileID: 8300000, guid: bbbb85bba4590e940a1efc1d6ddd0a1e, type: 3}
   isCameraShake: 0
   jumpPower: 12
   fallingGravity: 4

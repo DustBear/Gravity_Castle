@@ -24,7 +24,7 @@ public class StartMenu : MonoBehaviour
     public bool isGameMenuOpen;
     private void Start()
     {
-        UIManager.instance.FadeIn(1f);
+        StartCoroutine(startFade());
 
         isTitleMenuOpen = true;
         titleMenu.SetActive(true); //시작하면 titleMenu 에서 시작함 
@@ -41,6 +41,13 @@ public class StartMenu : MonoBehaviour
         StartCoroutine("blink");
     }
 
+    IEnumerator startFade()
+    {
+        UIManager.instance.fade.color = new Color(0, 0, 0, 1);
+        yield return new WaitForSeconds(0.3f);
+        UIManager.instance.FadeIn(1.5f);
+    }
+
     private void Update()
     {
         if (Input.anyKeyDown && isTitleMenuOpen) //타이틀화면이 열려 있는 상태에서 아무 키나 누르면 
@@ -51,9 +58,9 @@ public class StartMenu : MonoBehaviour
 
     IEnumerator gameMenuOpen() //메뉴 열고 닫는 중간에 페이드인/아웃 효과 있어야 함 
     {
-        UIManager.instance.FadeOut(0.6f);
+        UIManager.instance.FadeOut(1.5f);
 
-        yield return new WaitForSeconds(1f); //화면이 완전히 어두워지면 
+        yield return new WaitForSeconds(2f); //화면이 완전히 어두워지면 
 
         //타이틀화면 끄고 
         titleMenu.SetActive(false);
@@ -63,7 +70,7 @@ public class StartMenu : MonoBehaviour
         isGameMenuOpen = true;
         gameMenu.SetActive(true);
 
-        UIManager.instance.FadeIn(0.6f);
+        UIManager.instance.FadeIn(1.5f);
     }
 
     IEnumerator blink() //시작 버튼 깜빡이게 만듦

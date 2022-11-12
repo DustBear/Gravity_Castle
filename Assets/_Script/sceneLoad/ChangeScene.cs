@@ -49,7 +49,13 @@ public class ChangeScene : MonoBehaviour
                 GameManager.instance.isStartWithFlipX = false;
             }
 
-            SceneManager.LoadScene(nextScene);
+            UIManager.instance.FadeOut(.8f);
+            Invoke("loadSceneInvoke", 1f);
         }
+    }
+
+    void loadSceneInvoke()
+    {
+        SceneManager.LoadScene(nextScene);
     }
 }
