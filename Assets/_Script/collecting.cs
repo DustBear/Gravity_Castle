@@ -10,6 +10,13 @@ public class collecting : MonoBehaviour
 
     bool isParticlePlayed;
 
+    public AudioSource sound;
+    public AudioSource loopSound;
+
+    public AudioClip collect_normal;
+    public AudioClip collect_abnormal;
+    public AudioClip ambience;
+
     private void Awake()
     {
 
@@ -20,9 +27,11 @@ public class collecting : MonoBehaviour
         cameraScript = cameraObj.GetComponent<MainCamera>();
 
         isParticlePlayed = false;
+        loopSound.clip = ambience;
+        loopSound.Play();
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         
@@ -30,20 +39,28 @@ public class collecting : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Player" && collision.transform.up == transform.up)
+        if(collision.tag == "Player")
         {            
-            if (!isParticlePlayed)
+            if(collision.transform.up == transform.up)
             {
-                part.Play();               
-                GetComponent<AudioSource>().Play();
+                if (!isParticlePlayed)
+                {
+                    part.Play();
+                    GetComponent<AudioSource>().Play();
+                    sound.PlayOneShot(collect_normal);
 
-                cameraScript.cameraShake(0.5f, 0.3f);
-                GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0); //투명화 
+                    UIManager.instance.cameraShake(0.5f, 0.3f);
+                    GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0); //투명화 
 
-                isParticlePlayed = true;
+                    isParticlePlayed = true;
+                }
+
+                Invoke("deActive", 2f);
             }
-
-            Invoke("deActive", 2f);
+            else
+            {
+                sound.PlayOneShot(collect_abnormal);
+            }
         }
     }
 

@@ -23,8 +23,8 @@ public class ObjManager : Singleton<ObjManager>
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        //InitPool(arrowNum, ref arrow, ref arrowQueue);
-        //InitPool(cannonNum, ref cannon, ref cannonQueue);
+        InitPool(arrowNum, ref arrow, ref arrowQueue);
+        InitPool(cannonNum, ref cannon, ref cannonQueue);
         //InitPool(fireNum, ref fire, ref fireQueue);
         //InitPool(fireFallingNum, ref fireFalling, ref fireFallingQueue);
     }
@@ -36,8 +36,9 @@ public class ObjManager : Singleton<ObjManager>
         {
             GameObject newObj = Instantiate(obj);
             DontDestroyOnLoad(newObj);
+            newObj.transform.parent = transform; //objManager에 생성한 오브젝트풀 집어넣어서 정리 
             queue.Enqueue(newObj);
-            newObj.SetActive(false);
+            newObj.SetActive(false); //생성한 오브젝트 큐에 집어넣음 
         }
     }
 
@@ -59,6 +60,7 @@ public class ObjManager : Singleton<ObjManager>
 
     public void ReturnObj(ObjType objType, GameObject obj)
     {
+        //사용이 끝난 오브젝트를 다시 큐에 집어넣음 
         obj.SetActive(false);
         switch (objType)
         {

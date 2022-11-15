@@ -99,14 +99,20 @@ public class side02_movingStone : MonoBehaviour
 
             if(rigid.velocity.x > 0 && isRightCollOn)
             {
-                rigid.velocity = Vector3.zero; //목표위치에 근접하면 정지
+                rigid.velocity = Vector3.zero; //벽과 충돌하면 정지 
                 isOnMove = false;
+                transform.position = new Vector3(Mathf.Round(transform.position.x * 10) * 0.1f, Mathf.Round(transform.position.y * 10) * 0.1f, 0);
+                //박스가 어중간한 소숫점 위치에서 정지하지 않도록 보정해 줌 
+
                 spr.sprite = spriteGroup[0];
             }
             else if(rigid.velocity.x < 0 && isLeftCollOn)
             {
-                rigid.velocity = Vector3.zero; //목표위치에 근접하면 정지
+                rigid.velocity = Vector3.zero; //벽과 충돌하면 정지 
                 isOnMove = false;
+                transform.position = new Vector3(Mathf.Round(transform.position.x * 10) * 0.1f, Mathf.Round(transform.position.y * 10) * 0.1f, 0);
+                //박스가 어중간한 소숫점 위치에서 정지하지 않도록 보정해 줌 
+
                 spr.sprite = spriteGroup[0];
             }
         }
@@ -124,14 +130,20 @@ public class side02_movingStone : MonoBehaviour
 
             if (rigid.velocity.y > 0 && isTopCollOn)
             {
-                rigid.velocity = Vector3.zero; //목표위치에 근접하면 정지
+                rigid.velocity = Vector3.zero; //벽과 충돌하면 정지 
                 isOnMove = false;
+                transform.position = new Vector3(Mathf.Round(transform.position.x * 10) * 0.1f, Mathf.Round(transform.position.y * 10) * 0.1f, 0);
+                //박스가 어중간한 소숫점 위치에서 정지하지 않도록 보정해 줌 
+
                 spr.sprite = spriteGroup[0];
             }
             else if (rigid.velocity.y < 0 && isBottomCollOn)
             {
-                rigid.velocity = Vector3.zero; //목표위치에 근접하면 정지
+                rigid.velocity = Vector3.zero; //벽과 충돌하면 정지 
                 isOnMove = false;
+                transform.position = new Vector3(Mathf.Round(transform.position.x * 10) * 0.1f, Mathf.Round(transform.position.y * 10) * 0.1f, 0);
+                //박스가 어중간한 소숫점 위치에서 정지하지 않도록 보정해 줌 
+
                 spr.sprite = spriteGroup[0];
             }
         }

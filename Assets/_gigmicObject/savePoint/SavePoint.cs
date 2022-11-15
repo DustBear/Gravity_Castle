@@ -37,6 +37,8 @@ public class SavePoint : MonoBehaviour
     public AudioClip lightOnSound;
     public AudioClip lightOffSound;
     public AudioClip activeSound;
+
+    public ParticleSystem particle;
     void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -54,6 +56,7 @@ public class SavePoint : MonoBehaviour
         {
             spr.sprite = spriteGroup[lastIndex]; //활성화 상태
             curSpriteNum = lastIndex;
+            particle.Play();
             isSavePointActivated = true;
         }
         else
@@ -168,8 +171,8 @@ public class SavePoint : MonoBehaviour
         sound.clip = activeSound;
         sound.Play();
 
-        cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.5f); //세이브스톤이 박힐 때 카메라 진동 
-
+        UIManager.instance.cameraShake(0.3f, 0.5f); //세이브스톤이 박힐 때 카메라 진동 
+        particle.Play();
         yield return null;
     }
 
@@ -199,6 +202,7 @@ public class SavePoint : MonoBehaviour
         sound.clip = activeSound;
         sound.Play();
 
-        cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.4f); //세이브스톤이 박힐 때 카메라 진동 
+        UIManager.instance.cameraShake(0.3f, 0.5f);
+        //세이브스톤이 박힐 때 카메라 진동 
     }
 }

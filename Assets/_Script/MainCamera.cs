@@ -27,7 +27,7 @@ public class MainCamera : MonoBehaviour
     public bool isCameraLock; //특정 연출 시 카메라가 플레이어를 따라가지 않도록 고정 
     public AnimationCurve shakeCurve;
 
-    bool isLookDownWork;
+    public bool isLookDownWork;
     public float lookDownSide_distance; //lookDownSide()가 작동했을 때 아래쪽으로 시야가 얼마나 이동하는지
     public float lookDownSIde_smoothTime; //카메라 워크 smooth 정도 
     public float lookDownSide_inputTime; //플레이어가 몇초 이상 down Arrow 를 누르고 있어야 작동하는지

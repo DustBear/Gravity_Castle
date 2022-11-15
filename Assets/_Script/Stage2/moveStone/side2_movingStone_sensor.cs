@@ -6,6 +6,7 @@ public class side2_movingStone_sensor : MonoBehaviour
 {
     public GameObject moveStone;
     public side02_movingStone moveStoneScr;
+    //센서에 platform과 충돌했다는 정보가 들어오면 처리 
 
     public int collType;
     /*
@@ -22,7 +23,6 @@ public class side2_movingStone_sensor : MonoBehaviour
     {
         if(collision.tag == "Platform")
         {
-            Debug.Log(collType + " collision");
             switch (collType)
             {
                 case 1:

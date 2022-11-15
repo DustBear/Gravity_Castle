@@ -30,6 +30,11 @@ public class dynamicBox_lever : MonoBehaviour
     int curSavePoint;
     //매 프레임마다 현재의 진행도 체크 ~> 진행도가 달라질 때 마다 rigidBody 상태 그에 맞게 초기화해 줌 
 
+    AudioSource sound;
+
+    public AudioClip grabSound;
+    public AudioClip putDownSound;
+
     private void Awake()
     {
         spr = GetComponent<SpriteRenderer>();
@@ -38,6 +43,7 @@ public class dynamicBox_lever : MonoBehaviour
         playerObj = GameObject.FindWithTag("Player");
         playerscr = playerObj.GetComponent<Player>();
         playerBoxColl = playerObj.GetComponent<Player>().boxGrabColl;
+        sound = GetComponent<AudioSource>();
     }
     void Start()
     {
@@ -88,6 +94,7 @@ public class dynamicBox_lever : MonoBehaviour
                 playerscr.isPlayerGrab = true;
                 playerscr.walkSpeed = grabSpeed; //box들고있는 상태에선 더 느리게 걸음 
 
+                sound.PlayOneShot(grabSound);
                 StartCoroutine(boxGrab());
             }           
 
@@ -96,6 +103,8 @@ public class dynamicBox_lever : MonoBehaviour
                 isBoxGrab = false; //박스 잡고있는 상태에서 E 누르면 내려놓기 
                 playerscr.isPlayerGrab = false;
                 playerscr.walkSpeed = initWalkSpeed;
+
+                sound.PlayOneShot(putDownSound);
             }
         }
 

@@ -11,7 +11,7 @@ public class side02_movingStone_lever : MonoBehaviour
     SpriteRenderer spr;
 
     bool isPlayerOn; //플레이어가 센서 내에 들어와 있는가? 
-    [SerializeField] int moveType;
+    [SerializeField] int moveType; //타입이 1이면 가로 이동, 2이면 세로 이동 
     [SerializeField] float targetPos;
 
     bool isStoneMoveOnLastFrame;
@@ -20,7 +20,6 @@ public class side02_movingStone_lever : MonoBehaviour
     int spriteNum;
     void Start()
     {
-        movingStone = GameObject.Find("movingStone");
         spr = GetComponent<SpriteRenderer>();
         msScript = movingStone.GetComponent<side02_movingStone>();
 
@@ -32,7 +31,7 @@ public class side02_movingStone_lever : MonoBehaviour
     {
         if(isPlayerOn && Input.GetKeyDown(KeyCode.E))
         {
-            if (msScript.isOnMove) return;
+            if (msScript.isOnMove) return; //박스가 움직이는 동안은 명령어 인식 x 
             msScript.stoneMove(moveType, targetPos);
 
             spr.sprite = leverSprite[3];

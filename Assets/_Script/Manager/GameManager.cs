@@ -33,6 +33,7 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] int purposeBgmIndex; //실행시키고자 하는 bgm index
     [SerializeField] int curBgmIndex; //현재 실행중인 bgm index
+    public float masterVolume_bgm; 
 
     void Awake() 
     {
@@ -67,6 +68,7 @@ public class GameManager : Singleton<GameManager>
         }
         
         bgmMachine = gameObject.AddComponent<AudioSource>();
+        bgmMachine.volume = masterVolume_bgm;
         //moodMachine = gameObject.AddComponent<AudioSource>();
     }
 
@@ -81,7 +83,7 @@ public class GameManager : Singleton<GameManager>
         else if(curSceneNum == 1)
         {
             //인게임 메뉴 
-            purposeBgmIndex = 0;
+            purposeBgmIndex = curBgmIndex;
         }
         else if(curSceneNum == 3)
         {
@@ -126,7 +128,7 @@ public class GameManager : Singleton<GameManager>
                 break;
             }
 
-            bgmMachine.volume = bgmMachine.volume-0.05f;
+            bgmMachine.volume = bgmMachine.volume-masterVolume_bgm/20f;
             //moodMachine.volume = bgmMachine.volume;
             yield return new WaitForSeconds(0.05f);
 
@@ -142,7 +144,7 @@ public class GameManager : Singleton<GameManager>
    
         for (int index = 1; index <= 20; index++)
         {
-            bgmMachine.volume = 0.05f * index;
+            bgmMachine.volume = masterVolume_bgm / 20f * index;
             //moodMachine.volume = bgmMachine.volume;
             yield return new WaitForSeconds(0.05f); //다시 서서히 volume 키움 
         }
@@ -187,7 +189,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Update()
     {
-        //soundNumCheck();
+        soundNumCheck();
 
         //게임이 제대로 작동하는 지 체크하기 위한 함수 ~> 출시버전에선 삭제해야 함 
         if (Input.GetKeyDown(KeyCode.U))

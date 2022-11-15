@@ -15,15 +15,10 @@ public class popUpSpikeBox : MonoBehaviour
     SpriteRenderer spr;
     BoxCollider2D spikeColl;
 
-    AudioSource sound;
-    public AudioClip knifeStab;
-    public AudioClip knifeBack;
-
     void Start()
     {
         spr = GetComponent<SpriteRenderer>();
         spikeColl = GetComponent<BoxCollider2D>();
-        sound = GetComponent<AudioSource>();
 
         spr.sprite = spriteGroup[0];
         spikeColl.offset = new Vector2(0, spikeOffsetGroup[0]);
@@ -46,10 +41,6 @@ public class popUpSpikeBox : MonoBehaviour
         {
             yield return new WaitForSeconds(popUpDelay - 0.2f);
 
-            sound.Stop(); //가시 튀어나오는 소리 
-            sound.clip = knifeStab;
-            sound.Play();
-
             for (int index = 0; index <= 3; index++)
             {
                 spr.sprite = spriteGroup[index];
@@ -58,10 +49,6 @@ public class popUpSpikeBox : MonoBehaviour
             }
 
             yield return new WaitForSeconds(spikeDelay-0.2f);
-
-            sound.Stop(); //가시 튀어나오는 소리 
-            sound.clip = knifeBack;
-            sound.Play();
 
             for (int index=3; index>=0; index--)
             {

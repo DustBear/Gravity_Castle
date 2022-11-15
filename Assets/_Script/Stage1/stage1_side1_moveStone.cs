@@ -21,19 +21,24 @@ public class stage1_side1_moveStone : MonoBehaviour
 
     float fallDelay; //stone이 떨어진 후 걸린 시간 
     SpriteRenderer spr;
-    GameObject cameraObj;
+   
+    public AudioSource sound;
+    public AudioSource loopSound;
 
-    public AudioClip moveSound;
-    public AudioClip smashSound;
-    public AudioClip bibSound;
+    public AudioClip act_ready;
+    public AudioClip lightOn;
+    public AudioClip act_start;
+    public AudioClip moving;
+    public AudioClip arrive;
+    public AudioClip blink_turnOn;
+    public AudioClip blink_turnOff;
+    public AudioClip windBlow;
+    public AudioClip crush;
 
-    AudioSource sound;
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
         spr = GetComponent<SpriteRenderer>();
-        cameraObj = GameObject.Find("Main Camera");
-        sound = GetComponent<AudioSource>();
 
         shouldStoneStart = false;
         shouldStoneMove = false;
@@ -57,15 +62,13 @@ public class stage1_side1_moveStone : MonoBehaviour
     {
         shouldStoneStart = false;
 
-        sound.Stop();
-        sound.clip = bibSound;
-        sound.Play();
-
         Vector3 vibrateDir = (startPos - finishPos).normalized;
+        sound.PlayOneShot(act_ready);
 
         //stone이 움직이기 전 위 아래로 살짝 진동하면서 깜빡임 
         transform.position += vibrateDir * 0.05f;
-        spr.sprite = spriteGroup[spriteGroup.Length - 1]; 
+        spr.sprite = spriteGroup[spriteGroup.Length - 1];
+        sound.PlayOneShot(lightOn);
         yield return new WaitForSeconds(0.08f);
 
         transform.position -= vibrateDir * 0.05f;
@@ -83,13 +86,14 @@ public class stage1_side1_moveStone : MonoBehaviour
         //stone 진동이 끝나면 목표지점으로 움직이기 시작 
         shouldStoneMove = true;
 
-        sound.Stop();
-        sound.clip = moveSound;
-        sound.Play();
+        sound.PlayOneShot(act_start);
+
+        loopSound.clip = moving;
+        loopSound.Play();
 
         while (shouldStoneMove)
         {
-            stoneMove();
+            stoneMove();            
             yield return null;
         }
         
@@ -99,7 +103,7 @@ public class stage1_side1_moveStone : MonoBehaviour
     int spriteIndex = 1;
 
     void stoneMove()
-    {
+    {        
         spriteTimer += Time.deltaTime;
         rigid.velocity = (finishPos - startPos).normalized * moveSpeed;
 
@@ -125,6 +129,8 @@ public class stage1_side1_moveStone : MonoBehaviour
             transform.position = finishPos;
             spriteIndex = 1;
 
+            sound.PlayOneShot(arrive);
+            loopSound.Stop();
             StartCoroutine("stoneFloat");
         }
     }
@@ -135,12 +141,18 @@ public class stage1_side1_moveStone : MonoBehaviour
         {
             yield return new WaitForSeconds(floatTime / 8);
             spr.sprite = spriteGroup[0];
+            sound.PlayOneShot(blink_turnOff);
+
             yield return new WaitForSeconds(floatTime / 8);
             spr.sprite = spriteGroup[spriteGroup.Length-1];
+            sound.PlayOneShot(blink_turnOn);
         }
 
         shouldStoneFall = true;
         fallDelay = 0; //타이머 초기화 
+
+        loopSound.clip = windBlow;
+        loopSound.Play();
 
         while (shouldStoneFall)
         {
@@ -174,10 +186,9 @@ public class stage1_side1_moveStone : MonoBehaviour
             transform.position = startPos;
             spr.sprite = spriteGroup[0];
 
-            cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.4f);
-            sound.Stop();
-            sound.clip = smashSound;
-            sound.Play();
+            loopSound.Stop();
+            sound.PlayOneShot(crush);
+            UIManager.instance.cameraShake(0.3f, 0.4f);            
         }
     }
 }

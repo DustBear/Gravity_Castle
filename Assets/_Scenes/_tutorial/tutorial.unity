@@ -402,7 +402,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 10.749999, y: -2.500001}
+  m_AnchoredPosition: {x: 10.749999, y: 0.49999905}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &52822123
@@ -1267,12 +1267,16 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5714377009829052650, guid: 709ceb3ce86642b4db3fc54a9084e876, type: 3}
+      propertyPath: moveSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5714377009829052650, guid: 709ceb3ce86642b4db3fc54a9084e876, type: 3}
       propertyPath: startPos.x
       value: -16.5
       objectReference: {fileID: 0}
     - target: {fileID: 5714377009829052650, guid: 709ceb3ce86642b4db3fc54a9084e876, type: 3}
       propertyPath: startPos.y
-      value: -39
+      value: -38
       objectReference: {fileID: 0}
     - target: {fileID: 5714377009829052650, guid: 709ceb3ce86642b4db3fc54a9084e876, type: 3}
       propertyPath: moveToNextStage
@@ -1288,7 +1292,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5714377009829052651, guid: 709ceb3ce86642b4db3fc54a9084e876, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -39
+      value: -38
       objectReference: {fileID: 0}
     - target: {fileID: 5714377009829052651, guid: 709ceb3ce86642b4db3fc54a9084e876, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1323,9 +1327,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5714377009829052652, guid: 709ceb3ce86642b4db3fc54a9084e876, type: 3}
-      propertyPath: m_Sprite
+      propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 21300000, guid: eddd7323bd449174aa91871a500044db, type: 3}
+      objectReference: {fileID: 2100000, guid: c8ce44aedcacee844bbd7d32f251a2a3, type: 2}
+    - target: {fileID: 5714377009829052653, guid: 709ceb3ce86642b4db3fc54a9084e876, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5714377009829052655, guid: 709ceb3ce86642b4db3fc54a9084e876, type: 3}
       propertyPath: m_Name
       value: sceneElevator_end
@@ -55805,6 +55813,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2098624710219773214, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2098624710219773215, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: pos1.x
       value: -37.5
@@ -60471,7 +60483,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -108, y: 831}
+  m_AnchoredPosition: {x: -108, y: 812.5006}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2136684503

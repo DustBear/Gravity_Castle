@@ -10,9 +10,13 @@ public class grassAnim_stage1 : MonoBehaviour
     GameObject playerObj;
 
     bool isAnimCor;
+    AudioSource sound;
+
+    public AudioClip[] grassSounds;
     void Start()
     {
         spr = GetComponent<SpriteRenderer>();
+        sound = GetComponent<AudioSource>();
 
         spr.sprite = spriteGroup[0];
         isAnimCor = false;
@@ -34,6 +38,7 @@ public class grassAnim_stage1 : MonoBehaviour
     IEnumerator grassAnim()
     {
         isAnimCor = true;
+        grassSound();
         for(int index=0; index<8; index++)
         {
             spr.sprite = spriteGroup[index%4];
@@ -68,4 +73,12 @@ public class grassAnim_stage1 : MonoBehaviour
         }
     }
 
+    void grassSound()
+    {
+        int grassIndex = Random.Range(0, grassSounds.Length);
+        if (sound.isPlaying) sound.Stop();
+
+        sound.clip = grassSounds[grassIndex];
+        sound.Play();
+    }
 }

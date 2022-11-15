@@ -25,11 +25,19 @@ public class movingProp : MonoBehaviour
     bool isPropMove;
 
     public GameObject arrow;
+    public AudioSource sound;
+    public AudioSource loopSound;
+
+    public AudioClip leverActive;
+    public AudioClip prop_start;
+    public AudioClip prop_moving;
+    public AudioClip prop_arrive;
 
     private void Awake()
     {       
         spr = GetComponent<SpriteRenderer>();
-        anim = prop.GetComponent<Animator>();       
+        anim = prop.GetComponent<Animator>();
+        sound = GetComponent<AudioSource>();
     }
     void Start()
     {
@@ -60,6 +68,7 @@ public class movingProp : MonoBehaviour
             if (isLeverActivated)
             {
                 arrow.SetActive(true);
+                sound.PlayOneShot(leverActive);
             }
             else
             {
@@ -80,22 +89,23 @@ public class movingProp : MonoBehaviour
         }
     }
     IEnumerator leverAct(int leverDir) //-1 이면 이전 pos로, +1 이면 이후 pos 로 이동 
-    {
+    {       
         if (isCorWork) yield break; //아직 동작이 끝나지 않았으면 작동 무시 
 
+        sound.PlayOneShot(prop_start);
         isCorWork = true;
 
         if(leverDir == -1)
         {
             spr.sprite = leverSprite[1];
             StartCoroutine(propMove(1));
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(0.5f);
         }
         else if(leverDir == 1)
         {
             spr.sprite = leverSprite[2];
             StartCoroutine(propMove(2));
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(0.5f);
         }
         spr.sprite = leverSprite[0];
 
@@ -103,9 +113,9 @@ public class movingProp : MonoBehaviour
     }
 
     
-    IEnumerator propMove(int aimPos) //1�̸� pos1 ������ ������ , 2�̸� pos2 ������ ������ 
+    IEnumerator propMove(int aimPos) //실제로 prop이 움직임 
     {
-        if (isPropMove) yield break; ; //�۵����̸� ����
+        if (isPropMove) yield break; ; 
 
         isPropMove = true;
 
@@ -117,6 +127,9 @@ public class movingProp : MonoBehaviour
                 yield break;
             }
 
+            loopSound.clip = prop_moving;
+            loopSound.Play();
+
             anim.SetFloat("animSpeed", 3f);
             while (true)
             {               
@@ -127,6 +140,10 @@ public class movingProp : MonoBehaviour
                     curPos--;
 
                     anim.SetFloat("animSpeed", 0);
+
+                    loopSound.Stop();
+                    sound.PlayOneShot(prop_arrive);
+
                     break;
                 }
                 yield return null;
@@ -140,6 +157,9 @@ public class movingProp : MonoBehaviour
                 yield break;
             }
 
+            loopSound.clip = prop_moving;
+            loopSound.Play();
+
             anim.SetFloat("animSpeed", -3f);
             while (true)
             {
@@ -150,6 +170,10 @@ public class movingProp : MonoBehaviour
                     curPos++;
 
                     anim.SetFloat("animSpeed", 0);
+
+                    loopSound.Stop();
+                    sound.PlayOneShot(prop_arrive);
+
                     break;
                 }
                 yield return null;

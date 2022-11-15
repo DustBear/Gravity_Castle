@@ -106,10 +106,12 @@ public class Player : MonoBehaviour
     bool isDevilFalling;
 
     //사운드 기믹 
-    AudioSource sound;
+    public AudioSource sound;
+    public AudioSource walkSound;
 
     public AudioClip moveSound;
-    public AudioClip jump_landSound;
+    public AudioClip jumpSound;
+    public AudioClip landSound;
 
     public AudioClip ropeGrab;
     public AudioClip ropeMove;
@@ -131,7 +133,6 @@ public class Player : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         ani = GetComponent<Animator>();
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<MainCamera>();
-        sound = GetComponent<AudioSource>();
         cameraObj = GameObject.FindWithTag("MainCamera");
 
         for (int index = 0; index < parts.Length; index++)
@@ -197,6 +198,8 @@ public class Player : MonoBehaviour
 
         UIManager.instance.fade.color = new Color(0, 0, 0, 1);
         UIManager.instance.FadeIn(1f);
+
+        StartCoroutine(walkSoundGen());
     }
 
     bool readyToLand() //착지 동작은 발판이 움직이는 물체인지 아닌지에 따라 달라져야 하므로 복잡한 알고리즘 가짐. 별도 함수로 구분 
@@ -273,29 +276,32 @@ public class Player : MonoBehaviour
 
     void walkSoundCheck()
     {
-        if (fsm.State == States.Walk && (isGrounded || isOnJumpPlatform)
-            && Mathf.Abs(transform.InverseTransformDirection(rigid.velocity).x) > 0.1f) //속도가 0.1보다 커야 함
+        if (fsm.State == States.Walk && (isGrounded || isOnJumpPlatform))
         {
-            if (!sound.isPlaying)
+            if(Mathf.Abs(transform.InverseTransformDirection(rigid.velocity).x) > 0.1f) //속도가 0.1보다 커야 함
             {
-                //sound.clip = moveSound;
-                //sound.Play();
+                walkSound.volume = 1f;
+            }
+            else
+            {
+                walkSound.volume = 0f;
             }
         }
         else
         {
-            if (sound.clip == moveSound)
-            {
-                //sound.Stop();
-            }
+            walkSound.volume = 0f;
         }
     }
 
-    void audioController(AudioClip source)
+    public float walkSoundPeriod; //한 발 내딛고 다음 발을 내딛기까지의 시간 
+    IEnumerator walkSoundGen()
     {
-        sound.Stop();
-        sound.clip = source;
-        sound.Play();
+        var walkDelay = new WaitForSeconds(walkSoundPeriod);
+        while (true)
+        {
+            walkSound.PlayOneShot(moveSound);
+            yield return new WaitForSeconds(walkSoundPeriod); 
+        }
     }
 
     void Walk_Enter()
@@ -377,8 +383,7 @@ public class Player : MonoBehaviour
 
         rigid.AddForce(jumpPower * addForceDirection, ForceMode2D.Impulse);
 
-        //sound.clip = jump_landSound;
-        //sound.Play();
+        sound.PlayOneShot(jumpSound);
     }
 
     public float fallingGravity;
@@ -493,8 +498,7 @@ public class Player : MonoBehaviour
     {
         rigid.gravityScale = 3f;
         jumpGauge = minJumpPower;
-        //sound.clip = jump_landSound;
-        //sound.Play();
+        sound.PlayOneShot(landSound);
     }
 
     void Land_Update()
@@ -546,9 +550,10 @@ public class Player : MonoBehaviour
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
 
-        audioController(ropeGrab); //로프 매달리는 소리 남
+        sound.PlayOneShot(ropeGrab); //로프 매달리는 소리 남
     }
 
+    float ropeCorrectOffset = 0.1f;
     void AccessRope_Update()
     {
         if (rope == null) return;
@@ -558,10 +563,22 @@ public class Player : MonoBehaviour
         if (rope.CompareTag("VerticalRope")) //세로 로프일 때
         {
             destPos_rope = new Vector2(rope.transform.position.x, transform.position.y);
+            
+            //세로 로프에 가로로 매달림 ~> 플레이어 기준 아래쪽으로 0.1만큼 빼줘야 함 
+            if(transform.up == new Vector3(1,0,0) || transform.up == new Vector3(-1, 0, 0))
+            {
+                destPos_rope -= new Vector2(transform.up.x, transform.up.y) * ropeCorrectOffset;
+            }
         }
         else //가로 로프일 때 
         {
-            destPos_rope = new Vector2(transform.position.x, rope.transform.position.y - 0.1f);
+            destPos_rope = new Vector2(transform.position.x, rope.transform.position.y);
+
+            //가로 로프에 세로로 매달림 ~> 플레이어 기준 아래쪽으로 0.1만큼 빼줘야 함 
+            if (transform.up == new Vector3(0, 1, 0) || transform.up == new Vector3(0, -1, 0))
+            {
+                destPos_rope -= new Vector2(transform.up.x, transform.up.y) * ropeCorrectOffset;
+            }
         }
 
         transform.position = Vector2.MoveTowards(transform.position, destPos_rope, Time.deltaTime * ropeAccessSpeed);
@@ -647,7 +664,7 @@ public class Player : MonoBehaviour
         // Rope에서 점프할 때 
         if (readyToJump())
         {
-            audioController(ropeBounce);
+            sound.PlayOneShot(ropeBounce);
             ChangeState(States.Jump);
         }
     }
@@ -852,7 +869,7 @@ public class Player : MonoBehaviour
 
         Time.timeScale = 0; //레버 돌아가는 동안은 시간 정지  
 
-        cameraObj.GetComponent<MainCamera>().cameraShake(0.3f, 0.5f);
+        UIManager.instance.cameraShake(0.3f, 0.5f);
     }
 
     float timer = 0;
@@ -861,6 +878,7 @@ public class Player : MonoBehaviour
     void ChangeGravityDir_Update()
     {
         if (isCameraShake) return; //카메라 진동이 끝나고 레버회전 시작 
+        if (cameraObj.GetComponent<MainCamera>().isLookDownWork) return; 
 
         cameraObj.transform.position = cameraObj.GetComponent<MainCamera>().cameraPosCal();
         transform.localPosition = Vector2.MoveTowards(transform.localPosition, destPos_afterLevering, Time.unscaledDeltaTime / leverRotateDelay);
@@ -1005,13 +1023,13 @@ public class Player : MonoBehaviour
 
         switch (GameManager.instance.gameData.curStageNum)
         {
-            case 2: case 6: case 7:
+            case 3: case 7: case 8:
                 if (other.gameObject.CompareTag("Projectile") && !isDieCorWork)
                 {
                     StartCoroutine(Die());
                 }
                 break;
-            case 8:
+            case 9:
                 if (other.collider.CompareTag("Devil") || other.collider.CompareTag("Projectile")) StartCoroutine(Die());
                 break;
         }
@@ -1187,7 +1205,7 @@ public class Player : MonoBehaviour
         GameManager.instance.shouldSpawnSavePoint = true; //죽은 경우는 일단 세이브포인트에서 시작해야 함
 
         cameraObj.GetComponent<MainCamera>().isCameraLock = true; //죽은 경우 카메라는 고정
-        cameraObj.GetComponent<MainCamera>().cameraShake(0.5f, 0.7f);
+        UIManager.instance.cameraShake(0.5f, 0.7f);
         sprite.color = new Color(1, 1, 1, 0); 
 
         for(int index=0; index<parts.Length; index++)

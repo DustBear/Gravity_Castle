@@ -98,8 +98,8 @@ public class UIManager : Singleton<UIManager>
         sound.Play();
     }
 
-    public void cameraShake()
+    public void cameraShake(float size, float length)
     {
-
+        GameObject.Find("Main Camera").GetComponent<MainCamera>().cameraShake(size, length);
     }
 }

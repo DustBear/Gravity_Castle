@@ -11,8 +11,13 @@ public class sceneCover : MonoBehaviour
     [SerializeField] bool isPlayerIn;
     [SerializeField] bool isCoroutinePlay;
 
+    AudioSource sound;
+    public AudioClip fadeInSound;
+    public AudioClip fadeOutSound;
+
     void Start()
     {
+        sound = GetComponent<AudioSource>();
         spr = GetComponent<SpriteRenderer>();
         if (isPlayerIn)
         {
@@ -44,6 +49,8 @@ public class sceneCover : MonoBehaviour
         {
             StopCoroutine("fadeIn");
             StartCoroutine("fadeOut");
+
+            sound.PlayOneShot(fadeInSound);
         }    
     }
 
@@ -55,6 +62,8 @@ public class sceneCover : MonoBehaviour
 
             StopCoroutine("fadeOut"); //¹à¾ÆÁö´Â°Å ¸ØÃß°í 
             StartCoroutine("fadeIn"); //´Ù½Ã ¾îµÎ¿öÁü 
+
+            sound.PlayOneShot(fadeOutSound);
         }       
     }
     private void OnTriggerStay2D(Collider2D collision)

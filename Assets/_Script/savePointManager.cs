@@ -16,8 +16,6 @@ public class savePointManager : MonoBehaviour
 
     private void Awake()
     {
-        //Debug.Log("savePointManager activated");
-
         player = GameObject.Find("Player");
         playerSpawnSavePoint = GameManager.instance.gameData.curAchievementNum; //현재의 achNum 이 스폰돼야 하는 세이브포인트 번호 
       

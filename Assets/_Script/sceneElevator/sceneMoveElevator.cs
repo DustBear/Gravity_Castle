@@ -57,7 +57,9 @@ public class sceneMoveElevator : MonoBehaviour
     }
 
     IEnumerator elevatorMove()
-    {              
+    {
+        UIManager.instance.cameraShake(0.5f, 0.4f);
+
         rigid.velocity = new Vector2(0, -moveSpeed); //엘리베이터 등속운동 시작 
         yield return new WaitForSeconds(moveTime-2f);
 

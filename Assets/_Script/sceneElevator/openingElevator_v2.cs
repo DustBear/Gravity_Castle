@@ -23,7 +23,7 @@ public class openingElevator_v2 : MonoBehaviour
         {
             transform.position = pos1;
             isElevatorArrived = false;
-            GameManager.instance.nextPos = pos1 + new Vector2(0, 1.5f); //엘리베이터 위에 플레이어 생성 
+            GameManager.instance.nextPos = pos1 + new Vector2(0, 3f); //엘리베이터 위에 플레이어 생성 
             GameManager.instance.nextGravityDir = new Vector2(0, -1); //중력 방향 설정해 줌 
 
             rigid.velocity = new Vector2(0, -moveSpeed);
@@ -51,6 +51,7 @@ public class openingElevator_v2 : MonoBehaviour
             isElevatorArrived = true;
 
             GameManager.instance.shouldUseOpeningElevator = false;
+            UIManager.instance.cameraShake(0.5f, 0.4f);
         }
     }
 }

@@ -6816,7 +6816,7 @@ PrefabInstance:
     - target: {fileID: 2098624710219773200, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: eddd7323bd449174aa91871a500044db, type: 3}
+      objectReference: {fileID: 21300000, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
     - target: {fileID: 2098624710219773201, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -6827,7 +6827,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2098624710219773201, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -21.5
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 2098624710219773201, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6879,7 +6879,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2098624710219773215, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: pos2.y
-      value: -21.5
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 2098624710219773215, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: playerObj
@@ -51755,6 +51755,8 @@ MonoBehaviour:
   fadeTime: 0.2
   isPlayerIn: 0
   isCoroutinePlay: 0
+  fadeInSound: {fileID: 0}
+  fadeOutSound: {fileID: 0}
 --- !u!4 &1920811948 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 789245381894676217, guid: 1d94e3f380cfc6b4ab1c24f180271ed4, type: 3}
