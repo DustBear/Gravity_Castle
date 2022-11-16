@@ -5193,6 +5193,8 @@ MonoBehaviour:
   doorOpen: {fileID: 8300000, guid: 1175073ea3cc50e40809c31f9ae35e6f, type: 3}
   doorOpenComplete: {fileID: 8300000, guid: 5ac649601e63a434e94221e71192e910, type: 3}
   windBlow: {fileID: 8300000, guid: 4daa9553abb3ac24dabec7949af5f2c8, type: 3}
+  sound: {fileID: 432934825}
+  windSound: {fileID: 432934826}
 --- !u!212 &432934823
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6659,7 +6661,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 0dac25fe6fc713a45ab1ec82945fafa0, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -55756,7 +55758,7 @@ PrefabInstance:
     - target: {fileID: 2098624710219773200, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: eddd7323bd449174aa91871a500044db, type: 3}
+      objectReference: {fileID: 21300000, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
     - target: {fileID: 2098624710219773200, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -55771,7 +55773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2098624710219773201, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 22.5
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 2098624710219773201, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: m_LocalPosition.z
@@ -55809,14 +55811,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: sceneElevator_start
       objectReference: {fileID: 0}
-    - target: {fileID: 2098624710219773214, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2098624710219773214, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
-      propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 2098624710219773215, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: pos1.x
       value: -37.5
@@ -55842,6 +55836,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 958314301}
     - target: {fileID: 2098624711387280808, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5722044947946506930, guid: cb2b19de436d5b74f83ba155724f8735, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}

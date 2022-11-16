@@ -97,8 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36750b86dc9a3124ab784027d70c102c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popUpDelay: 1
-  spikeDelay: 1
+  popUpDelay: 1.5
+  spikeDelay: 0.5
   iniOffset: 0
   spriteGroup:
   - {fileID: 4953313347217292831, guid: c6e5caa3e1623b648850202526fd4c3a, type: 3}
@@ -110,8 +110,9 @@ MonoBehaviour:
   - -0.2
   - 0
   - 0.3
-  knifeStab: {fileID: 8300000, guid: 786d653aa7a4cca449728de1909dd992, type: 3}
-  knifeBack: {fileID: 8300000, guid: beb919bd0d8f9db4fa79c19b627e54d5, type: 3}
+  useAudioSource: 1
+  spike_in: {fileID: 8300000, guid: 51d662a97169233498533b931d78f8db, type: 3}
+  spike_out: {fileID: 8300000, guid: 1edcd63af3b97814da5d77a6368beba0, type: 3}
 --- !u!61 &6070869691215346994
 BoxCollider2D:
   m_ObjectHideFlags: 0

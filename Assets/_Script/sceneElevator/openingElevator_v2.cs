@@ -13,9 +13,15 @@ public class openingElevator_v2 : MonoBehaviour
     
     bool isElevatorArrived; //엘리베이터가 pos2에 도착했는지의 여부 
 
+    AudioSource sound;
+
+    public AudioClip moveSound;
+    public AudioClip arriveSound;
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        sound = GetComponent<AudioSource>();
     }
     void Start()
     {
@@ -27,6 +33,9 @@ public class openingElevator_v2 : MonoBehaviour
             GameManager.instance.nextGravityDir = new Vector2(0, -1); //중력 방향 설정해 줌 
 
             rigid.velocity = new Vector2(0, -moveSpeed);
+
+            sound.clip = moveSound;
+            sound.Play();
         }
         else
         {
@@ -52,6 +61,9 @@ public class openingElevator_v2 : MonoBehaviour
 
             GameManager.instance.shouldUseOpeningElevator = false;
             UIManager.instance.cameraShake(0.5f, 0.4f);
+
+            sound.Stop();
+            sound.PlayOneShot(arriveSound);
         }
     }
 }

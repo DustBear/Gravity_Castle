@@ -18,6 +18,10 @@ public class moveWall : MonoBehaviour
     AudioSource sound;
     Rigidbody2D rigid;
 
+    public AudioClip startSound;
+    public AudioClip movingSound;
+    public AudioClip arriveSound;
+
     private void Awake()
     {
         sound = GetComponent<AudioSource>();
@@ -88,11 +92,10 @@ public class moveWall : MonoBehaviour
     {
         isMoving = true;
 
-        sound.Stop();
-        sound.Play();
-
         float distance = (pos2 - pos1).magnitude; //움직여야 할 거리 
         Vector3 direction = (pos1 - pos2).normalized; //pos1이 목표일 때 
+
+        sound.PlayOneShot(startSound);
 
         for(int index=1; index<=3; index++) //3회에 걸쳐 진동 
         {
@@ -118,10 +121,18 @@ public class moveWall : MonoBehaviour
                 break;
         }
 
+        sound.clip = movingSound;
+        sound.Play();
+
         float moveSpeed = distance / moveTime;
         rigid.velocity = moveSpeed * direction;
 
-        yield return new WaitForSeconds(moveTime);
+        yield return new WaitForSeconds(moveTime-0.1f);
+
+        sound.Stop();
+        sound.PlayOneShot(arriveSound);
+
+        yield return new WaitForSeconds(0.1f);
         rigid.velocity = Vector3.zero;
 
         switch (dirPos) //물리엔진 오차가 발생할 수 있으므로 stone이 도착하고 나면 좌표를 별도로 고정해 준다 
@@ -137,6 +148,5 @@ public class moveWall : MonoBehaviour
         }
 
         isMoving = false;
-        sound.Stop();
     }
 }

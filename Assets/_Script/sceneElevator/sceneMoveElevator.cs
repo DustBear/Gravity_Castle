@@ -21,8 +21,14 @@ public class sceneMoveElevator : MonoBehaviour
 
     public GameObject elevatorLever;
 
+    AudioSource sound;
+
+    public AudioClip startSound;
+    public AudioClip moveSound;
+
     private void Awake()
     {
+        sound = GetComponent<AudioSource>();
         rigid = GetComponent<Rigidbody2D>();
         cameraObj = GameObject.FindWithTag("MainCamera");
     }
@@ -58,7 +64,12 @@ public class sceneMoveElevator : MonoBehaviour
 
     IEnumerator elevatorMove()
     {
+        sound.PlayOneShot(startSound);
         UIManager.instance.cameraShake(0.5f, 0.4f);
+        yield return new WaitForSeconds(1.5f);
+
+        sound.clip = moveSound;
+        sound.Play();
 
         rigid.velocity = new Vector2(0, -moveSpeed); //엘리베이터 등속운동 시작 
         yield return new WaitForSeconds(moveTime-2f);

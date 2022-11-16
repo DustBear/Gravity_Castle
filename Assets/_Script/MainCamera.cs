@@ -33,7 +33,12 @@ public class MainCamera : MonoBehaviour
     public float lookDownSide_inputTime; //플레이어가 몇초 이상 down Arrow 를 누르고 있어야 작동하는지
     [SerializeField] float lookDownSide_timer= 0f;
 
-    void Awake() {
+    //public bool shouldLookDownStop;
+    //플레이어가 발 아래를 바라보는 동작이 끝나지 않은 상태에서 레버 돌리면 에러 발생 
+    //레버 돌릴 때 진행중이던 코루틴 즉시 중단하는 외부 변수 필요 
+
+    void Awake() 
+    {
         playerObj = GameObject.FindWithTag("Player");
         player = playerObj.GetComponent<Player>();
         cam = GetComponent<Camera>();
@@ -62,7 +67,7 @@ public class MainCamera : MonoBehaviour
     void Update()
     {
         lookDownSide();
-        if (isCameraLock) return;
+        //if (isCameraLock) return;
 
         // 카메라 rotation = 플레이어 rotation
         transform.rotation = Quaternion.Euler(0f, 0f, player.transform.eulerAngles.z);
@@ -132,10 +137,12 @@ public class MainCamera : MonoBehaviour
     IEnumerator lookDownSideCor()
     {
         isLookDownWork = true;
+
         isCameraLock = true; //잠시 카메라가 플레이어를 따라가지 않도록 조정 
         InputManager.instance.isInputBlocked = true; //카메라 움직이는동안은 플레이어 움직임 정지 
 
         Vector3 lookDownAimPos = transform.position - player.transform.up * lookDownSide_distance;
+
 
         while (true)
         {
@@ -151,6 +158,7 @@ public class MainCamera : MonoBehaviour
         
         while (Input.GetKey(KeyCode.LeftShift) && !(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)))
         {
+            //양쪽 화살표를 누르지 않고 동시에 왼쪽 쉬프트 키를 누르고 있을 때 아래를 보는 상태 유지 
             yield return null;
         }
 
@@ -160,6 +168,14 @@ public class MainCamera : MonoBehaviour
         while (true)
         {
             transform.position = Vector3.SmoothDamp(transform.position, newAimPos, ref dampSpeed, lookDownSIde_smoothTime);
+            /*
+            if (shouldLookDownStop) //아직 카메라가 원래 위치로 돌아가는 도중 레버 작동시키면 
+            {
+                InputManager.instance.isInputBlocked = false; //inputLock 해제 
+                transform.position = newAimPos; //카메라 원래 위치로 바로 돌림
+                break;
+            }
+            */
 
             //카메라가 원위치로 100% 돌아온 후 inputlock 이 풀리면 좀 답답함 ~> 여유시간을 두고 inputlock 풀어줌 
             if(Mathf.Abs((transform.position - newAimPos).magnitude) <= 0.1f)

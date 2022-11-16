@@ -6,6 +6,7 @@ public class slowFallingPlatform : MonoBehaviour
 {
     public float fallSpeed; //일정한 속도로 등속 낙하함 
     public GameObject player; //플레이어의 회전각을 기준으로 낙하방향을 정함 
+    public int activeNum;
 
     public Vector2 pos1;
     public Vector2 pos2; //이동 가능범위 
@@ -15,8 +16,6 @@ public class slowFallingPlatform : MonoBehaviour
     pos1----     무조건 pos2는 x,y 중 하나는 pos1 보다 커야 함 
     */
     
-
-
     bool isMoveHorizontal; //플랫폼이 가로로 움직이면 true, 세로로 움직이면 false
     int moveDirection;
     /*
@@ -26,6 +25,12 @@ public class slowFallingPlatform : MonoBehaviour
     */
 
     Rigidbody2D rigid;
+    public AudioSource sound;
+    public AudioSource loopSound;
+
+    public AudioClip moveSound;
+    public AudioClip startSound;
+
     void Start()
     {
         if(pos1.x == pos2.x) //두 지점의 x좌표가 같다 ~> y축 방향으로만 움직이는 플랫폼이다 
@@ -38,12 +43,47 @@ public class slowFallingPlatform : MonoBehaviour
         }
 
         rigid = GetComponent<Rigidbody2D>();
+        loopSound.clip = moveSound;
     }
     
     void Update()
     {
         directionCheck();
         speedCheck();
+        soundCheck();
+    }
+
+    [SerializeField] bool isMoving;
+    [SerializeField] bool wasMoving; //이전 프레임에 움직이고 있었는지의 여부 
+
+    void soundCheck()
+    {
+        if(GameManager.instance.gameData.curAchievementNum != activeNum)
+        {
+            return;
+        }
+
+        if(rigid.velocity.magnitude > 0.1f)
+        {
+            isMoving = true;
+            if (!loopSound.isPlaying)
+            {                
+                loopSound.Play();
+            }
+        }
+        else
+        {
+            isMoving = false;
+            loopSound.Stop();
+        }
+
+        if(!wasMoving && isMoving)
+        {
+            //이전 프레임에선 정지해 있다가 그 다음 프레임에서는 출발 
+            sound.PlayOneShot(startSound);
+        }
+
+        wasMoving = isMoving;
     }
 
     void directionCheck()
@@ -73,6 +113,8 @@ public class slowFallingPlatform : MonoBehaviour
             if(moveDirection==1 || moveDirection == 3)
             {
                 rigid.velocity = Vector3.zero;
+                isMoving = false;
+                loopSound.Stop();
             }
             else if (moveDirection == 2)
             {
@@ -80,8 +122,14 @@ public class slowFallingPlatform : MonoBehaviour
                 {
                     transform.position = pos1;
                     rigid.velocity = Vector3.zero;
+
+                    isMoving = false;
+                    loopSound.Stop();
                 }
-                rigid.velocity = new Vector3(-fallSpeed, 0, 0);
+                else
+                {
+                    rigid.velocity = new Vector3(-fallSpeed, 0, 0);
+                }               
             }
             else
             {
@@ -89,8 +137,14 @@ public class slowFallingPlatform : MonoBehaviour
                 {
                     transform.position = pos2;
                     rigid.velocity = Vector3.zero;
+
+                    isMoving = false;
+                    loopSound.Stop();
                 }
-                rigid.velocity = new Vector3(fallSpeed, 0, 0);
+                else
+                {
+                    rigid.velocity = new Vector3(fallSpeed, 0, 0);
+                }               
             }
         }
         else //세로로 움직이는 플랫폼일 때: moveDir이 2,4일 땐 가만히 있고 1일땐 -y 방향으로, 3일 땐 +y 방향으로 이동해야 함 
@@ -98,6 +152,8 @@ public class slowFallingPlatform : MonoBehaviour
             if (moveDirection == 2 || moveDirection == 4)
             {
                 rigid.velocity = Vector3.zero;
+                isMoving = false;
+                loopSound.Stop();
             }
             else if (moveDirection == 1)
             {
@@ -105,8 +161,14 @@ public class slowFallingPlatform : MonoBehaviour
                 {
                     transform.position = pos1;
                     rigid.velocity = Vector3.zero;
+
+                    isMoving = false;
+                    loopSound.Stop();
                 }
-                rigid.velocity = new Vector3(0, -fallSpeed, 0);
+                else
+                {
+                    rigid.velocity = new Vector3(0, -fallSpeed, 0);
+                }               
             }
             else
             {
@@ -114,8 +176,14 @@ public class slowFallingPlatform : MonoBehaviour
                 {
                     transform.position = pos2;
                     rigid.velocity = Vector3.zero;
+
+                    isMoving = false;
+                    loopSound.Stop();
                 }
-                rigid.velocity = new Vector3(0, fallSpeed, 0);
+                else
+                {
+                    rigid.velocity = new Vector3(0, fallSpeed, 0);
+                }            
             }
         }
     }  

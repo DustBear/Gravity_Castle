@@ -664,6 +664,7 @@ public class Player : MonoBehaviour
         // Rope에서 점프할 때 
         if (readyToJump())
         {
+            sound.Stop();
             sound.PlayOneShot(ropeBounce);
             ChangeState(States.Jump);
         }
@@ -878,8 +879,8 @@ public class Player : MonoBehaviour
     void ChangeGravityDir_Update()
     {
         if (isCameraShake) return; //카메라 진동이 끝나고 레버회전 시작 
-        if (cameraObj.GetComponent<MainCamera>().isLookDownWork) return; 
 
+        //cameraObj.GetComponent<MainCamera>().shouldLookDownStop = true;
         cameraObj.transform.position = cameraObj.GetComponent<MainCamera>().cameraPosCal();
         transform.localPosition = Vector2.MoveTowards(transform.localPosition, destPos_afterLevering, Time.unscaledDeltaTime / leverRotateDelay);
         float newRotZ;
@@ -911,6 +912,7 @@ public class Player : MonoBehaviour
     void rotationCorrect()
     {
         transform.rotation = Quaternion.Euler(0, 0, initZRot + destRot);
+        //cameraObj.GetComponent<MainCamera>().shouldLookDownStop = false;
 
         Vector2 gravity = -transform.up * 9.8f;
         if (Mathf.Abs(gravity.x) < 1f) gravity.x = 0f; //물리엔진 연산오차 보정 ~> x 방향 중력값이 1미만 소수면 ~> 0으로 만들어 줌 

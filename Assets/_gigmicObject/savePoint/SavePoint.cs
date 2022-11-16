@@ -71,13 +71,13 @@ public class SavePoint : MonoBehaviour
     {
         //원래 이미 활성화된 세이브포인트도 원하면 다시 활성화할 수 있어야 함 
         //ex) 이미 클리어한 스테이지를 다시 돌아와서 할 때 
-        if(isSavePointActivated && isPlayerOnSensor && Input.GetKeyDown(KeyCode.S))
+        if(isSavePointActivated && isPlayerOnSensor && Input.GetKeyDown(KeyCode.E))
         {           
             StartCoroutine(reSaveData());
         }
 
         //if (isSavePointActivated) return; //활성화된 이후에는 따로 작동x 
-        if(!isSavePointActivated && isPlayerOnSensor && Input.GetKeyDown(KeyCode.S)) //처음으로 세이브포인트를 활성화시킴 
+        if(!isSavePointActivated && isPlayerOnSensor && Input.GetKeyDown(KeyCode.E)) //처음으로 세이브포인트를 활성화시킴 
         {           
             StartCoroutine(SaveData());
         }

@@ -15,6 +15,7 @@ public class passiveBoxSound : MonoBehaviour
 
     Rigidbody2D rigid;
 
+    public int activeNum;
     void Start()
     {      
         rigid = GetComponent<Rigidbody2D>();
@@ -22,6 +23,11 @@ public class passiveBoxSound : MonoBehaviour
 
     void Update()
     {
+        if(GameManager.instance.gameData.curAchievementNum != activeNum)
+        {
+            return;
+        }
+
         if (!lastCollide && isCollide)
         {
             //box 가 땅에 충돌했을 때 

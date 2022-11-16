@@ -25,6 +25,7 @@ public class advancedStageDoor : MonoBehaviour
     public AudioClip doorShakeSound;
     public AudioClip doorOpenLoopSound;
     public AudioClip doorHitSound;
+    public AudioClip spikePopUp;
 
     Vector3 initialPos; //맨 처음 초기화 할 위치
 
@@ -129,7 +130,10 @@ public class advancedStageDoor : MonoBehaviour
         //(3) 문이 올라감 
 
         StartCoroutine("spikeDeActive");
+        playOnceSound.PlayOneShot(spikePopUp);
         yield return new WaitForSeconds(0.5f);
+
+        playOnceSound.PlayOneShot(doorShakeSound);
         StartCoroutine("doorShake");
         yield return new WaitForSeconds(0.6f);
 
@@ -139,17 +143,15 @@ public class advancedStageDoor : MonoBehaviour
         float moveSpeed = doorLength / doorPeriod; //문이 올라가는 속도 
 
         rigid.velocity = transform.up * moveSpeed;
+        yield return new WaitForSeconds(doorPeriod-0.1f);
 
-        yield return new WaitForSeconds(doorPeriod - 0.1f);
-        playOnceSound.Stop();
-        playOnceSound.clip = doorHitSound;
-        playOnceSound.Play();
+        playOnceSound.PlayOneShot(doorHitSound);
 
         yield return new WaitForSeconds(0.1f);
+        loopSound.Stop();
+
         rigid.velocity = Vector3.zero;
         transform.position = initialPos + transform.up * doorLength; //문의 위치 올라간채로 고정 
-
-        loopSound.Stop();
     }
 
     IEnumerator doorDown()
@@ -160,29 +162,28 @@ public class advancedStageDoor : MonoBehaviour
         //(3) 가시 활성화 
 
         StartCoroutine("doorShake");
+        playOnceSound.PlayOneShot(doorShakeSound);
         yield return new WaitForSeconds(0.6f);
 
         loopSound.clip = doorOpenLoopSound;
         loopSound.Play();
 
         float moveSpeed = doorLength / doorPeriod; //문이 올라가는 속도 
-
         rigid.velocity = -transform.up * moveSpeed;
-
+        
         yield return new WaitForSeconds(doorPeriod-0.1f);
-        playOnceSound.Stop();
-        playOnceSound.clip = doorHitSound;
-        playOnceSound.Play();
+
+        playOnceSound.PlayOneShot(doorHitSound);
 
         yield return new WaitForSeconds(0.1f);
 
+        loopSound.Stop();
         rigid.velocity = Vector3.zero;
         transform.position = initialPos - transform.up * doorLength; //문의 위치 내려온채로 고정 
 
-        loopSound.Stop();
-
         yield return new WaitForSeconds(0.5f);
         StartCoroutine("spikeActive");
+        playOnceSound.PlayOneShot(spikePopUp);
     }
 
     IEnumerator spikeActive() //가시 활성화하는 함수 
@@ -207,10 +208,6 @@ public class advancedStageDoor : MonoBehaviour
 
     IEnumerator doorShake() //문이 열릴 때, 문이 닫힐 때 흔들림 ~> 0.48초간 흔들림 
     {
-        playOnceSound.Stop();
-        playOnceSound.clip = doorShakeSound;
-        playOnceSound.Play();
-
         float shakeDegree = 0.03f; //위아래로 흔들림
         for(int index=0; index<3; index++)
         {

@@ -15,6 +15,13 @@ public class popUpSpikeBox : MonoBehaviour
     SpriteRenderer spr;
     BoxCollider2D spikeColl;
 
+    public bool useAudioSource = false;
+
+    AudioSource sound;
+
+    public AudioClip spike_in;
+    public AudioClip spike_out;
+
     void Start()
     {
         spr = GetComponent<SpriteRenderer>();
@@ -24,6 +31,11 @@ public class popUpSpikeBox : MonoBehaviour
         spikeColl.offset = new Vector2(0, spikeOffsetGroup[0]);
 
         StartCoroutine(spikeLoop());
+
+        if (useAudioSource)
+        {
+            sound = GetComponent<AudioSource>();
+        }
     }
 
 
@@ -41,6 +53,11 @@ public class popUpSpikeBox : MonoBehaviour
         {
             yield return new WaitForSeconds(popUpDelay - 0.2f);
 
+            if (useAudioSource)
+            {
+                sound.PlayOneShot(spike_out);
+            }
+
             for (int index = 0; index <= 3; index++)
             {
                 spr.sprite = spriteGroup[index];
@@ -49,6 +66,11 @@ public class popUpSpikeBox : MonoBehaviour
             }
 
             yield return new WaitForSeconds(spikeDelay-0.2f);
+
+            if (useAudioSource)
+            {
+                sound.PlayOneShot(spike_in);
+            }
 
             for (int index=3; index>=0; index--)
             {

@@ -109,6 +109,9 @@ MonoBehaviour:
   - {fileID: -1630782289360209026, guid: ee9b9cb6eef10324ba59f3c44d1d0f5d, type: 3}
   - {fileID: -438635037330603354, guid: ee9b9cb6eef10324ba59f3c44d1d0f5d, type: 3}
   cycleNum: 0
+  startSound: {fileID: 8300000, guid: 7e14fa321d80eeb4f9306966fcac7220, type: 3}
+  movingSound: {fileID: 8300000, guid: 68e945577e3a2ba489bc72efe5c7a249, type: 3}
+  arriveSound: {fileID: 8300000, guid: 79c3d0e6fbf203045a577ffeeb7b207c, type: 3}
 --- !u!61 &238782807720249748
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -149,7 +152,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
