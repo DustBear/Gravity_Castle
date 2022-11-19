@@ -59,9 +59,10 @@ public class Player : MonoBehaviour
     GameObject rope; //현재 플레이어가 매달려 있는 로프 ~> 동시 두개는 error 발생 
 
     // Lever
-    bool isCollideLever;
+    [SerializeField]bool isCollideLever;
+
     public bool shouldRotateHalf; //powerLever 이면 180도 회전 ~> true, powerLever 아니면 90도 회전 ~> false 
-    GameObject lever; //현재 플레이어가 작동시키려는 lever
+    [SerializeField] GameObject targetLever; //현재 플레이어가 작동시키려는 lever
     Vector3 destPos_afterLevering; // Lever 작동직후 플레이어가 이동해야 할 position
     [SerializeField] int destRot; // Lever 작동후
     float destGhostRot;
@@ -153,8 +154,10 @@ public class Player : MonoBehaviour
 
         readyToPowerJump = () => InputManager.instance.jumpUp && (isOnJumpPlatform) && (groundedRemember > 0);
         readyToRope = () => isCollideRope && InputManager.instance.vertical == 1; //위쪽 화살표를 누르면서 로프 콜라이더에 닿아 있으면 
+
+        //콜라이더가 레버와 닿아있으면서 위 화살표를 누르며 레버와 동일한 각도를 가질 때 
         readyToLever = () => isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown
-                             && lever.transform.up == transform.up;
+                             && targetLever.transform.up == transform.up;
 
         if (!GameManager.instance.shouldSpawnSavePoint)
         {            
@@ -679,17 +682,19 @@ public class Player : MonoBehaviour
     void AccessLever_Enter()
     {
         rigid.velocity = Vector2.zero;
-        if (leverColl != null)
+        Debug.Log("error_1");
+        if (targetLever != null)
         {
-            leverColl.GetComponent<lever>().lightTurnOff();
+            targetLever.GetComponent<lever>().lightTurnOff();
             //플레이어가 레버를 작동시키려고 하면 레버 불을 끔 
         }
+        Debug.Log("error_2");
 
         //플레이어가 레버의 오른쪽에 있는지, 왼쪽에 있는지에 따라 sprite flip 바꿔줘야 함 
-        switch (lever.transform.eulerAngles.z)
+        switch (targetLever.transform.eulerAngles.z)
         {
             case 0f:
-                if (transform.localPosition.x > lever.transform.localPosition.x)
+                if (transform.localPosition.x > targetLever.transform.localPosition.x)
                 {
                     sprite.flipX = true;
                 }
@@ -700,7 +705,7 @@ public class Player : MonoBehaviour
                 break;
 
             case 180f:
-                if (transform.localPosition.x > lever.transform.localPosition.x)
+                if (transform.localPosition.x > targetLever.transform.localPosition.x)
                 {
                     sprite.flipX = false;
                 }
@@ -711,7 +716,7 @@ public class Player : MonoBehaviour
                 break;
 
             case 90f:
-                if (transform.localPosition.y > lever.transform.localPosition.y)
+                if (transform.localPosition.y > targetLever.transform.localPosition.y)
                 {
                     sprite.flipX = true;
                 }
@@ -722,7 +727,7 @@ public class Player : MonoBehaviour
                 break;
 
             case 270f:
-                if (transform.localPosition.y > lever.transform.localPosition.y)
+                if (transform.localPosition.y > targetLever.transform.localPosition.y)
                 {
                     sprite.flipX = false;
                 }
@@ -739,14 +744,14 @@ public class Player : MonoBehaviour
         Vector2 destPos_beforeLevering;
 
         //플레이어의 크기가 1x1 이 아니므로 레버를 돌릴 때 각도만 바뀌는 것이 아니라 pivot의 위치도 바뀌어야 함
-        switch (lever.transform.eulerAngles.z)
+        switch (targetLever.transform.eulerAngles.z)
         {
             case 0f: case 180f:
-                destPos_beforeLevering = new Vector2(lever.transform.position.x, transform.position.y);
+                destPos_beforeLevering = new Vector2(targetLever.transform.position.x, transform.position.y);
                 break;
 
             default:
-                destPos_beforeLevering = new Vector2(transform.position.x, lever.transform.position.y);
+                destPos_beforeLevering = new Vector2(transform.position.x, targetLever.transform.position.y);
                 break;
         }
 
@@ -768,18 +773,18 @@ public class Player : MonoBehaviour
 
     void SelectGravityDir_Update()
     {
-        AudioSource leverSound = leverColl.GetComponent<lever>().sound;
+        AudioSource leverSound = targetLever.GetComponent<lever>().sound;
         // 좌우 화살표 누르면 ~> 실제 레버 작동단계로 이행
         if (InputManager.instance.horizontalDown)
         {          
             leverSound.Stop();
             if (!shouldRotateHalf)
             {
-                leverSound.clip = leverColl.GetComponent<lever>().rotateSound_90;
+                leverSound.clip = targetLever.GetComponent<lever>().rotateSound_90;
             }
             else
             {
-                leverSound.clip = leverColl.GetComponent<lever>().rotateSound_180;
+                leverSound.clip = targetLever.GetComponent<lever>().rotateSound_180;
             }
             leverSound.Play();           
 
@@ -788,9 +793,9 @@ public class Player : MonoBehaviour
         // 위 화살표 누르면 ~> 레버 작동 캔슬 
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            leverColl.GetComponent<lever>().lightTurnOn(); //다시 레버 불 킴 
+            targetLever.GetComponent<lever>().lightTurnOn(); //다시 레버 불 킴 
 
-            leverSound.clip = leverColl.GetComponent<lever>().accessSound;
+            leverSound.clip = targetLever.GetComponent<lever>().accessSound;
             leverSound.Play();
 
             leftArrow.SetActive(false);
@@ -842,19 +847,19 @@ public class Player : MonoBehaviour
         // 레버 회전이후 도달해야 하는 위치 조정 
         if (!shouldRotateHalf) //90도 회전하는 경우 
         {
-            switch (lever.transform.eulerAngles.z)
+            switch (targetLever.transform.eulerAngles.z)
             {
                 case 0f: case 180f:
-                    destPos_afterLevering = new Vector2(transform.position.x, lever.transform.position.y);
+                    destPos_afterLevering = new Vector2(transform.position.x, targetLever.transform.position.y);
                     break;
                 case 90f: case 270f:
-                    destPos_afterLevering = new Vector2(lever.transform.position.x, transform.position.y);
+                    destPos_afterLevering = new Vector2(targetLever.transform.position.x, transform.position.y);
                     break;
             }
         }
         else //180도 회전하는 경우 
         {
-            switch (lever.transform.eulerAngles.z)
+            switch (targetLever.transform.eulerAngles.z)
             {
                 case 0f: case 180f:
                     destPos_afterLevering = new Vector2(transform.position.x, transform.position.y);
@@ -934,7 +939,7 @@ public class Player : MonoBehaviour
         Time.timeScale = 1;
         if (shouldRotateHalf) shouldRotateHalf = false;
         InputManager.instance.isInputBlocked = true;
-        leverColl.GetComponent<lever>().lightTurnOn(); //다시 레버 불 킴 
+        targetLever.GetComponent<lever>().lightTurnOn(); //다시 레버 불 킴 
     }
 
     void FallAfterLevering_Update()
@@ -1037,7 +1042,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    GameObject leverColl = null; //현재 작동중인 레버 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("VerticalRope") || other.CompareTag("HorizontalRope"))
@@ -1049,16 +1053,11 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Lever"))
         {
             isCollideLever = true;
-            leverColl = other.gameObject;
-            lever = other.gameObject;
-            if (lever.GetComponent<lever>().isPowerLever)
+            targetLever = other.gameObject;
+            if (targetLever.GetComponent<lever>().isPowerLever)
             {
                 shouldRotateHalf = true;
             }
-        }
-        else
-        {
-            leverColl = null;
         }
 
         switch (GameManager.instance.gameData.curStageNum)
@@ -1160,6 +1159,7 @@ public class Player : MonoBehaviour
         if (other.CompareTag("VerticalRope") || other.CompareTag("HorizontalRope")) isCollideRope = false;
         if (other.CompareTag("Lever"))
         {
+            targetLever = null;
             isCollideLever = false;
             if (shouldRotateHalf) shouldRotateHalf = false;
         }

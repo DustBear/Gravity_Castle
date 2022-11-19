@@ -90,12 +90,12 @@ public class moveBox_lever : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player") isPlayerOn = true;
+        if (collision.tag == "Player" && collision.transform.up == transform.up) isPlayerOn = true;
     }
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Player") isPlayerOn = false;
+        if (collision.tag == "Player" && collision.transform.up == transform.up) isPlayerOn = false;
         rigid.velocity = Vector3.zero; //플레이어가 레버 센서 밖으로 나가면 stone 도 정지 
         spr.sprite = spriteGroup[0];
     }
