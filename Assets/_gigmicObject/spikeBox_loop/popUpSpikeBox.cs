@@ -22,6 +22,9 @@ public class popUpSpikeBox : MonoBehaviour
     public AudioClip spike_in;
     public AudioClip spike_out;
 
+    float spike_lifeTime;
+    float timer = 0f;
+
     void Start()
     {
         spr = GetComponent<SpriteRenderer>();
@@ -30,54 +33,64 @@ public class popUpSpikeBox : MonoBehaviour
         spr.sprite = spriteGroup[0];
         spikeColl.offset = new Vector2(0, spikeOffsetGroup[0]);
 
-        StartCoroutine(spikeLoop());
-
         if (useAudioSource)
         {
             sound = GetComponent<AudioSource>();
         }
+
+        spike_lifeTime = popUpDelay + spikeDelay;
     }
 
 
     void Update()
     {
-
+        spikeTimeManager();
     }
 
-    IEnumerator spikeLoop()
+    void spikeTimeManager()
     {
-        yield return new WaitForSeconds(iniOffset);
-        //초기 오프셋 지난 이후 가시 튀어나옴 
+        timer += Time.deltaTime;
 
-        while (true)
+        if(timer >= spike_lifeTime + iniOffset)
         {
-            yield return new WaitForSeconds(popUpDelay - 0.2f);
-
-            if (useAudioSource)
-            {
-                sound.PlayOneShot(spike_out);
-            }
-
-            for (int index = 0; index <= 3; index++)
-            {
-                spr.sprite = spriteGroup[index];
-                spikeColl.offset = new Vector2(0, spikeOffsetGroup[index]);
-                yield return new WaitForSeconds(0.05f);
-            }
-
-            yield return new WaitForSeconds(spikeDelay-0.2f);
-
-            if (useAudioSource)
-            {
-                sound.PlayOneShot(spike_in);
-            }
-
-            for (int index=3; index>=0; index--)
-            {
-                spr.sprite = spriteGroup[index];
-                spikeColl.offset = new Vector2(0, spikeOffsetGroup[index]);
-                yield return new WaitForSeconds(0.05f);
-            }
+            StartCoroutine(spikeLoopCor());
+            timer = iniOffset;
         }
+    }
+    
+    IEnumerator spikeLoopCor() //가시가 한 번 튀어나왔다가 들어가는 동작 
+    {
+        if (useAudioSource)
+        {
+            sound.PlayOneShot(spike_out);
+        }
+
+        //가시 튀어나옴 
+        for (int index = 0; index <= 3; index++)
+        {
+            spr.sprite = spriteGroup[index];
+            spikeColl.offset = new Vector2(0, spikeOffsetGroup[index]);
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        //가시 나온 상태 유지 
+        yield return new WaitForSeconds(spikeDelay - 0.2f);
+
+        if (useAudioSource)
+        {
+            sound.PlayOneShot(spike_in);
+        }
+
+        //가시 들어감 
+        for (int index = 3; index >= 0; index--)
+        {
+            spr.sprite = spriteGroup[index];
+            spikeColl.offset = new Vector2(0, spikeOffsetGroup[index]);
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        //가시 들어간 상태 유지 
+        yield return new WaitForSeconds(popUpDelay - 0.2f);
+
     }
 }

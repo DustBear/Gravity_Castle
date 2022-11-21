@@ -62,7 +62,7 @@ public class startScene_circleDoor : MonoBehaviour
         spr.sortingLayerName = "stageStartPlayer"; //처음에는 플레이어가 문 뒤에 있어야 함 
         InputManager.instance.isInputBlocked = true; //플레이어 움직이지 못하게 함 
 
-        UIManager.instance.FadeIn(4f); //4초에 걸쳐 화면 밝아짐 
+        UIManager.instance.FadeIn(3f); //4초에 걸쳐 화면 밝아짐 
         yield return new WaitForSeconds(7f);
 
         sound.PlayOneShot(doorShake);
@@ -79,7 +79,7 @@ public class startScene_circleDoor : MonoBehaviour
 
         sound.clip = doorRotate;
         sound.Play();
-        for (int num=0; num<=2; num++) //잠금장치가 3회 회전 
+        for (int num=0; num<=1; num++) //잠금장치가 2회 회전 
         {
             for (int index = 0; index <= doorRotateSprites.Length - 1; index++)
             {
@@ -103,7 +103,7 @@ public class startScene_circleDoor : MonoBehaviour
 
         sound.PlayOneShot(doorLockOpen);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         sound.PlayOneShot(doorShake);
 

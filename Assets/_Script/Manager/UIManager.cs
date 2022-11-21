@@ -39,6 +39,8 @@ public class UIManager : Singleton<UIManager>
     public void FadeIn(float fadeTime)
     {       
         StopCoroutine(fadeCoroutine);
+        fadeTimer = 0;
+
         fadeCoroutine = _FadeIn(fadeTime);
         StartCoroutine(fadeCoroutine);
     }
@@ -46,33 +48,47 @@ public class UIManager : Singleton<UIManager>
     public void FadeOut(float fadeTime)
     {        
         StopCoroutine(fadeCoroutine);
+        fadeTimer = 0;
+
         fadeCoroutine = _FadeOut(fadeTime);
         StartCoroutine(fadeCoroutine);
     }
 
-    IEnumerator _FadeIn(float delayTime) //È­¸é ¹à¾ÆÁü 
+    float fadeTimer;
+    IEnumerator _FadeIn(float delayTime) //¹à¾ÆÁü ~> ¾ËÆÄ°¡ ³·¾ÆÁ®¾ß ÇÔ 
     {
-        var wait = new WaitForSeconds(delayTime / 50f);
+        fade.color = new Color(0, 0, 0, 1);
 
-        while (fade.color.a > 0f)
+        while(fade.color.a > 0f)
         {
-            fade.color = new Color(0, 0, 0, fade.color.a - 0.02f);
-            yield return wait;
+            fadeTimer += Time.deltaTime;
+            float alphaValue;
+
+            alphaValue = 1 - fadeTimer / delayTime;
+            fade.color = new Color(0, 0, 0, alphaValue);
+            yield return null;
         }
+
         fade.color = new Color(0, 0, 0, 0);
+        fadeTimer = 0;
     }
 
-    IEnumerator _FadeOut(float delayTime) //È­¸é ¾îµÎ¿öÁü 
+    IEnumerator _FadeOut(float delayTime) //¾îµÎ¿öÁü ~> ¾ËÆÄ°¡ ³ô¾ÆÁ®¾ß ÇÔ 
     {
-        var wait = new WaitForSeconds(delayTime/50f);
-
         while (fade.color.a < 1f)
         {
-            fade.color = new Color(0, 0, 0, fade.color.a + 0.02f);
-            yield return wait;
+            fadeTimer += Time.deltaTime;
+            float alphaValue;
+
+            alphaValue = fadeTimer / delayTime;
+            fade.color = new Color(0, 0, 0, alphaValue);
+            yield return null;
         }
+
         fade.color = new Color(0, 0, 0, 1);
+        fadeTimer = 0;
     }
+    
    
     public void OnOffInGameMenu() //¸Þ´ºÃ¢ÀÌ ÄÑÁ®ÀÖÀ¸¸é ²ô°í ²¨Á®ÀÖÀ¸¸é Å²´Ù 
     {

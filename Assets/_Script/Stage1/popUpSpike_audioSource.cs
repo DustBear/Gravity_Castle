@@ -17,6 +17,9 @@ public class popUpSpike_audioSource : MonoBehaviour
     GameObject playerObj;
     bool isCorPlaying;
 
+    float timer = 0;
+    float spike_lifeTime;
+
     private void Awake()
     {
         sound = GetComponent<AudioSource>();
@@ -29,22 +32,28 @@ public class popUpSpike_audioSource : MonoBehaviour
 
     void Update()
     {
-        
+        spikeSoundTimeManager();
     }
 
-    IEnumerator spikeSound()
+    void spikeSoundTimeManager()
     {
-        yield return new WaitForSeconds(spikeOffset);
+        timer += Time.deltaTime;
 
-        while (true)
+        if (timer >= spike_lifeTime + spikeOffset)
         {
-            sound.PlayOneShot(spike_out);
+            StartCoroutine(spikeSound());
+            timer = spikeOffset;
+        }
+    }
 
-            yield return new WaitForSeconds(spikeActiveTime);
-            sound.PlayOneShot(spike_in);
 
-            yield return new WaitForSeconds(spikeDelayTime);
-        }             
+    IEnumerator spikeSound() //가시가 튀어나오는 소리가 한번 났다가 들어가는 소리가 한 번 나는 동작 
+    {
+        sound.PlayOneShot(spike_out);
+
+        yield return new WaitForSeconds(spikeActiveTime);
+
+        sound.PlayOneShot(spike_in);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
