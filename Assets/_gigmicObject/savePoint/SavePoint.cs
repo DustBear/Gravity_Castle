@@ -156,7 +156,6 @@ public class SavePoint : MonoBehaviour
     {
         isSavePointActivated = true;
 
-        Debug.Log("savePointBackUp: " + achievementNum);
         GameManager.instance.SaveData(achievementNum, stageNum, respawnPos);
 
         StopCoroutine(curCoroutine);
@@ -178,7 +177,6 @@ public class SavePoint : MonoBehaviour
 
     IEnumerator reSaveData() //이미 활성화한 세이브를 다시 활성화 ~> stone이 느리게 상승했다가 다시 하강 
     {
-        Debug.Log("RE_savePointBackUp: " + achievementNum);
         GameManager.instance.SaveData(achievementNum, stageNum, respawnPos);
 
         for (int index = lastIndex; index >=0; index--)

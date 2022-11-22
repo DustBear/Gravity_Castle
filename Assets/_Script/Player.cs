@@ -682,13 +682,11 @@ public class Player : MonoBehaviour
     void AccessLever_Enter()
     {
         rigid.velocity = Vector2.zero;
-        Debug.Log("error_1");
         if (targetLever != null)
         {
             targetLever.GetComponent<lever>().lightTurnOff();
             //플레이어가 레버를 작동시키려고 하면 레버 불을 끔 
         }
-        Debug.Log("error_2");
 
         //플레이어가 레버의 오른쪽에 있는지, 왼쪽에 있는지에 따라 sprite flip 바꿔줘야 함 
         switch (targetLever.transform.eulerAngles.z)

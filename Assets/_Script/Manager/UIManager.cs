@@ -39,7 +39,6 @@ public class UIManager : Singleton<UIManager>
     public void FadeIn(float fadeTime)
     {       
         StopCoroutine(fadeCoroutine);
-        fadeTimer = 0;
 
         fadeCoroutine = _FadeIn(fadeTime);
         StartCoroutine(fadeCoroutine);
@@ -48,7 +47,6 @@ public class UIManager : Singleton<UIManager>
     public void FadeOut(float fadeTime)
     {        
         StopCoroutine(fadeCoroutine);
-        fadeTimer = 0;
 
         fadeCoroutine = _FadeOut(fadeTime);
         StartCoroutine(fadeCoroutine);
@@ -61,32 +59,28 @@ public class UIManager : Singleton<UIManager>
 
         while(fade.color.a > 0f)
         {
-            fadeTimer += Time.deltaTime;
-            float alphaValue;
+            float alphaValue = fade.color.a;
 
-            alphaValue = 1 - fadeTimer / delayTime;
+            alphaValue -= Time.deltaTime / delayTime;
             fade.color = new Color(0, 0, 0, alphaValue);
             yield return null;
         }
 
         fade.color = new Color(0, 0, 0, 0);
-        fadeTimer = 0;
     }
 
     IEnumerator _FadeOut(float delayTime) //어두워짐 ~> 알파가 높아져야 함 
     {
         while (fade.color.a < 1f)
         {
-            fadeTimer += Time.deltaTime;
-            float alphaValue;
+            float alphaValue = fade.color.a;
 
-            alphaValue = fadeTimer / delayTime;
+            alphaValue += Time.deltaTime / delayTime;
             fade.color = new Color(0, 0, 0, alphaValue);
             yield return null;
         }
 
         fade.color = new Color(0, 0, 0, 1);
-        fadeTimer = 0;
     }
     
    
