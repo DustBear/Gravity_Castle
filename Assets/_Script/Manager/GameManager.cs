@@ -292,4 +292,21 @@ public class GameManager : Singleton<GameManager>
         saveIndex += (int)saveData.y - 1; //stage3에서 내가 몇번째 세이브인지도 더해야 함 
         return saveIndex;
     }
+
+    public int collectionNumCalculate(Vector2 collectionData)
+    {
+        if (collectionData.x == 1)
+        {
+            return ((int)collectionData.y - 1);
+        }
+
+        int collectionIndex = 0;
+        for (int index = 0; index < (int)collectionData.x - 1; index++) //ex) stage 3 이라면 stage1, stage2의 전체 세이브포인트 개수를 더하고,
+        {
+            collectionIndex += 30; //각 스테이지별로 최대 30개의 수집요소 존재 
+        }
+
+        collectionIndex += (int)collectionData.y - 1; //stage3에서 내가 몇번째 세이브인지도 더해야 함 
+        return collectionIndex;
+    }
 }

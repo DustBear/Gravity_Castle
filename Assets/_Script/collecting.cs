@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class collecting : MonoBehaviour
 {
@@ -17,6 +18,11 @@ public class collecting : MonoBehaviour
     public AudioClip collect_abnormal;
     public AudioClip ambience;
 
+    [SerializeField] int stageNum; //지금이 몇 번째 스테이지인지 
+    [SerializeField] int collectionNum; //몇 번째 수집요소인지
+
+    int colNumCal;
+
     private void Awake()
     {
 
@@ -25,6 +31,12 @@ public class collecting : MonoBehaviour
     {
         cameraObj = GameObject.FindWithTag("MainCamera");
         cameraScript = cameraObj.GetComponent<MainCamera>();
+        colNumCal = GameManager.instance.collectionNumCalculate(new Vector2(stageNum, collectionNum));
+
+        if (GameManager.instance.gameData.collectionUnlock[colNumCal]) //만약 이미 모은 수집요소이면 
+        {
+            gameObject.SetActive(false);
+        }
 
         isParticlePlayed = false;
         loopSound.clip = ambience;
@@ -55,6 +67,7 @@ public class collecting : MonoBehaviour
                     isParticlePlayed = true;
                 }
 
+                collectionSave(); //데이터 저장 
                 Invoke("deActive", 2f);
             }
             else
@@ -67,5 +80,15 @@ public class collecting : MonoBehaviour
     void deActive()
     {
         gameObject.SetActive(false);
+    }
+
+    void collectionSave()
+    {
+        GameManager.instance.gameData.collectionUnlock[colNumCal] = true; //해당하는 수집요소 넘버 true 값 할당 
+
+        //GameData 에 데이터 저장 
+        string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
+        string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
+        File.WriteAllText(filePath, ToJsonData);
     }
 }
