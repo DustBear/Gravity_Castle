@@ -12,32 +12,55 @@ public class Launcher : MonoBehaviour
     [SerializeField] float fireSpeed; //발사 시 투사체의 속도  
 
     [SerializeField] float limitSpeed_arrow; //화살의 최대속도 
+    float launchTimer = 0f;
+    bool isFirstShot = true;
     void Start()
     {
-        StartCoroutine(Launch());
+
     }
 
-    IEnumerator Launch()
+    private void Update()
     {
-        yield return new WaitForSeconds(launchOffset);
+        LaunchManager();
+    }
 
-        while (true)
-        {            
-            GameObject curObj = ObjManager.instance.GetObj(type); //필요한 타입의 발사체 가져옴 
-            curObj.transform.position = transform.position + transform.up; //위치는 발사기의 위치로부터 발사방향으로 1만큼 떨어진 점에 고정 
-            curObj.transform.eulerAngles = transform.eulerAngles; //발사각도 고정 
+    void LaunchManager()
+    {
+        launchTimer += Time.deltaTime;
 
-            if(type == ObjManager.ObjType.arrow)
-            {
-                curObj.GetComponent<stage2_arrow>().limitSpeed = limitSpeed_arrow;
-            }
+        if(launchTimer >= launchOffset && isFirstShot)
+        {
+            //첫 발사때는 launchOffset 만큼 지나면 발사됨 
+            launch();
+            isFirstShot = false;
+            launchTimer = 0f;
+            return;
+        }
 
-            Rigidbody2D rigid = curObj.GetComponent<Rigidbody2D>();
-            
-            curObj.SetActive(true);
-            rigid.velocity = transform.up * fireSpeed; //발사기의 위측 방향이 발사 방향 
-            yield return new WaitForSeconds(launchPeriod);
+        if(launchTimer >= launchPeriod && !isFirstShot)
+        {
+            launch();
+            launchTimer = 0f;
+            return;
         }
     }
+
+    void launch()
+    {
+        GameObject curObj = ObjManager.instance.GetObj(type); //필요한 타입의 발사체 가져옴 
+        curObj.transform.position = transform.position + transform.up; //위치는 발사기의 위치로부터 발사방향으로 1만큼 떨어진 점에 고정 
+        curObj.transform.eulerAngles = transform.eulerAngles; //발사각도 고정 
+
+        if (type == ObjManager.ObjType.arrow)
+        {
+            curObj.GetComponent<stage2_arrow>().limitSpeed = limitSpeed_arrow;
+        }
+
+        Rigidbody2D rigid = curObj.GetComponent<Rigidbody2D>();
+
+        curObj.SetActive(true);
+        rigid.velocity = transform.up * fireSpeed; //발사기의 위측 방향이 발사 방향 
+    }
+
 
 }

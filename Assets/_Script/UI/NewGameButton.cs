@@ -52,6 +52,17 @@ public class NewGameButton : MonoBehaviour
             GameManager.instance.gameData.finalAchievementNum = 0;
 
             GameManager.instance.gameData.savePointUnlock = new int[100]; //세이브포인트 그룹 새로 초기화 
+            GameManager.instance.gameData.collectionUnlock = new bool[240]; //30x8 
+
+            //세이브포인트 및 컬렉션데이터 초기화 
+            for (int i = 0; i < GameManager.instance.gameData.savePointUnlock.Length; i++)
+            {
+                GameManager.instance.gameData.savePointUnlock[i] = 0;
+            }
+            for (int i = 0; i < GameManager.instance.gameData.collectionUnlock.Length; i++)
+            {
+                GameManager.instance.gameData.collectionUnlock[i] = false;
+            }
 
             //GameData [0] 에 데이터 저장 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);

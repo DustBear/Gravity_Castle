@@ -24,6 +24,7 @@ public class popUpSpikeBox : MonoBehaviour
 
     float spike_lifeTime;
     float timer = 0f;
+    bool isFirstShot = true;
 
     void Start()
     {
@@ -51,10 +52,19 @@ public class popUpSpikeBox : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if(timer >= spike_lifeTime + iniOffset)
+        if(timer >= iniOffset && isFirstShot)
         {
+            isFirstShot = false;
+            timer = 0f;
             StartCoroutine(spikeLoopCor());
-            timer = iniOffset;
+            return;
+        }
+
+        if(timer >= spike_lifeTime && !isFirstShot)
+        {
+            timer = 0f;
+            StartCoroutine(spikeLoopCor());
+            return;
         }
     }
     

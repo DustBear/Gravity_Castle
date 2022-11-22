@@ -72,11 +72,17 @@ public class SaveFileButton : MonoBehaviour
             GameManager.instance.gameData.finalAchievementNum = 0;
 
             GameManager.instance.gameData.savePointUnlock = new int[100]; //savePointGroup 초기화 
+            GameManager.instance.gameData.collectionUnlock = new bool[240]; //collectionGroup 초기화 
 
             for (int i = 0; i < GameManager.instance.gameData.savePointUnlock.Length; i++)
             {
                 GameManager.instance.gameData.savePointUnlock[i] = 0;
             }
+            for (int i = 0; i < GameManager.instance.gameData.collectionUnlock.Length; i++)
+            {
+                GameManager.instance.gameData.collectionUnlock[i] = false;
+            }
+
             //세이브포인트 저장
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[saveFileNum];

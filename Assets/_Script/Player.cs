@@ -146,6 +146,10 @@ public class Player : MonoBehaviour
     {
         InputManager.instance.isInputBlocked = false;
 
+        UIManager.instance.fade.color = new Color(0, 0, 0, 1);
+        UIManager.instance.FadeIn(1f);
+
+
         //플레이어가 각 state 로 전이하기 위한 조건 
         readyToFall = () => (!isGrounded) && (!isOnJumpPlatform); //땅이나 강화발판에 닿아있지 않으면         
         readyToGrab = () => isPlayerGrab; //isPlayerGrab 이 true 이면 오브젝트 잡기로 이동 
@@ -198,9 +202,6 @@ public class Player : MonoBehaviour
 
         jumpTimer = 0; //jumpTimer 초기화
         boxGrabColl.SetActive(false);
-
-        UIManager.instance.fade.color = new Color(0, 0, 0, 1);
-        UIManager.instance.FadeIn(1f);
 
         StartCoroutine(walkSoundGen());
     }

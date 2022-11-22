@@ -7,8 +7,6 @@ public class floatingLanton : MonoBehaviour
     GameObject playerObj;
     Vector3 playerDir;
 
-    public float period;
-    public float sinForce;
     Vector3 initPos;
 
     private void Awake()
@@ -29,8 +27,6 @@ public class floatingLanton : MonoBehaviour
 
     void Update()
     {
-        //sinMove();
-
         if (playerObj == null) return;
         //플레이어의 방향이 바뀔때만 호출 
         if (playerDir != playerObj.transform.up)
@@ -44,10 +40,5 @@ public class floatingLanton : MonoBehaviour
     void rotateCorrect()
     {
         transform.rotation = playerObj.transform.rotation;
-    }
-
-    void sinMove()
-    {
-        transform.position = initPos + Mathf.Sin(Time.time/period) * transform.up;
     }
 }

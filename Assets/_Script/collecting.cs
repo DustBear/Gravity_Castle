@@ -37,10 +37,12 @@ public class collecting : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-
-        isParticlePlayed = false;
-        loopSound.clip = ambience;
-        loopSound.Play();
+        else
+        {
+            isParticlePlayed = false;
+            loopSound.clip = ambience;
+            loopSound.Play();
+        }        
     }
 
     
