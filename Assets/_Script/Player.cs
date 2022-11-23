@@ -146,8 +146,8 @@ public class Player : MonoBehaviour
     {
         InputManager.instance.isInputBlocked = false;
 
-        UIManager.instance.fade.color = new Color(0, 0, 0, 1);
-        UIManager.instance.FadeIn(1f);
+        //UIManager.instance.fade.color = new Color(0, 0, 0, 1);
+        UIManager.instance.FadeIn(1.5f);
 
 
         //플레이어가 각 state 로 전이하기 위한 조건 

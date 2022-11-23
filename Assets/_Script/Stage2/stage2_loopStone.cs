@@ -18,14 +18,11 @@ public class stage2_loopStone : MonoBehaviour
     bool isFirstShot = true;
 
     Rigidbody2D rigid;
-
-    bool isPlayerOn = false;
-    GameObject playerObj;
-
+    public bool isHitting;
+    
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
-        playerObj = GameObject.Find("Player");
     }
     void Start()
     {
@@ -36,7 +33,6 @@ public class stage2_loopStone : MonoBehaviour
     void Update()
     {
         hitManager();
-        playerDieManager();
     }
 
     void hitManager()
@@ -65,6 +61,8 @@ public class stage2_loopStone : MonoBehaviour
     IEnumerator stone_hit() //망치가 지면을 한 번 때리는 동작 
     {
         isCorWork = true;
+        isHitting = true;
+
         float distance = (finishPos - startPos).magnitude;
         Vector2 dir = (finishPos - startPos).normalized;
         float maxSpeed = 2 * distance / hitDelay;
@@ -80,6 +78,7 @@ public class stage2_loopStone : MonoBehaviour
             yield return null;
         }
 
+        isHitting = false;
         rigid.velocity = Vector2.zero;
         transform.position = finishPos;
 
@@ -96,20 +95,4 @@ public class stage2_loopStone : MonoBehaviour
         isCorWork = false;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.gameObject.tag == "Player")
-        {
-            isPlayerOn = true;
-        }
-    }
-
-    void playerDieManager()
-    {
-        if(isPlayerOn && rigid.velocity.magnitude >= 0.1f && playerObj.GetComponent<Player>().isGrounded)
-        {
-            //현재 플레이어가 망치에 닿아 있고 + 망치의 속도가 양수이며 + 플레이어가 땅에도 닿아있는 상태이면 
-            playerObj.GetComponent<Player>().Die(); //플레이어 사망
-        }
-    }
 }
