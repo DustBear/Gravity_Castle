@@ -11,7 +11,16 @@ public class UIManager : Singleton<UIManager>
     public GameObject fadeObj;
     public Image fade;
 
+    public GameObject collectionMenu;
+    public GameObject collectionMenu_fade;
+    public GameObject col_alarm;
+    public GameObject col_explanation;
+
+    string col_getText = "탐험가 상자를 확보했습니다.\n가까운 영혼 비석에서 안전하게 보관할 수 있습니다." ;
+    string col_saveText = "수집한 탐험가 상자를 영혼 비석에 저장했습니다.";
+
     IEnumerator fadeCoroutine;
+    IEnumerator colAlarm_coroutine;
 
     AudioSource sound;
 
@@ -27,7 +36,13 @@ public class UIManager : Singleton<UIManager>
         fade.color = new Color(0, 0, 0, 0); //맨 처음 시작하면 fade는 투명화 
 
         //게임 시작하면 UI 메뉴는 전부 끄고 시작하기 
-        inGameMenu.SetActive(false);       
+        inGameMenu.SetActive(false);
+
+        //탐험가상자 수집 메뉴는 켜 놔야 함. 단, 어두운 배경은 없애서 보이지 않게 만들기 
+        collectionMenu.SetActive(true);
+        collectionMenu_fade.SetActive(false);
+        col_alarm.GetComponent<Text>().color = new Color(1, 1, 1, 0); //알람 텍스트 투명화 
+        col_explanation.GetComponent<Text>().color = new Color(1, 1, 1, 0); //설명 텍스트 투명화 
     }
 
     private void Update()
@@ -88,11 +103,12 @@ public class UIManager : Singleton<UIManager>
     {
         inGameMenu.SetActive(!inGameMenu.activeSelf);
         // 인게임 메뉴 팝업창 활성화 시 일시정지
+
         if (inGameMenu.activeSelf)
         {
             Time.timeScale = 0f; //시간 정지
             Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None; 
+            Cursor.lockState = CursorLockMode.None;
         }
         // 인게임 메뉴 팝업창 비활성화 시 다시 재생
         else
@@ -100,7 +116,86 @@ public class UIManager : Singleton<UIManager>
             Time.timeScale = 1f;
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked; //게임 도중에는 마우스 조작 불가능 
+            inGameMenu.GetComponent<InGameMenu>().collectionIconDel(); //수집요소 아이콘 지우기 
         }
+    }
+
+    public void collectionAlarm(int type)
+    {
+        switch (type)
+        {
+            case 1: //탐험가상자를 처음 수집했을 때 
+                StopCoroutine("collectionGet");
+                StopCoroutine("collectionSave");
+
+                StartCoroutine(collectionGet());
+                break;
+
+            case 2: //탐험가상자를 저장했을 때 
+                StopCoroutine("collectionGet");
+                StopCoroutine("collectionSave");
+
+                StartCoroutine(collectionSave());
+                break;
+        }
+    }
+
+    public IEnumerator collectionGet() //탐험가상자를 처음 수집했을 때 노출 
+    {
+        Text alarmText = col_alarm.GetComponent<Text>();
+        col_alarm.GetComponent<Text>().color = new Color(1, 1, 1, 0);
+
+        float alphaTimer = 0f;
+
+        alarmText.text = col_getText;
+        
+        while (alarmText.color.a <= 1)
+        {
+            alarmText.color = new Color(1, 1, 1, alphaTimer/0.5f);
+            alphaTimer += Time.deltaTime;
+            yield return null;
+        }
+        alarmText.color = new Color(1, 1, 1, 1); //0.5초에 걸쳐 알람 밝아짐 
+
+        alphaTimer = 0.5f;
+        yield return new WaitForSeconds(4f);
+
+        while (alarmText.color.a >= 0 )
+        {
+            alarmText.color = new Color(1, 1, 1, alphaTimer / 0.5f);
+            alphaTimer -= Time.deltaTime;
+            yield return null;
+        }
+        alarmText.color = new Color(1, 1, 1, 0); //0.5초에 걸쳐 알람 어두워짐  
+    }
+
+    public IEnumerator collectionSave() //탐험가상자를 세이브에서 저장했을 때 노출 
+    {
+        Text alarmText = col_alarm.GetComponent<Text>();
+        col_alarm.GetComponent<Text>().color = new Color(1, 1, 1, 0);
+
+        float alphaTimer = 0f;
+
+        alarmText.text = col_saveText;
+
+        while (alarmText.color.a <= 1)
+        {
+            alarmText.color = new Color(1, 1, 1, alphaTimer / 0.5f);
+            alphaTimer += Time.deltaTime;
+            yield return null;
+        }
+        alarmText.color = new Color(1, 1, 1, 1); //0.5초에 걸쳐 알람 밝아짐 
+
+        alphaTimer = 0.5f;
+        yield return new WaitForSeconds(4f);
+
+        while (alarmText.color.a >= 0)
+        {
+            alarmText.color = new Color(1, 1, 1, alphaTimer / 0.5f);
+            alphaTimer -= Time.deltaTime;
+            yield return null;
+        }
+        alarmText.color = new Color(1, 1, 1, 0); //0.5초에 걸쳐 알람 어두워짐  
     }
 
     public void clickSoundGen() //UI 클릭할 때 딸깍 소리 냄 

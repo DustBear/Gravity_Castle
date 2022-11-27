@@ -83,6 +83,8 @@ public class SaveFileButton : MonoBehaviour
                 GameManager.instance.gameData.collectionUnlock[i] = false;
             }
 
+            GameManager.instance.gameData.collectionTmp = new List<int>(); //처음에는 비어 있는 배열이어야 함 
+
             //세이브포인트 저장
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[saveFileNum];

@@ -154,6 +154,11 @@ public class SavePoint : MonoBehaviour
 
     IEnumerator SaveData()
     {
+        if (GameManager.instance.gameData.collectionTmp.Count != 0) //임시저장 리스트에 하나라도 수집요소가 있으면 
+        {
+            UIManager.instance.collectionAlarm(2); //탐험가상자를 저장했다는 메시지 출력 
+        }
+
         isSavePointActivated = true;
 
         GameManager.instance.SaveData(achievementNum, stageNum, respawnPos);
@@ -177,6 +182,11 @@ public class SavePoint : MonoBehaviour
 
     IEnumerator reSaveData() //이미 활성화한 세이브를 다시 활성화 ~> stone이 느리게 상승했다가 다시 하강 
     {
+        if(GameManager.instance.gameData.collectionTmp.Count != 0) //임시저장 리스트에 하나라도 수집요소가 있으면 
+        {
+            UIManager.instance.collectionAlarm(2); //탐험가상자를 저장했다는 메시지 출력 
+        }
+        
         GameManager.instance.SaveData(achievementNum, stageNum, respawnPos);
 
         for (int index = lastIndex; index >=0; index--)

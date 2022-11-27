@@ -21,18 +21,16 @@ public class collecting : MonoBehaviour
     [SerializeField] int stageNum; //지금이 몇 번째 스테이지인지 
     [SerializeField] int collectionNum; //몇 번째 수집요소인지
 
-    int colNumCal;
+    public int colNumCal;
 
     private void Awake()
-    {
-
-    }
-    void Start()
     {
         cameraObj = GameObject.FindWithTag("MainCamera");
         cameraScript = cameraObj.GetComponent<MainCamera>();
         colNumCal = GameManager.instance.collectionNumCalculate(new Vector2(stageNum, collectionNum));
-
+    }
+    void Start()
+    {      
         if (GameManager.instance.gameData.collectionUnlock[colNumCal]) //만약 이미 모은 수집요소이면 
         {
             gameObject.SetActive(false);
@@ -69,6 +67,7 @@ public class collecting : MonoBehaviour
                     isParticlePlayed = true;
                 }
 
+                UIManager.instance.collectionAlarm(1); //탐험가상자를 저장했다는 메시지 출력  //탐험가상자 확보했다는 메시지 출력 
                 collectionSave(); //데이터 저장 
                 Invoke("deActive", 2f);
             }
@@ -86,7 +85,7 @@ public class collecting : MonoBehaviour
 
     void collectionSave()
     {
-        GameManager.instance.gameData.collectionUnlock[colNumCal] = true; //해당하는 수집요소 넘버 true 값 할당 
+        GameManager.instance.gameData.collectionTmp.Add(colNumCal); //임시 저장소에 수집한 수집요소 넘버값 입력 
 
         //GameData 에 데이터 저장 
         string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);

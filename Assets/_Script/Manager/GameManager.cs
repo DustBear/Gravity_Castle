@@ -199,6 +199,13 @@ public class GameManager : Singleton<GameManager>
                 + "\nfinalAchieve: " + gameData.finalAchievementNum
                 + "  finalStage: " + gameData.finalStageNum
                 );
+
+            gameData.collectionTmp.Clear(); //임시저장한 탐험가상자 지움
+            for(int index=0; index<gameData.collectionUnlock.Length; index++)
+            {
+                gameData.collectionUnlock[index] = false;
+                // 모든 탐험가상자 수집기록 삭제 
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.I))
@@ -261,6 +268,17 @@ public class GameManager : Singleton<GameManager>
         gameData.savePointUnlock[saveNumCalculate(new Vector2(stageNum, savePointNum))] = 1; //세이브포인트 활성화 여부 저장 
         gameData.respawnGravityDir = Physics2D.gravity.normalized;
         
+        if(gameData.collectionTmp.Count != 0) //만약 세이브해야 할 수집요소가 있다면
+        {
+            for(int index=0; index < gameData.collectionTmp.Count; index++)
+            {
+                int colNum = gameData.collectionTmp[index];
+                gameData.collectionUnlock[colNum] = true; //해당 수집요소 수집 완료 
+            }
+        }
+
+        gameData.collectionTmp.Clear(); // 리스트는 정리 
+
         //GameData 에 데이터 저장 
         string ToJsonData = JsonUtility.ToJson(gameData);
         string filePath = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
@@ -294,19 +312,10 @@ public class GameManager : Singleton<GameManager>
     }
 
     public int collectionNumCalculate(Vector2 collectionData)
-    {
-        if (collectionData.x == 1)
-        {
-            return ((int)collectionData.y - 1);
-        }
-
-        int collectionIndex = 0;
-        for (int index = 0; index < (int)collectionData.x - 1; index++) //ex) stage 3 이라면 stage1, stage2의 전체 세이브포인트 개수를 더하고,
-        {
-            collectionIndex += 30; //각 스테이지별로 최대 30개의 수집요소 존재 
-        }
-
-        collectionIndex += (int)collectionData.y - 1; //stage3에서 내가 몇번째 세이브인지도 더해야 함 
+    {       
+        int collectionIndex = ((int)collectionData.x - 1) * 30 + (int)collectionData.y - 1;
+        //각 스테이지에는 30개의 수집요소가 있다고 가정 
+      
         return collectionIndex;
     }
 }
