@@ -39,6 +39,7 @@ public class stageManager : MonoBehaviour
     public Sprite savePointLock;
 
     public Image chapterInstruction;
+    public Text chapterName;
     public Image saveInstruction;
 
     void Start()
@@ -48,6 +49,7 @@ public class stageManager : MonoBehaviour
         selectedStageNum = GameManager.instance.gameData.curStageNum; //이전에 플레이하던 stage에서 시작해야 함 ( 1부터 시작 ) 
         selectedStageButton = stageButton[selectedStageNum - 1].gameObject;
         selectedSavePointNum = GameManager.instance.gameData.curAchievementNum;
+
 
         savePointCount = selectedStageButton.GetComponent<stageMoveButton>().savePointCount;
 
@@ -211,7 +213,7 @@ public class stageManager : MonoBehaviour
     void Update()
     {       
         iconInputCheck();
-        instructionImageCheck();
+        instructionCheck();
         stageButtonCheck();
 
         //베타모드 실행창이 켜져 있으면 Q 눌러서 끌 수 있음 
@@ -221,11 +223,16 @@ public class stageManager : MonoBehaviour
         }
     }
 
-    void instructionImageCheck()
+    void instructionCheck()
     {
         if(chapterInstruction.sprite != chapterImage[selectedStageNum - 1])
         {
             chapterInstruction.sprite = chapterImage[selectedStageNum - 1];
+        }
+
+        if(chapterName.text != GameManager.instance.stageName[selectedStageNum - 1])
+        {
+            chapterName.text = GameManager.instance.stageName[selectedStageNum - 1];
         }
 
         Sprite[] tmpArray;

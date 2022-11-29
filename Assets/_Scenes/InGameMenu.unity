@@ -1384,6 +1384,7 @@ MonoBehaviour:
   savePointImage_5: []
   savePointLock: {fileID: 21300000, guid: 6950982a3156e534b9107fc11dbcce3a, type: 3}
   chapterInstruction: {fileID: 944429947}
+  chapterName: {fileID: 1711685309}
   saveInstruction: {fileID: 1645273218}
 --- !u!4 &556475928
 Transform:
@@ -1588,7 +1589,6 @@ MonoBehaviour:
   chapter_Instruction: {fileID: 944429946}
   chapter_name: {fileID: 1711685307}
   stageManager: {fileID: 556475926}
-  stageNameText: "\uB9C8\uBC95\uC758 \uC218\uC815\uD0D1"
   stageNum: 5
   savePointCount: 0
   savePointScene: 
@@ -1928,7 +1928,6 @@ MonoBehaviour:
   chapter_Instruction: {fileID: 944429946}
   chapter_name: {fileID: 1711685307}
   stageManager: {fileID: 556475926}
-  stageNameText: "\uAE4A\uC740 \uACF3\uC73C\uB85C \uD5A5\uD558\uB294 \uB3D9\uAD74"
   stageNum: 1
   savePointCount: 4
   savePointScene: 04000000040000000400000004000000
@@ -2174,7 +2173,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1421240359
-  m_SortingLayer: -8
+  m_SortingLayer: -9
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: b281b91a70a624a0da1c43adc1c30c7b, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -2633,11 +2632,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d22511d973c0d940b5bf40683f2d4d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActive: 0
+  isActive: 1
   chapter_Instruction: {fileID: 944429946}
   chapter_name: {fileID: 1711685307}
   stageManager: {fileID: 556475926}
-  stageNameText: "\uBC84\uB824\uC9C4 \uAE30\uACC4\uC2E4"
   stageNum: 4
   savePointCount: 27
   savePointScene: 0d0000000d0000000d0000000d0000000d0000000d0000000d0000000e0000000f0000000f0000000f0000000f0000000f0000000f0000000f000000100000001000000010000000100000001000000010000000110000001100000011000000110000001100000011000000
@@ -3241,7 +3239,6 @@ MonoBehaviour:
   chapter_Instruction: {fileID: 944429946}
   chapter_name: {fileID: 1711685307}
   stageManager: {fileID: 556475926}
-  stageNameText: 
   stageNum: 7
   savePointCount: 0
   savePointScene: 
@@ -3772,7 +3769,6 @@ MonoBehaviour:
   chapter_Instruction: {fileID: 944429946}
   chapter_name: {fileID: 1711685307}
   stageManager: {fileID: 556475926}
-  stageNameText: 
   stageNum: 6
   savePointCount: 0
   savePointScene: 
@@ -4690,7 +4686,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC131\uC73C\uB85C \uD5A5\uD558\uB294 \uB3D9\uAD74"
+  m_Text: "\uC2A4\uD14C\uC774\uC9C0 \uC774\uB984"
 --- !u!222 &1711685310
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4837,7 +4833,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1421240359
-  m_SortingLayer: -8
+  m_SortingLayer: -9
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: ddf60f8edda1edd48b23d1e7af4b7972, type: 3}
   m_Color: {r: 0.7075472, g: 0.6486024, b: 0.62411004, a: 1}
@@ -5401,7 +5397,6 @@ MonoBehaviour:
   chapter_Instruction: {fileID: 944429946}
   chapter_name: {fileID: 1711685307}
   stageManager: {fileID: 556475926}
-  stageNameText: "\uC774\uB07C\uAC00 \uC790\uB77C\uB294 \uC9C0\uD558\uC694\uC0C8"
   stageNum: 2
   savePointCount: 25
   savePointScene: 05000000050000000500000005000000050000000500000005000000050000000600000007000000070000000700000007000000070000000700000007000000060000000800000008000000080000000800000008000000080000000800000008000000
@@ -5728,11 +5723,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d22511d973c0d940b5bf40683f2d4d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActive: 0
+  isActive: 1
   chapter_Instruction: {fileID: 944429946}
   chapter_name: {fileID: 1711685307}
   stageManager: {fileID: 556475926}
-  stageNameText: "\uBD88\uC758 \uB300\uC7A5\uAC04"
   stageNum: 3
   savePointCount: 30
   savePointScene: 090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000
@@ -5892,7 +5886,6 @@ MonoBehaviour:
   chapter_Instruction: {fileID: 944429946}
   chapter_name: {fileID: 1711685307}
   stageManager: {fileID: 556475926}
-  stageNameText: 
   stageNum: 8
   savePointCount: 0
   savePointScene: 

@@ -23,9 +23,10 @@ public class popUpSpikeBox : MonoBehaviour
     public AudioClip spike_out;
 
     float spike_lifeTime;
-    float timer = 0f;
-    bool isFirstShot = true;
-
+    
+    float initTime;
+    float curTime;
+    int spikeIndex = 0;
     void Start()
     {
         spr = GetComponent<SpriteRenderer>();
@@ -40,31 +41,21 @@ public class popUpSpikeBox : MonoBehaviour
         }
 
         spike_lifeTime = popUpDelay + spikeDelay;
+        initTime = Time.time;
     }
 
-
-    void Update()
+    private void FixedUpdate()
     {
         spikeTimeManager();
     }
 
     void spikeTimeManager()
     {
-        timer += Time.deltaTime;
-
-        if(timer >= iniOffset && isFirstShot)
+        curTime = Time.time;
+        if(curTime - initTime >= spikeIndex * spike_lifeTime + iniOffset)
         {
-            isFirstShot = false;
-            timer = 0f;
             StartCoroutine(spikeLoopCor());
-            return;
-        }
-
-        if(timer >= spike_lifeTime && !isFirstShot)
-        {
-            timer = 0f;
-            StartCoroutine(spikeLoopCor());
-            return;
+            spikeIndex++;
         }
     }
     

@@ -12,36 +12,28 @@ public class Launcher : MonoBehaviour
     [SerializeField] float fireSpeed; //발사 시 투사체의 속도  
 
     [SerializeField] float limitSpeed_arrow; //화살의 최대속도 
-    float launchTimer = 0f;
-    bool isFirstShot = true;
+
+    [SerializeField] float initTime;
+    //씬이 시작했을 때의 시간 ~> 절대적인 시간을 기준점으로 삼아서 연산오차 누적을 막는다 
+    float curTime;
+    int launchIndex = 0; //씬 시작 이후 발사한 횟수 
     void Start()
     {
-
+        initTime = Time.time;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         LaunchManager();
     }
-
+   
     void LaunchManager()
-    {
-        launchTimer += Time.deltaTime;
-
-        if(launchTimer >= launchOffset && isFirstShot)
-        {
-            //첫 발사때는 launchOffset 만큼 지나면 발사됨 
-            launch();
-            isFirstShot = false;
-            launchTimer = 0f;
-            return;
-        }
-
-        if(launchTimer >= launchPeriod && !isFirstShot)
+    {      
+        curTime = Time.time; //현재 시각
+        if (curTime - initTime >= launchIndex * launchPeriod + launchOffset)
         {
             launch();
-            launchTimer = 0f;
-            return;
+            launchIndex++;
         }
     }
 

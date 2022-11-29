@@ -14,13 +14,11 @@ public class UIManager : Singleton<UIManager>
     public GameObject collectionMenu;
     public GameObject collectionMenu_fade;
     public GameObject col_alarm;
-    public GameObject col_explanation;
 
     string col_getText = "탐험가 상자를 확보했습니다.\n가까운 영혼 비석에서 안전하게 보관할 수 있습니다." ;
     string col_saveText = "수집한 탐험가 상자를 영혼 비석에 저장했습니다.";
 
     IEnumerator fadeCoroutine;
-    IEnumerator colAlarm_coroutine;
 
     AudioSource sound;
 
@@ -42,7 +40,6 @@ public class UIManager : Singleton<UIManager>
         collectionMenu.SetActive(true);
         collectionMenu_fade.SetActive(false);
         col_alarm.GetComponent<Text>().color = new Color(1, 1, 1, 0); //알람 텍스트 투명화 
-        col_explanation.GetComponent<Text>().color = new Color(1, 1, 1, 0); //설명 텍스트 투명화 
     }
 
     private void Update()

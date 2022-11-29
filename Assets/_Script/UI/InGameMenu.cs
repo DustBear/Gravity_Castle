@@ -11,23 +11,36 @@ public class InGameMenu : MonoBehaviour
     public int firstCol_num; //현재 씬에서 첫 번째 수집요소의 번호는 몇 번인지 
 
     public GameObject collectionIcon;
-    public GameObject collection_firstAnchor;
+    public GameObject collection_firstAnchor; //수집과 저장을 끝낸 탐험가상자 중 이 씬 내에 있는 것의 1번 정렬위치 
+    public GameObject collection_tmp_Anchor; //수집만 하고 저장은 안 한 탐험가상자의 1번 정렬위치
 
     [SerializeField] GameObject collGroup; //생성된 수집요소 아이콘은 이 아래에 집어넣어 정리함 
     [SerializeField] float iconGap;
+
     [SerializeField] Sprite activeIcon; //이미 수집한 수집요소의 아이콘
     [SerializeField] Sprite deactiveIcon; //아직 수집하지 않은 수집요소의 아이콘 
 
     Vector2 col_initIconPos;
+    Vector2 col_tmpIconPos;
+
+    public Text stageNameIns; //현재 스테이지의 이름 
+    public Text depthInstruction; //현재 심도(curachievement Num * 50f)
 
     private void Awake()
     {
         col_initIconPos = collection_firstAnchor.transform.position;
+        col_tmpIconPos = collection_tmp_Anchor.transform.position;
     }
 
     private void OnEnable()
     {
         collectionIconMake();
+
+        //현재 스테이지 이름과 심도를 창을 열 때마다 보여줌 
+        stageNameIns.text = GameManager.instance.stageName[GameManager.instance.gameData.curStageNum - 1];
+
+        int depthNum = GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, GameManager.instance.gameData.curAchievementNum));
+        depthInstruction.text = "심도 " + depthNum * 50f + "m";
     }
 
     public void OnClickExit() //메인메뉴로 나가기 버튼 누를 때 
@@ -120,22 +133,39 @@ public class InGameMenu : MonoBehaviour
 
     public void collectionIconMake()
     {
+        int savedCollectionNum = 0;
+
         for(int index=0; index<collectionCount; index++)
         {
             GameObject tmpIcon = Instantiate(collectionIcon);
-            tmpIcon.transform.SetParent(collGroup.transform); //생성된 수집요소 아이콘은 ingameMenu 아래에 넣어 저장 
-            tmpIcon.transform.position = col_initIconPos + new Vector2(iconGap * index, 0);
+            tmpIcon.transform.SetParent(collGroup.transform); //생성된 수집요소 아이콘은 ingameMenu 아래에 넣어 저장            
 
             int tmpIconNum = firstCol_num + index; //방금 만든 수집요소의 번호 
 
+            //현재 수집, 저장 끝낸 탐험가 상자를 정렬하여 표시 
             if (GameManager.instance.gameData.collectionUnlock[tmpIconNum])
             {
-                tmpIcon.GetComponent<Image>().sprite = activeIcon;
+                //만약 이미 수집과 저장을 끝낸 탐험가 상자라면 
+                tmpIcon.transform.position = col_initIconPos + new Vector2(iconGap * savedCollectionNum, 0);
+                savedCollectionNum++;
+
+                tmpIcon.GetComponent<collectionIconButton>().collectionNum = tmpIconNum;
+                //해당 아이콘의 스크립트에 번호 할당 
             }
             else
             {
-                tmpIcon.GetComponent<Image>().sprite = deactiveIcon;
+                //아직 세이브하지 않았다면 표시하지 않아야 함 
+                Destroy(tmpIcon);
             }
+        }
+
+        for(int index=0; index<GameManager.instance.gameData.collectionTmp.Count; index++)
+        {
+            GameObject tmpIcon = Instantiate(collectionIcon);
+            tmpIcon.transform.SetParent(collGroup.transform); //생성된 수집요소 아이콘은 ingameMenu 아래에 넣어 저장            
+            tmpIcon.transform.position = col_tmpIconPos + new Vector2(iconGap * index, 0); //정렬 
+
+            tmpIcon.GetComponent<collectionIconButton>().collectionNum = GameManager.instance.gameData.collectionTmp[index];
         }
     }
 

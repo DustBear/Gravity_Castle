@@ -18,7 +18,6 @@ public class stageMoveButton : MonoBehaviour
     public GameObject chapter_name; //챕터 이름 텍스트    
     public GameObject stageManager;
 
-    public string stageNameText;
     public int stageNum; //시작해야 하는 스테이지 번호
 
     public int savePointCount; //해당 스테이지에 존재하는 세이브포인트의 개수
@@ -80,7 +79,7 @@ public class stageMoveButton : MonoBehaviour
 
         stageManager stageManagerScr = stageManager.GetComponent<stageManager>();
 
-        chapter_name.GetComponent<Text>().text = stageNameText; //스테이지 이름 바꿔주기 
+        chapter_name.GetComponent<Text>().text = GameManager.instance.stageName[stageNum - 1]; //스테이지 이름 바꿔주기 
         //chapter_Instruction.GetComponent<Image>().sprite = instruction_image;
         stageManagerScr.selectedStageNum = stageNum;
         stageManagerScr.selectedSavePointNum = 1; //스테이지가 넘어가면 세이브포인트 번호도 1로 초기화
