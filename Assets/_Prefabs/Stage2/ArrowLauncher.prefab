@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7475693537295601709}
   - component: {fileID: 5607457170190889755}
-  - component: {fileID: 8397597837929290024}
   - component: {fileID: 8091354277667611981}
   m_Layer: 6
   m_Name: ArrowLauncher
@@ -71,9 +70,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -659458167
-  m_SortingLayer: 3
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 9056876904860385697, guid: e894407c20e22bd499d45d69ccd781ed, type: 3}
+  m_SortingLayer: 2
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 478923916532109126, guid: 5bda4c8362d25ba44992856581fdf33e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -84,32 +83,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &8397597837929290024
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1056623239367919010}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.875, y: 0.9375}
-    newSize: {x: 0.875, y: 0.9375}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!114 &8091354277667611981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,6 +96,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  timeInterval: 0
-  nextTime: 0
-  firePower: 0
+  spriteGroup:
+  - {fileID: 478923916532109126, guid: 5bda4c8362d25ba44992856581fdf33e, type: 3}
+  - {fileID: -315189387255834835, guid: 5bda4c8362d25ba44992856581fdf33e, type: 3}
+  - {fileID: 7711091110946637744, guid: 5bda4c8362d25ba44992856581fdf33e, type: 3}
+  - {fileID: -1790305213551383600, guid: 5bda4c8362d25ba44992856581fdf33e, type: 3}
+  launchOffset: 0
+  launchPeriod: 0
+  fireSpeed: 0
+  limitSpeed_arrow: 0
+  initTime: 0

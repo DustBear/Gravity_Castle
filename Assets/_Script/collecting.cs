@@ -8,6 +8,10 @@ public class collecting : MonoBehaviour
     GameObject cameraObj;
     MainCamera cameraScript;
     public ParticleSystem part;
+    public ParticleSystem idleParticle;
+
+    public Sprite[] collectionSprite;
+    SpriteRenderer spr;
 
     bool isParticlePlayed;
 
@@ -23,11 +27,14 @@ public class collecting : MonoBehaviour
 
     public int colNumCal;
 
+    float timer = 0f;
+   
     private void Awake()
     {
         cameraObj = GameObject.FindWithTag("MainCamera");
         cameraScript = cameraObj.GetComponent<MainCamera>();
         colNumCal = GameManager.instance.collectionNumCalculate(new Vector2(stageNum, collectionNum));
+        spr = GetComponent<SpriteRenderer>();
     }
     void Start()
     {      
@@ -40,13 +47,18 @@ public class collecting : MonoBehaviour
             isParticlePlayed = false;
             loopSound.clip = ambience;
             loopSound.Play();
-        }        
+        }
     }
 
     
     void Update()
     {
-        
+        timer += Time.deltaTime;
+        if(timer >= 1.2f)
+        {
+            StartCoroutine(collectionAnim());
+            timer = 0f;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -63,13 +75,16 @@ public class collecting : MonoBehaviour
 
                     UIManager.instance.cameraShake(0.5f, 0.3f);
                     GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0); //투명화 
+                    var em = idleParticle.emission;
+                    em.rateOverTime = 0f; //탐험가상자 먹고 나면 파티클 꺼짐 
+
+                    UIManager.instance.collectionAlarm(1); //탐험가상자를 저장했다는 메시지 출력  //탐험가상자 확보했다는 메시지 출력 
+                    collectionSave(); //데이터 저장 
 
                     isParticlePlayed = true;
                 }
-
-                UIManager.instance.collectionAlarm(1); //탐험가상자를 저장했다는 메시지 출력  //탐험가상자 확보했다는 메시지 출력 
-                collectionSave(); //데이터 저장 
-                Invoke("deActive", 2f);
+               
+                Invoke("deActive", 2f); //2초 뒤 사라짐
             }
             else
             {
@@ -91,5 +106,16 @@ public class collecting : MonoBehaviour
         string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
         string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
         File.WriteAllText(filePath, ToJsonData);
+    }
+
+    IEnumerator collectionAnim()
+    {
+        var waitFrame = new WaitForSeconds(0.1f);
+        for (int index=0; index<collectionSprite.Length; index++)
+        {
+            spr.sprite = collectionSprite[index];
+            yield return waitFrame;
+        }
+        spr.sprite = collectionSprite[0];
     }
 }

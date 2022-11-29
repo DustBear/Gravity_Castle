@@ -209,7 +209,7 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I)) //수집요소 초기화 기능 
         {
             string outputStr = "";
 
@@ -229,7 +229,26 @@ public class GameManager : Singleton<GameManager>
 
             Debug.Log(outputStr);
         }
-        
+
+        captureScreenShot();
+    }
+
+    void captureScreenShot()
+    {
+        if (Input.GetKeyDown(KeyCode.P)) //스크린샷 캡쳐 기능
+        { 
+            string folderPath = "Assets/Screenshots/"; // the path of your project folder
+
+            if (!Directory.Exists(folderPath)) // if this path does not exist yet
+                Directory.CreateDirectory(folderPath);  // it will get created
+
+            var screenshotName =
+                                    "Screenshot_" +
+                                    System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") +
+                                    ".png";
+            ScreenCapture.CaptureScreenshot(Path.Combine(folderPath, screenshotName), 2);
+            Debug.Log(folderPath + screenshotName);
+        }
     }
 
     //세이브포인트 불러오기 버튼에 현재 진행도 표시하는 함수 

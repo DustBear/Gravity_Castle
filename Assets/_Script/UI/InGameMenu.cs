@@ -13,12 +13,14 @@ public class InGameMenu : MonoBehaviour
     public GameObject collectionIcon;
     public GameObject collection_firstAnchor; //수집과 저장을 끝낸 탐험가상자 중 이 씬 내에 있는 것의 1번 정렬위치 
     public GameObject collection_tmp_Anchor; //수집만 하고 저장은 안 한 탐험가상자의 1번 정렬위치
+    public GameObject compassIcon;
 
     [SerializeField] GameObject collGroup; //생성된 수집요소 아이콘은 이 아래에 집어넣어 정리함 
     [SerializeField] float iconGap;
 
     [SerializeField] Sprite activeIcon; //이미 수집한 수집요소의 아이콘
     [SerializeField] Sprite deactiveIcon; //아직 수집하지 않은 수집요소의 아이콘 
+    [SerializeField] Sprite[] compass_sprite;
 
     Vector2 col_initIconPos;
     Vector2 col_tmpIconPos;
@@ -35,12 +37,13 @@ public class InGameMenu : MonoBehaviour
     private void OnEnable()
     {
         collectionIconMake();
+        compassIconControl();
 
         //현재 스테이지 이름과 심도를 창을 열 때마다 보여줌 
         stageNameIns.text = GameManager.instance.stageName[GameManager.instance.gameData.curStageNum - 1];
 
         int depthNum = GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, GameManager.instance.gameData.curAchievementNum));
-        depthInstruction.text = "심도 " + depthNum * 50f + "m";
+        depthInstruction.text = "심도\n " + depthNum * 50f + "m";
     }
 
     public void OnClickExit() //메인메뉴로 나가기 버튼 누를 때 
@@ -150,6 +153,7 @@ public class InGameMenu : MonoBehaviour
                 savedCollectionNum++;
 
                 tmpIcon.GetComponent<collectionIconButton>().collectionNum = tmpIconNum;
+                tmpIcon.GetComponent<Image>().sprite = activeIcon;
                 //해당 아이콘의 스크립트에 번호 할당 
             }
             else
@@ -166,6 +170,7 @@ public class InGameMenu : MonoBehaviour
             tmpIcon.transform.position = col_tmpIconPos + new Vector2(iconGap * index, 0); //정렬 
 
             tmpIcon.GetComponent<collectionIconButton>().collectionNum = GameManager.instance.gameData.collectionTmp[index];
+            tmpIcon.GetComponent<Image>().sprite = deactiveIcon;
         }
     }
 
@@ -182,6 +187,27 @@ public class InGameMenu : MonoBehaviour
                     Destroy(childList[i].gameObject);
                 }
             }
+        }
+    }
+
+    void compassIconControl()
+    {
+        Image spr = compassIcon.GetComponent<Image>();
+        if(Physics2D.gravity.normalized == new Vector2(0, -1)) //땅이 아래쪽에 있음 
+        {
+            spr.sprite = compass_sprite[2];
+        }
+        else if(Physics2D.gravity.normalized == new Vector2(0, 1)) //땅이 위쪽에 있음
+        {
+            spr.sprite = compass_sprite[0];
+        }
+        else if (Physics2D.gravity.normalized == new Vector2(1, 0)) //땅이 오른쪽에 있음 
+        {
+            spr.sprite = compass_sprite[1];
+        }
+        else //땅이 왼쪽에 있음 
+        {
+            spr.sprite = compass_sprite[3];
         }
     }
 }
