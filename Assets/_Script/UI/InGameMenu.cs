@@ -28,6 +28,9 @@ public class InGameMenu : MonoBehaviour
     public Text stageNameIns; //현재 스테이지의 이름 
     public Text depthInstruction; //현재 심도(curachievement Num * 50f)
 
+    [SerializeField] Button mainMenuButton;
+    [SerializeField] Button gameMenuButton;
+
     private void Awake()
     {
         col_initIconPos = collection_firstAnchor.transform.position;
@@ -48,6 +51,11 @@ public class InGameMenu : MonoBehaviour
 
     public void OnClickExit() //메인메뉴로 나가기 버튼 누를 때 
     {
+        mainMenuButton.interactable = false;
+        gameMenuButton.interactable = false;
+
+        //나가기 버튼 중복 클릭 못하게 락 검 
+
         UIManager.instance.clickSoundGen();
         collectionIconDel();
         GameManager.instance.gameData.collectionTmp.Clear();
@@ -79,12 +87,15 @@ public class InGameMenu : MonoBehaviour
             GameManager.instance.shouldUseOpeningElevator = false;
         }
 
-        UIManager.instance.FadeOut(1f);
-        Invoke("loadMainMenu", 1.5f);
+        UIManager.instance.FadeOut(0.7f);
+        Invoke("loadMainMenu", 1f);
     }
 
     public void OnClickMainStage() //인게임 메뉴로 나가기 버튼 누를 때 
     {
+        mainMenuButton.interactable = false;
+        gameMenuButton.interactable = false;
+
         UIManager.instance.clickSoundGen();
         collectionIconDel();
         GameManager.instance.gameData.collectionTmp.Clear();
@@ -115,8 +126,8 @@ public class InGameMenu : MonoBehaviour
             GameManager.instance.shouldUseOpeningElevator = false;
         }
 
-        UIManager.instance.FadeOut(1f);
-        Invoke("loadInGameMenu", 1.5f);
+        UIManager.instance.FadeOut(0.7f);
+        Invoke("loadInGameMenu", 1f);
     }
 
     void loadInGameMenu()
@@ -124,12 +135,19 @@ public class InGameMenu : MonoBehaviour
         SceneManager.LoadScene("InGameMenu");
         Cursor.lockState = CursorLockMode.None;
 
+        gameMenuButton.interactable = true;
+        mainMenuButton.interactable = true;
+
         gameObject.SetActive(false);
     }
 
     void loadMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
+        Cursor.lockState = CursorLockMode.None;
+
+        gameMenuButton.interactable = true;
+        mainMenuButton.interactable = true;
 
         gameObject.SetActive(false);
     }

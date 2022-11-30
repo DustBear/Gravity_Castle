@@ -29,7 +29,7 @@ public class SaveFileButton : MonoBehaviour
         KeyValuePair<int, int> keyVal = GameManager.instance.GetSavedData(saveFileNum);
         if (keyVal.Key != -1) 
         {
-            text.text = "세이브" + (saveFileNum + 1) + " : 스테이지" + keyVal.Key + "_" + keyVal.Value;
+            text.text = "스테이지" +"\n"+ keyVal.Key + "_" + keyVal.Value;
             isSaveFileExist = true;
         }
         else
@@ -52,6 +52,9 @@ public class SaveFileButton : MonoBehaviour
 
     public void OnClickButton()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        //버튼 중복입력 막기 위해 버튼 누르자 마자 락 검 
+
         UIManager.instance.clickSoundGen();
         UIManager.instance.FadeOut(1f);
 

@@ -1195,6 +1195,8 @@ public class Player : MonoBehaviour
         GetComponent<BoxCollider2D>().isTrigger = true; //죽은 상태에선 콜라이더 통과가능하게 만들어야 함(그 위에 박스가 떠있지 않게) 
         rigid.bodyType = RigidbodyType2D.Kinematic;
 
+        GameManager.instance.gameData.collectionTmp.Clear(); //죽으면 임시보관됐던 수집요소 삭제
+
         sound.Stop();
         sound.clip = dieSound;
         sound.Play();
@@ -1223,9 +1225,7 @@ public class Player : MonoBehaviour
 
         UIManager.instance.FadeOut(0.8f); //화면 어두워짐 
         yield return new WaitForSeconds(2.5f);
-
-        isDieCorWork = false;
-
+        
         if (GameManager.instance.gameData.curAchievementNum == 0) 
             //만약 스테이지 시작하고 첫 세이브 활성화전에 죽었다면 ~> 그냥 첫 세이브에서 부활 
         {
@@ -1258,6 +1258,7 @@ public class Player : MonoBehaviour
         GameManager.instance.nextState = States.Walk;
 
         InputManager.instance.isPlayerDying = false;
+        isDieCorWork = false;
 
         SceneManager.LoadScene(GameManager.instance.nextScene);
     }
