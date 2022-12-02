@@ -205,10 +205,8 @@ public class SaveFileButton : MonoBehaviour
         UIManager.instance.clickSoundGen();
 
         saveDeleteWindow.SetActive(true);
+        mainMenu_deleteButton deleteButton = saveDeleteButton.GetComponent<mainMenu_deleteButton>();
 
-        for(int index=0; index<4; index++)
-        {
-            saveDeleteButton.SetActive(true);
-        }
+        deleteButton.selectedFileNum = saveFileNum;
     }
 }
