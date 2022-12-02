@@ -43,7 +43,7 @@ public class EnemyShot : MonoBehaviour
             isCollide = true;
             if (other.collider.tag == "Player" && rayHitPlayerUp.collider == null)
             {
-                GameManager.instance.shouldSpawnSavePoint = true;
+                //GameManager.instance.shouldSpawnSavePoint = true;
                 UIManager.instance.FadeOut(1f);
             }
         }

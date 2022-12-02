@@ -19,7 +19,7 @@ public class savePointManager : MonoBehaviour
         player = GameObject.Find("Player");
         playerSpawnSavePoint = GameManager.instance.gameData.curAchievementNum; //현재의 achNum 이 스폰돼야 하는 세이브포인트 번호 
       
-        if (GameManager.instance.shouldSpawnSavePoint) //ChangeScene을 통해 이동하거나 씬을 맨 처음 시작할 때는 세이브포인트에서 시작할 필요 x 
+        if (GameManager.instance.gameData.SpawnSavePoint_bool) //ChangeScene을 통해 이동하거나 씬을 맨 처음 시작할 때는 세이브포인트에서 시작할 필요 x 
         {
             for (int index = 0; index < savePointCount; index++)
             {
@@ -39,7 +39,8 @@ public class savePointManager : MonoBehaviour
                     File.WriteAllText(filePath, ToJsonData);
                 }               
             }
-            //GameManager.instance.shouldSpawnSavePoint = false;
+            //세이브포인트에서 소환하고 나면 changeScene 등 이용할 수 있도록 false 처리 해줘야 함 
+            GameManager.instance.gameData.SpawnSavePoint_bool = false;
         }
     }
 }

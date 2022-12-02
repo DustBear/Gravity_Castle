@@ -19,7 +19,7 @@ public class mapButton : MonoBehaviour
         GameManager.instance.nextPos = nextPos;
         GameManager.instance.nextGravityDir = nextGravityDir;
        
-        GameManager.instance.shouldSpawnSavePoint = false;
+        GameManager.instance.gameData.SpawnSavePoint_bool = false;
         GameManager.instance.nextState = Player.States.Walk;
         GameManager.instance.gameData.respawnScene = GameManager.instance.nextScene;
         GameManager.instance.gameData.respawnPos = GameManager.instance.nextPos;

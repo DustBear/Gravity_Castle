@@ -24,7 +24,7 @@ public class ChangeScene : MonoBehaviour
     }
 
     void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Player") && !GameManager.instance.shouldSpawnSavePoint) {
+        if (other.gameObject.CompareTag("Player") && !GameManager.instance.gameData.SpawnSavePoint_bool) {
 
             if (useNextSpawnPosCode)
             {

@@ -92,6 +92,9 @@ public class SaveFileButton : MonoBehaviour
 
             GameManager.instance.gameData.collectionTmp = new List<int>(); //처음에는 비어 있는 배열이어야 함 
 
+            GameManager.instance.gameData.SpawnSavePoint_bool = false; //맨 처음 시작하므로 따로 세이브포인트가 없다 
+            GameManager.instance.gameData.UseOpeningElevetor_bool = true; //오프닝 엘리베이터 이용해야 함 
+
             //새로 만든 GM 데이터를 알맞은 번호의 gameData에 저장 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[saveFileNum];
@@ -100,12 +103,6 @@ public class SaveFileButton : MonoBehaviour
             //gameData 값으로 당장 필요한 GameManager 갱신
             int tmpNextScene = SceneUtility.GetBuildIndexByScenePath("Assets/_Scenes/_tutorial/tutorial.unity"); //tutorial scene index
             GameManager.instance.nextScene = tmpNextScene;
-
-            GameManager.instance.gameData.SpawnSavePoint_bool = false; //맨 처음 시작하므로 따로 세이브포인트가 없다 
-            GameManager.instance.gameData.UseOpeningElevetor_bool = true; //오프닝 엘리베이터 이용해야 함 
-
-            GameManager.instance.shouldSpawnSavePoint = GameManager.instance.gameData.SpawnSavePoint_bool;
-            GameManager.instance.shouldUseOpeningElevator = GameManager.instance.gameData.UseOpeningElevetor_bool;
 
             StartCoroutine(loadSceneDelay(1));
         }
@@ -145,9 +142,6 @@ public class SaveFileButton : MonoBehaviour
             GameManager.instance.nextPos = GameManager.instance.gameData.respawnPos;
             GameManager.instance.nextGravityDir = GameManager.instance.gameData.respawnGravityDir;
             GameManager.instance.nextState = Player.States.Walk;
-
-            GameManager.instance.shouldSpawnSavePoint = GameManager.instance.gameData.SpawnSavePoint_bool;
-            GameManager.instance.shouldUseOpeningElevator = GameManager.instance.gameData.UseOpeningElevetor_bool;
 
             StartCoroutine(loadSceneDelay(2));
         }       

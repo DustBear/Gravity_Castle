@@ -99,17 +99,15 @@ public class NewGameButton : MonoBehaviour
 
             GameManager.instance.gameData.collectionTmp = new List<int>(); //처음에는 비어 있는 배열이어야 함 
 
-            //GameData [0] 에 데이터 저장 
+            //GameData 에 데이터 저장 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
-            string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[0];
+            string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             File.WriteAllText(filePath, ToJsonData);
 
             //GameData 초기화했으면 당장 플레이에 필요한 GM 데이터 갱신 
             int tmpNextScene = SceneUtility.GetBuildIndexByScenePath("Assets/_Scenes/_tutorial/tutorial.unity"); //tutorial scene index
             GameManager.instance.nextScene = tmpNextScene;
 
-            GameManager.instance.shouldSpawnSavePoint = GameManager.instance.gameData.SpawnSavePoint_bool;
-            GameManager.instance.shouldUseOpeningElevator = GameManager.instance.gameData.UseOpeningElevetor_bool;
             //nextPos, nextDir 등은 일단 다음 씬으로 보내고 나면 오프닝 엘리베이터 매니져가 알아서 조정해 줄 테니 지금 설정할 필요x
 
             UIManager.instance.FadeOut(1f);
@@ -143,25 +141,25 @@ public class NewGameButton : MonoBehaviour
             GameManager.instance.gameData.SpawnSavePoint_bool = curGameData.SpawnSavePoint_bool;
             GameManager.instance.gameData.UseOpeningElevetor_bool = curGameData.UseOpeningElevetor_bool;
 
+            if (GameManager.instance.gameData.curAchievementNum == 0)
+            {
+                GameManager.instance.gameData.SpawnSavePoint_bool = false;
+                GameManager.instance.gameData.UseOpeningElevetor_bool = true;
+            }
+
+            //GameData 에 데이터 저장 
+            string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
+            string _filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
+            File.WriteAllText(_filePath, ToJsonData);
+
             //collectionTmp는 게임을 시작할 땐 항상 비워둬야 함
             GameManager.instance.gameData.collectionTmp = new List<int>();
 
             //GM 자체의 데이터 갱신 
-            GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
-            GameManager.instance.nextPos = GameManager.instance.gameData.respawnPos;
-            GameManager.instance.nextGravityDir = GameManager.instance.gameData.respawnGravityDir;
+            GameManager.instance.nextScene = curGameData.respawnScene;
+            GameManager.instance.nextPos = curGameData.respawnPos;
+            GameManager.instance.nextGravityDir = curGameData.respawnGravityDir;
             GameManager.instance.nextState = Player.States.Walk; //States.Walk 가 기본값 
-
-            GameManager.instance.shouldSpawnSavePoint = curGameData.SpawnSavePoint_bool;
-            GameManager.instance.shouldUseOpeningElevator = curGameData.UseOpeningElevetor_bool;
-
-            /*
-            if(GameManager.instance.gameData.curAchievementNum == 0)
-            {
-                GameManager.instance.shouldSpawnSavePoint = false;
-                GameManager.instance.shouldUseOpeningElevator = true; 
-            }
-            */
 
             UIManager.instance.FadeOut(1f);
             StartCoroutine(loadSceneDelay(2));

@@ -91,7 +91,6 @@ public class InGameMenu : MonoBehaviour
             File.WriteAllText(filePath, ToJsonData);
 
             GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
-            GameManager.instance.shouldUseOpeningElevator = false;
         }
 
         UIManager.instance.FadeOut(0.7f);
@@ -135,7 +134,6 @@ public class InGameMenu : MonoBehaviour
             File.WriteAllText(filePath, ToJsonData);
 
             GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
-            GameManager.instance.shouldUseOpeningElevator = false;
         }
 
         UIManager.instance.FadeOut(0.7f);

@@ -22,7 +22,7 @@ public class stage2_bullet : MonoBehaviour
     void Update()
     {
         // ¾À ¹øÈ£°¡ ¹Ù²î¸é ¿ÀºêÁ§Æ® ÆÄ±«ÇØ Áà¾ß ÇÔ 
-        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.shouldSpawnSavePoint)
+        if (originScene != SceneManager.GetActiveScene() || GameManager.instance.gameData.SpawnSavePoint_bool)
         {
             ObjManager.instance.ReturnObj(type, gameObject);
         }

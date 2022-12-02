@@ -6,10 +6,7 @@ using System.IO;
 using System.Linq;
 
 public class GameManager : Singleton<GameManager>
-{    
-    public bool shouldSpawnSavePoint = true;    
-    public bool shouldUseOpeningElevator = false;
-
+{       
     public string[] stageName = new string[7]; //각 스테이지별 이름 
     public int[] saveNumForStage = new int[7]; //각 스테이지별로 세이브포인트가 몇개 있는지 저장하는 배열 
     public int nextScene {get; set;}
@@ -31,9 +28,6 @@ public class GameManager : Singleton<GameManager>
     public AudioClip[] bgmGroup_once;
     public AudioClip[] bgmGroup_loop;
 
-    //public AudioSource moodMachine;
-    //public AudioClip[] moodSoundGroup;
-
     [SerializeField] int purposeBgmIndex; //실행시키고자 하는 bgm index
     [SerializeField] int curBgmIndex; //현재 실행중인 bgm index
     public float masterVolume_bgm; 
@@ -48,15 +42,8 @@ public class GameManager : Singleton<GameManager>
         if (File.Exists(filePath_seq)) //이전에 플레이한 기록이 있으면 
         {
             string FromJsonData = File.ReadAllText(filePath_seq);
-            saveFileSeq = JsonUtility.FromJson<SaveFileSeq>(FromJsonData); //svaeFileSeq 가져오기 
+            saveFileSeq = JsonUtility.FromJson<SaveFileSeq>(FromJsonData); //saveFileSeq 가져오기 
 
-            /*
-            //마지막으로 플레이했던 세이브파일 가져옴 
-            string filePath_save = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
-            string FromJsonData_2 = File.ReadAllText(filePath_save);
-
-            gameData = JsonUtility.FromJson<GameData>(FromJsonData_2); //선택한 세이브파일의 GameData 불러옴 
-            */
         }
         else //처음 시작하는 게임이면 
         {           
@@ -66,7 +53,6 @@ public class GameManager : Singleton<GameManager>
         
         bgmMachine = gameObject.AddComponent<AudioSource>();
         bgmMachine.volume = masterVolume_bgm;
-        //moodMachine = gameObject.AddComponent<AudioSource>();
     }
 
     public void soundNumCheck() //매 프레임마다 실행 
@@ -128,21 +114,10 @@ public class GameManager : Singleton<GameManager>
         bgmMachine.volume = 0f;
 
         bgmMachine.clip = bgmGroup_loop[purposeBgmIndex]; //bgm clip 에 해당하는 bgm 파일 할당   
-        //moodMachine.clip = moodSoundGroup[purposeBgmIndex];
 
         yield return new WaitForSeconds(1f); //1초간 음악 정지 
         bgmMachine.Play();
-        //moodMachine.Play();
-
-        /*
-        bgmVolume = bgmMachine.volume;
-        while (bgmVolume <= masterVolume_bgm)
-        {
-            bgmVolume += masterVolume_bgm * Time.deltaTime;
-            bgmMachine.volume = bgmVolume;
-            yield return null;
-        }
-        */
+        
         bgmMachine.volume = masterVolume_bgm;
 
     }
@@ -166,14 +141,6 @@ public class GameManager : Singleton<GameManager>
         //게임이 시작하면 MainMenu 로드 
         SceneManager.LoadScene("MainMenu"); 
         
-        //bgm 과련 코드 
-        //purposeBgmIndex = 0; //main theme 에서 틀어줘야 하는 bgm 은 9 
-        //curBgmIndex = 0;
-        //bgmMachine.clip = bgmGroup[0];
-        //moodMachine.clip = moodSoundGroup[9];
-        //bgmMachine.Play();
-        //moodMachine.Play();
-
         bgmMachine.loop = true;
         bgmMachine.playOnAwake = false;
 
