@@ -110,7 +110,15 @@ public class Player : MonoBehaviour
     public AudioSource sound;
     public AudioSource walkSound;
 
-    public AudioClip moveSound;
+    //각 스테이지별 랜덤 발자국 소리
+    public AudioClip[] walkSound_stage1;
+    public AudioClip[] walkSound_stage2;
+    public AudioClip[] walkSound_stage3;
+    public AudioClip[] walkSound_stage4;
+
+    //해당 씬에서 플레이어의 walkSound 그룹
+    AudioClip[] aimWalkSound;
+
     public AudioClip jumpSound;
     public AudioClip landSound;
 
@@ -163,7 +171,7 @@ public class Player : MonoBehaviour
         readyToLever = () => isCollideLever && InputManager.instance.vertical == 1 && InputManager.instance.verticalDown
                              && targetLever.transform.up == transform.up;
 
-        if (!GameManager.instance.shouldSpawnSavePoint)
+        if (!GameManager.instance.gameData.SpawnSavePoint_bool)
         {            
             //GameManager ~> 세이브포인트에서 시작하는 것이 아닐 때 GM이 플레이어 초기화 담당 ~> 스테이지 처음 시작할 때, 한 씬에서 통로를 통해 다음씬 넘어갈 때 
             transform.position = GameManager.instance.nextPos;
@@ -189,7 +197,12 @@ public class Player : MonoBehaviour
             transform.up = -GameManager.instance.gameData.respawnGravityDir;
             transform.eulerAngles = Vector3.forward * transform.eulerAngles.z;
             ChangeState(States.Walk); //세이브포인트에서 시작할 땐 항상 walk 상태로 시작 
-            GameManager.instance.shouldSpawnSavePoint = false;
+
+            //gameData에 spawnSavePoint_bool 값 저장 
+            GameManager.instance.gameData.SpawnSavePoint_bool = false;
+            string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
+            string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
+            File.WriteAllText(filePath, ToJsonData);
         }
 
         if (GameManager.instance.isStartWithFlipX)
@@ -203,7 +216,22 @@ public class Player : MonoBehaviour
         jumpTimer = 0; //jumpTimer 초기화
         boxGrabColl.SetActive(false);
 
-        StartCoroutine(walkSoundGen());
+        //스테이지 번호 가져와 현재 씬에서의 walkStage 그룹 선택함 
+        switch (GameManager.instance.gameData.curStageNum)
+        {
+            case 1:
+                aimWalkSound = walkSound_stage1;
+                break;
+            case 2:
+                aimWalkSound = walkSound_stage2;
+                break;
+            case 3:
+                aimWalkSound = walkSound_stage3;
+                break;
+            case 4:
+                aimWalkSound = walkSound_stage4;
+                break;
+        }
     }
 
     bool readyToLand() //착지 동작은 발판이 움직이는 물체인지 아닌지에 따라 달라져야 하므로 복잡한 알고리즘 가짐. 별도 함수로 구분 
@@ -254,6 +282,7 @@ public class Player : MonoBehaviour
         }
     }
 
+
     private void Update()
     {
         walkSoundCheck();
@@ -278,33 +307,42 @@ public class Player : MonoBehaviour
         curState = nextState;
     }
 
+    float walkSoundTimer = 0f;
+    public float walkSoundPeriod; //한 발 내딛고 다음 발을 내딛기까지의 시간 
+    bool isFirstWalkStep = true; //걷는 소리 안 나다가 맨 처음 한 발을 걸을 때 일시적으로 true 
+
     void walkSoundCheck()
     {
-        if (fsm.State == States.Walk && (isGrounded || isOnJumpPlatform))
+        if (fsm.State == States.Walk && InputManager.instance.horizontal !=0) 
         {
-            if(Mathf.Abs(transform.InverseTransformDirection(rigid.velocity).x) > 0.1f) //속도가 0.1보다 커야 함
+            if (isFirstWalkStep)
             {
-                walkSound.volume = 1f;
+                int randomWalkIndex = Random.Range(0, aimWalkSound.Length);
+                walkSound.PlayOneShot(aimWalkSound[randomWalkIndex]);
+
+                isFirstWalkStep = false;
             }
-            else
+
+            walkSoundTimer += Time.deltaTime;
+
+            if(walkSoundTimer >= walkSoundPeriod)
             {
-                walkSound.volume = 0f;
+                //배열 내에서 어떤 발소리를 재생할 지 랜덤 선택 
+                int randomWalkIndex = Random.Range(0, aimWalkSound.Length);
+
+                walkSound.PlayOneShot(aimWalkSound[randomWalkIndex]);
+                walkSoundTimer = 0f;
             }
+
         }
         else
         {
-            walkSound.volume = 0f;
-        }
-    }
-
-    public float walkSoundPeriod; //한 발 내딛고 다음 발을 내딛기까지의 시간 
-    IEnumerator walkSoundGen()
-    {
-        var walkDelay = new WaitForSeconds(walkSoundPeriod);
-        while (true)
-        {
-            walkSound.PlayOneShot(moveSound);
-            yield return new WaitForSeconds(walkSoundPeriod); 
+            if (walkSound.isPlaying)
+            {
+                walkSound.Stop();
+            }
+            walkSoundTimer = 0f;
+            isFirstWalkStep = true;
         }
     }
 
@@ -1194,19 +1232,16 @@ public class Player : MonoBehaviour
         InputManager.instance.isPlayerDying = true;
         GetComponent<BoxCollider2D>().isTrigger = true; //죽은 상태에선 콜라이더 통과가능하게 만들어야 함(그 위에 박스가 떠있지 않게) 
         rigid.bodyType = RigidbodyType2D.Kinematic;
-
-        GameManager.instance.gameData.collectionTmp.Clear(); //죽으면 임시보관됐던 수집요소 삭제
-
+       
         sound.Stop();
         sound.clip = dieSound;
         sound.Play();
-
+       
         if (isPlayerGrab)
         {
             isPlayerGrab = false; //만약 상자를 잡고 있는 상태에서 죽는다면 상자를 내려놔야 함 
         }
-        GameManager.instance.shouldSpawnSavePoint = true; //죽은 경우는 일단 세이브포인트에서 시작해야 함
-
+        
         cameraObj.GetComponent<MainCamera>().isCameraLock = true; //죽은 경우 카메라는 고정
         UIManager.instance.cameraShake(0.5f, 0.7f);
         sprite.color = new Color(1, 1, 1, 0); 
@@ -1225,7 +1260,10 @@ public class Player : MonoBehaviour
 
         UIManager.instance.FadeOut(0.8f); //화면 어두워짐 
         yield return new WaitForSeconds(2.5f);
-        
+
+        GameManager.instance.gameData.SpawnSavePoint_bool = true; //죽은 경우는 일단 세이브포인트에서 시작해야 함
+        GameManager.instance.gameData.collectionTmp.Clear(); //죽으면 임시보관됐던 수집요소 삭제
+
         if (GameManager.instance.gameData.curAchievementNum == 0) 
             //만약 스테이지 시작하고 첫 세이브 활성화전에 죽었다면 ~> 그냥 첫 세이브에서 부활 
         {
@@ -1241,14 +1279,7 @@ public class Player : MonoBehaviour
 
             GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, 1))] = 1;
             GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex;
-
-            //GameData 저장해 줌 
-            string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
-            string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
-            File.WriteAllText(filePath, ToJsonData);
-
-            GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
-            SceneManager.LoadScene(GameManager.instance.nextScene);
+         
         }
 
         //GameData 의 정보 GM 에 가져와서 초기화 
@@ -1256,6 +1287,11 @@ public class Player : MonoBehaviour
         GameManager.instance.nextPos = GameManager.instance.gameData.respawnPos;
         GameManager.instance.nextGravityDir = GameManager.instance.gameData.respawnGravityDir;
         GameManager.instance.nextState = States.Walk;
+
+        //GameData 저장해 줌 
+        string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
+        string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
+        File.WriteAllText(filePath, ToJsonData);
 
         InputManager.instance.isPlayerDying = false;
         isDieCorWork = false;

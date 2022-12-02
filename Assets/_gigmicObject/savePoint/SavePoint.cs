@@ -68,7 +68,7 @@ public class SavePoint : MonoBehaviour
     }
 
     private void Update()
-    {
+    {        
         //원래 이미 활성화된 세이브포인트도 원하면 다시 활성화할 수 있어야 함 
         //ex) 이미 클리어한 스테이지를 다시 돌아와서 할 때 
         if(isSavePointActivated && isPlayerOnSensor && Input.GetKeyDown(KeyCode.E))
@@ -81,6 +81,7 @@ public class SavePoint : MonoBehaviour
         {           
             StartCoroutine(SaveData());
         }
+        
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -99,6 +100,11 @@ public class SavePoint : MonoBehaviour
                 curCoroutine = lightOn();
                 StartCoroutine(curCoroutine);
             }           
+
+            if(isSavePointActivated && GameManager.instance.gameData.curAchievementNum != achievementNum)
+            {
+                StartCoroutine(reSaveData());
+            }
         }
     }
 
@@ -106,17 +112,7 @@ public class SavePoint : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            isPlayerOnSensor = false;
-            if (!isSavePointActivated)
-            {
-                if (isCorWorking)
-                {
-                    StopCoroutine(curCoroutine);
-                    isCorWorking = false;
-                }
-                curCoroutine = lightOff();
-                StartCoroutine(curCoroutine);
-            }           
+            isPlayerOnSensor = false;              
         }
     }
 
@@ -134,6 +130,8 @@ public class SavePoint : MonoBehaviour
             curSpriteNum = index;
             yield return new WaitForSeconds(0.03f);
         }
+
+        StartCoroutine(SaveData()); //불이 끝까지 다 들어오면 자동 세이브 
     }
 
     IEnumerator lightOff()

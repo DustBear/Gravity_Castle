@@ -41,6 +41,8 @@ public class elevatorCage : MonoBehaviour
     public AudioClip elevatorEffect;
     public AudioClip elevatorArrive;
 
+    public GameObject E_icon;
+
     private void Awake()
     {
         //시작하면서 엘리베이터 위치 초기화
@@ -84,6 +86,8 @@ public class elevatorCage : MonoBehaviour
 
         gearAni.SetBool("gearMove", false);
         StartCoroutine(soundCheck());
+
+        E_icon.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -91,6 +95,7 @@ public class elevatorCage : MonoBehaviour
         if(collision.tag == "Player" && collision.transform.up == transform.up)
         {
             //플레이어와 엘리베이터의 회전각이 다르면 활성화 안됨 
+            E_icon.SetActive(true);
             isPlayerOnBell = true;
         }       
     }
@@ -98,6 +103,7 @@ public class elevatorCage : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
+            E_icon.SetActive(false);
             isPlayerOnBell = false;           
         }
     }
@@ -107,6 +113,7 @@ public class elevatorCage : MonoBehaviour
         {
             if (isPlayerOnBell) bellRing();
             //센서 내에 플레이어가 있는 상태로 상호작용키 누르면 벨 울리면서 purposePoint 바뀜 
+            E_icon.SetActive(false);
         }
 
         elevatorMove();

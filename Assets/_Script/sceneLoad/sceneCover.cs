@@ -27,6 +27,8 @@ public class sceneCover : MonoBehaviour
         {
             spr.color = new Color(1, 1, 1, 1);
         }
+
+        sound.volume = 0.3f;
     }
 
     

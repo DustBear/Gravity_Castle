@@ -27,7 +27,9 @@ public class GameManager : Singleton<GameManager>
     string saveFileSeqName = "/SaveFileSeq.json";
 
     public AudioSource bgmMachine;
-    public AudioClip[] bgmGroup;
+
+    public AudioClip[] bgmGroup_once;
+    public AudioClip[] bgmGroup_loop;
 
     //public AudioSource moodMachine;
     //public AudioClip[] moodSoundGroup;
@@ -39,33 +41,27 @@ public class GameManager : Singleton<GameManager>
     void Awake() 
     {
         DontDestroyOnLoad(gameObject);
-        string filePath = Application.persistentDataPath + saveFileSeqName; //현재 플레이중인 세이브파일의 저장경로 
+        string filePath_seq = Application.persistentDataPath + saveFileSeqName; //세이브파일 플레이 순서 리스트 가져오기 
 
         gameData = new GameData(); //gameData 생성하기 
 
-        if (File.Exists(filePath)) //세이브파일이 존재하면 
+        if (File.Exists(filePath_seq)) //이전에 플레이한 기록이 있으면 
         {
-            Debug.Log("file exist");
-
-            string FromJsonData = File.ReadAllText(filePath);
+            string FromJsonData = File.ReadAllText(filePath_seq);
             saveFileSeq = JsonUtility.FromJson<SaveFileSeq>(FromJsonData); //svaeFileSeq 가져오기 
 
-            curSaveFileNum = saveFileSeq.saveFileSeqList.Last(); //마지막으로 실행했던 세이브파일 번호
-
-            
-            string filePath_2 = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
-            string FromJsonData_2 = File.ReadAllText(filePath_2);
+            /*
+            //마지막으로 플레이했던 세이브파일 가져옴 
+            string filePath_save = Application.persistentDataPath + gameDataFileNames[curSaveFileNum];
+            string FromJsonData_2 = File.ReadAllText(filePath_save);
 
             gameData = JsonUtility.FromJson<GameData>(FromJsonData_2); //선택한 세이브파일의 GameData 불러옴 
-            
+            */
         }
         else //처음 시작하는 게임이면 
-        {
-            Debug.Log("file dont exist");
-
+        {           
             saveFileSeq = new SaveFileSeq(); //SaveFileSeq 없으면 만들기 
             saveFileSeq.saveFileSeqList = new List<int>();
-       
         }
         
         bgmMachine = gameObject.AddComponent<AudioSource>();
@@ -89,7 +85,7 @@ public class GameManager : Singleton<GameManager>
         else if(curSceneNum == 3)
         {
             //오프닝 애니메이션
-            purposeBgmIndex = 10; //index 10이 오프닝 애니메이션 bgm 
+            purposeBgmIndex = 9; //index 9이 오프닝 애니메이션 bgm 
         }
         else //각각의 스테이지에 진입했을 때 
         {
@@ -112,7 +108,7 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
-        if(purposeBgmIndex != curBgmIndex) //현재 씬에서 실행해야 하는 bgm이 이미 실행되고 있으면 무시해야 함 
+        if (purposeBgmIndex != curBgmIndex) //현재 씬에서 실행해야 하는 bgm이 이미 실행되고 있으면 무시해야 함 
         {
             StopCoroutine("soundManager"); //기존에 실행중이던 sound 중지 
             StartCoroutine("soundManager");
@@ -122,50 +118,46 @@ public class GameManager : Singleton<GameManager>
     {
         curBgmIndex = purposeBgmIndex;
 
-        for (int index = 20; index >= 1; index--)
+        float bgmVolume = bgmMachine.volume;
+        while(bgmVolume >= 0f)
         {
-            if (bgmMachine.volume == 0)
-            {
-                break;
-            }
-
-            bgmMachine.volume = bgmMachine.volume-masterVolume_bgm/20f;
-            //moodMachine.volume = bgmMachine.volume;
-            yield return new WaitForSeconds(0.05f);
-
-            //현재 볼륨이 얼마이든 서서히 줄여서 0으로 만듦        
+            bgmVolume -= masterVolume_bgm * Time.deltaTime;
+            bgmMachine.volume = bgmVolume;
+            yield return null;
         }
-              
-        bgmMachine.clip = bgmGroup[purposeBgmIndex]; //bgm clip 에 해당하는 bgm 파일 할당   
+        bgmMachine.volume = 0f;
+
+        bgmMachine.clip = bgmGroup_loop[purposeBgmIndex]; //bgm clip 에 해당하는 bgm 파일 할당   
         //moodMachine.clip = moodSoundGroup[purposeBgmIndex];
 
         yield return new WaitForSeconds(1f); //1초간 음악 정지 
         bgmMachine.Play();
         //moodMachine.Play();
-   
-        for (int index = 1; index <= 20; index++)
+
+        /*
+        bgmVolume = bgmMachine.volume;
+        while (bgmVolume <= masterVolume_bgm)
         {
-            bgmMachine.volume = masterVolume_bgm / 20f * index;
-            //moodMachine.volume = bgmMachine.volume;
-            yield return new WaitForSeconds(0.05f); //다시 서서히 volume 키움 
+            bgmVolume += masterVolume_bgm * Time.deltaTime;
+            bgmMachine.volume = bgmVolume;
+            yield return null;
         }
+        */
+        bgmMachine.volume = masterVolume_bgm;
+
     }
 
     IEnumerator soundOff() //GM에 의한 bgm 제어를 끄고 해당 씬에서 직접 음향을 제어해야 할 때 사용
     {
-        for (int index = 20; index >= 1; index--)
+        float bgmVolume = bgmMachine.volume;
+        while (bgmVolume >= 0f)
         {
-            if (bgmMachine.volume == 0)
-            {
-                break;
-            }
-
-            bgmMachine.volume = bgmMachine.volume - 0.05f;
-            //moodMachine.volume = bgmMachine.volume;
-            yield return new WaitForSeconds(0.05f);
-
-            //현재 볼륨이 얼마이든 서서히 줄여서 0으로 만듦        
+            bgmVolume -= masterVolume_bgm * Time.deltaTime;
+            bgmMachine.volume = bgmVolume;
+            yield return null;
         }
+        bgmMachine.volume = 0f;
+        //현재 볼륨이 얼마이든 서서히 줄여서 0으로 만듦               
     }
 
 
@@ -183,9 +175,11 @@ public class GameManager : Singleton<GameManager>
         //moodMachine.Play();
 
         bgmMachine.loop = true;
-        //moodMachine.loop = true;
         bgmMachine.playOnAwake = false;
-        //moodMachine.playOnAwake = false;
+
+        bgmMachine.clip = bgmGroup_loop[0];
+        bgmMachine.volume = masterVolume_bgm;
+        bgmMachine.Play();
     }
 
     private void Update()
@@ -200,9 +194,13 @@ public class GameManager : Singleton<GameManager>
                 + "\nfinalAchieve: " + gameData.finalAchievementNum
                 + "  finalStage: " + gameData.finalStageNum
                 );
+            Debug.Log(gameData.SpawnSavePoint_bool + ", " + gameData.UseOpeningElevetor_bool);
+        }
 
+        if (Input.GetKeyDown(KeyCode.C))
+        {
             gameData.collectionTmp.Clear(); //임시저장한 탐험가상자 지움
-            for(int index=0; index<gameData.collectionUnlock.Length; index++)
+            for (int index = 0; index < gameData.collectionUnlock.Length; index++)
             {
                 gameData.collectionUnlock[index] = false;
                 // 모든 탐험가상자 수집기록 삭제 
@@ -251,7 +249,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    //세이브포인트 불러오기 버튼에 현재 진행도 표시하는 함수 
+    //세이브포인트 불러오기 버튼에 현재 진행도(게임 종료전 플레이하던 시점) 표시하는 함수 
     public KeyValuePair<int, int> GetSavedData(int saveFileNum)
     {
         string filePath = Application.persistentDataPath + gameDataFileNames[saveFileNum];
@@ -259,7 +257,7 @@ public class GameManager : Singleton<GameManager>
         {
             string FromJsonData = File.ReadAllText(filePath);
             GameData curGameData = JsonUtility.FromJson<GameData>(FromJsonData);
-            return new KeyValuePair<int, int>(curGameData.finalStageNum, curGameData.finalAchievementNum);
+            return new KeyValuePair<int, int>(curGameData.curStageNum, curGameData.curAchievementNum);
         }
         return new KeyValuePair<int, int>(-1, -1); //세이브가 없으면 (-1, -1) 반환 
     }  

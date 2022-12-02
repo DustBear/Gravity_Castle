@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class openingElevator_v2 : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class openingElevator_v2 : MonoBehaviour
     }
     void Start()
     {
-        if (GameManager.instance.shouldUseOpeningElevator) //엘리베이터를 사용할지 말지는 GM 이 결정 
+        if (GameManager.instance.gameData.UseOpeningElevetor_bool) //엘리베이터를 사용할지 말지는 GM 이 결정 
         {
             transform.position = pos1;
             isElevatorArrived = false;
@@ -36,6 +37,16 @@ public class openingElevator_v2 : MonoBehaviour
 
             sound.clip = moveSound;
             sound.Play();
+
+            //엘리베이터를 사용했으면 그 다음은 세이브포인트를 이용해야 함 
+            GameManager.instance.gameData.UseOpeningElevetor_bool = false;
+            GameManager.instance.shouldUseOpeningElevator = false;
+            GameManager.instance.gameData.SpawnSavePoint_bool = true;
+            GameManager.instance.shouldSpawnSavePoint = true;
+
+            string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
+            string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
+            File.WriteAllText(filePath, ToJsonData);
         }
         else
         {
@@ -59,7 +70,6 @@ public class openingElevator_v2 : MonoBehaviour
             rigid.velocity = Vector2.zero;
             isElevatorArrived = true;
 
-            GameManager.instance.shouldUseOpeningElevator = false;
             UIManager.instance.cameraShake(0.5f, 0.4f);
 
             sound.Stop();

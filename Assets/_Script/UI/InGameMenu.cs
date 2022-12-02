@@ -19,7 +19,9 @@ public class InGameMenu : MonoBehaviour
     [SerializeField] float iconGap;
 
     [SerializeField] Sprite activeIcon; //이미 수집한 수집요소의 아이콘
+    [SerializeField] Sprite tmpSavedIcon; //수집은 했지만 저장하지 않은 아이콘 
     [SerializeField] Sprite deactiveIcon; //아직 수집하지 않은 수집요소의 아이콘 
+
     [SerializeField] Sprite[] compass_sprite;
 
     Vector2 col_initIconPos;
@@ -30,6 +32,7 @@ public class InGameMenu : MonoBehaviour
 
     [SerializeField] Button mainMenuButton;
     [SerializeField] Button gameMenuButton;
+
 
     private void Awake()
     {
@@ -57,8 +60,9 @@ public class InGameMenu : MonoBehaviour
         //나가기 버튼 중복 클릭 못하게 락 검 
 
         UIManager.instance.clickSoundGen();
-        collectionIconDel();
+
         GameManager.instance.gameData.collectionTmp.Clear();
+        GameManager.instance.gameData.SpawnSavePoint_bool = true;
 
         Time.timeScale = 1f;
 
@@ -78,6 +82,9 @@ public class InGameMenu : MonoBehaviour
             GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, 1))] = 1; //세이브포인트 1 활성화 
             GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; // 
 
+            GameManager.instance.gameData.SpawnSavePoint_bool = true;
+            GameManager.instance.gameData.UseOpeningElevetor_bool = false;
+
             //세이브파일에 데이터 저장 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
@@ -88,6 +95,7 @@ public class InGameMenu : MonoBehaviour
         }
 
         UIManager.instance.FadeOut(0.7f);
+        collectionIconDel();
         Invoke("loadMainMenu", 1f);
     }
 
@@ -97,12 +105,13 @@ public class InGameMenu : MonoBehaviour
         gameMenuButton.interactable = false;
 
         UIManager.instance.clickSoundGen();
-        collectionIconDel();
+
         GameManager.instance.gameData.collectionTmp.Clear();
+        GameManager.instance.gameData.SpawnSavePoint_bool = true;
 
         Time.timeScale = 1f;
-
-        if(GameManager.instance.gameData.curAchievementNum == 0)
+        
+        if (GameManager.instance.gameData.curAchievementNum == 0)
         {
             //opening Elevator 작동중이고 아직 첫 세이브포인트를 활성화시키지 않았을 때 
 
@@ -117,6 +126,9 @@ public class InGameMenu : MonoBehaviour
             GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, 1))] = 1; 
             GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex;
 
+            GameManager.instance.gameData.SpawnSavePoint_bool = true;
+            GameManager.instance.gameData.UseOpeningElevetor_bool = false;
+
             //세이브파일에 데이터 저장 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
@@ -127,6 +139,7 @@ public class InGameMenu : MonoBehaviour
         }
 
         UIManager.instance.FadeOut(0.7f);
+        collectionIconDel();
         Invoke("loadInGameMenu", 1f);
     }
 
@@ -154,30 +167,25 @@ public class InGameMenu : MonoBehaviour
 
     public void collectionIconMake()
     {
-        int savedCollectionNum = 0;
-
         for(int index=0; index<collectionCount; index++)
         {
             GameObject tmpIcon = Instantiate(collectionIcon);
             tmpIcon.transform.SetParent(collGroup.transform); //생성된 수집요소 아이콘은 ingameMenu 아래에 넣어 저장            
 
             int tmpIconNum = firstCol_num + index; //방금 만든 수집요소의 번호 
+            tmpIcon.transform.position = col_initIconPos + new Vector2(iconGap * index, 0);
+            tmpIcon.GetComponent<collectionIconButton>().collectionNum = tmpIconNum;
 
             //현재 수집, 저장 끝낸 탐험가 상자를 정렬하여 표시 
             if (GameManager.instance.gameData.collectionUnlock[tmpIconNum])
             {
-                //만약 이미 수집과 저장을 끝낸 탐험가 상자라면 
-                tmpIcon.transform.position = col_initIconPos + new Vector2(iconGap * savedCollectionNum, 0);
-                savedCollectionNum++;
-
-                tmpIcon.GetComponent<collectionIconButton>().collectionNum = tmpIconNum;
+                //만약 이미 수집과 저장을 끝낸 탐험가 상자라면               
                 tmpIcon.GetComponent<Image>().sprite = activeIcon;
-                //해당 아이콘의 스크립트에 번호 할당 
             }
             else
             {
-                //아직 세이브하지 않았다면 표시하지 않아야 함 
-                Destroy(tmpIcon);
+                //아직 세이브하지 않았다면
+                tmpIcon.GetComponent<Image>().sprite = deactiveIcon;
             }
         }
 
@@ -188,7 +196,7 @@ public class InGameMenu : MonoBehaviour
             tmpIcon.transform.position = col_tmpIconPos + new Vector2(iconGap * index, 0); //정렬 
 
             tmpIcon.GetComponent<collectionIconButton>().collectionNum = GameManager.instance.gameData.collectionTmp[index];
-            tmpIcon.GetComponent<Image>().sprite = deactiveIcon;
+            tmpIcon.GetComponent<Image>().sprite = tmpSavedIcon;
         }
     }
 

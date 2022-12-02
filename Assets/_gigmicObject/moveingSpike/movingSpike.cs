@@ -12,6 +12,12 @@ public class movingSpike : MonoBehaviour
     Rigidbody2D rigid;
     Animator anim;
 
+    public AudioSource sound;
+    public AudioSource sound_loop;
+
+    public AudioClip moveStart;
+    public AudioClip moveFinish;
+    public AudioClip moving;
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -19,59 +25,61 @@ public class movingSpike : MonoBehaviour
     }
     void Start()
     {
+        anim.SetFloat("animSpeed", 0);
+        sound.clip = moving;
+
         if (initPos == 1) 
         {
             transform.position = pos1;
+            StartCoroutine(spikeMove(1));
         }
         else
         {
             transform.position = pos2;
+            StartCoroutine(spikeMove(-1));
         }
-
-        anim.SetFloat("animSpeed", 0);
-        StartCoroutine(spikeMove());
     }
-   
-    IEnumerator spikeMove()
+    
+    IEnumerator spikeMove(int aimpos) //aimPos를 향해 감 
     {
+        //1이면 pos1 ~> pos2 
+        //-2이면 pos2 ~> pos1 로 이동 
+
         //초기 속도 
         float moveSpeed = (pos1 - pos2).magnitude / moveDelay;
+        sound_loop.Play();
+        sound.PlayOneShot(moveStart);
 
-        if(initPos == 1) //pos1에서 출발 ~> pos2로 가야 함 
+        if(aimpos == 1) //pos2로 가야 함 
         {
             rigid.velocity = (pos2 - pos1).normalized * moveSpeed;
             anim.SetFloat("animSpeed", -1);
         }
-        else //pos2에서 출발 ~> pos1로 가야 함 
+        else //pos1로 가야 함 
         {
             rigid.velocity = (pos1 - pos2).normalized * moveSpeed;
             anim.SetFloat("animSpeed", 1);
         }
 
-        while (true)
+        yield return new WaitForSeconds(moveDelay-0.2f);
+        sound.PlayOneShot(moveFinish);
+        yield return new WaitForSeconds(0.2f);
+
+        rigid.velocity = Vector2.zero;
+
+        if(aimpos == 1)
         {
-            Vector2 spikePos = new Vector2(transform.position.x, transform.position.y);
-            if ((spikePos - pos1).magnitude > (pos2-pos1).magnitude) //spikeBox 가 pos2를 넘어감 
-            {
-                transform.position = pos2;
-                rigid.velocity = Vector2.zero;
-                anim.SetFloat("animSpeed", 0);
-                yield return new WaitForSeconds(stopDelay);
-
-                rigid.velocity = rigid.velocity = (pos1 - pos2).normalized * moveSpeed; //pos1 을 향해 출발 
-                anim.SetFloat("animSpeed", 1);
-            }
-            else if((spikePos - pos2).magnitude > (pos2 - pos1).magnitude) //spikeBox 가 pos1를 넘어감 
-            {
-                transform.position = pos1;
-                rigid.velocity = Vector2.zero;
-                anim.SetFloat("animSpeed", 0);
-                yield return new WaitForSeconds(stopDelay);
-
-                rigid.velocity = rigid.velocity = (pos2 - pos1).normalized * moveSpeed; //pos2 을 향해 출발 
-                anim.SetFloat("animSpeed", -1);
-            }
-            yield return null;
+            transform.position = pos2;
         }
+        else
+        {
+            transform.position = pos1;
+        }
+
+        anim.SetFloat("animSpeed", 0);
+        sound_loop.Stop();
+       
+        yield return new WaitForSeconds(stopDelay);
+        StartCoroutine(spikeMove(aimpos * (-1)));
     }
 }

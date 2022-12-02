@@ -7,6 +7,10 @@ public class popUpSpikeBox : MonoBehaviour
     public float popUpDelay; //가시가 들어갔다가 다시 나오기까지 걸리는 시간
     public float spikeDelay; //가시가 나왔다가 들어가기까지 걸리는 시간 
 
+    public GameObject targetAudio;
+    popUpSpike_audioSource audioScr;
+    //이 spike의 소리를 재생해 주는 오디오 
+
     public float iniOffset; //씬이 활성화되고 처음 가시가 나오는 데 걸리는 시간
     public Sprite[] spriteGroup; //[0]은 가시가 들어간 스프라이트, [3]은 가시가 튀어나온 스프라이트 
 
@@ -27,10 +31,15 @@ public class popUpSpikeBox : MonoBehaviour
     float initTime;
     float curTime;
     int spikeIndex = 0;
+
     void Start()
     {
         spr = GetComponent<SpriteRenderer>();
         spikeColl = GetComponent<BoxCollider2D>();
+        if(targetAudio!= null)
+        {
+            audioScr = targetAudio.GetComponent<popUpSpike_audioSource>();
+        }
 
         spr.sprite = spriteGroup[0];
         spikeColl.offset = new Vector2(0, spikeOffsetGroup[0]);
@@ -65,6 +74,10 @@ public class popUpSpikeBox : MonoBehaviour
         {
             sound.PlayOneShot(spike_out);
         }
+        else if(targetAudio != null)
+        {
+            audioScr.spikeOut_Play();
+        }
 
         //가시 튀어나옴 
         for (int index = 0; index <= 3; index++)
@@ -80,6 +93,10 @@ public class popUpSpikeBox : MonoBehaviour
         if (useAudioSource)
         {
             sound.PlayOneShot(spike_in);
+        }
+        else if (targetAudio != null)
+        {
+            audioScr.spikeIn_Play();
         }
 
         //가시 들어감 

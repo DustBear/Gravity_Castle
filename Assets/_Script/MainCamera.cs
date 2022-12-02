@@ -89,25 +89,33 @@ public class MainCamera : MonoBehaviour
     {
         StartCoroutine(cameraShakeCor(shakeSize, shakeCount));
     }
+
     IEnumerator cameraShakeCor(float shakeSize, float shakeDelay)
     {
         Vector3 initialPos = transform.position;
         player.GetComponent<Player>().isCameraShake = true;
+        int shakePeriod = 3;
 
         float strength;
         float elapsedTime = 0f;
+        int shakeIndex = 0;
 
-        while(elapsedTime <= shakeDelay)
+        while (elapsedTime <= shakeDelay)
         {
             elapsedTime += Time.unscaledDeltaTime;
             strength = shakeSize * shakeCurve.Evaluate(elapsedTime / shakeDelay);
 
-            transform.position = new Vector3(cameraPosCal().x + strength * Random.insideUnitCircle.x, cameraPosCal().y + strength * Random.insideUnitCircle.y, cameraPosCal().z);
-            //카메라가 흔들리는 도중에도 플레이어를 따라 움직일 수 있도록 상대적 좌표를 이용 
+            if(shakeIndex%shakePeriod == 0)
+            {
+                transform.position = new Vector3(cameraPosCal().x + strength * Random.insideUnitCircle.x, cameraPosCal().y + strength * Random.insideUnitCircle.y, cameraPosCal().z);
+                //카메라가 흔들리는 도중에도 플레이어를 따라 움직일 수 있도록 상대적 좌표를 이용 
+            }
+
+            shakeIndex++;
             yield return null;
         }
 
-        transform.position = cameraPosCal();      
+        transform.position = cameraPosCal();
         player.GetComponent<Player>().isCameraShake = false;
     }
     

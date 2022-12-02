@@ -11,6 +11,7 @@ public class openingAnimation : MonoBehaviour
     public string[] message;
 
     bool isSceneWorking = false;
+    bool isEscPressed = false;
 
     private void Start()
     {
@@ -34,9 +35,10 @@ public class openingAnimation : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !isEscPressed)
         {
             SceneManager.LoadScene(4);
+            isEscPressed = true;
         }
     }
 
@@ -128,18 +130,6 @@ public class openingAnimation : MonoBehaviour
             }
             yield return null;
         }
-
-        /*
-        //#10 : 텍스트 페이드인(타이핑효과 없음) : 결코 용서받지 못하리라. 
-        textObj[3].gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
-
-        for(int index=1; index<=100; index++)
-        {
-            textObj[3].color = new Color(1, 1, 1, 1 - index * 0.01f);
-            yield return new WaitForSeconds(0.015f);
-        }
-        */
 
     }
 

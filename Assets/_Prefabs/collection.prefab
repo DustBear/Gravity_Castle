@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: -685508463
   m_SortingLayer: -1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5945786167257189742, guid: bd8837c48a87b7e4883bf8afe30ea867, type: 3}
+  m_Sprite: {fileID: 3868263849053281345, guid: 2596edf023d7aee4f9666f61b2678d0e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -118,15 +118,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   part: {fileID: 2239948850052513357}
   idleParticle: {fileID: 6051016601310612205}
-  collectionSprite:
-  - {fileID: -5945786167257189742, guid: bd8837c48a87b7e4883bf8afe30ea867, type: 3}
-  - {fileID: -6578392305576850864, guid: bd8837c48a87b7e4883bf8afe30ea867, type: 3}
-  - {fileID: -4334188242052835033, guid: bd8837c48a87b7e4883bf8afe30ea867, type: 3}
-  - {fileID: 3439183900238650015, guid: bd8837c48a87b7e4883bf8afe30ea867, type: 3}
-  - {fileID: -1201122116955499009, guid: bd8837c48a87b7e4883bf8afe30ea867, type: 3}
-  - {fileID: -7283890518854260196, guid: bd8837c48a87b7e4883bf8afe30ea867, type: 3}
-  - {fileID: -4740241543033481301, guid: bd8837c48a87b7e4883bf8afe30ea867, type: 3}
-  - {fileID: -9007725967552419825, guid: bd8837c48a87b7e4883bf8afe30ea867, type: 3}
+  spriteGroup:
+  - {fileID: 3868263849053281345, guid: 2596edf023d7aee4f9666f61b2678d0e, type: 3}
+  - {fileID: 2379491638259345822, guid: 2596edf023d7aee4f9666f61b2678d0e, type: 3}
+  - {fileID: -6507638892565709643, guid: 2596edf023d7aee4f9666f61b2678d0e, type: 3}
+  - {fileID: -3514192747969088413, guid: 2596edf023d7aee4f9666f61b2678d0e, type: 3}
+  - {fileID: -3083900494906614558, guid: 2596edf023d7aee4f9666f61b2678d0e, type: 3}
+  - {fileID: -3932299322648139711, guid: 2596edf023d7aee4f9666f61b2678d0e, type: 3}
+  - {fileID: -7032961698011306506, guid: 2596edf023d7aee4f9666f61b2678d0e, type: 3}
+  - {fileID: 4955842193648776470, guid: 2596edf023d7aee4f9666f61b2678d0e, type: 3}
   sound: {fileID: 595825968961919500}
   loopSound: {fileID: 927313306049596519}
   collect_normal: {fileID: 8300000, guid: 6b1d0f15535d80c4188e70f9fe413274, type: 3}

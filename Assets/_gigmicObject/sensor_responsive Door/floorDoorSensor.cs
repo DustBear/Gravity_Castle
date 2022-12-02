@@ -23,6 +23,13 @@ public class floorDoorSensor : MonoBehaviour
 
     bool isDoorActing = false;
 
+    public AudioSource sound;
+    public AudioSource sound_loop;
+
+    public AudioClip sensorOn;
+    public AudioClip sensorOff;
+    public AudioClip sensorIdle;
+
     private void Awake()
     {
         spr = doorCol.GetComponent<SpriteRenderer>();
@@ -60,6 +67,9 @@ public class floorDoorSensor : MonoBehaviour
             isPlayerOn = true;
             if (curCoroutine != doorOpen())
             {
+                sound.PlayOneShot(sensorOn);
+                sound_loop.Play();
+
                 StopCoroutine(curCoroutine);
                 curCoroutine = doorOpen();
 
@@ -71,6 +81,9 @@ public class floorDoorSensor : MonoBehaviour
             isObjectOn = true;
             if (curCoroutine != doorOpen())
             {
+                sound.PlayOneShot(sensorOn);
+                sound_loop.Play();
+
                 StopCoroutine(curCoroutine);
                 curCoroutine = doorOpen();
 
@@ -86,6 +99,9 @@ public class floorDoorSensor : MonoBehaviour
             isPlayerOn = false;
             if (!isObjectOn) //센서 위에 아무것도 없는 경우 ~> 문 닫음 
             {
+                sound.PlayOneShot(sensorOff);
+                sound_loop.Stop();
+
                 StopCoroutine(curCoroutine);
                 curCoroutine = doorClose();
 
@@ -97,6 +113,9 @@ public class floorDoorSensor : MonoBehaviour
             isObjectOn = false;
             if (!isPlayerOn) //센서 위에 아무것도 없는 경우 ~> 문 닫음 
             {
+                sound.PlayOneShot(sensorOff);
+                sound_loop.Stop();
+
                 StopCoroutine(curCoroutine);
                 curCoroutine = doorClose();
 

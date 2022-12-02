@@ -614,7 +614,9 @@ MonoBehaviour:
   jumpHeightCut: 0.5
   groundedRemember: 0
   groundedRememberOffset: 0.12
+  isCollideLever: 0
   shouldRotateHalf: 0
+  targetLever: {fileID: 0}
   destRot: 0
   isPlayerGrab: 0
   upWindActive: 0
@@ -634,8 +636,33 @@ MonoBehaviour:
   isBlackHole: 0
   sound: {fileID: 3228596939286394652}
   walkSound: {fileID: 6078229650507772591}
-  moveSound: {fileID: 8300000, guid: 0161e3b94f6c76049b72bfbba1821750, type: 3}
-  jumpSound: {fileID: 8300000, guid: 1e966a3dce14154459d29ceea597886f, type: 3}
+  walkSound_stage1:
+  - {fileID: 8300000, guid: e78a771387362004998d1e1a7ef680c8, type: 3}
+  - {fileID: 8300000, guid: 165856b72ab136d41af272908120d352, type: 3}
+  - {fileID: 8300000, guid: d51dd3477edb153429722f588d2fc1bf, type: 3}
+  - {fileID: 8300000, guid: 9efbc86e385d2d94bb4e19c80156e0e1, type: 3}
+  - {fileID: 8300000, guid: 950246a23e73d9f42908361b885a4926, type: 3}
+  - {fileID: 8300000, guid: 29a4f0700e0f1c64391cbbafd7c8b0ce, type: 3}
+  walkSound_stage2:
+  - {fileID: 8300000, guid: 9dbe2bc3187029a42a0119f2634fd22b, type: 3}
+  - {fileID: 8300000, guid: 6e82c276bcebe3547837b9313df88006, type: 3}
+  - {fileID: 8300000, guid: ba278c7aca5f06a4dbdb91bece1c42f5, type: 3}
+  - {fileID: 8300000, guid: e3956a45fbade3f4884747648622ea9a, type: 3}
+  - {fileID: 8300000, guid: edfdc9cf1878a8c4cac7db324728b403, type: 3}
+  - {fileID: 8300000, guid: dd5fbe72d17f87a42a8b1f5853cf397f, type: 3}
+  walkSound_stage3:
+  - {fileID: 8300000, guid: 5100f906b33f0324d93988c78f0b13a2, type: 3}
+  - {fileID: 8300000, guid: f24e49ba0a0fd694db5c0b90933f6756, type: 3}
+  - {fileID: 8300000, guid: 0087f4bdac66aff468b74deb155ac728, type: 3}
+  - {fileID: 8300000, guid: 45a88690d61efb44882f472b820598d4, type: 3}
+  - {fileID: 8300000, guid: 33f2c992e96f40f4bb8fef1e63b4dac9, type: 3}
+  walkSound_stage4:
+  - {fileID: 8300000, guid: 2c91360a9a855d446a3ff3d04113d58c, type: 3}
+  - {fileID: 8300000, guid: e450954356271b84f9d0a5a00c9c8ecb, type: 3}
+  - {fileID: 8300000, guid: b18bbfc83d93d8941a0d0daa303d15b5, type: 3}
+  - {fileID: 8300000, guid: 009746cf0e438c744914e974420ef9a9, type: 3}
+  - {fileID: 8300000, guid: 88e2c09ce301df649b4f20d9bad636bc, type: 3}
+  jumpSound: {fileID: 8300000, guid: 6c6d868f92ff2e84e863381510e433f8, type: 3}
   landSound: {fileID: 8300000, guid: 3709185f83b96784e9668a565533eb6b, type: 3}
   ropeGrab: {fileID: 8300000, guid: 8030e9424ebb6a64e9f07ab3e59353cc, type: 3}
   ropeMove: {fileID: 8300000, guid: 2aed02715ff20d541b3c149bfbcbc51e, type: 3}
@@ -684,7 +711,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.65
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -780,7 +807,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0

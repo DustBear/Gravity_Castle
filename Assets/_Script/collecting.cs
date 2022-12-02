@@ -10,7 +10,7 @@ public class collecting : MonoBehaviour
     public ParticleSystem part;
     public ParticleSystem idleParticle;
 
-    public Sprite[] collectionSprite;
+    public Sprite[] spriteGroup;
     SpriteRenderer spr;
 
     bool isParticlePlayed;
@@ -28,6 +28,7 @@ public class collecting : MonoBehaviour
     public int colNumCal;
 
     float timer = 0f;
+    float anim_period = 1.5f;
    
     private void Awake()
     {
@@ -54,11 +55,12 @@ public class collecting : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        if(timer >= 1.2f)
+        if(timer >= anim_period)
         {
-            StartCoroutine(collectionAnim());
+            StartCoroutine(colAnim());
             timer = 0f;
         }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -108,14 +110,14 @@ public class collecting : MonoBehaviour
         File.WriteAllText(filePath, ToJsonData);
     }
 
-    IEnumerator collectionAnim()
+    IEnumerator colAnim()
     {
-        var waitFrame = new WaitForSeconds(0.1f);
-        for (int index=0; index<collectionSprite.Length; index++)
+        for(int index=0; index<spriteGroup.Length; index++)
         {
-            spr.sprite = collectionSprite[index];
-            yield return waitFrame;
+            spr.sprite = spriteGroup[index];
+            yield return new WaitForSeconds(0.1f);
         }
-        spr.sprite = collectionSprite[0];
+        spr.sprite = spriteGroup[0];
     }
+
 }

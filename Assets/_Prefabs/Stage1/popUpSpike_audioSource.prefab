@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8015912847357221181}
   - component: {fileID: 865437344697443191}
   - component: {fileID: 2044222273025807764}
-  - component: {fileID: 5147261264913931438}
   m_Layer: 0
   m_Name: popUpSpike_audioSource
   m_TagString: Untagged
@@ -54,7 +53,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 10
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -89,7 +88,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -143,22 +142,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spike_in: {fileID: 8300000, guid: 51d662a97169233498533b931d78f8db, type: 3}
   spike_out: {fileID: 8300000, guid: 1edcd63af3b97814da5d77a6368beba0, type: 3}
-  spikeActiveTime: 0
-  spikeDelayTime: 0
-  spikeOffset: 0
---- !u!58 &5147261264913931438
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1370431969575320589}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5

@@ -51,9 +51,14 @@ public class InputManager : Singleton<InputManager>
         // 메인메뉴, 오프닝씬, 인게임메뉴 이외의 창에서 esc 누르면 인게임 메뉴 열어줌 
         esc = Input.GetButtonDown("Cancel");
 
+        //데모버전에서는 scene8에서 게임이 끝나고 엔딩크레딧이 올라옴
+        //따라서 scene8에서는 esc 메뉴를 열 수 없음 
+        //이후 출시버전에서는 삭제해야 함 
+
         if (esc && SceneManager.GetActiveScene().name != "MainMenu" 
             && SceneManager.GetActiveScene().name != "openingScene"
             && SceneManager.GetActiveScene().name != "InGameMenu"
+            && SceneManager.GetActiveScene().buildIndex != 8
             && !isPlayerDying) //esc 를 눌러 mainMenu 씬을 열 수 있는 조건 
         {
             UIManager.instance.OnOffInGameMenu();

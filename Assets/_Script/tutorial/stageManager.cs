@@ -319,6 +319,9 @@ public class stageManager : MonoBehaviour
         GameManager.instance.gameData.respawnPos = GameManager.instance.nextPos;
         GameManager.instance.gameData.respawnGravityDir = GameManager.instance.nextGravityDir;
 
+        GameManager.instance.gameData.SpawnSavePoint_bool = true;
+        GameManager.instance.gameData.UseOpeningElevetor_bool = false;
+
         Cursor.lockState = CursorLockMode.Locked;
         InputManager.instance.isInputBlocked = false;
 
@@ -327,8 +330,8 @@ public class stageManager : MonoBehaviour
         string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
         File.WriteAllText(filePath, ToJsonData);
 
-        GameManager.instance.shouldSpawnSavePoint = true; //세이브포인트에서 시작해야 함 
-        GameManager.instance.shouldUseOpeningElevator = false;
+        GameManager.instance.shouldSpawnSavePoint = GameManager.instance.gameData.SpawnSavePoint_bool; //세이브포인트에서 시작해야 함 
+        GameManager.instance.shouldUseOpeningElevator = GameManager.instance.gameData.UseOpeningElevetor_bool;
 
         UIManager.instance.FadeOut(1f);
         Invoke("chapterStart_invoke", 1.5f);
