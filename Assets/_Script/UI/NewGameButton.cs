@@ -65,10 +65,12 @@ public class NewGameButton : MonoBehaviour
                 if (!File.Exists(savefilePath)) //해당 인덱스의 세이브파일이 비어 있다면 
                 {
                     GameManager.instance.curSaveFileNum = index;
+                    //새로운 인덱스의 세이브파일 생성 
 
                     GameManager.instance.saveFileSeq.saveFileSeqList.Remove(index);
                     GameManager.instance.saveFileSeq.saveFileSeqList.Add(index);
                     GameManager.instance.SaveSaveFileSeq();
+                    //세이브 실행기록에 반영 
 
                     break;
                 }
@@ -120,6 +122,7 @@ public class NewGameButton : MonoBehaviour
             Debug.Log("load");
             GameManager.instance.curSaveFileNum = GameManager.instance.saveFileSeq.saveFileSeqList.Last(); //마지막으로 실행했던 세이브파일 번호 가져옴 
 
+            //세이브파일 실행 순서 기록 초기화 
             GameManager.instance.saveFileSeq.saveFileSeqList.Remove(GameManager.instance.curSaveFileNum);
             GameManager.instance.saveFileSeq.saveFileSeqList.Add(GameManager.instance.curSaveFileNum);
             GameManager.instance.SaveSaveFileSeq();
@@ -141,6 +144,7 @@ public class NewGameButton : MonoBehaviour
             GameManager.instance.gameData.SpawnSavePoint_bool = curGameData.SpawnSavePoint_bool;
             GameManager.instance.gameData.UseOpeningElevetor_bool = curGameData.UseOpeningElevetor_bool;
 
+            //에러로 인해 achievement가 0에서 1로 올라가지 않았을 때 자동으로 보정해 줌 ~> 사실 필요없지만 리스크 관리로 일단 둠 
             if (GameManager.instance.gameData.curAchievementNum == 0)
             {
                 GameManager.instance.gameData.SpawnSavePoint_bool = false;

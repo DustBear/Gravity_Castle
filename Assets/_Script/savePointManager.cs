@@ -35,7 +35,7 @@ public class savePointManager : MonoBehaviour
 
                     //GameData 데이터 저장 
                     string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
-                    string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[0];
+                    string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
                     File.WriteAllText(filePath, ToJsonData);
                 }               
             }
