@@ -308,28 +308,28 @@ public class stageManager : MonoBehaviour
         GameManager.instance.gameData.curStageNum = selectedStageNum;
         GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(selectedStageNum, selectedSavePointNum))] = 1;
 
-        GameManager.instance.nextScene = tmpScript.savePointScene[selectedSavePointNum-1]; 
-        GameManager.instance.nextPos = new Vector2(0, 0);
-        GameManager.instance.nextGravityDir = new Vector2(0, -1);
+        GameManager.instance.gameData.respawnScene = tmpScript.savePointScene[selectedSavePointNum-1]; 
+        GameManager.instance.gameData.respawnPos = new Vector2(0, 0);
+        GameManager.instance.gameData.respawnGravityDir = new Vector2(0, -1);
         //nextPos와 nextGravityDIr은 어차피 다음 씬에 도착하면 savePointLoad 가 알아서 조정해 줌 
-
-        GameManager.instance.nextState = Player.States.Walk;
-
-        GameManager.instance.gameData.respawnScene = GameManager.instance.nextScene;
-        GameManager.instance.gameData.respawnPos = GameManager.instance.nextPos;
-        GameManager.instance.gameData.respawnGravityDir = GameManager.instance.nextGravityDir;
 
         //챕터 시작 버튼 누를 경우 세이브포인트에서 시작해야 함
         GameManager.instance.gameData.SpawnSavePoint_bool = true;
         GameManager.instance.gameData.UseOpeningElevetor_bool = false;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        InputManager.instance.isInputBlocked = false;
-
         //게임데이터 저장 
         string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
         string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
         File.WriteAllText(filePath, ToJsonData);
+
+        //당장 GM이 써야 하는 데이터는 초기화 해 줌 
+        GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
+        GameManager.instance.nextPos = GameManager.instance.gameData.respawnPos;
+        GameManager.instance.nextGravityDir = GameManager.instance.gameData.respawnGravityDir;
+        GameManager.instance.nextState = Player.States.Walk;
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        InputManager.instance.isInputBlocked = false;
 
         UIManager.instance.FadeOut(1f);
         Invoke("chapterStart_invoke", 1.5f);

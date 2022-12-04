@@ -80,7 +80,7 @@ public class InGameMenu : MonoBehaviour
                 }
             }
             GameManager.instance.gameData.savePointUnlock[GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, 1))] = 1; //세이브포인트 1 활성화 
-            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; // 
+            GameManager.instance.gameData.respawnScene = SceneManager.GetActiveScene().buildIndex; //세이브포인트를 하나도 못 먹고 죽으면 현재 있는 씬에서 부활  
 
             GameManager.instance.gameData.SpawnSavePoint_bool = true;
             GameManager.instance.gameData.UseOpeningElevetor_bool = false;

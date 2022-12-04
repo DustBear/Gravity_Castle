@@ -63,6 +63,8 @@ public class SaveFileButton : MonoBehaviour
         // 저장된 saveFile 이 없으면
         if (!isSaveFileExist)
         {
+            Debug.Log("file doesn't exist. Make new file");
+
             GameManager.instance.saveFileSeq.saveFileSeqList.Remove(saveFileNum); //기존에 플레이한 기록 있으면 지우고 
             GameManager.instance.saveFileSeq.saveFileSeqList.Add(saveFileNum); //세이브포인트 실행기록에 현재 index 추가
             GameManager.instance.SaveSaveFileSeq(); //저장
@@ -109,6 +111,8 @@ public class SaveFileButton : MonoBehaviour
         // 이미 세이브 파일이 있으면 
         else
         {
+            Debug.Log("file exist. Load it");
+
             GameManager.instance.saveFileSeq.saveFileSeqList.Remove(saveFileNum);
             GameManager.instance.saveFileSeq.saveFileSeqList.Add(saveFileNum);            
             GameManager.instance.SaveSaveFileSeq();
@@ -134,8 +138,17 @@ public class SaveFileButton : MonoBehaviour
             GameManager.instance.gameData.SpawnSavePoint_bool = curGameData.SpawnSavePoint_bool;
             GameManager.instance.gameData.UseOpeningElevetor_bool = curGameData.UseOpeningElevetor_bool;
 
+            GameManager.instance.gameData.respawnScene = curGameData.respawnScene;
+            GameManager.instance.gameData.respawnPos = curGameData.respawnPos;
+            GameManager.instance.gameData.respawnGravityDir = curGameData.respawnGravityDir;
+
             //collectionTmp는 게임을 시작할 땐 항상 비워둬야 함
             GameManager.instance.gameData.collectionTmp = new List<int>();
+
+            //새로 만든 GM 데이터를 알맞은 번호의 gameData에 저장 
+            string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
+            string _filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[saveFileNum];
+            File.WriteAllText(_filePath, ToJsonData);
 
             //GM 에 필요한 데이터 gameData에서 불러와 초기화하기 
             GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;

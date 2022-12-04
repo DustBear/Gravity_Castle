@@ -159,7 +159,8 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("curAchieve: " + gameData.curAchievementNum
                 + "  curStageNum: " + gameData.curStageNum
                 + "\nfinalAchieve: " + gameData.finalAchievementNum
-                + "  finalStage: " + gameData.finalStageNum
+                + "  finalStage: " + gameData.finalStageNum 
+                + "  nextScene: " + GameManager.instance.nextScene
                 );
             Debug.Log(gameData.SpawnSavePoint_bool + ", " + gameData.UseOpeningElevetor_bool);
         }
