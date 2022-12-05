@@ -11,8 +11,9 @@ public class startScene_circleDoor : MonoBehaviour
     public float doorMoveLength;
     public float doorMoveDelay;
 
-    public Sprite[] doorRotateSprites;
-    public Sprite[] doorOpenSprites;
+    public Sprite[] lock_1;
+    public Sprite[] lock_2;
+    public Sprite[] lock_3;
 
     public GameObject[] firstInform; //맨 처음 좌우조작키 설명은 문이 완전히 열린 뒤 떠야 함 
 
@@ -63,10 +64,9 @@ public class startScene_circleDoor : MonoBehaviour
         InputManager.instance.isInputBlocked = true; //플레이어 움직이지 못하게 함 
 
         UIManager.instance.FadeIn(3f); //4초에 걸쳐 화면 밝아짐 
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(6f);
 
-        sound.PlayOneShot(doorShake);
-        for (int index = 0; index < 3; index++) //잠금장치 작동직전 진동 
+        for (int index = 0; index < 3; index++) //진동 
         {
 
             transform.position += new Vector3(0, 1, 0) * 0.06f;
@@ -77,48 +77,44 @@ public class startScene_circleDoor : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        sound.clip = doorRotate;
-        sound.Play();
-        for (int num=0; num<=1; num++) //잠금장치가 2회 회전 
+        //lock_1 애니메이션 
+        for (int index = 0; index < lock_1.Length; index++)
         {
-            for (int index = 0; index <= doorRotateSprites.Length - 1; index++)
-            {
-                thisSpr.sprite = doorRotateSprites[index];
-                yield return new WaitForSeconds(0.35f);
-            }
+            thisSpr.sprite = lock_1[index];
+            yield return new WaitForSeconds(0.15f);
         }
 
-        sound.Stop();
-        sound.PlayOneShot(doorRotateComplete);
-        thisSpr.sprite = doorRotateSprites[0];
-      
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
 
-        //잠금장치 해제 
-        for (int index = 0; index < doorOpenSprites.Length - 1; index++)
+        //lock_2 애니메이션
+        for (int index = 0; index < lock_2.Length; index++)
         {
-            thisSpr.sprite = doorOpenSprites[index];
+            thisSpr.sprite = lock_2[index];
             yield return new WaitForSeconds(0.1f);
         }
 
-        sound.PlayOneShot(doorLockOpen);
+        yield return new WaitForSeconds(1.5f);
 
-        yield return new WaitForSeconds(1f);
+        //lock_3 애니메이션 
+        for (int index = 0; index < lock_3.Length; index++)
+        {
+            thisSpr.sprite = lock_3[index];
+            yield return new WaitForSeconds(0.1f);
+        }
 
-        sound.PlayOneShot(doorShake);
+        yield return new WaitForSeconds(1.5f);
 
-        for (int index=0; index<3; index++) //문 올라가기 직전 진동함 
-        {           
+        for (int index = 0; index < 3; index++) //진동 
+        {
+
             transform.position += new Vector3(0, 1, 0) * 0.06f;
             yield return new WaitForSeconds(0.06f);
             transform.position -= new Vector3(0, 1, 0) * 0.06f;
-            yield return new WaitForSeconds(0.06f);           
+            yield return new WaitForSeconds(0.06f);
         }
+
         yield return new WaitForSeconds(1f);
 
-        sound.Stop();
-        sound.clip = doorOpen;
-        sound.Play();
 
         StartCoroutine(windSoundGen(5f, 50));
 
