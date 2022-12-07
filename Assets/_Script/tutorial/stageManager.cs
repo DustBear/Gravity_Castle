@@ -230,9 +230,9 @@ public class stageManager : MonoBehaviour
             chapterInstruction.sprite = chapterImage[selectedStageNum - 1];
         }
 
-        if(chapterName.text != GameManager.instance.stageName[selectedStageNum - 1])
+        if(chapterName.text != gameTextManager.instance.stageNameManager(selectedStageNum))
         {
-            chapterName.text = GameManager.instance.stageName[selectedStageNum - 1];
+            chapterName.text = gameTextManager.instance.stageNameManager(selectedStageNum);
         }
 
         Sprite[] tmpArray;

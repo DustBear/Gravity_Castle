@@ -7,7 +7,6 @@ using System.Linq;
 
 public class GameManager : Singleton<GameManager>
 {       
-    public string[] stageName = new string[7]; //각 스테이지별 이름 
     public int[] saveNumForStage = new int[7]; //각 스테이지별로 세이브포인트가 몇개 있는지 저장하는 배열 
     public int nextScene {get; set;}
     public Vector2 nextPos {get; set;}
@@ -53,6 +52,8 @@ public class GameManager : Singleton<GameManager>
         
         bgmMachine = gameObject.AddComponent<AudioSource>();
         bgmMachine.volume = masterVolume_bgm;
+
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void soundNumCheck() //매 프레임마다 실행 

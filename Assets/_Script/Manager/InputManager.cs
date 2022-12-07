@@ -57,11 +57,12 @@ public class InputManager : Singleton<InputManager>
 
         if (esc && SceneManager.GetActiveScene().name != "MainMenu" 
             && SceneManager.GetActiveScene().name != "openingScene"
-            && SceneManager.GetActiveScene().name != "InGameMenu"
-            && SceneManager.GetActiveScene().buildIndex != 8
+            && SceneManager.GetActiveScene().name != "InGameMenu"           
             && !isPlayerDying) //esc 를 눌러 mainMenu 씬을 열 수 있는 조건 
         {
             UIManager.instance.OnOffInGameMenu();
         }
+
+        //&& SceneManager.GetActiveScene().buildIndex != 8 집어넣으면 마지막 씬에서 esc 사용 못하게 됨 
     }
 }

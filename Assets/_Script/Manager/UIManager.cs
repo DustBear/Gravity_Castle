@@ -8,6 +8,7 @@ using TMPro;
 public class UIManager : Singleton<UIManager>
 {
     public GameObject inGameMenu;
+    public GameObject optionMenu;
     public GameObject fadeObj;
     public Image fade;
 
@@ -35,6 +36,7 @@ public class UIManager : Singleton<UIManager>
 
         //게임 시작하면 UI 메뉴는 전부 끄고 시작하기 
         inGameMenu.SetActive(false);
+        optionMenu.SetActive(false);
 
         //탐험가상자 수집 메뉴는 켜 놔야 함. 단, 어두운 배경은 없애서 보이지 않게 만들기 
         collectionMenu.SetActive(true);
@@ -204,4 +206,17 @@ public class UIManager : Singleton<UIManager>
     {
         GameObject.Find("Main Camera").GetComponent<MainCamera>().cameraShake(size, length);
     }
+
+    public void OnClickOptionMenu() //옵션 창 켜기 버튼을 누를 때 
+    {
+        clickSoundGen();
+        optionMenu.SetActive(true);
+    }
+
+    public void optionDisable()
+    {
+        clickSoundGen();
+        optionMenu.SetActive(false);
+    }
 }
+

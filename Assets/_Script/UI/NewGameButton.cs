@@ -12,6 +12,9 @@ public class NewGameButton : MonoBehaviour
     public Text text;
     public bool isSaveFileExist;
 
+    int languageIndex_cur = 0;
+    int languageIndex_last = 0;
+
     void Awake()
     {
         text = GetComponentInChildren<Text>();
@@ -29,22 +32,39 @@ public class NewGameButton : MonoBehaviour
 
             if (File.Exists(savefilePath)) //만약 마지막으로 플레이했던 파일이 존재한다면 
             {
-                text.text = "이어하기";
+                text.text = gameTextManager.instance.systemTextManager(2);
                 isSaveFileExist = true;
             }
             else
             {
                 //플레이한 기록이 있더라도 이전에 플레이하던 세이브를 삭제했다면 새로하기 해야 함 
-                text.text = "새로하기";
+                text.text = gameTextManager.instance.systemTextManager(1);
                 isSaveFileExist = false;
             }
         }
         else
         {
             //플레이한 기록이 없다면 새로 하기 
-            text.text = "새로하기";
+            text.text = gameTextManager.instance.systemTextManager(1);
             isSaveFileExist = false;
         }
+    }
+
+    private void Update()
+    {
+        languageIndex_cur = gameTextManager.instance.selectedLanguageNum;
+        if (languageIndex_cur != languageIndex_last) //언어 세팅이 바뀌면 
+        {
+            if (isSaveFileExist)
+            {
+                text.text = gameTextManager.instance.systemTextManager(2);
+            }
+            else
+            {
+                text.text = gameTextManager.instance.systemTextManager(1);
+            }
+        }
+        languageIndex_last = languageIndex_cur;
     }
 
     public void OnClickButton() 

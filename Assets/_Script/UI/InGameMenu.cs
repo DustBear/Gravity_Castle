@@ -33,6 +33,8 @@ public class InGameMenu : MonoBehaviour
     [SerializeField] Button mainMenuButton;
     [SerializeField] Button gameMenuButton;
 
+    int languageIndex_curFrame = 0;
+    int languageIndex_lastFrame = 0;
 
     private void Awake()
     {
@@ -46,10 +48,22 @@ public class InGameMenu : MonoBehaviour
         compassIconControl();
 
         //현재 스테이지 이름과 심도를 창을 열 때마다 보여줌 
-        stageNameIns.text = GameManager.instance.stageName[GameManager.instance.gameData.curStageNum - 1];
+        
+        stageNameIns.text = gameTextManager.instance.stageNameManager(GameManager.instance.gameData.curStageNum);
 
         int depthNum = GameManager.instance.saveNumCalculate(new Vector2(GameManager.instance.gameData.curStageNum, GameManager.instance.gameData.curAchievementNum));
-        depthInstruction.text = "심도\n " + depthNum * 50f + "m";
+        depthInstruction.text = (depthNum+1) * 50f + "m";
+    }
+
+    private void Update()
+    {
+        languageIndex_curFrame = gameTextManager.instance.selectedLanguageNum;
+
+        if (languageIndex_curFrame != languageIndex_lastFrame)
+        {
+            stageNameIns.text = gameTextManager.instance.stageNameManager(GameManager.instance.gameData.curStageNum);
+        }
+        languageIndex_lastFrame = languageIndex_curFrame;
     }
 
     public void OnClickExit() //메인메뉴로 나가기 버튼 누를 때 

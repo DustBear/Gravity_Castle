@@ -21,7 +21,7 @@ public class introCanvas : MonoBehaviour
     }
     void Start()
     {
-        _introText.text = GameManager.instance.stageName[stageNum-1];
+        _introText.text = gameTextManager.instance.stageNameManager(stageNum);
         _introDeco.color = new Color(1, 1, 1, 0);
         _introText.color = new Color(1, 1, 1, 0);
 

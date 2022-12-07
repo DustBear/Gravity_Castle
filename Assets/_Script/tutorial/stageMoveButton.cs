@@ -79,7 +79,7 @@ public class stageMoveButton : MonoBehaviour
 
         stageManager stageManagerScr = stageManager.GetComponent<stageManager>();
 
-        chapter_name.GetComponent<Text>().text = GameManager.instance.stageName[stageNum - 1]; //스테이지 이름 바꿔주기 
+        chapter_name.GetComponent<Text>().text = gameTextManager.instance.stageNameManager(stageNum); //스테이지 이름 바꿔주기 
         //chapter_Instruction.GetComponent<Image>().sprite = instruction_image;
         stageManagerScr.selectedStageNum = stageNum;
         stageManagerScr.selectedSavePointNum = 1; //스테이지가 넘어가면 세이브포인트 번호도 1로 초기화

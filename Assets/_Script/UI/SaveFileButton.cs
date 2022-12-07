@@ -20,6 +20,10 @@ public class SaveFileButton : MonoBehaviour
     public GameObject saveDeleteButton;
     public NewGameButton _newGameButton;
 
+    int languageIndex_cur = 0;
+    int languageIndex_last = 0;
+
+
     void Awake()
     {
         text = GetComponentInChildren<Text>();
@@ -31,18 +35,20 @@ public class SaveFileButton : MonoBehaviour
         KeyValuePair<int, int> keyVal = GameManager.instance.GetSavedData(saveFileNum);
         if (keyVal.Key != -1) 
         {
-            text.text = "스테이지" +"\n"+ keyVal.Key + "_" + keyVal.Value;
+            text.text = gameTextManager.instance.systemTextManager(6) +"\n"+ keyVal.Key + "_" + keyVal.Value;
             isSaveFileExist = true;
         }
         else
         {
-            text.text = "새 게임";
+            text.text = gameTextManager.instance.systemTextManager(5);
             isSaveFileExist = false;
         }
 
         saveDeleteWindow.SetActive(false);
+        languageIndex_cur = gameTextManager.instance.selectedLanguageNum;
     }
 
+    
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Q) && saveDeleteWindow.activeSelf == true)
@@ -50,6 +56,21 @@ public class SaveFileButton : MonoBehaviour
             saveDeleteButton.SetActive(false);
             saveDeleteWindow.SetActive(false);
         }
+
+        languageIndex_cur = gameTextManager.instance.selectedLanguageNum;
+        if(languageIndex_cur != languageIndex_last) //언어 세팅이 바뀌면 
+        {
+            if (isSaveFileExist)
+            {
+                KeyValuePair<int, int> keyVal = GameManager.instance.GetSavedData(saveFileNum);
+                text.text = gameTextManager.instance.systemTextManager(6) + "\n" + keyVal.Key + "_" + keyVal.Value;
+            }
+            else
+            {
+                text.text = gameTextManager.instance.systemTextManager(5);
+            }
+        }
+        languageIndex_last = languageIndex_cur;
     }
 
     public void OnClickButton()
@@ -181,13 +202,13 @@ public class SaveFileButton : MonoBehaviour
         string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[saveFileNum];
         File.Delete(filePath);
         
-        text.text = "새 게임";
+        text.text = gameTextManager.instance.systemTextManager(5);
         isSaveFileExist = false;
 
         if (saveFileNum == GameManager.instance.saveFileSeq.saveFileSeqList.Last())
         {
             _newGameButton.isSaveFileExist = false;
-            _newGameButton.text.text = "새로하기";
+            _newGameButton.text.text = gameTextManager.instance.systemTextManager(1);
             //마지막으로 플레이했던 세이브를 삭제했기 때문에 세이브 없음 
         }
 
@@ -206,7 +227,7 @@ public class SaveFileButton : MonoBehaviour
         {
             string seqfilePath = Application.persistentDataPath + "/SaveFileSeq.json";
             File.Delete(seqfilePath);
-            gameStartButton.GetComponent<NewGameButton>().text.text = "새로하기"; //gameStart 버튼 바꾸기 
+            gameStartButton.GetComponent<NewGameButton>().text.text = gameTextManager.instance.systemTextManager(1); //gameStart 버튼 바꾸기 
             gameStartButton.GetComponent<NewGameButton>().isSaveFileExist = false;
         }
 

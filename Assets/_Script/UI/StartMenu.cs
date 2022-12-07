@@ -15,10 +15,7 @@ public class StartMenu : MonoBehaviour
     public TextMeshProUGUI settingExp;
 
     public GameObject titleImage; //배경 영상 
-    //public GameObject fadeCover;
     public GameObject gameMenuText; //'아무 버튼이나 눌러 시작하세요' 버튼 ~> 깜빡여야 함 
-
-    Color fadeCoverColor;
 
     public bool isTitleMenuOpen;
     public bool isGameMenuOpen;
@@ -31,10 +28,8 @@ public class StartMenu : MonoBehaviour
 
         //gameMenu, loadMenu 끔 
         isGameMenuOpen = false;
-        gameMenu.SetActive(false);
-      
+        gameMenu.SetActive(false);     
         loadMenu.SetActive(false);
-
 
         InputManager.instance.isInputBlocked = false; //메인 메뉴로 돌아오면 무조건 inputBlock 풀어줌
         
@@ -90,16 +85,14 @@ public class StartMenu : MonoBehaviour
         }      
     }
 
- 
-    public void OnClickSetting()
+    public void optionMenuOpen() 
     {
         UIManager.instance.clickSoundGen();
 
-        settingExp.gameObject.SetActive(true);
-        Invoke("settingMessageOff", 3f); //3초 후 세팅메시지 꺼짐
-
-        //Debug.Log("Start Setting!");
+        //옵션 창 켬 
+        UIManager.instance.optionMenu.SetActive(true);
     }
+
     void settingMessageOff()
     {
         settingExp.gameObject.SetActive(false);
