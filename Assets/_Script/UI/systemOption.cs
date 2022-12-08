@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class systemOption : MonoBehaviour
 {
@@ -17,7 +18,8 @@ public class systemOption : MonoBehaviour
 
     void Start()
     {
-        selectedLanguageIndex = 0; //기본 설정은 한국어 
+        selectedLanguageIndex = GameManager.instance.optionSettingData.languageSetting; //기본 언어 설정 가져오기 
+        gameTextManager.instance.selectedLanguageNum = selectedLanguageIndex; //언어 설정 바꿈 
         languageName.text = languageArray[selectedLanguageIndex];
 
         systemGroup.SetActive(false);
@@ -45,6 +47,13 @@ public class systemOption : MonoBehaviour
             selectedLanguageIndex++;
             gameTextManager.instance.selectedLanguageNum = selectedLanguageIndex; //언어 설정 바꿈 
             languageName.text = languageArray[selectedLanguageIndex];
+
+            GameManager.instance.optionSettingData.languageSetting = selectedLanguageIndex; //세팅 데이터 바꿈 
+
+            //바꾼 언어 세팅 데이터 저장 
+            string ToJsonData = JsonUtility.ToJson(GameManager.instance.optionSettingData);
+            string filePath = Application.persistentDataPath + GameManager.instance.optionFileName;
+            File.WriteAllText(filePath, ToJsonData);
         }
     }
     public void leftArrowClick()
@@ -54,6 +63,13 @@ public class systemOption : MonoBehaviour
             selectedLanguageIndex--;
             gameTextManager.instance.selectedLanguageNum = selectedLanguageIndex; //언어 설정 바꿈 
             languageName.text = languageArray[selectedLanguageIndex];
+
+            GameManager.instance.optionSettingData.languageSetting = selectedLanguageIndex; //세팅 데이터 바꿈 
+
+            //바꾼 언어 세팅 데이터 저장 
+            string ToJsonData = JsonUtility.ToJson(GameManager.instance.optionSettingData);
+            string filePath = Application.persistentDataPath + GameManager.instance.optionFileName;
+            File.WriteAllText(filePath, ToJsonData);
         }
     }
 

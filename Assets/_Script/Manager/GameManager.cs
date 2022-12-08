@@ -20,7 +20,11 @@ public class GameManager : Singleton<GameManager>
     public int saveFileCount; //전체 세이브파일 개수 
     public GameData gameData { get; private set; }
     public SaveFileSeq saveFileSeq {get; set;}
+    public optionSetting optionSettingData { get; set; }
+
+
     string saveFileSeqName = "/SaveFileSeq.json";
+    public string optionFileName = "/OptionFile.json";
 
     public AudioSource bgmMachine;
 
@@ -34,7 +38,8 @@ public class GameManager : Singleton<GameManager>
     void Awake() 
     {
         DontDestroyOnLoad(gameObject);
-        string filePath_seq = Application.persistentDataPath + saveFileSeqName; //세이브파일 플레이 순서 리스트 가져오기 
+        string filePath_seq = Application.persistentDataPath + saveFileSeqName; //세이브파일 플레이 순서 리스트 경로 
+        string optionSettingPath = Application.persistentDataPath + optionFileName; //옵션 세팅 경로 
 
         gameData = new GameData(); //gameData 생성하기 
 
@@ -48,6 +53,17 @@ public class GameManager : Singleton<GameManager>
         {           
             saveFileSeq = new SaveFileSeq(); //SaveFileSeq 없으면 만들기 
             saveFileSeq.saveFileSeqList = new List<int>();
+        }
+
+        if (File.Exists(optionSettingPath))
+        {
+            string FromJsonData = File.ReadAllText(optionSettingPath);
+            optionSettingData = JsonUtility.FromJson<optionSetting>(FromJsonData); //optionSetting 가져오기 
+        }
+        else
+        {
+            optionSettingData = new optionSetting();
+            optionSettingData.languageSetting = 0; //기본 언어세팅 한국어 
         }
         
         bgmMachine = gameObject.AddComponent<AudioSource>();

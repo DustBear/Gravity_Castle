@@ -22,6 +22,10 @@ public class gameTextManager : Singleton<gameTextManager>
     public TextAsset stageName_textFile; //각 스테이지의 이름을 저장한 텍스트파일
     public TextAsset system_textFile; //UI 등에 사용되는 용어를 저장한 텍스트파일 
 
+    private void Awake()
+    {
+        selectedLanguageNum = GameManager.instance.optionSettingData.languageSetting;
+    }
     public string stageNameManager(int stageNum) //선택된 스테이지 번호(1~) 와 언어 번호(0~) 에 맞는 텍스트 송출 
     {
         string[] textData = stageName_textFile.text.Split(new string[] { ",", "\n" }, StringSplitOptions.None);

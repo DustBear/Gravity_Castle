@@ -845,6 +845,7 @@ MonoBehaviour:
   - /GameData3.json
   curSaveFileNum: 0
   saveFileCount: 4
+  optionFileName: /OptionFile.json
   bgmMachine: {fileID: 0}
   bgmGroup_once:
   - {fileID: 8300000, guid: 2444d2cbebba6d9448ffd5e8367fb0a0, type: 3}
@@ -3145,7 +3146,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1913918213
 RectTransform:
   m_ObjectHideFlags: 0
