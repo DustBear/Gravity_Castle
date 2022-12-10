@@ -64,15 +64,18 @@ public class elevatorCage : MonoBehaviour
         //맨 처음 시작할 때는 purposePoint와 현재 위치가 동일하도록 맞춰 줘야 함 
 
         bellSound = gameObject.AddComponent<AudioSource>();
+        bellSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         bellSound.loop = false;
         bellSound.playOnAwake = false;
         bellSound.clip = bellEffect;
 
         elevatorSound = gameObject.AddComponent<AudioSource>();
+        elevatorSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         elevatorSound.playOnAwake = false;
         elevatorSound.loop = false;
 
         elevatorLoopSound = gameObject.AddComponent<AudioSource>();
+        elevatorLoopSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         elevatorLoopSound.playOnAwake = false;
         elevatorLoopSound.loop = true;
         elevatorLoopSound.clip = elevatorEffect;
@@ -129,6 +132,7 @@ public class elevatorCage : MonoBehaviour
             {
                 if (!elevatorLoopSound.isPlaying) //만약 움직이는 사운드가 재생중이지 않으면 
                 {
+                    elevatorLoopSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
                     elevatorLoopSound.Play();
                 }
             }
@@ -170,6 +174,8 @@ public class elevatorCage : MonoBehaviour
             {
                 elevatorSound.Stop();
                 elevatorSound.clip = elevatorArrive;
+
+                elevatorSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
                 elevatorSound.Play();
 
                 gearAni.SetBool("gearMove", false);
@@ -191,6 +197,8 @@ public class elevatorCage : MonoBehaviour
             {
                 elevatorSound.Stop();
                 elevatorSound.clip = elevatorArrive;
+
+                elevatorSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
                 elevatorSound.Play();
 
                 gearAni.SetBool("gearMove", false);
@@ -209,11 +217,15 @@ public class elevatorCage : MonoBehaviour
         {
             elevatorSound.Stop();
             elevatorSound.clip = elevatorDepart;
+
+            elevatorSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
             elevatorSound.Play();
         }
 
         isAchieved = false;
         bellSound.Stop();
+
+        bellSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         bellSound.Play();
 
         /*

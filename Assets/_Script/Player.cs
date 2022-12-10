@@ -110,6 +110,9 @@ public class Player : MonoBehaviour
     public AudioSource sound;
     public AudioSource walkSound;
 
+    [SerializeField] float defaultSound = 0.65f;
+    [SerializeField] float defaultWalkSound = 0.3f;
+
     //각 스테이지별 랜덤 발자국 소리
     public AudioClip[] walkSound_stage1;
     public AudioClip[] walkSound_stage2;
@@ -288,6 +291,9 @@ public class Player : MonoBehaviour
         walkSoundCheck();
         AnimationManager();
 
+        //사운드 볼륨 실시간 조정 
+        sound.volume = defaultSound * GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+
         jumpTimer -= Time.deltaTime; //jumpTimer 초기화
         groundedRemember -= Time.deltaTime;
         if (InputManager.instance.jumpDown)
@@ -313,6 +319,11 @@ public class Player : MonoBehaviour
 
     void walkSoundCheck()
     {
+        walkSound.volume = 
+            GameManager.instance.optionSettingData.masterVolume_setting 
+            * GameManager.instance.optionSettingData.effectVolume_setting
+            * defaultWalkSound;
+
         if (fsm.State == States.Walk && InputManager.instance.horizontal !=0) 
         {
             if (isFirstWalkStep)
@@ -811,6 +822,8 @@ public class Player : MonoBehaviour
     void SelectGravityDir_Update()
     {
         AudioSource leverSound = targetLever.GetComponent<lever>().sound;
+        leverSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+
         // 좌우 화살표 누르면 ~> 실제 레버 작동단계로 이행
         if (InputManager.instance.horizontalDown)
         {          

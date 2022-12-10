@@ -62,6 +62,7 @@ public class elevatorLever : MonoBehaviour
 
     IEnumerator spriteAni() //스프라이트 움직임으로 애니메이션 구현
     {
+        leverSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         leverSound.Play();
         spr.sprite = leverSprite[1];
         yield return new WaitForSeconds(0.4f);

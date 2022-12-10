@@ -31,15 +31,13 @@ public class passiveBoxSound : MonoBehaviour
         if (!lastCollide && isCollide)
         {
             //box 가 땅에 충돌했을 때 
-            sound.Stop();
-            sound.clip = box_impact;
-            sound.Play();
+
+            sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+            sound.PlayOneShot(box_impact);
         }else if(lastCollide && !isCollide)
         {
             //box 가 떨어지기 시작했을 때 
-            sound.Stop();
-            sound.clip = chain_start;
-            sound.Play();
+            sound.PlayOneShot(chain_start);
         }
 
         if(rigid.velocity.magnitude >= 0.05f)

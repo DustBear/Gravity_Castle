@@ -45,7 +45,9 @@ public class introCanvas : MonoBehaviour
     {
         yield return new WaitForSeconds(timeOffset);
 
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         sound.Play();
+
         for(int index=0; index<=frameCount; index++)
         {
             _introDeco.color = new Color(1, 1, 1, (float)index/frameCount);

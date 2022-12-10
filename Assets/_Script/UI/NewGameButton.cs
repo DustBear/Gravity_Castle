@@ -120,6 +120,7 @@ public class NewGameButton : MonoBehaviour
             }
 
             GameManager.instance.gameData.collectionTmp = new List<int>(); //처음에는 비어 있는 배열이어야 함 
+            GameManager.instance.gameData.respawnScene = SceneUtility.GetBuildIndexByScenePath("Assets/_Scenes/_tutorial/tutorial.unity"); //tutorial scene index
 
             //GameData 에 데이터 저장 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
@@ -127,8 +128,7 @@ public class NewGameButton : MonoBehaviour
             File.WriteAllText(filePath, ToJsonData);
 
             //GameData 초기화했으면 당장 플레이에 필요한 GM 데이터 갱신 
-            int tmpNextScene = SceneUtility.GetBuildIndexByScenePath("Assets/_Scenes/_tutorial/tutorial.unity"); //tutorial scene index
-            GameManager.instance.nextScene = tmpNextScene;
+            GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
 
             //nextPos, nextDir 등은 일단 다음 씬으로 보내고 나면 오프닝 엘리베이터 매니져가 알아서 조정해 줄 테니 지금 설정할 필요x
 
@@ -163,6 +163,8 @@ public class NewGameButton : MonoBehaviour
 
             GameManager.instance.gameData.SpawnSavePoint_bool = curGameData.SpawnSavePoint_bool;
             GameManager.instance.gameData.UseOpeningElevetor_bool = curGameData.UseOpeningElevetor_bool;
+
+            GameManager.instance.gameData.respawnScene = curGameData.respawnScene;
 
             //에러로 인해 achievement가 0에서 1로 올라가지 않았을 때 자동으로 보정해 줌 ~> 사실 필요없지만 리스크 관리로 일단 둠 
             if (GameManager.instance.gameData.curAchievementNum == 0)

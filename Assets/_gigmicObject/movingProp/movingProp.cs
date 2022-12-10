@@ -60,6 +60,9 @@ public class movingProp : MonoBehaviour
     
     void Update()
     {
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        loopSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+
         if (isPlayerOn && Input.GetKeyDown(KeyCode.E))
         {
             isLeverActivated = !isLeverActivated; //활성화상태면 비활성화하고 비활성화상태면 활성화시킴 

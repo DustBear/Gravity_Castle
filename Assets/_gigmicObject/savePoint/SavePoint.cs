@@ -120,9 +120,8 @@ public class SavePoint : MonoBehaviour
     {
         isCorWorking = true;
 
-        sound.Stop();
-        sound.clip = lightOnSound;
-        sound.Play();
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        sound.PlayOneShot(lightOnSound);
 
         for(int index=curSpriteNum; index<=lastIndex-1; index++)
         {
@@ -140,6 +139,8 @@ public class SavePoint : MonoBehaviour
 
         sound.Stop();
         sound.clip = lightOffSound;
+
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         sound.Play();
 
         for (int index=curSpriteNum; index>=0; index--)
@@ -169,9 +170,8 @@ public class SavePoint : MonoBehaviour
         rightBurst.Play();
         leftBurst.Play();
 
-        sound.Stop();
-        sound.clip = activeSound;
-        sound.Play();
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        sound.PlayOneShot(activeSound);
 
         UIManager.instance.cameraShake(0.3f, 0.5f); //세이브스톤이 박힐 때 카메라 진동 
         particle.Play();
@@ -204,9 +204,8 @@ public class SavePoint : MonoBehaviour
         rightBurst.Play();
         leftBurst.Play();
 
-        sound.Stop();
-        sound.clip = activeSound;
-        sound.Play();
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        sound.PlayOneShot(activeSound);
 
         UIManager.instance.cameraShake(0.3f, 0.5f);
         //세이브스톤이 박힐 때 카메라 진동 

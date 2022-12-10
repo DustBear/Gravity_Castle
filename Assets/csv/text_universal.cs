@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class text_universal : MonoBehaviour
 {
@@ -12,15 +13,36 @@ public class text_universal : MonoBehaviour
     int languageIndex_last=0;
     int languageIndex_cur=0;
 
-    Text thisText;
+    //text 와 textMeshPro 둘 다 사용할 수 있도록 경우의 수 지정 
+    Text thisText; //textType = 1
+    TextMeshProUGUI thisTextPro; //textType = 2
+
+    int textType;
 
     private void Awake()
     {
-        thisText = GetComponent<Text>();
+        if(GetComponent<Text>() != null)
+        {
+            thisText = GetComponent<Text>();
+            textType = 1;
+        }
+        else if(GetComponent<TextMeshPro>() != null)
+        {
+            thisTextPro = GetComponent<TextMeshProUGUI>();
+            textType = 2;
+        }
     }
     void Start()
     {
-        thisText.text = gameTextManager.instance.systemTextManager(textIndex);
+        if(textType == 1)
+        {
+            thisText.text = gameTextManager.instance.systemTextManager(textIndex);
+        }
+        else
+        {
+            thisTextPro.text = gameTextManager.instance.systemTextManager(textIndex);
+        }
+
         languageIndex_cur = gameTextManager.instance.selectedLanguageNum;
     }
 
@@ -31,7 +53,14 @@ public class text_universal : MonoBehaviour
         //만약 언어가 바뀌면 노출되는 텍스트도 바뀌어야 함 
         if(languageIndex_cur != languageIndex_last)
         {
-            thisText.text = gameTextManager.instance.systemTextManager(textIndex);
+            if(textType == 1)
+            {
+                thisText.text = gameTextManager.instance.systemTextManager(textIndex);
+            }
+            else
+            {
+                thisTextPro.text = gameTextManager.instance.systemTextManager(textIndex);
+            }
         }
         languageIndex_last = languageIndex_cur;
     }

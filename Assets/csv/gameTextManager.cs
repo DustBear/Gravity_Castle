@@ -21,6 +21,7 @@ public class gameTextManager : Singleton<gameTextManager>
 
     public TextAsset stageName_textFile; //각 스테이지의 이름을 저장한 텍스트파일
     public TextAsset system_textFile; //UI 등에 사용되는 용어를 저장한 텍스트파일 
+    public TextAsset tutorial_textFile; //튜토리얼 설명에 사용되는 텍스트를 저장한 파일 
 
     private void Awake()
     {
@@ -40,6 +41,33 @@ public class gameTextManager : Singleton<gameTextManager>
         int requiredIndex = (textIndex - 1) * languageNum + selectedLanguageNum;
 
         return textData[requiredIndex];
+    }
+
+    public string tutorialTextManager(int textIndex)
+    {
+        string[] textData = tutorial_textFile.text.Split(new string[] { ",", "\n" }, StringSplitOptions.None);
+        int requiredIndex = (textIndex - 1) * languageNum + selectedLanguageNum;
+
+        string aimWords = textData[requiredIndex];
+        string output = "";
+               
+        for(int index=0; index<aimWords.Length; index++)
+        {           
+            if(aimWords[index] == '/')
+            {
+                output += "\n"; //엔터 기호 
+            }
+            else if(aimWords[index] == '#')
+            {
+                output += ","; //콤마 기호 
+            }
+            else
+            {
+                output += aimWords[index];
+            }
+        }
+
+        return output;
     }
 
     void Start()

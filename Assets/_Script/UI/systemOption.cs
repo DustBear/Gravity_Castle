@@ -33,6 +33,8 @@ public class systemOption : MonoBehaviour
 
     public void onClickSelf()
     {
+        UIManager.instance.clickSoundGen();
+
         //켜져 있으면 끄고 꺼져 있으면 켬 
         systemGroup.SetActive(!systemGroup.activeSelf);
 
@@ -42,7 +44,9 @@ public class systemOption : MonoBehaviour
 
     public void rightArrowClick()
     {
-        if(selectedLanguageIndex < languageCount)
+        UIManager.instance.clickSoundGen();
+
+        if (selectedLanguageIndex < languageCount)
         {
             selectedLanguageIndex++;
             gameTextManager.instance.selectedLanguageNum = selectedLanguageIndex; //언어 설정 바꿈 
@@ -58,6 +62,8 @@ public class systemOption : MonoBehaviour
     }
     public void leftArrowClick()
     {
+        UIManager.instance.clickSoundGen();
+
         if (selectedLanguageIndex > 0)
         {
             selectedLanguageIndex--;

@@ -35,6 +35,7 @@ public class openingElevator_v2 : MonoBehaviour
 
             rigid.velocity = new Vector2(0, -moveSpeed);
 
+            sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
             sound.clip = moveSound;
             sound.Play();
             
@@ -71,6 +72,8 @@ public class openingElevator_v2 : MonoBehaviour
             UIManager.instance.cameraShake(0.5f, 0.4f);
 
             sound.Stop();
+
+            sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
             sound.PlayOneShot(arriveSound);
         }
     }

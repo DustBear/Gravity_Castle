@@ -47,7 +47,11 @@ public class movingSpike : MonoBehaviour
 
         //초기 속도 
         float moveSpeed = (pos1 - pos2).magnitude / moveDelay;
+
+        sound_loop.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         sound_loop.Play();
+
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         sound.PlayOneShot(moveStart);
 
         if(aimpos == 1) //pos2로 가야 함 
@@ -62,7 +66,10 @@ public class movingSpike : MonoBehaviour
         }
 
         yield return new WaitForSeconds(moveDelay-0.2f);
+
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         sound.PlayOneShot(moveFinish);
+
         yield return new WaitForSeconds(0.2f);
 
         rigid.velocity = Vector2.zero;

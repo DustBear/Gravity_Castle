@@ -33,7 +33,9 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] int purposeBgmIndex; //실행시키고자 하는 bgm index
     [SerializeField] int curBgmIndex; //현재 실행중인 bgm index
-    public float masterVolume_bgm; 
+
+    bool isFirstPlayed; //현재 bgm이 처음 실행되었는지 
+    //첫 번째 실행때는 일반 파일, 두 번째부터는 loop 파일을 재생해야 함 
 
     void Awake() 
     {
@@ -63,18 +65,27 @@ public class GameManager : Singleton<GameManager>
         else
         {
             optionSettingData = new optionSetting();
+
             optionSettingData.languageSetting = 0; //기본 언어세팅 한국어 
+
+            //기본 볼륨 세팅 = 1
+            optionSettingData.masterVolume_setting = 1f;
+            optionSettingData.bgmVolume_setting = 1f;
+            optionSettingData.effectVolume_setting = 1f;
+
+            //초기화시킨 데이터를 옵션 세팅에 저장 
+            string ToJsonData = JsonUtility.ToJson(optionSettingData);
+            string filePath = Application.persistentDataPath + optionFileName;
+            File.WriteAllText(filePath, ToJsonData);
         }
         
-        bgmMachine = gameObject.AddComponent<AudioSource>();
-        bgmMachine.volume = masterVolume_bgm;
-
+        bgmMachine = gameObject.AddComponent<AudioSource>();        
         Cursor.lockState = CursorLockMode.None;
     }
 
     public void soundNumCheck() //매 프레임마다 실행 
     {
-        int curSceneNum = SceneManager.GetActiveScene().buildIndex;
+        int curSceneNum = SceneManager.GetActiveScene().buildIndex; //현재 씬 번호 
         if(curSceneNum == 0)
         {
             //메인메뉴
@@ -116,6 +127,8 @@ public class GameManager : Singleton<GameManager>
             StopCoroutine("soundManager"); //기존에 실행중이던 sound 중지 
             StartCoroutine("soundManager");
         }
+
+        bgmMachine.volume = optionSettingData.masterVolume_setting * optionSettingData.bgmVolume_setting; //실시간으로 볼륨 조정 
     } 
     IEnumerator soundManager()
     {
@@ -124,18 +137,18 @@ public class GameManager : Singleton<GameManager>
         float bgmVolume = bgmMachine.volume;
         while(bgmVolume >= 0f)
         {
-            bgmVolume -= masterVolume_bgm * Time.deltaTime;
+            bgmVolume -= optionSettingData.masterVolume_setting * optionSettingData.bgmVolume_setting * Time.deltaTime;
             bgmMachine.volume = bgmVolume;
             yield return null;
         }
         bgmMachine.volume = 0f;
 
-        bgmMachine.clip = bgmGroup_loop[purposeBgmIndex]; //bgm clip 에 해당하는 bgm 파일 할당   
+        bgmMachine.clip = bgmGroup_once[purposeBgmIndex]; //bgm clip 에 해당하는 bgm 파일 할당   
 
         yield return new WaitForSeconds(1f); //1초간 음악 정지 
         bgmMachine.Play();
         
-        bgmMachine.volume = masterVolume_bgm;
+        bgmMachine.volume = optionSettingData.masterVolume_setting * optionSettingData.bgmVolume_setting;
 
     }
 
@@ -144,7 +157,7 @@ public class GameManager : Singleton<GameManager>
         float bgmVolume = bgmMachine.volume;
         while (bgmVolume >= 0f)
         {
-            bgmVolume -= masterVolume_bgm * Time.deltaTime;
+            bgmVolume -= optionSettingData.masterVolume_setting * optionSettingData.bgmVolume_setting * Time.deltaTime;
             bgmMachine.volume = bgmVolume;
             yield return null;
         }
@@ -162,7 +175,7 @@ public class GameManager : Singleton<GameManager>
         bgmMachine.playOnAwake = false;
 
         bgmMachine.clip = bgmGroup_loop[0];
-        bgmMachine.volume = masterVolume_bgm;
+        bgmMachine.volume = optionSettingData.masterVolume_setting * optionSettingData.bgmVolume_setting;
         bgmMachine.Play();
     }
 
@@ -177,7 +190,8 @@ public class GameManager : Singleton<GameManager>
                 + "  curStageNum: " + gameData.curStageNum
                 + "\nfinalAchieve: " + gameData.finalAchievementNum
                 + "  finalStage: " + gameData.finalStageNum 
-                + "  nextScene: " + GameManager.instance.nextScene
+                + "  nextScene: " + nextScene
+                + " nextPos" + nextPos
                 );
             Debug.Log(gameData.SpawnSavePoint_bool + ", " + gameData.UseOpeningElevetor_bool);
         }

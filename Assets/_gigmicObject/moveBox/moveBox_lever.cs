@@ -103,6 +103,11 @@ public class moveBox_lever : MonoBehaviour
     {
         stoneMove();
         moveSoundCheck();
+
+        for(int index=0; index<sounds.Length; index++)
+        {
+            sounds[index].volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        }
     }
 
     void moveSoundCheck()

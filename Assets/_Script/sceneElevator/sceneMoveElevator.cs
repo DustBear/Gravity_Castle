@@ -71,10 +71,12 @@ public class sceneMoveElevator : MonoBehaviour
         InputManager.instance.isInputBlocked = true;
         E_icon.SetActive(false);
 
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         sound.PlayOneShot(startSound);
         UIManager.instance.cameraShake(0.5f, 0.4f);
         yield return new WaitForSeconds(1.5f);
 
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         sound.clip = moveSound;
         sound.Play();
 

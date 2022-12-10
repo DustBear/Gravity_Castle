@@ -55,7 +55,8 @@ public class startScene_circleDoor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        //실시간 효과음 볼륨 조절 
     }
    
     IEnumerator doorOpenScene()
@@ -145,7 +146,8 @@ public class startScene_circleDoor : MonoBehaviour
 
         for (int index=1; index<=frameCount; index++)
         {
-            windSound.volume = index / (float)frameCount;
+            float volumeValue = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+            windSound.volume = (index / (float)frameCount) * volumeValue;
             yield return delayFrame;
         }
     }

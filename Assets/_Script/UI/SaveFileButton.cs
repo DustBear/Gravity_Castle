@@ -117,15 +117,15 @@ public class SaveFileButton : MonoBehaviour
 
             GameManager.instance.gameData.SpawnSavePoint_bool = false; //맨 처음 시작하므로 따로 세이브포인트가 없다 
             GameManager.instance.gameData.UseOpeningElevetor_bool = true; //오프닝 엘리베이터 이용해야 함 
+            GameManager.instance.gameData.respawnScene = SceneUtility.GetBuildIndexByScenePath("Assets/_Scenes/_tutorial/tutorial.unity"); //tutorial scene index
 
             //새로 만든 GM 데이터를 알맞은 번호의 gameData에 저장 
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[saveFileNum];
             File.WriteAllText(filePath, ToJsonData);
 
-            //gameData 값으로 당장 필요한 GameManager 갱신
-            int tmpNextScene = SceneUtility.GetBuildIndexByScenePath("Assets/_Scenes/_tutorial/tutorial.unity"); //tutorial scene index
-            GameManager.instance.nextScene = tmpNextScene;
+            //gameData 값으로 당장 필요한 GameManager 갱신           
+            GameManager.instance.nextScene = GameManager.instance.gameData.respawnScene;
 
             StartCoroutine(loadSceneDelay(1));
         }

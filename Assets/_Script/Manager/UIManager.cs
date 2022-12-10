@@ -97,7 +97,7 @@ public class UIManager : Singleton<UIManager>
         fade.color = new Color(0, 0, 0, 1);
     }
     
-   
+    
     public void OnOffInGameMenu() //메뉴창이 켜져있으면 끄고 꺼져있으면 킨다 
     {
         inGameMenu.SetActive(!inGameMenu.activeSelf);

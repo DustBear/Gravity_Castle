@@ -18,12 +18,16 @@ public class textInform : MonoBehaviour
     {
         Canvas.SetActive(false);        
     }
+
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
             Canvas.SetActive(true);
             sound.Stop();
+
+            sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
             sound.Play();
         }
     }

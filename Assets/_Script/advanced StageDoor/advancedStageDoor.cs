@@ -32,8 +32,11 @@ public class advancedStageDoor : MonoBehaviour
     public Vector2[] spikeOffsetGroup; 
     //[0]이 가시 들어간 상태, [3]이 가시 튀어나온 상태 
 
-    public bool disposable; 
+    public bool disposable;
     //이 조건이 설정된 문은 사이드 스테이지 내의 퍼즐기믹에 포함된 문으로 리스폰할 때 마다 '매번' 원 상태로 초기화된다
+
+    public bool isSpikeAct;
+    //true이면 spike 가 있고 false이면 없다 
 
     private void Awake()
     {
@@ -129,15 +132,23 @@ public class advancedStageDoor : MonoBehaviour
         //(2) 문 진동
         //(3) 문이 올라감 
 
-        StartCoroutine("spikeDeActive");
-        playOnceSound.PlayOneShot(spikePopUp);
-        yield return new WaitForSeconds(0.5f);
+        if (isSpikeAct)
+        {
+            StartCoroutine("spikeDeActive");
 
+            playOnceSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+            playOnceSound.PlayOneShot(spikePopUp);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        playOnceSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         playOnceSound.PlayOneShot(doorShakeSound);
         StartCoroutine("doorShake");
         yield return new WaitForSeconds(0.6f);
 
         loopSound.clip = doorOpenLoopSound;
+
+        loopSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         loopSound.Play();
 
         float moveSpeed = doorLength / doorPeriod; //문이 올라가는 속도 
@@ -145,6 +156,7 @@ public class advancedStageDoor : MonoBehaviour
         rigid.velocity = transform.up * moveSpeed;
         yield return new WaitForSeconds(doorPeriod-0.1f);
 
+        playOnceSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         playOnceSound.PlayOneShot(doorHitSound);
 
         yield return new WaitForSeconds(0.1f);
@@ -162,10 +174,14 @@ public class advancedStageDoor : MonoBehaviour
         //(3) 가시 활성화 
 
         StartCoroutine("doorShake");
+
+        playOnceSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         playOnceSound.PlayOneShot(doorShakeSound);
         yield return new WaitForSeconds(0.6f);
 
         loopSound.clip = doorOpenLoopSound;
+
+        loopSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         loopSound.Play();
 
         float moveSpeed = doorLength / doorPeriod; //문이 올라가는 속도 
@@ -173,6 +189,7 @@ public class advancedStageDoor : MonoBehaviour
         
         yield return new WaitForSeconds(doorPeriod-0.1f);
 
+        playOnceSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         playOnceSound.PlayOneShot(doorHitSound);
 
         yield return new WaitForSeconds(0.1f);
@@ -181,9 +198,14 @@ public class advancedStageDoor : MonoBehaviour
         rigid.velocity = Vector3.zero;
         transform.position = initialPos - transform.up * doorLength; //문의 위치 내려온채로 고정 
 
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine("spikeActive");
-        playOnceSound.PlayOneShot(spikePopUp);
+        if (isSpikeAct)
+        {
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine("spikeActive");
+
+            playOnceSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+            playOnceSound.PlayOneShot(spikePopUp);
+        }
     }
 
     IEnumerator spikeActive() //가시 활성화하는 함수 

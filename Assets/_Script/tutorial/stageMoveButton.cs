@@ -64,6 +64,8 @@ public class stageMoveButton : MonoBehaviour
         {
             sound.Stop();
             sound.clip = incorrect;
+
+            sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
             sound.Play();
 
             Debug.Log("not enough achievement");
@@ -75,6 +77,8 @@ public class stageMoveButton : MonoBehaviour
 
         sound.Stop();
         sound.clip = correct;
+
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         sound.Play();
 
         stageManager stageManagerScr = stageManager.GetComponent<stageManager>();
