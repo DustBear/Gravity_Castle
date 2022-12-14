@@ -636,6 +636,8 @@ MonoBehaviour:
   isBlackHole: 0
   sound: {fileID: 3228596939286394652}
   walkSound: {fileID: 6078229650507772591}
+  defaultSound: 0.65
+  defaultWalkSound: 0.3
   walkSound_stage1:
   - {fileID: 8300000, guid: e78a771387362004998d1e1a7ef680c8, type: 3}
   - {fileID: 8300000, guid: 165856b72ab136d41af272908120d352, type: 3}
@@ -667,7 +669,8 @@ MonoBehaviour:
   ropeGrab: {fileID: 8300000, guid: 8030e9424ebb6a64e9f07ab3e59353cc, type: 3}
   ropeMove: {fileID: 8300000, guid: 2aed02715ff20d541b3c149bfbcbc51e, type: 3}
   ropeBounce: {fileID: 8300000, guid: 5b00e9095be7bbe46a4f4559c354ce4f, type: 3}
-  dieSound: {fileID: 8300000, guid: 3769e6ce60309fe4793b63b7b1f838d8, type: 3}
+  dieSound: {fileID: 8300000, guid: 46717f3afb16819408a4e30a069247b3, type: 3}
+  die_crush: {fileID: 8300000, guid: d9a1c970d32de714d8ccd18ad64ba1df, type: 3}
   isCameraShake: 0
   walkSoundPeriod: 0.25
   jumpPower: 12

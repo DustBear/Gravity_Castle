@@ -40,7 +40,26 @@ public class gameTextManager : Singleton<gameTextManager>
         string[] textData = system_textFile.text.Split(new string[] { ",", "\n" }, StringSplitOptions.None);
         int requiredIndex = (textIndex - 1) * languageNum + selectedLanguageNum;
 
-        return textData[requiredIndex];
+        string aimWords = textData[requiredIndex];
+        string output = "";
+
+        for (int index = 0; index < aimWords.Length; index++)
+        {
+            if (aimWords[index] == '/')
+            {
+                output += "\n"; //엔터 기호 
+            }
+            else if (aimWords[index] == '#')
+            {
+                output += ","; //콤마 기호 
+            }
+            else
+            {
+                output += aimWords[index];
+            }
+        }
+
+        return output;
     }
 
     public string tutorialTextManager(int textIndex)

@@ -1,5 +1,89 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2367429452692493629
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4292825376945712275}
+  - component: {fileID: 6975922465116757898}
+  - component: {fileID: 6326282172542732279}
+  m_Layer: 0
+  m_Name: door
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4292825376945712275
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2367429452692493629}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5714377009829052651}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &6975922465116757898
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2367429452692493629}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -4, y: 4}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 4}
+  m_EdgeRadius: 0
+--- !u!61 &6326282172542732279
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2367429452692493629}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 4, y: 4}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 4}
+  m_EdgeRadius: 0
 --- !u!1 &2488522924534627894
 GameObject:
   m_ObjectHideFlags: 0
@@ -4931,6 +5015,7 @@ Transform:
   - {fileID: 3256612696172517270}
   - {fileID: 7053581997459440163}
   - {fileID: 7745168325097149362}
+  - {fileID: 4292825376945712275}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4971,15 +5056,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1200094403
-  m_SortingLayer: -6
+  m_SortingLayerID: -2056838877
+  m_SortingLayer: -2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
+  m_Sprite: {fileID: -7958965139006960478, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 9, y: 8}
+  m_Size: {x: 9, y: 10}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -5001,9 +5086,9 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 3}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 9, y: 8}
-    newSize: {x: 9, y: 8}
+    pivot: {x: 0.5, y: 0.4}
+    oldSize: {x: 9, y: 10}
+    newSize: {x: 9, y: 10}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -5053,7 +5138,17 @@ MonoBehaviour:
   elevatorLever: {fileID: 6196492426830079131}
   startSound: {fileID: 8300000, guid: f49ff9634dcec29428a9a6385eab75df, type: 3}
   moveSound: {fileID: 8300000, guid: a0070f32e971ff84cb73d4bbe837796d, type: 3}
+  doorSound: {fileID: 8300000, guid: 61fb1df2abdf9154090a74379b449dfd, type: 3}
   E_icon: {fileID: 2488522924534627894}
+  elevatorDoorSprites:
+  - {fileID: -7958965139006960478, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
+  - {fileID: 5785542092511405728, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
+  - {fileID: 2453751657520914090, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
+  - {fileID: 3519834148566164272, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
+  - {fileID: 2461363681766328959, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
+  - {fileID: -3276910123721026792, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
+  - {fileID: -3281181420834809164, guid: a6a3c9c7e0547f84c8f001401eee552c, type: 3}
+  elevatorDoor: {fileID: 2367429452692493629}
 --- !u!82 &4447256511062370554
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5275,8 +5370,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1200094403
-  m_SortingLayer: -6
+  m_SortingLayerID: -2056838877
+  m_SortingLayer: -2
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 67a024af18010e64ba114b6797469d6e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

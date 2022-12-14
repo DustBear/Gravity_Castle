@@ -46,7 +46,7 @@ public class systemOption : MonoBehaviour
     {
         UIManager.instance.clickSoundGen();
 
-        if (selectedLanguageIndex < languageCount)
+        if (selectedLanguageIndex < 1) //데모 버전은 영어, 한국어 두 언어만을 지원 
         {
             selectedLanguageIndex++;
             gameTextManager.instance.selectedLanguageNum = selectedLanguageIndex; //언어 설정 바꿈 

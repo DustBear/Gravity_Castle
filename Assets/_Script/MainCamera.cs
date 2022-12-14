@@ -32,6 +32,7 @@ public class MainCamera : MonoBehaviour
     public float lookDownSIde_smoothTime; //카메라 워크 smooth 정도 
     public float lookDownSide_inputTime; //플레이어가 몇초 이상 down Arrow 를 누르고 있어야 작동하는지
     [SerializeField] float lookDownSide_timer= 0f;
+    bool isCameraOffsetUp; //true이면 3, false이면 -3 
 
     //public bool shouldLookDownStop;
     //플레이어가 발 아래를 바라보는 동작이 끝나지 않은 상태에서 레버 돌리면 에러 발생 
@@ -52,6 +53,8 @@ public class MainCamera : MonoBehaviour
     void Start()
     {
         ImmediateMove();
+        isCameraOffsetUp = true;
+        offset = 3f;
     }
 
     private void OnEnable()
@@ -79,7 +82,7 @@ public class MainCamera : MonoBehaviour
     }
     public void DampMove() //Damp 기능이 걸린 채로 움직임(일반적인 움직임에서 사용)
     {
-        if (isCameraLock) return;
+        //if (isCameraLock) return;
 
         Vector3 aimPos = cameraPosCal();
         transform.position = Vector3.SmoothDamp(transform.position, aimPos, ref dampSpeed, smoothTime);
@@ -122,6 +125,7 @@ public class MainCamera : MonoBehaviour
     void lookDownSide()
     {
         if (isLookDownWork) return;
+        //카메라 이동하는 동안은 인풋 인식 x 
 
         bool isLookDownReady = false;
 
@@ -131,27 +135,64 @@ public class MainCamera : MonoBehaviour
         else if (Player.curState == Player.States.MoveOnRope) isLookDownReady = true;
         else if (Player.curState == Player.States.SelectGravityDir) isLookDownReady = true;
 
-        if(isLookDownReady && Input.GetKey(KeyCode.LeftShift)) 
-            //플레이어가 상태 조건을 만족시키면서 SHIFT 를 계속 누르면
+        if(isLookDownReady && Input.GetKeyDown(KeyCode.LeftShift))            
         {
+            //플레이어가 상태 조건을 만족시키면서 SHIFT 를 누르면
+
+            if (isCameraOffsetUp)
+            {
+                isCameraOffsetUp = false;
+                StartCoroutine(lookDownSideCor(true));
+            }
+            else
+            {
+                isCameraOffsetUp = true;
+                StartCoroutine(lookDownSideCor(false));
+            }
+
+            /*
             lookDownSide_timer += Time.deltaTime;
             if(lookDownSide_timer >= lookDownSide_inputTime) //필요 기준치를 넘으면 
             {
                 StartCoroutine(lookDownSideCor());
             }
+            */
         }
     }
 
-    IEnumerator lookDownSideCor()
+    IEnumerator lookDownSideCor(bool moveDown) //파라미터 true 이면 아래로 내려감, 파라미터 false이면 위로 올라감 
     {
         isLookDownWork = true;
 
-        isCameraLock = true; //잠시 카메라가 플레이어를 따라가지 않도록 조정 
-        InputManager.instance.isInputBlocked = true; //카메라 움직이는동안은 플레이어 움직임 정지 
+        //isCameraLock = true; //잠시 카메라가 플레이어를 따라가지 않도록 조정 
+        //InputManager.instance.isInputBlocked = true; //카메라 움직이는동안은 플레이어 움직임 정지 
 
-        Vector3 lookDownAimPos = transform.position - player.transform.up * lookDownSide_distance;
+        //Vector3 lookDownAimPos = transform.position - player.transform.up * lookDownSide_distance;
 
+        float aimOffset; //카메라 이동방향에 따라 목표 offset 설정 
+        if (moveDown)
+        {
+            offset = 3f;
+            aimOffset = -3f;
+        }
+        else
+        {
+            offset = -3f;
+            aimOffset = 3f;
+        }
 
+        while(Mathf.Abs(offset - aimOffset) <= 0.1f)
+        {
+            //카메라의 offset이 aimOffset으로 부드럽게 이동 
+            offset = Mathf.Lerp(offset, aimOffset, Time.deltaTime);
+            yield return null;
+        }
+
+        //오차범위 감안해서 이동 끝나면 위치 고정시킴 
+        offset = aimOffset;
+        isLookDownWork = false;
+
+        /*
         while (true)
         {
             transform.position = Vector3.SmoothDamp(transform.position, lookDownAimPos, ref dampSpeed, lookDownSIde_smoothTime);          
@@ -172,19 +213,11 @@ public class MainCamera : MonoBehaviour
 
         Vector3 newAimPos = transform.position + player.transform.up * lookDownSide_distance;
         InputManager.instance.isInputBlocked = false;
-
+        
         while (true)
         {
             transform.position = Vector3.SmoothDamp(transform.position, newAimPos, ref dampSpeed, lookDownSIde_smoothTime);
-            /*
-            if (shouldLookDownStop) //아직 카메라가 원래 위치로 돌아가는 도중 레버 작동시키면 
-            {
-                InputManager.instance.isInputBlocked = false; //inputLock 해제 
-                transform.position = newAimPos; //카메라 원래 위치로 바로 돌림
-                break;
-            }
-            */
-
+            
             //카메라가 원위치로 100% 돌아온 후 inputlock 이 풀리면 좀 답답함 ~> 여유시간을 두고 inputlock 풀어줌 
             if(Mathf.Abs((transform.position - newAimPos).magnitude) <= 0.1f)
             {
@@ -201,11 +234,10 @@ public class MainCamera : MonoBehaviour
 
             yield return new WaitForSeconds(Time.deltaTime);
         }
+        */
+        //isCameraLock = false;
 
-        isLookDownWork = false;
-        isCameraLock = false;
-
-        lookDownSide_timer = 0;
+        //lookDownSide_timer = 0;
     }
 
 

@@ -17,7 +17,10 @@ public class demo_ending : MonoBehaviour
     
     void Update()
     {
-        
+        if(Cursor.lockState != CursorLockMode.None)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
     public void onClick()

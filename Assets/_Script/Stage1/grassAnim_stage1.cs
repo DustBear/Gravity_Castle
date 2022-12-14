@@ -79,6 +79,7 @@ public class grassAnim_stage1 : MonoBehaviour
         if (sound.isPlaying) sound.Stop();
 
         sound.clip = grassSounds[grassIndex];
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         sound.Play();
     }
 }

@@ -64,18 +64,15 @@ public class elevatorCage : MonoBehaviour
         //맨 처음 시작할 때는 purposePoint와 현재 위치가 동일하도록 맞춰 줘야 함 
 
         bellSound = gameObject.AddComponent<AudioSource>();
-        bellSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         bellSound.loop = false;
         bellSound.playOnAwake = false;
         bellSound.clip = bellEffect;
 
-        elevatorSound = gameObject.AddComponent<AudioSource>();
-        elevatorSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        elevatorSound = gameObject.AddComponent<AudioSource>();       
         elevatorSound.playOnAwake = false;
         elevatorSound.loop = false;
 
         elevatorLoopSound = gameObject.AddComponent<AudioSource>();
-        elevatorLoopSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         elevatorLoopSound.playOnAwake = false;
         elevatorLoopSound.loop = true;
         elevatorLoopSound.clip = elevatorEffect;
@@ -83,6 +80,10 @@ public class elevatorCage : MonoBehaviour
 
     void Start()
     {
+        bellSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        elevatorSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        elevatorLoopSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+
         rigid = GetComponent<Rigidbody2D>();
         gearAni = gear.GetComponent<Animator>();
         initialBellRotation = bell.transform.rotation;

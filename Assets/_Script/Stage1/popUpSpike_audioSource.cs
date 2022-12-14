@@ -16,10 +16,12 @@ public class popUpSpike_audioSource : MonoBehaviour
     
     public void spikeIn_Play() //가시 튀어나오는 소리 재생 
     {
+        sound.volume = sound.volume = GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
         sound.PlayOneShot(spike_in);
     }
     public void spikeOut_Play()
     {
+        sound.volume = sound.volume = GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
         sound.PlayOneShot(spike_out);
     }
 }

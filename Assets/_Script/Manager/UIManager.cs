@@ -16,9 +16,6 @@ public class UIManager : Singleton<UIManager>
     public GameObject collectionMenu_fade;
     public GameObject col_alarm;
 
-    string col_getText = "탐험가 상자를 확보했습니다.\n가까운 영혼 비석에서 안전하게 보관할 수 있습니다." ;
-    string col_saveText = "수집한 탐험가 상자를 영혼 비석에 저장했습니다.";
-
     IEnumerator fadeCoroutine;
 
     AudioSource sound;
@@ -146,7 +143,7 @@ public class UIManager : Singleton<UIManager>
 
         float alphaTimer = 0f;
 
-        alarmText.text = col_getText;
+        alarmText.text = gameTextManager.instance.systemTextManager(21);
         
         while (alarmText.color.a <= 1)
         {
@@ -175,7 +172,7 @@ public class UIManager : Singleton<UIManager>
 
         float alphaTimer = 0f;
 
-        alarmText.text = col_saveText;
+        alarmText.text = gameTextManager.instance.systemTextManager(22);
 
         while (alarmText.color.a <= 1)
         {

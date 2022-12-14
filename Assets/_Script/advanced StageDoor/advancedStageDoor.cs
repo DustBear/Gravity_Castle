@@ -49,15 +49,18 @@ public class advancedStageDoor : MonoBehaviour
         playOnceSound.loop = false;
         loopSound.loop = true;
 
-        rigid = GetComponent<Rigidbody2D>();
-        if(thresholdPoint.gameObject != null)//disposable 로 설정된 문은 따로 thresholdPoint 가 없다 
-        {
-            doorActiveThreshold = thresholdPoint.GetComponent<SavePoint>().achievementNum;
-        }      
+        rigid = GetComponent<Rigidbody2D>();             
     }
     void Start() //door 는 localPos 를 기준으로 움직임: 회전은 stageDoor 그룹 자체에 줘야 함 
     {
         initialPos = transform.position; //초기 위치 저장 
+
+        /*
+        if (thresholdPoint.gameObject != null)//disposable 로 설정된 문은 따로 thresholdPoint 가 없다 
+        {
+            doorActiveThreshold = thresholdPoint.GetComponent<SavePoint>().achievementNum;
+        }
+        */
 
         // 가시 스프라이트 및 오프셋 설정 
         if (disposable) //일회성 문일 경우 

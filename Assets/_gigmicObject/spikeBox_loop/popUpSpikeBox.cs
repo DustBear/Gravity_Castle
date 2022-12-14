@@ -32,11 +32,18 @@ public class popUpSpikeBox : MonoBehaviour
     float curTime;
     int spikeIndex = 0;
 
-    void Start()
+    float initVolume;
+
+    void Awake()
     {
         spr = GetComponent<SpriteRenderer>();
         spikeColl = GetComponent<BoxCollider2D>();
-        if(targetAudio!= null)
+        sound = GetComponent<AudioSource>();
+    }
+
+    void Start()
+    {      
+        if (targetAudio!= null)
         {
             audioScr = targetAudio.GetComponent<popUpSpike_audioSource>();
         }
@@ -44,13 +51,10 @@ public class popUpSpikeBox : MonoBehaviour
         spr.sprite = spriteGroup[0];
         spikeColl.offset = new Vector2(0, spikeOffsetGroup[0]);
 
-        if (useAudioSource)
-        {
-            sound = GetComponent<AudioSource>();
-        }
-
         spike_lifeTime = popUpDelay + spikeDelay;
         initTime = Time.time;
+
+        initVolume = sound.volume; //초기 볼륨 세팅 
     }
 
     private void FixedUpdate()
@@ -72,6 +76,7 @@ public class popUpSpikeBox : MonoBehaviour
     {
         if (useAudioSource)
         {
+            sound.volume = initVolume * GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
             sound.PlayOneShot(spike_out);
         }
         else if(targetAudio != null)
@@ -92,6 +97,7 @@ public class popUpSpikeBox : MonoBehaviour
 
         if (useAudioSource)
         {
+            sound.volume = initVolume * GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
             sound.PlayOneShot(spike_in);
         }
         else if (targetAudio != null)

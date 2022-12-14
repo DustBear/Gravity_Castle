@@ -53,7 +53,6 @@ public class SaveFileButton : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Q) && saveDeleteWindow.activeSelf == true)
         {
-            saveDeleteButton.SetActive(false);
             saveDeleteWindow.SetActive(false);
         }
 

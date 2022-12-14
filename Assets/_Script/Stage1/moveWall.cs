@@ -95,6 +95,7 @@ public class moveWall : MonoBehaviour
         float distance = (pos2 - pos1).magnitude; //움직여야 할 거리 
         Vector3 direction = (pos1 - pos2).normalized; //pos1이 목표일 때 
 
+        sound.volume = GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
         sound.PlayOneShot(startSound);
 
         for(int index=1; index<=3; index++) //3회에 걸쳐 진동 
@@ -121,6 +122,7 @@ public class moveWall : MonoBehaviour
                 break;
         }
 
+        sound.volume = GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
         sound.clip = movingSound;
         sound.Play();
 
@@ -129,6 +131,7 @@ public class moveWall : MonoBehaviour
 
         yield return new WaitForSeconds(moveTime-0.1f);
 
+        sound.volume = GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
         sound.Stop();
         sound.PlayOneShot(arriveSound);
 

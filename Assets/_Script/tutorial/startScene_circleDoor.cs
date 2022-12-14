@@ -67,9 +67,11 @@ public class startScene_circleDoor : MonoBehaviour
         UIManager.instance.FadeIn(3f); //4초에 걸쳐 화면 밝아짐 
         yield return new WaitForSeconds(6f);
 
+        sound.PlayOneShot(doorShake);
+        yield return new WaitForSeconds(0.1f);
+
         for (int index = 0; index < 3; index++) //진동 
         {
-
             transform.position += new Vector3(0, 1, 0) * 0.06f;
             yield return new WaitForSeconds(0.06f);
             transform.position -= new Vector3(0, 1, 0) * 0.06f;
@@ -78,6 +80,9 @@ public class startScene_circleDoor : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
+        sound.clip = doorRotate;
+        sound.Play();
+
         //lock_1 애니메이션 
         for (int index = 0; index < lock_1.Length; index++)
         {
@@ -85,16 +90,27 @@ public class startScene_circleDoor : MonoBehaviour
             yield return new WaitForSeconds(0.15f);
         }
 
+        sound.Stop();
+
         yield return new WaitForSeconds(1.5f);
 
         //lock_2 애니메이션
+        int animFrameCount = 0;
         for (int index = 0; index < lock_2.Length; index++)
         {
+            animFrameCount++;
+            if(animFrameCount == lock_2.Length - 3)
+            {
+                sound.PlayOneShot(doorLockOpen);
+            }
             thisSpr.sprite = lock_2[index];
             yield return new WaitForSeconds(0.1f);
         }
 
         yield return new WaitForSeconds(1.5f);
+
+        sound.clip = doorRotate;
+        sound.Play();
 
         //lock_3 애니메이션 
         for (int index = 0; index < lock_3.Length; index++)
@@ -103,7 +119,10 @@ public class startScene_circleDoor : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
+        sound.Stop();
+        
         yield return new WaitForSeconds(1.5f);
+        sound.PlayOneShot(doorShake);
 
         for (int index = 0; index < 3; index++) //진동 
         {
@@ -115,7 +134,8 @@ public class startScene_circleDoor : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1f);
-
+        sound.clip = doorOpen;
+        sound.Play();
 
         StartCoroutine(windSoundGen(5f, 50));
 
@@ -123,12 +143,15 @@ public class startScene_circleDoor : MonoBehaviour
         GetComponent<Rigidbody2D>().velocity = new Vector2(0, doorMoveSpeed);
 
         yield return new WaitForSeconds(doorMoveDelay -1f);
-        sound.Stop();
         sound.PlayOneShot(doorOpenComplete);
+
+        //문 정지 
+        yield return new WaitForSeconds(1f);
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
         yield return new WaitForSeconds(1f);
 
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        sound.Stop();
 
 
         spr.sortingLayerName = "Player"; //플레이어가 문 앞으로 옴 

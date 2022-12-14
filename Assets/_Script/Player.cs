@@ -129,7 +129,8 @@ public class Player : MonoBehaviour
     public AudioClip ropeMove;
     public AudioClip ropeBounce;
 
-    public AudioClip dieSound; //플레이어가 죽는 소리 
+    public AudioClip dieSound; //플레이어 죽는 소리_1
+    public AudioClip die_crush; //플레이어 죽는 소리_2
 
     GameObject cameraObj;
     public bool isCameraShake;
@@ -1245,11 +1246,12 @@ public class Player : MonoBehaviour
         InputManager.instance.isPlayerDying = true;
         GetComponent<BoxCollider2D>().isTrigger = true; //죽은 상태에선 콜라이더 통과가능하게 만들어야 함(그 위에 박스가 떠있지 않게) 
         rigid.bodyType = RigidbodyType2D.Kinematic;
-       
-        sound.Stop();
-        sound.clip = dieSound;
-        sound.Play();
-       
+
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        sound.PlayOneShot(dieSound);
+        sound.PlayOneShot(die_crush);
+
+
         if (isPlayerGrab)
         {
             isPlayerGrab = false; //만약 상자를 잡고 있는 상태에서 죽는다면 상자를 내려놔야 함 

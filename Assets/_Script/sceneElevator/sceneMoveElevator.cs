@@ -25,18 +25,28 @@ public class sceneMoveElevator : MonoBehaviour
 
     public AudioClip startSound;
     public AudioClip moveSound;
+    public AudioClip doorSound;
 
     public GameObject E_icon;
+    public Sprite[] elevatorDoorSprites;
+    //마지막 스프라이트가 문이 열린 상태 , 처음 스프라이트가 문이 닫힌 상태
+
+    SpriteRenderer spr;
+
+    public GameObject elevatorDoor;
 
     private void Awake()
     {
         sound = GetComponent<AudioSource>();
         rigid = GetComponent<Rigidbody2D>();
         cameraObj = GameObject.FindWithTag("MainCamera");
+        spr = GetComponent<SpriteRenderer>();
     }
     void Start()
     {
         E_icon.SetActive(false);
+        spr.sprite = elevatorDoorSprites[elevatorDoorSprites.Length - 1];
+        elevatorDoor.SetActive(false);
     }
 
     void Update()
@@ -74,6 +84,10 @@ public class sceneMoveElevator : MonoBehaviour
         sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
         sound.PlayOneShot(startSound);
         UIManager.instance.cameraShake(0.5f, 0.4f);
+
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(doorClose()); //문 닫음 
+
         yield return new WaitForSeconds(1.5f);
 
         sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
@@ -134,5 +148,19 @@ public class sceneMoveElevator : MonoBehaviour
         elevatorLever.transform.rotation = Quaternion.Euler(0, 0, -15f);
         yield return new WaitForSeconds(0.1f);
         elevatorLever.transform.rotation = Quaternion.Euler(0, 0, 0f);
+    }
+
+    IEnumerator doorClose() //플레이어가 레버를 당기면 문이 닫힘 
+    {
+        elevatorDoor.SetActive(true);
+
+        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+        sound.PlayOneShot(doorSound);
+
+        for (int index= elevatorDoorSprites.Length-1; index>0; index--)
+        {
+            spr.sprite = elevatorDoorSprites[index];
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 }

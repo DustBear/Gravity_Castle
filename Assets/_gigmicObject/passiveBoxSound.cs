@@ -37,6 +37,7 @@ public class passiveBoxSound : MonoBehaviour
         }else if(lastCollide && !isCollide)
         {
             //box 가 떨어지기 시작했을 때 
+            sound.volume = GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
             sound.PlayOneShot(chain_start);
         }
 
@@ -44,6 +45,7 @@ public class passiveBoxSound : MonoBehaviour
         {
             if (!moveSound.isPlaying)
             {
+                moveSound.volume = GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
                 moveSound.Play();
             }
         }

@@ -69,9 +69,8 @@ public class advancedStageDoor_button : MonoBehaviour
             isPlayerOn = true;
             if (!isActived)
             {
-                sound.Stop();
-                sound.clip = popUpSound;
-                sound.Play();
+                sound.volume = GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
+                sound.PlayOneShot(popUpSound);
                 keyIcon.SetActive(true);
             }
         }   
@@ -88,9 +87,8 @@ public class advancedStageDoor_button : MonoBehaviour
 
     IEnumerator buttonSpin()
     {
-        sound.Stop();
-        sound.clip = rotateSound;
-        sound.Play();
+        sound.volume = GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
+        sound.PlayOneShot(rotateSound);
 
         keyIcon.SetActive(false);
         InputManager.instance.isInputBlocked = true; //레버 돌리는 동안은 플레이어 움직이지 못함 

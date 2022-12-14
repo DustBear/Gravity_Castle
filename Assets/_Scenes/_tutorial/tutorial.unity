@@ -7294,8 +7294,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -2905537700765154543, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
+      propertyPath: m_RendererIndex
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2905537700765154543, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_RenderPostProcessing
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380298031898825306, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
+      propertyPath: m_HDR
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380298031898825306, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
+      propertyPath: m_AllowMSAA
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4380298031898825307, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_RootOrder
@@ -7368,6 +7380,10 @@ PrefabInstance:
     - target: {fileID: 4380298031898825311, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
       propertyPath: m_Name
       value: Main Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380298031898825311, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad864765ff887c046a15783efbe8d5b1, type: 3}
@@ -49533,6 +49549,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Global Light 2D
       objectReference: {fileID: 0}
+    - target: {fileID: 5012786124739270648, guid: 1a5e2177ed042ff4ea31a684a65cdbbc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5012786124739270649, guid: 1a5e2177ed042ff4ea31a684a65cdbbc, type: 3}
       propertyPath: m_ApplyToSortingLayers.Array.size
       value: 9
@@ -51896,7 +51916,7 @@ SpriteRenderer:
   m_SortingLayer: -8
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 4b2fd00d895307646be18b109989beba, type: 3}
-  m_Color: {r: 0.5754717, g: 0.5238964, b: 0.5238964, a: 1}
+  m_Color: {r: 0.5764706, g: 0.5254902, b: 0.5254902, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -122633,6 +122653,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5119296211944376084, guid: 9e9a4f2a6de41764c94d7bf20031ff65, type: 3}
+      propertyPath: m_Intensity
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 5119296211944376085, guid: 9e9a4f2a6de41764c94d7bf20031ff65, type: 3}
       propertyPath: m_Name
       value: Global Light_background
@@ -125906,7 +125930,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.371
   m_Color: {r: 0.8962264, g: 0.7750285, b: 0.5960751, a: 1}
-  m_Intensity: 2.76
+  m_Intensity: 3.91
   m_LightVolumeOpacity: 0
   m_ApplyToSortingLayers: d99749ab035aa460
   m_LightCookieSprite: {fileID: 0}
@@ -128437,6 +128461,10 @@ PrefabInstance:
       propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8303134013399262382, guid: e48661757d2727a41ac614581e4a46ba, type: 3}
+      propertyPath: m_ApplyToSortingLayers.Array.data[4]
+      value: -685508463
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e48661757d2727a41ac614581e4a46ba, type: 3}
 --- !u!1001 &6122451057620681317
@@ -128537,7 +128565,7 @@ PrefabInstance:
       objectReference: {fileID: 938263047}
     - target: {fileID: 6715983682375319597, guid: a2e4338238a98564a8178e393cc01882, type: 3}
       propertyPath: doorActiveThreshold
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6715983682375319597, guid: a2e4338238a98564a8178e393cc01882, type: 3}
       propertyPath: spritesGroup.Array.data[0]

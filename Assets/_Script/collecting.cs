@@ -33,12 +33,13 @@ public class collecting : MonoBehaviour
     private void Awake()
     {
         cameraObj = GameObject.FindWithTag("MainCamera");
-        cameraScript = cameraObj.GetComponent<MainCamera>();
-        colNumCal = GameManager.instance.collectionNumCalculate(new Vector2(stageNum, collectionNum));
+        cameraScript = cameraObj.GetComponent<MainCamera>();       
         spr = GetComponent<SpriteRenderer>();
+        colNumCal = GameManager.instance.collectionNumCalculate(new Vector2(stageNum, collectionNum));
     }
     void Start()
-    {      
+    {
+        colNumCal = GameManager.instance.collectionNumCalculate(new Vector2(stageNum, collectionNum));
         if (GameManager.instance.gameData.collectionUnlock[colNumCal]) //만약 이미 모은 수집요소이면 
         {
             gameObject.SetActive(false);
