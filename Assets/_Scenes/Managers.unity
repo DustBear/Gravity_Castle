@@ -715,6 +715,7 @@ GameObject:
   - component: {fileID: 262412890}
   - component: {fileID: 262412892}
   - component: {fileID: 262412891}
+  - component: {fileID: 262412893}
   m_Layer: 5
   m_Name: Text_1
   m_TagString: Untagged
@@ -738,7 +739,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 203.5, y: -193.25}
+  m_AnchoredPosition: {x: 187, y: -193.25}
   m_SizeDelta: {x: 1000, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &262412891
@@ -755,7 +756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -774,8 +775,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC0C1\uB2E8\uC758 \uC544\uC774\uCF58\uC740 \uC601\uD63C \uBE44\uC11D\uC5D0\uC11C
-    \n\uC800\uC7A5\uD55C \uD0D0\uD5D8\uAC00 \uC0C1\uC790\uB97C \uC758\uBBF8\uD569\uB2C8\uB2E4."
+  m_Text: "The icon at the top represents the Explorer's chest \nsaved from the Soul
+    monument"
 --- !u!222 &262412892
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -784,6 +785,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 262412889}
   m_CullTransparentMesh: 1
+--- !u!114 &262412893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 262412889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f751b9914e1af34aa56d69afb8961b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textIndex: 30
 --- !u!1 &273726838
 GameObject:
   m_ObjectHideFlags: 0
@@ -4187,6 +4201,7 @@ GameObject:
   - component: {fileID: 1531914366}
   - component: {fileID: 1531914368}
   - component: {fileID: 1531914367}
+  - component: {fileID: 1531914369}
   m_Layer: 5
   m_Name: Text_2
   m_TagString: Untagged
@@ -4227,7 +4242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -4257,6 +4272,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1531914365}
   m_CullTransparentMesh: 1
+--- !u!114 &1531914369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531914365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f751b9914e1af34aa56d69afb8961b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textIndex: 31
 --- !u!1 &1574704966
 GameObject:
   m_ObjectHideFlags: 0
@@ -5639,6 +5667,7 @@ GameObject:
   - component: {fileID: 2068204232}
   - component: {fileID: 2068204234}
   - component: {fileID: 2068204233}
+  - component: {fileID: 2068204235}
   m_Layer: 5
   m_Name: Text_3
   m_TagString: Untagged
@@ -5662,7 +5691,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 700.5, y: -192.25}
+  m_AnchoredPosition: {x: 786, y: -192.25}
   m_SizeDelta: {x: 1000, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2068204233
@@ -5679,7 +5708,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5708,6 +5737,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2068204231}
   m_CullTransparentMesh: 1
+--- !u!114 &2068204235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068204231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f751b9914e1af34aa56d69afb8961b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textIndex: 32
 --- !u!1 &2086550728
 GameObject:
   m_ObjectHideFlags: 0

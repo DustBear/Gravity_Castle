@@ -260,12 +260,11 @@ MonoBehaviour:
   pos1: {x: 0, y: 0}
   pos2: {x: 0, y: 0}
   leverArrow: {fileID: 435714321317946245}
-  activeSound: {fileID: 8300000, guid: a11b43865f337024db1a8e563db6382e, type: 3}
-  moveSound: {fileID: 8300000, guid: 23898c2c03a8ceb40808b258613a4424, type: 3}
   leverAct: {fileID: 8300000, guid: 23898c2c03a8ceb40808b258613a4424, type: 3}
   boxActive: {fileID: 8300000, guid: 8ee546462508d6b4ea9d6ca13f3bc230, type: 3}
   boxDeActive: {fileID: 8300000, guid: 960b3fc99c01f824e81802de1c2cb58a, type: 3}
   boxMove: {fileID: 8300000, guid: 8b2b7d42dfe8f784094ff98b07fa517d, type: 3}
+  shouldDirFlip: 1
 --- !u!61 &2811746285003243355
 BoxCollider2D:
   m_ObjectHideFlags: 0

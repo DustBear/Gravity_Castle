@@ -47,6 +47,8 @@ public class moveBox_lever : MonoBehaviour
     public AudioClip boxDeActive;
     public AudioClip boxMove;
 
+    [SerializeField] int shouldDirFlip;
+    // 화살표 누르는 방향이 반대로 바뀌어야 함 
     private void Awake()
     {
         rigid = moveStone.GetComponent<Rigidbody2D>();
@@ -172,7 +174,7 @@ public class moveBox_lever : MonoBehaviour
                 leverSound.Play();
             }
 
-            if (Input.GetAxisRaw("Horizontal") == -1) // [<--] 누르면 ~> 값이 작아지는 방향으로 움직임 
+            if (Input.GetAxisRaw("Horizontal") == -1 * shouldDirFlip) // [<--] 누르면 ~> 값이 작아지는 방향으로 움직임 
             {
                 spr.sprite = spriteGroup[1];
 
@@ -204,7 +206,7 @@ public class moveBox_lever : MonoBehaviour
                     }
                }
             }
-            else if (Input.GetAxisRaw("Horizontal") == 1) // [-->] 를 누르면 ~> 값이 커지는 방향으로 움직임 
+            else if (Input.GetAxisRaw("Horizontal") == 1 * shouldDirFlip) // [-->] 를 누르면 ~> 값이 커지는 방향으로 움직임 
             {
                 spr.sprite = spriteGroup[2];
 
