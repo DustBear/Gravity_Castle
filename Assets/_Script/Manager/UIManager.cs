@@ -196,6 +196,7 @@ public class UIManager : Singleton<UIManager>
 
     public void clickSoundGen() //UI Å¬¸¯ÇÒ ¶§ µþ±ï ¼Ò¸® ³¿ 
     {
+        sound.volume = GameManager.instance.optionSettingData.effectVolume_setting * GameManager.instance.optionSettingData.masterVolume_setting;
         sound.Play();
     }
 

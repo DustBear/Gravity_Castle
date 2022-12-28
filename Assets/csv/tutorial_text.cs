@@ -11,10 +11,10 @@ public class tutorial_text : MonoBehaviour
     int languageIndex_last = 0;
     int languageIndex_cur = 0;
 
-    TextMeshProUGUI thisText;
+    Text thisText;
     private void Awake()
     {
-        thisText = GetComponent<TextMeshProUGUI>();
+        thisText = GetComponent<Text>();
     }
     void Start()
     {
