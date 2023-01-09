@@ -245,7 +245,7 @@ public class GameManager : Singleton<GameManager>
                                     "Screenshot_" +
                                     System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") +
                                     ".png";
-            ScreenCapture.CaptureScreenshot(Path.Combine(folderPath, screenshotName), 2);
+            ScreenCapture.CaptureScreenshot(Path.Combine(folderPath, screenshotName), 1);
             Debug.Log(folderPath + screenshotName);
         }
     }
