@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class openingElevator_v2 : MonoBehaviour
 {
@@ -24,12 +25,21 @@ public class openingElevator_v2 : MonoBehaviour
     public GameObject elevatorDoor;
 
     SpriteRenderer spr;
+    bool isOpeningSceneElevator; //맨 처음 게임 실행할 때는 오프닝 엘리베이터는 코드만 작동하고 애니메이션은 동작 x
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         sound = GetComponent<AudioSource>();
 
         spr = GetComponent<SpriteRenderer>();
+        if(SceneManager.GetActiveScene().buildIndex == 4)
+        {
+            isOpeningSceneElevator = true;
+        }
+        else
+        {
+            isOpeningSceneElevator = false;
+        }
     }
     void Start()
     {
@@ -42,10 +52,13 @@ public class openingElevator_v2 : MonoBehaviour
 
             rigid.velocity = new Vector2(0, -moveSpeed);
 
-            sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
-            sound.clip = moveSound;
-            sound.Play();
-
+            if (!isOpeningSceneElevator)
+            {
+                sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+                sound.clip = moveSound;
+                sound.Play();
+            }
+           
             spr.sprite = elevatorDoorSprites[0];
             elevatorDoor.SetActive(true);
 
@@ -82,22 +95,28 @@ public class openingElevator_v2 : MonoBehaviour
             GameManager.instance.gameData.UseOpeningElevetor_bool = false;
             GameManager.instance.gameData.SpawnSavePoint_bool = false;
 
-            UIManager.instance.cameraShake(0.5f, 0.4f);
+            if (!isOpeningSceneElevator)
+            {
+                UIManager.instance.cameraShake(0.5f, 0.4f);
 
-            sound.Stop();
+                sound.Stop();
 
-            sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
-            sound.PlayOneShot(arriveSound);
+                sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+                sound.PlayOneShot(arriveSound);
+            }
 
             StartCoroutine(doorOpen());
         }
     }
 
     IEnumerator doorOpen() //엘리베이터 도착하면 문이 열림 
-    {       
-        sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
-        sound.PlayOneShot(doorSound);
-
+    {
+        if (!isOpeningSceneElevator)
+        {
+            sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
+            sound.PlayOneShot(doorSound);
+        }
+        
         for (int index = 0; index < elevatorDoorSprites.Length - 1; index++)
         {
             spr.sprite = elevatorDoorSprites[index];
