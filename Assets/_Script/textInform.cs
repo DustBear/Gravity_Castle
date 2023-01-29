@@ -12,17 +12,20 @@ public class textInform : MonoBehaviour
 
     private void Awake()
     {
-        sound = GetComponent<AudioSource>();
+        if(GetComponent<AudioSource>().gameObject != null)
+        {
+            sound = GetComponent<AudioSource>();
+        }
     }
     private void Start()
     {
         Canvas.SetActive(false);        
     }
-
-    
+   
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Player")
+        if(collision.tag == "Player" && sound != null)
+            //만약 audioSource가 붙어있지 않으면 소리 재생 x 
         {
             Canvas.SetActive(true);
             sound.Stop();

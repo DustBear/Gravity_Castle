@@ -39,6 +39,8 @@ public class GameManager : Singleton<GameManager>
 
     void Awake() 
     {
+        Debug.Log("GM activated");
+
         DontDestroyOnLoad(gameObject);
         string filePath_seq = Application.persistentDataPath + saveFileSeqName; //세이브파일 플레이 순서 리스트 경로 
         string optionSettingPath = Application.persistentDataPath + optionFileName; //옵션 세팅 경로 

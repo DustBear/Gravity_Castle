@@ -161,7 +161,10 @@ public class NewGameButton : MonoBehaviour
             GameManager.instance.gameData.savePointUnlock = curGameData.savePointUnlock;
             GameManager.instance.gameData.collectionUnlock = curGameData.collectionUnlock;
 
-            GameManager.instance.gameData.SpawnSavePoint_bool = curGameData.SpawnSavePoint_bool;
+            GameManager.instance.gameData.SpawnSavePoint_bool = true;
+            //세이브파일이 있다는 것은 이미 한 번 게임을 종료한 적이 있다는 뜻 
+            //어떤 방법으로든 종료했다면 그 시점에서 다음 판은 무조건 세이브에서 이어져야 한다
+
             GameManager.instance.gameData.UseOpeningElevetor_bool = curGameData.UseOpeningElevetor_bool;
 
             GameManager.instance.gameData.respawnScene = curGameData.respawnScene;

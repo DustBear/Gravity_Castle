@@ -155,7 +155,9 @@ public class SaveFileButton : MonoBehaviour
             GameManager.instance.gameData.savePointUnlock = curGameData.savePointUnlock;
             GameManager.instance.gameData.collectionUnlock = curGameData.collectionUnlock;
 
-            GameManager.instance.gameData.SpawnSavePoint_bool = curGameData.SpawnSavePoint_bool;
+            GameManager.instance.gameData.SpawnSavePoint_bool = true;
+            //GM의 경우와 마찬가지로 세이브가 있다면 ~> 이전 판을 하다가 중간에 종료했다는 뜻이고 ~> 그렇다면 다음판은 무조건 세이브에서 재시작해야 함 
+
             GameManager.instance.gameData.UseOpeningElevetor_bool = curGameData.UseOpeningElevetor_bool;
 
             GameManager.instance.gameData.respawnScene = curGameData.respawnScene;

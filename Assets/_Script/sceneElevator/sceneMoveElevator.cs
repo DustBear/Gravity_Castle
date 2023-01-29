@@ -34,6 +34,7 @@ public class sceneMoveElevator : MonoBehaviour
     SpriteRenderer spr;
 
     public GameObject elevatorDoor;
+    bool isElevatorDeparted = false; 
 
     private void Awake()
     {
@@ -51,8 +52,10 @@ public class sceneMoveElevator : MonoBehaviour
 
     void Update()
     {
-        if(isPlayerOn && Input.GetKeyDown(KeyCode.E))
+        if(isPlayerOn && Input.GetKeyDown(KeyCode.E) && !isElevatorDeparted)
         {
+            isElevatorDeparted = true;
+
             StartCoroutine(elevatorLeverAct());
             StartCoroutine(elevatorMove());
         }

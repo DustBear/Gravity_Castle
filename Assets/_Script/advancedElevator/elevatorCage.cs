@@ -165,7 +165,7 @@ public class elevatorCage : MonoBehaviour
         if (purposePoint == 1) //현재 pos2 에서 pos1으로 이동하고 있는 중이면 
         {           
             gearAni.SetBool("gearMove", true);
-            gearAni.SetFloat("gearSpeed", 2f);
+            gearAni.SetFloat("gearSpeed", 1.5f);
 
             dirVector = pos1 - pos2;
             moveDirection = dirVector.normalized; //moveDirection = 움직여야 하는 방향(크기1 벡터로 표현)
@@ -179,6 +179,7 @@ public class elevatorCage : MonoBehaviour
                 elevatorSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
                 elevatorSound.Play();
 
+                gearAni.SetFloat("gearSpeed", 0f);
                 gearAni.SetBool("gearMove", false);
                 transform.position = pos1; //위치 고정하고 
                 rigid.velocity = Vector3.zero; //속도 정지시키고 
@@ -188,7 +189,7 @@ public class elevatorCage : MonoBehaviour
         else //현재 pos1 에서 pos2 으로 이동하고 있는 중이면 
         {           
             gearAni.SetBool("gearMove", true);
-            gearAni.SetFloat("gearSpeed", -2f);
+            gearAni.SetFloat("gearSpeed", -1.5f);
 
             dirVector = pos2 - pos1;
             moveDirection = dirVector.normalized;
@@ -202,6 +203,7 @@ public class elevatorCage : MonoBehaviour
                 elevatorSound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
                 elevatorSound.Play();
 
+                gearAni.SetFloat("gearSpeed", 0f);
                 gearAni.SetBool("gearMove", false);
                 transform.position = pos2; //위치 고정하고 
                 rigid.velocity = Vector3.zero; //속도 정지시키고 

@@ -226,6 +226,7 @@ MonoBehaviour:
   - {x: 0.5, y: 0}
   - {x: 0.8, y: 0}
   disposable: 0
+  isSpikeAct: 0
 --- !u!61 &604410335805974111
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -250,7 +251,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8, y: 3}
+  m_Size: {x: 0.9, y: 3}
   m_EdgeRadius: 0
 --- !u!50 &6357587529836015900
 Rigidbody2D:

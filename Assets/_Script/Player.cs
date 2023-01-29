@@ -156,6 +156,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("player activated");
         InputManager.instance.isInputBlocked = false;
 
         //UIManager.instance.fade.color = new Color(0, 0, 0, 1);
@@ -176,7 +177,9 @@ public class Player : MonoBehaviour
                              && targetLever.transform.up == transform.up;
 
         if (!GameManager.instance.gameData.SpawnSavePoint_bool)
-        {            
+        {
+            Debug.Log("player position initiated _ not savePoint");
+
             //GameManager ~> 세이브포인트에서 시작하는 것이 아닐 때 GM이 플레이어 초기화 담당 ~> 스테이지 처음 시작할 때, 한 씬에서 통로를 통해 다음씬 넘어갈 때 
             transform.position = GameManager.instance.nextPos;
             Physics2D.gravity = GameManager.instance.nextGravityDir * 9.8f;
@@ -193,6 +196,8 @@ public class Player : MonoBehaviour
         //세이브포인트에서 시작해야 할 때 ~> GameData 에서 플레이어 초기화 담당 
         else
         {
+            Debug.Log("player position initiated _ savePoint");
+
             //세이브포인트에서 시작할 땐 플레이어 앉아있다 일어나는 애니메이션에서 자동으로 페이드인 해줌 
             //StartCoroutine(sceneStartAnimation());
 
@@ -207,6 +212,9 @@ public class Player : MonoBehaviour
             string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
             string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
             File.WriteAllText(filePath, ToJsonData);
+
+            //세이브포인트에서 소환하고 나면 changeScene 등 이용할 수 있도록 false 처리 해줘야 함 
+            GameManager.instance.gameData.SpawnSavePoint_bool = false;
         }
 
         if (GameManager.instance.isStartWithFlipX)

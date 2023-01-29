@@ -16,6 +16,8 @@ public class savePointManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("savePointActivated");
+
         player = GameObject.Find("Player");
         playerSpawnSavePoint = GameManager.instance.gameData.curAchievementNum; //현재의 achNum 이 스폰돼야 하는 세이브포인트 번호 
       
@@ -25,6 +27,8 @@ public class savePointManager : MonoBehaviour
             {
                 if (savePointGroup[index].GetComponent<SavePoint>().achievementNum == playerSpawnSavePoint)
                 {
+                    Debug.Log("savePointManager found aimed savepoint");
+
                     //GameManager 데이터 갱신
                     GameManager.instance.nextPos = savePointGroup[index].GetComponent<SavePoint>().respawnPos;
                     GameManager.instance.nextGravityDir = savePointGroup[index].GetComponent<SavePoint>().respawnDir;
@@ -37,10 +41,12 @@ public class savePointManager : MonoBehaviour
                     string ToJsonData = JsonUtility.ToJson(GameManager.instance.gameData);
                     string filePath = Application.persistentDataPath + GameManager.instance.gameDataFileNames[GameManager.instance.curSaveFileNum];
                     File.WriteAllText(filePath, ToJsonData);
+
+                    Debug.Log("save completed");
                 }               
             }
             //세이브포인트에서 소환하고 나면 changeScene 등 이용할 수 있도록 false 처리 해줘야 함 
-            GameManager.instance.gameData.SpawnSavePoint_bool = false;
+            //GameManager.instance.gameData.SpawnSavePoint_bool = false;
         }
     }
 }

@@ -17,6 +17,9 @@ public class SavePoint : MonoBehaviour
     bool isPlayerOnSensor;
     bool isSavePointActivated;
 
+    bool isSavePointWorking = false;
+    //애니메이션 작동하는 동안에는 입력 제한 
+
     SpriteRenderer spr;
     public Sprite[] spriteGroup;
     /* [0] : 비활성화 상태(불 꺼짐)
@@ -71,17 +74,10 @@ public class SavePoint : MonoBehaviour
     {        
         //원래 이미 활성화된 세이브포인트도 원하면 다시 활성화할 수 있어야 함 
         //ex) 이미 클리어한 스테이지를 다시 돌아와서 할 때 
-        if(isSavePointActivated && isPlayerOnSensor && Input.GetKeyDown(KeyCode.E))
+        if(isSavePointActivated && isPlayerOnSensor && Input.GetKeyDown(KeyCode.E) && !isSavePointWorking)
         {           
             StartCoroutine(reSaveData());
         }
-
-        //if (isSavePointActivated) return; //활성화된 이후에는 따로 작동x 
-        if(!isSavePointActivated && isPlayerOnSensor && Input.GetKeyDown(KeyCode.E)) //처음으로 세이브포인트를 활성화시킴 
-        {           
-            StartCoroutine(SaveData());
-        }
-        
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -101,6 +97,7 @@ public class SavePoint : MonoBehaviour
                 StartCoroutine(curCoroutine);
             }           
 
+            //이미 활성화시킨 세이브를 재활성화시킬 때 
             if(isSavePointActivated && GameManager.instance.gameData.curAchievementNum != achievementNum)
             {
                 StartCoroutine(reSaveData());
@@ -153,6 +150,7 @@ public class SavePoint : MonoBehaviour
 
     IEnumerator SaveData()
     {
+        isSavePointWorking = true;
         if (GameManager.instance.gameData.collectionTmp.Count != 0) //임시저장 리스트에 하나라도 수집요소가 있으면 
         {
             UIManager.instance.collectionAlarm(2); //탐험가상자를 저장했다는 메시지 출력 
@@ -175,12 +173,15 @@ public class SavePoint : MonoBehaviour
 
         UIManager.instance.cameraShake(0.3f, 0.5f); //세이브스톤이 박힐 때 카메라 진동 
         particle.Play();
+
+        isSavePointWorking = false;
         yield return null;
     }
 
     IEnumerator reSaveData() //이미 활성화한 세이브를 다시 활성화 ~> stone이 느리게 상승했다가 다시 하강 
     {
-        if(GameManager.instance.gameData.collectionTmp.Count != 0) //임시저장 리스트에 하나라도 수집요소가 있으면 
+        isSavePointWorking = true;
+        if (GameManager.instance.gameData.collectionTmp.Count != 0) //임시저장 리스트에 하나라도 수집요소가 있으면 
         {
             UIManager.instance.collectionAlarm(2); //탐험가상자를 저장했다는 메시지 출력 
         }
@@ -208,6 +209,8 @@ public class SavePoint : MonoBehaviour
         sound.PlayOneShot(activeSound);
 
         UIManager.instance.cameraShake(0.3f, 0.5f);
+
+        isSavePointWorking = false;
         //세이브스톤이 박힐 때 카메라 진동 
     }
 }
