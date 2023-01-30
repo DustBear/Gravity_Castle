@@ -68,7 +68,7 @@ public class NewGameButton : MonoBehaviour
     }
 
     public void OnClickButton() 
-    {
+    {       
         Cursor.lockState = CursorLockMode.Locked;
         //버튼 중복입력 막기 위해 버튼 누르자 마자 락 검 
 

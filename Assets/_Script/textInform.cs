@@ -12,10 +12,11 @@ public class textInform : MonoBehaviour
 
     private void Awake()
     {
-        if(GetComponent<AudioSource>().gameObject != null)
+        if(GetComponent<AudioSource>() != null)
         {
             sound = GetComponent<AudioSource>();
         }
+        
     }
     private void Start()
     {
@@ -24,14 +25,17 @@ public class textInform : MonoBehaviour
    
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Player" && sound != null)
+        if(collision.tag == "Player")
             //만약 audioSource가 붙어있지 않으면 소리 재생 x 
         {
-            Canvas.SetActive(true);
+            Canvas.SetActive(true);           
             sound.Stop();
-
+            
             sound.volume = GameManager.instance.optionSettingData.masterVolume_setting * GameManager.instance.optionSettingData.effectVolume_setting;
-            sound.Play();
+            if (!GameManager.instance.gameData.UseOpeningElevetor_bool)
+            {
+                sound.Play();
+            }
         }
     }
 
