@@ -144,6 +144,7 @@ public class floorDoorSensor : MonoBehaviour
         for(int index=0; index<=2; index++)
         {
             sensorSpr.sprite = sensorLight[index];
+            yield return new WaitForSeconds(0.05f);
         }
 
         for (int index = 0; index < doorSpr_active.Length; index++)
@@ -164,6 +165,7 @@ public class floorDoorSensor : MonoBehaviour
         for (int index = 2; index >= 0; index--)
         {
             sensorSpr.sprite = sensorLight[index];
+            yield return new WaitForSeconds(0.05f);
         }
 
         spr.enabled = true;

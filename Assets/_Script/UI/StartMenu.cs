@@ -19,6 +19,8 @@ public class StartMenu : MonoBehaviour
 
     public bool isTitleMenuOpen;
     public bool isGameMenuOpen;
+
+
     private void Start()
     {
         StartCoroutine(startFade());
@@ -26,9 +28,9 @@ public class StartMenu : MonoBehaviour
         isTitleMenuOpen = true;
         titleMenu.SetActive(true); //시작하면 titleMenu 에서 시작함 
 
-        //gameMenu, loadMenu 끔 
+        //gameMenu, loadMenu 끔
         isGameMenuOpen = false;
-        gameMenu.SetActive(false);     
+        gameMenu.SetActive(false);
         loadMenu.SetActive(false);
 
         InputManager.instance.isInputBlocked = false; //메인 메뉴로 돌아오면 무조건 inputBlock 풀어줌
@@ -53,13 +55,13 @@ public class StartMenu : MonoBehaviour
 
     IEnumerator gameMenuOpen() //메뉴 열고 닫는 중간에 페이드인/아웃 효과 있어야 함 
     {
+        isTitleMenuOpen = false;
         UIManager.instance.FadeOut(1.5f);
 
         yield return new WaitForSeconds(2f); //화면이 완전히 어두워지면 
 
         //타이틀화면 끄고 
         titleMenu.SetActive(false);
-        isTitleMenuOpen = false;
 
         //gameMenu 키고 
         isGameMenuOpen = true;

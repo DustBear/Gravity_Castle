@@ -42,6 +42,7 @@ public class stageManager : MonoBehaviour
     public Text chapterName;
     public Image saveInstruction;
 
+    bool isButtonClicked = false;
     void Start()
     {
         UIManager.instance.FadeIn(1.5f);
@@ -201,6 +202,11 @@ public class stageManager : MonoBehaviour
 
     public void backToMainMenu() //메인메뉴로 돌아가는 함수 
     {
+        if (isButtonClicked) return;
+        //이미 버튼을 누른 상태면 다른 버튼 클릭x
+
+        isButtonClicked = true;
+
         UIManager.instance.FadeOut(1f);
         Invoke("backToMainMenuInvoke", 1.5f);
     }
@@ -276,6 +282,10 @@ public class stageManager : MonoBehaviour
 
     public void ChapterStart() //선택한 스테이지, 세이브포인트 시작하는 버튼 
     {
+        if (isButtonClicked) return;
+        //이미 버튼을 누른 상태면 다른 버튼 클릭x
+
+        isButtonClicked = true;
         UIManager.instance.clickSoundGen();
 
         GameObject stageButtonTmp = stageButton[selectedStageNum-1].gameObject;

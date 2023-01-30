@@ -24,12 +24,13 @@ public class startScene_circleDoor : MonoBehaviour
 
     public GameObject[] firstInform; //맨 처음 좌우조작키 설명은 문이 완전히 열린 뒤 떠야 함 
 
-    public AudioClip doorShake;
-    public AudioClip doorRotate;
-    public AudioClip doorRotateComplete;
-    public AudioClip doorLockOpen;
-    public AudioClip doorOpen;
-    public AudioClip doorOpenComplete;
+    [SerializeField] AudioClip lockShake;
+    [SerializeField] AudioClip lockMove;
+    [SerializeField] AudioClip lockComplete;
+    [SerializeField] AudioClip lockChainMove;
+    [SerializeField] AudioClip doorMove;
+    [SerializeField] AudioClip doorMove_complete;
+
     public AudioClip windBlow;
 
     public AudioSource sound;
@@ -82,7 +83,9 @@ public class startScene_circleDoor : MonoBehaviour
 
         UIManager.instance.FadeIn(3f); //3초에 걸쳐 화면 밝아짐 
         yield return new WaitForSeconds(9f);
-       
+
+        sound.PlayOneShot(lockShake);
+
         for (int index = 0; index < 3; index++) // doorLock 진동 
         {
             doorLock.transform.position += new Vector3(0, 1, 0) * 0.05f;
@@ -101,16 +104,25 @@ public class startScene_circleDoor : MonoBehaviour
             animFrameCount++;
             doorLockChainSpr.sprite = doorLockChainSprite[index];
 
+            if (index == 51) //잠금 해제되는 소리 
+            {
+                sound.PlayOneShot(lockChainMove);
+            }       
             yield return new WaitForSeconds(doorLockChain_frameDelay);
         }
 
         yield return new WaitForSeconds(1.5f);
 
         //doorLock 이 위로 올라감 
+
+        sound.PlayOneShot(lockMove);
         float doorLockSpeed = doorLock_MoveLength / doorLock_MoveDelay;
         doorLock.GetComponent<Rigidbody2D>().velocity = new Vector3(0, doorLockSpeed, 0);
 
         yield return new WaitForSeconds(doorLock_MoveDelay);
+
+        sound.Stop();
+        sound.PlayOneShot(lockComplete);
         doorLock.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         doorLock.transform.localPosition = new Vector3(0, doorLock_MoveLength, 0);
       
@@ -118,10 +130,16 @@ public class startScene_circleDoor : MonoBehaviour
 
         //문이 열림 
         float doorOpenSpeed = door_openLength / door_openDelay;
+
+        sound.PlayOneShot(doorMove);
         rightDoor.GetComponent<Rigidbody2D>().velocity = new Vector3(doorOpenSpeed, 0, 0);
         leftDoor.GetComponent<Rigidbody2D>().velocity = new Vector3(-doorOpenSpeed, 0, 0);
 
-        yield return new WaitForSeconds(door_openDelay);
+        yield return new WaitForSeconds(door_openDelay-0.2f);
+
+        sound.PlayOneShot(doorMove_complete);
+
+        yield return new WaitForSeconds(0.2f);
 
         rightDoor.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         leftDoor.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
