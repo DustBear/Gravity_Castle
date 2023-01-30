@@ -58,7 +58,7 @@ public class InputManager : Singleton<InputManager>
         if (esc && SceneManager.GetActiveScene().name != "MainMenu" 
             && SceneManager.GetActiveScene().name != "openingScene"
             && SceneManager.GetActiveScene().name != "InGameMenu"
-            //&& SceneManager.GetActiveScene().buildIndex != 8
+            && SceneManager.GetActiveScene().buildIndex != 8
             && !UIManager.instance.optionMenu.activeSelf //설정창이 열려 있는 상태에서 뒤에 있는 메뉴창을 닫을 수 없음 
             && !isPlayerDying) //esc 를 눌러 mainMenu 씬을 열 수 있는 조건 
         {
